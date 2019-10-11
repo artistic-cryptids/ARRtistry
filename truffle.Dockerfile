@@ -10,7 +10,3 @@ WORKDIR /src
 # Install Truffle
 RUN npm install -g truffle
     && npm config set bin-links false
-
-# Setup project
-RUN npm install zos
-    && npx zos add Arrtistry

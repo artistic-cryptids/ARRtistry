@@ -1,17 +1,26 @@
 {
-  "name": "Arrtistry",
+  "name": "contract",
   "version": "1.0.0",
-  "description": "Smart contract for Arrtistry",
+  "description": "`docker-compose up -d` `docker exec -it contract_truffleapp_1 bash` `truffle {test}`",
   "main": "truffle-config.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "truffle test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/artistic-cryptids/contract.git"
+  },
   "keywords": [],
   "author": "",
   "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/artistic-cryptids/contract/issues"
+  },
+  "homepage": "https://github.com/artistic-cryptids/contract#readme",
   "dependencies": {
-    "openzeppelin-eth": "^2.1.3",
-    "truffle": "5.0.0",
-    "zos-lib": "^2.2.0",
-    "chai": "4.2.0",
-    "bignumber.js": "8.1.1",
-    "chai-bignumber": "3.0.0"
+    "@openzeppelin/contracts-ethereum-package": "^2.3.0"
   }
 }
