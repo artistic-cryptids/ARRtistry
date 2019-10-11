@@ -1,0 +1,17 @@
+{
+  "name": "Arrtistry",
+  "version": "1.0.0",
+  "description": "Smart contract for Arrtistry",
+  "main": "truffle-config.js",
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "openzeppelin-eth": "^2.1.3",
+    "truffle": "5.0.0",
+    "zos-lib": "^2.2.0",
+    "chai": "4.2.0",
+    "bignumber.js": "8.1.1",
+    "chai-bignumber": "3.0.0"
+  }
+}
