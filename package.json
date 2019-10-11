@@ -1,7 +1,7 @@
 {
-  "name": "contract",
+  "name": "Arrtistry Contracts",
   "version": "1.0.0",
-  "description": "`docker-compose up -d` `docker exec -it contract_truffleapp_1 bash` `truffle {test}`",
+  "description": "",
   "main": "truffle-config.js",
   "directories": {
     "test": "test"
@@ -15,10 +15,6 @@
   },
   "keywords": [],
   "author": "",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/artistic-cryptids/contract/issues"
-  },
   "homepage": "https://github.com/artistic-cryptids/contract#readme",
   "dependencies": {
     "@openzeppelin/contracts-ethereum-package": "^2.3.0"
