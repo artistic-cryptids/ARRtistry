@@ -1,0 +1,59 @@
+{
+  "name": "contract",
+  "version": "0.0.0",
+  "description": "Smart contracts for the art market",
+  "main": "truffle-config.js",
+  "files": [
+    "/contracts/**/*.sol"
+  ],
+  "scripts": {
+    "compile": "scripts/compile.sh",
+    "console": "truffle console",
+    "coverage": "truffle run coverage",
+    "lint": "concurrently --kill-others \"npm run lint:js\" \"npm run lint:sol\"",
+    "lint:fix": "npm run lint:js:fix",
+    "lint:js": "npx eslint .",
+    "lint:js:fix": "npx eslint . --fix",
+    "lint:sol": "npx solhint --max-warnings 0 \"contracts/**/*.sol\"",
+    "test": "scripts/test.sh"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/artistic-cryptids/contract.git"
+  },
+  "keywords": [
+    "solidity",
+    "ethereum",
+    "smart",
+    "contracts",
+    "security",
+    "art",
+    "provenance"
+  ],
+  "author": "Artistic Cryptids",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/artistic-cryptids/contract/issues"
+  },
+  "homepage": "https://github.com/artistic-cryptids/contract#readme",
+  "devDependencies": {
+    "@openzeppelin/gsn-helpers": "^0.2.0",
+    "@openzeppelin/gsn-provider": "^0.1.8",
+    "@openzeppelin/test-helpers": "^0.5.1",
+    "chai": "^4.2.0",
+    "concurrently": "^5.0.0",
+    "coveralls": "^3.0.7",
+    "eslint": "^4.19.1",
+    "eslint-config-standard": "^11.0.0",
+    "eslint-plugin-import": "^2.18.2",
+    "eslint-plugin-mocha-no-only": "^1.1.0",
+    "eslint-plugin-node": "^5.2.1",
+    "eslint-plugin-promise": "^4.2.1",
+    "eslint-plugin-standard": "^3.1.0",
+    "ethereumjs-util": "^6.1.0",
+    "ganache-cli": "^6.7.0",
+    "solhint": "2.3.0",
+    "solidity-coverage": "^0.7.0-beta.2",
+    "truffle": "^5.0.39"
+  }
+}
