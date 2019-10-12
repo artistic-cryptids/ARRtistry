@@ -1,6 +1,3 @@
 node_modules/
 build/
-zos.json
-.zos.session
-.openzeppelin
-.openzeppelin/.session
+.openzeppelin/
