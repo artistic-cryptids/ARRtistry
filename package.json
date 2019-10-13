@@ -7,9 +7,9 @@
     "/contracts/**/*.sol"
   ],
   "scripts": {
-    "coverage": "scripts/coverage.sh",
     "compile": "scripts/compile.sh",
     "console": "truffle console",
+    "coverage": "scripts/coverage.sh",
     "lint": "concurrently --kill-others \"npm run lint:js\" \"npm run lint:sol\"",
     "lint:fix": "npm run lint:js:fix",
     "lint:js": "npx eslint .",

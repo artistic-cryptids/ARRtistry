@@ -1,9 +1,7 @@
 #!/usr/bin/env bash
 
-set -o errexit -o pipefail
+# Exit script as soon as a command fails.
+set -o errexit
 
-log() {
-  echo "$*" >&2
-}
-
-SOLIDITY_COVERAGE=true scripts/test.sh || log "Test run failed"
+truffle run coverage
+cat coverage/lcov.info | npx coveralls
