@@ -1,5 +1,5 @@
 # Smart Contracts
-
+[![Coverage Status](https://coveralls.io/repos/github/artistic-cryptids/contract/badge.svg?branch=feature/full-ci-support)](https://coveralls.io/github/artistic-cryptids/contract?branch=feature/full-ci-support)
 ## Development
 Start truffle and ganache with `docker-compose up -d`
 
