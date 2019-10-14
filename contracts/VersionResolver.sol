@@ -19,7 +19,7 @@ contract VersionResolver {
             || interfaceID == 0x01ffc9a7;
     }
 
-    function addr(bytes32 nodeID) constant returns (address) {
+    function addr(bytes32 nodeID) constant view returns (address) {
         return address(this);
     }
 
@@ -28,7 +28,7 @@ contract VersionResolver {
         addresses['latest'] = addr;
     }
 
-    function getVersion(string version) constant returns (address) {
+    function getVersion(string version) constant view returns (address) {
         return addresses[version];
     }
 
