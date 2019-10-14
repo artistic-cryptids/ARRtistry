@@ -2,7 +2,13 @@ pragma solidity ^0.4.0;
 
 contract VersionResolver {
     address owner;
-    mapping(string=>address) addresses;
+
+    struct Contract {
+        address addr;
+        string abi;
+    }
+
+    mapping(string=>Contract) contracts;
 
     modifier only_owner() {
         if(msg.sender != owner) throw;
@@ -23,13 +29,14 @@ contract VersionResolver {
         return address(this);
     }
 
-    function releaseVersion(string version, address addr) only_owner {
-        addresses[version] = addr;
-        addresses['latest'] = addr;
+    function releaseVersion(string version, address addr, string abi) only_owner {
+        Contract contr = Contract(addr, abi);
+        contracts[version] = contr;
+        contracts['latest'] = contr;
     }
 
     function getVersion(string version) constant view returns (address) {
-        return addresses[version];
+        return contracts[version];
     }
 
     function() {
