@@ -1,6 +1,8 @@
-node_modules
 build
+node_modules
+.idea
 .openzeppelin/
 package-lock.json
 coverage.json
 coverage
+npm-debug.log
