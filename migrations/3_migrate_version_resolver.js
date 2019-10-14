@@ -1,5 +1,5 @@
-const Users = artifacts.require('Users');
+const VersionResolver = artifacts.require('VersionResolver');
 
 module.exports = function (deployer) {
-  deployer.deploy(Users);
+  deployer.deploy(VersionResolver);
 };
