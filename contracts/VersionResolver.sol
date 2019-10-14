@@ -14,7 +14,7 @@ contract VersionResolver {
     }
 
     // Our resolver supports (supportsInterface & addr) interfaces
-    function supportsInterface(bytes4 interfaceID) constant returns (bool) {
+    function supportsInterface(bytes4 interfaceID) constant view returns (bool) {
         return interfaceID == 0x3b3b57de
             || interfaceID == 0x01ffc9a7;
     }
