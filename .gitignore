@@ -1,3 +1,7 @@
 build
 node_modules
 .idea
+.openzeppelin/
+package-lock.json
+coverage.json
+coverage
