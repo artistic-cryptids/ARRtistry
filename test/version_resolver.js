@@ -1,75 +1,82 @@
-const Users = artifacts.require('./Users.sol');
+const Contract = artifacts.require('./VersionResolver.sol');
 
-contract('Users', async accounts => {
+contract('VersionResolver', async accounts => {
   let instance;
   const mainAccount = accounts[0];
 
-  // TEST: register a new user and check if the total users is increased and if the
-  // user has been registered correctly.
-  it('should register an user', async () => {
-    instance = await Users.deployed();
-    const totalUsersBeforeRegister = await instance.totalUsers.call();
-    const initialTotal = totalUsersBeforeRegister.toNumber();
+  beforeEach(async () => {
+    instance = await Contract.deployed();
+  })
 
-    await instance.registerUser('Test User Name', web3.utils.fromAscii('Test Status'), {
-      from: mainAccount,
-    });
-    const totalUsersAfterRegister = await instance.totalUsers.call();
+  it('Should support interface supportInterface', async () => {
+    const result = await instance.supportsInterface('0x01ffc9a7');
 
-    assert.equal(
-      totalUsersAfterRegister.toNumber(),
-      initialTotal + 1,
-      'number of users must be (' + initialTotal + ' + 1)'
-    );
+    assert.equal(result, true);
+  })
 
-    const isMainAccountRegistered = await instance.isRegistered.call({from: mainAccount});
-    // assert.isTrue(isMainAccountRegistered);
-  }); // end of "should register an user"
+  it('Should support interface addr', async () => {
+    const result = await instance.supportsInterface('0x3b3b57de');
 
-  // Testing the data of the user profile stored in the blockchain match with the data
-  // gave during the registration.
-  it('username and status in the blockchain should be the same the one gave on the registration', async () => {
-    // NOTE: the contract instance has been instantiated before, so no need
-    // to do again: return Users.deployed().then(function(contractInstance) { ...
-    // like before in "should register an user".
-    const profile = await instance.getOwnProfile.call();
-    // the result is an array where in the position 0 there user ID, in
-    // the position 1 the user name and in the position 2 the status,
-    assert.equal(profile[1], 'Test User Name');
+    assert.equal(result, true);
+  })
 
-    // the status is type of bytes32: converting the status Bytes32 into string
-    const newStatusStr = web3.utils.toUtf8(profile[2]);
-    assert.equal(newStatusStr, 'Test Status');
-  }); // end testing username and status
+  it('Should not support unknown interface', async () => {
+    const result = await instance.supportsInterface('0x21ffc9a7');
 
-  // Testing the update profile function: first update the user's profile name and status, then
-  // chching that the profile has been updated correctly.
-  it('should update the profile', function () {
-    return instance.updateUser('Updated Name', web3.utils.fromAscii('Updated Status'), {
-      from: mainAccount,
-    }).then(function (result) {
-      return instance.getOwnProfile.call();
-    }).then(function (result) {
-      // the result is an array where in the position 0 there user ID, in
-      // the position 1 the user name and in the position 2 the status,
-      assert.equal(result[1], 'Updated Name');
+    assert.equal(result, false);
+  })
 
-      // the status is type of bytes32: converting the status Bytes32 into string
-      const newStatusStr = web3.utils.toUtf8(result[2]);
-      assert.equal(newStatusStr, 'Updated Status');
-    });
-  }); // end should update the profile
+  it('Should return 0 address and abi on unknown version', async () => {
+    const addr = await instance.getAddr("unknown version");
+    const abi = await instance.getAbi("unknown version");
 
-  // Testing that a user cannot register itself twice.
-  it('a registered user should not be registered twice', function () {
-    // we are expecting the call to registerUser to fail since the user account
-    // is already registered!
-    return instance.registerUser('Test username Twice', web3.utils.fromAscii('Test Status Twice'), {
-      from: mainAccount,
-    }).then(assert.fail).catch(function (error) { // here we are expecting the exception
-      if (error) {
-        assert(true);
-      }
-    });
-  }); // end testing registration twice
-}); // end Users contract
+    assert.equal(addr, '0x0000000000000000000000000000000000000000');
+    assert.equal(abi, 0);
+  })
+
+  it('Should resolve to the correct contract for known version', async () => {
+    const addr = '0x1234500000000000000000000000000000000001';
+    const version = "1.0.0";
+    const abi = "{}";
+
+    await instance.releaseVersion(version, abi, addr);
+
+    const addrResult = await instance.getAddr(version);
+    const abiResult = await instance.getAbi(version);
+
+    assert.equal(addr, addrResult);
+    assert.equal(abi, abiResult);
+  })
+
+  it('Should resolve to the latest contract release for latest version', async () => {
+    let addr = '0x1234500000000000000000000000000000000001';
+    let version = "1.0.0";
+    let abi = "{}";
+
+    await instance.releaseVersion(version, abi, addr);
+
+    let addrResult = await instance.getAddr("latest");
+    let abiResult = await instance.getAbi("latest");
+
+    assert.equal(addr, addrResult);
+    assert.equal(abi, abiResult);
+
+    addr = '0x1234500000000000000000000000000000000001';
+    abi = "{different}"
+    version = "1.0.1";
+
+    await instance.releaseVersion(version, abi, addr);
+
+    addrResult = await instance.getAddr("latest");
+    abiResult = await instance.getAbi("latest");
+
+    assert.equal(addr, addrResult);
+    assert.equal(abi, abiResult);
+  })
+
+  it('Should resolve always to itself', async () => {
+    const resolvedAddr = await instance.addr('0x3b3b57de3b3b57de3b3b57de3b3b57de3b3b57de3b3b57de3b3b57de3b3b57de');
+
+    assert.equal(resolvedAddr, instance.address);
+  })
+});
