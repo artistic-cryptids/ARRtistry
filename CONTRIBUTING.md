@@ -54,6 +54,12 @@ Just like `npm run test`, this command will run the tests on a different **Ganac
 ### Standard build
 TODO
 
+## Versioning
+```bash
+npm version minor -m "Bump version to %s for a feature"
+npm version patch -m "Bump version to %s for a patch"
+```
+
 ## Developing
 ### `grunt watch`
 _TODO This sounds awesome_
