@@ -1,26 +1,20 @@
 import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import { DrizzleContext } from 'drizzle-react';
+import User from './User';
 
-function App () {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
-}
+export default () => (
+  <DrizzleContext.Consumer>
+    {drizzleContext => {
+      const { drizzle, drizzleState, initialized } = drizzleContext;
 
-export default App;
+      if (!initialized) {
+        // TODO: Show a more user-friendly loading screen
+        return 'Loading...';
+      }
+
+      return (
+        <User drizzle={drizzle} drizzleState={drizzleState} />
+      );
+    }}
+  </DrizzleContext.Consumer>
+);
