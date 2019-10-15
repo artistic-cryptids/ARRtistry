@@ -15,7 +15,8 @@
     "lint:js": "npx eslint .",
     "lint:js:fix": "npx eslint . --fix",
     "lint:sol": "npx solhint --max-warnings 0 \"contracts/**/*.sol\"",
-    "test": "scripts/test.sh"
+    "test": "scripts/test.sh",
+    "abi": "scripts/abi.sh"
   },
   "repository": {
     "type": "git",
@@ -56,5 +57,8 @@
     "solhint": "2.3.0",
     "solidity-coverage": "^0.7.0-beta.2",
     "truffle": "^5.0.39"
+  },
+  "dependencies": {
+    "@openzeppelin/contracts": "^2.3.0"
   }
 }
