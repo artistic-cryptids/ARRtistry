@@ -10,7 +10,7 @@
     "compile": "scripts/compile.sh",
     "console": "truffle console",
     "coverage": "truffle run coverage",
-    "lint": "concurrently --kill-others \"npm run lint:js\" \"npm run lint:sol\"",
+    "lint": "npm-run-all lint:js lint:sol",
     "lint:fix": "npm run lint:js:fix",
     "lint:js": "npx eslint .",
     "lint:js:fix": "npx eslint . --fix",
@@ -52,6 +52,7 @@
     "eslint-plugin-standard": "^3.1.0",
     "ethereumjs-util": "^6.1.0",
     "ganache-cli": "^6.7.0",
+    "npm-run-all": "^4.1.5",
     "solhint": "2.3.0",
     "solidity-coverage": "^0.7.0-beta.2",
     "truffle": "^5.0.39"
