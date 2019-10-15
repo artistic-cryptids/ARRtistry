@@ -24,5 +24,5 @@ jobs:
         npm run test
       env:
         CI: true
-    - name: lint solidity
-      run: npm run lint:sol
+    - name: lint
+      run: npm run lint
