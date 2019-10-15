@@ -22,8 +22,8 @@ contract('Users', async accounts => {
       'number of users must be (' + initialTotal + ' + 1)'
     );
 
-    const isMainAccountRegistered = await instance.isRegistered.call({from: mainAccount});
-    // assert.isTrue(isMainAccountRegistered);
+    const isMainAccountRegistered = await instance.isRegistered.call({ from: mainAccount });
+    assert.isTrue(isMainAccountRegistered);
   }); // end of "should register an user"
 
   // Testing the data of the user profile stored in the blockchain match with the data
