@@ -10,14 +10,14 @@ import "@openzeppelin/contracts/token/ERC721/ERC721Full.sol";
 contract ArtistryCore is Ownable, ERC721Full {
 
   // The address of the moderator
-  address[] public moderators;
+  address public moderator;
 
   constructor() ERC721Full("Artifact", "ART") public {
-    moderators.push(owner());
+    moderator = owner();
   }
 
   // Update the moderator required to approve new art pieces etc.
-  function addModerator(address moderator) public onlyOwner {
-    moderators.push(moderator);
+  function setModerator(address newModerator) public onlyOwner {
+    moderator = newModerator;
   }
 }
