@@ -16,7 +16,6 @@ class User extends Component {
   render () {
     const { Users } = this.props.drizzleState.contracts;
     const totalUsers = Users.totalUsers[this.state.dataKey];
-    console.log(totalUsers);
     return (
       <div>
         {totalUsers && <h1>Total Users: {totalUsers.value}</h1>}
