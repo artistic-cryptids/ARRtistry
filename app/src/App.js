@@ -1,6 +1,7 @@
 import React from 'react';
 import { DrizzleContext } from 'drizzle-react';
 import User from './User';
+import ArtPieceList from './ArtPieceList'
 
 export default () => (
   <DrizzleContext.Consumer>
@@ -13,7 +14,10 @@ export default () => (
       }
 
       return (
-        <User drizzle={drizzle} drizzleState={drizzleState} />
+        <div>
+          <User drizzle={drizzle} drizzleState={drizzleState} />
+          <ArtPieceList />
+        </div>
       );
     }}
   </DrizzleContext.Consumer>
