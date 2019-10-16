@@ -1,6 +1,6 @@
 # Contributing Guide
 
-Contributing to `artistic-cryptids/contracts` is fairly easy. This document shows you how to get the project, run all provided tests and generate a production-ready build.
+Contributing to `artistic-cryptids/contracts` is fairly easy. This document shows you how to get the project, run all provided tests and generate a production-ready build for `ARRtistry`'s smart contracts (backend). If you are looking to contribute to the frontend please refer to [this document](app/CONTRIBUTING.md).
 
 It also covers provided grunt tasks that help you develop with `artistic-cryptids/contracts`.
 
