@@ -33,7 +33,7 @@ class ArtPieceList extends Component {
         const useStyles = makeStyles(theme => ({
             root: {
                 width: '100%',
-                maxWidth: 360,
+                maxWidth: 560,
                 backgroundColor: theme.palette.background.paper,
             },
             inline: {
@@ -42,10 +42,9 @@ class ArtPieceList extends Component {
         }));
 
         const classes = useStyles();
-        console.log(placeholderJson)
         const artpieces = placeholderJson.data
         const listItems = artpieces.map((artpiece) =>
-            <ListItem alignItems="flex-start">
+            <ListItem alignItems="flex-start" key={artpiece.code}>
                 <ListItemAvatar>
                     {/* TODO: replace with thumbnail image?? */}
                     <Avatar alt={artpiece.piece_name}>{artpiece.piece_name.charAt(0)}</Avatar>
