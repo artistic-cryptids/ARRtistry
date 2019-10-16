@@ -1,2 +1,4 @@
 coverage
 truffle-config.js
+# app has its own eslint
+app
