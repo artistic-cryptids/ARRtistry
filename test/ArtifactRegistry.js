@@ -6,14 +6,14 @@ const { ZERO_ADDRESS } = constants;
 const { expect } = require('chai');
 
 const { shouldBehaveLikeERC721 } = require('./behaviours/ERC721.behavior.js');
-const ArtistryCoreMock = artifacts.require('./ArtistryCoreMock.sol');
+const ArtifactRegistryMock = artifacts.require('./ArtifactRegistryMock.sol');
 
-contract('ArtistryCore', async accounts => {
+contract('ArtifactRegistry', async accounts => {
   const creator = accounts[0];
   const owner = accounts[0];
 
   beforeEach(async function () {
-    this.token = await ArtistryCoreMock.new({ from: creator });
+    this.token = await ArtifactRegistryMock.new({ from: creator });
   });
 
   shouldBehaveLikeERC721(creator, creator, accounts);

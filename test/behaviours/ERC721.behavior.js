@@ -22,8 +22,8 @@ function shouldBehaveLikeERC721(
 
   describe('like an ERC721', function () {
     beforeEach(async function () {
-      await this.token.mint(owner, firstTokenId, { from: minter });
-      await this.token.mint(owner, secondTokenId, { from: minter });
+      await this.token.mockMint(owner, firstTokenId, { from: minter });
+      await this.token.mockMint(owner, secondTokenId, { from: minter });
       this.toWhom = other; // default to anyone for toWhom in context-dependent tests
     });
 
