@@ -1,8 +1,8 @@
 import React from 'react';
 import { DrizzleContext } from 'drizzle-react';
 import User from './User';
-import ArtPieceList from './ArtPieceList';
-import Register from './Register';
+//import ArtPieceList from './ArtPieceList';
+//import Register from './Register';
 
 export default () => (
   <DrizzleContext.Consumer>
