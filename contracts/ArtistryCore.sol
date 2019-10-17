@@ -12,7 +12,7 @@ contract ArtistryCore is Ownable, ERC721Full {
 
   // Use counters for IDs as they use less gas
   using Counters for Counters.Counter;
-  Counters.Counter private _tokenIds;
+  Counters.Counter public _tokenIds;
 
   // The address of the moderator
   address public moderator;

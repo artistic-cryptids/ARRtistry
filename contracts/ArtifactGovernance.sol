@@ -84,7 +84,7 @@ contract ArtifactGovernance is ArtistryCore {
 
   function removeArtifactProposal(uint proposalId) public {
     require(
-      msg.sender == proposal.artist || msg.sender == moderator,
+      msg.sender == proposals[proposalId].artist || msg.sender == moderator,
       "Only the proposer or moderator can reject a piece of work"
     );
 
