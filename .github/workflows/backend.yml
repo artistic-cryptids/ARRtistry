@@ -1,4 +1,4 @@
-name: Node CI
+name: Backend CI
 
 on: [push]
 
@@ -22,17 +22,5 @@ jobs:
         npm install
         npm run build --if-present
         npm run test
-      env:
-        CI: true
-    - name: npm install, build, and test frontend
-      run: |
-        npm run compile
-        cd app
-        npm install
-        npm run build --if-present
-        npm test
-        cd ..
-      env:
-        CI: true
     - name: lint
       run: npm run lint
