@@ -1,5 +1,7 @@
 pragma solidity ^0.5.0;
 
+import "@openzeppelin/contracts/ownership/Ownable.sol";
+
 /**
  * @title Moderated
  * @dev Behaviour for moderator interface
@@ -14,7 +16,7 @@ contract Moderated is Ownable {
     _;
   }
 
-  constructor() Ownable(msg.sender) public {
+  constructor() Ownable() public {
     moderator = owner();
   }
 
