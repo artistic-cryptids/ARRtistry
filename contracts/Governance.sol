@@ -43,7 +43,8 @@ contract Governance is Moderated {
     proposal.target = target;
     proposal.data = data;
     proposal.proposer = msg.sender;
-
+    proposal.status = Status.Pending;
+    
     proposals.push(proposal);
 
     emit Propose(proposalId, msg.sender, target, data);
