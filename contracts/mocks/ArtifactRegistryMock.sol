@@ -8,15 +8,17 @@ import { ArtifactRegistry } from "../ArtifactRegistry.sol";
  * This mock just provides a public mint, and burn functions for testing purposes
  */
 contract ArtifactRegistryMock is ArtifactRegistry {
-    function mockMint(address to, uint256 tokenId) public {
-        _mint(to, tokenId);
-    }
+  constructor(address owner) ArtifactRegistry(owner) public {}
 
-    function mockBurn(address owner, uint256 tokenId) public {
-        _burn(owner, tokenId);
-    }
+  function mockMint(address to, uint256 tokenId) public {
+    _mint(to, tokenId);
+  }
 
-    function mockBurn(uint256 tokenId) public {
-        _burn(tokenId);
-    }
+  function mockBurn(address owner, uint256 tokenId) public {
+    _burn(owner, tokenId);
+  }
+
+  function mockBurn(uint256 tokenId) public {
+    _burn(tokenId);
+  }
 }

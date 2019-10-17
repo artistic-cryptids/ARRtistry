@@ -13,7 +13,7 @@ contract('ArtifactRegistry', async accounts => {
   const owner = accounts[0];
 
   beforeEach(async function () {
-    this.token = await ArtifactRegistryMock.new({ from: creator });
+    this.token = await ArtifactRegistryMock.new(creator, { from: creator });
   });
 
   shouldBehaveLikeERC721(creator, creator, accounts);
