@@ -1,7 +1,8 @@
+pragma solidity ^0.5.0;
 
 /**
- * @title ArtistryCore
- * @dev Core functionality of the platform
+ * @title Moderated
+ * @dev Behaviour for moderator interface
  */
 contract Moderated is Ownable {
 
