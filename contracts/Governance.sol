@@ -53,24 +53,24 @@ contract Governance is Moderated {
 
   //TODO: Needs an iteration function
 
-  function voteYes(uint proposalId) public onlyModerator {
+  function approve(uint proposalId) public onlyModerator {
     Proposal memory proposal = proposals[proposalId];
     require(
       proposal.status == Status.Pending,
-      "Governance::voteYes: Artifact proposal must not already have been rejected or approved"
+      "Governance::approve: Artifact proposal must not already have been rejected or approved"
     );
 
     proposals[proposalId].status = Status.Approved;
 
-    emit Execute(proposalId);
+    emit Approve(proposalId);
     (bool success, ) = proposal.target.call(proposal.data);
-    require(success, "Governance::voteYes: Proposal target call was unsuccessful");
+    require(success, "Governance::approve: Proposal target call was unsuccessful");
   }
 
-  function voteNo(uint proposalId) public {
+  function reject(uint proposalId) public {
     require(
       msg.sender == proposals[proposalId].proposer || msg.sender == moderator,
-      "Governance::voteNo: Only the proposer or moderator can reject a piece of work"
+      "Governance::reject: Only the proposer or moderator can reject a piece of work"
     );
 
     proposals[proposalId].status = Status.Rejected;
