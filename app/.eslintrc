@@ -1,0 +1,91 @@
+{
+  "extends" : [
+    "standard",
+    "plugin:promise/recommended",
+    "plugin:react/recommended"
+  ],
+  "plugins": [
+    "mocha-no-only",
+    "promise",
+    "react"
+  ],
+  "env": {
+    "browser" : true,
+    "node"    : true,
+    "mocha"   : true,
+    "jest"    : true,
+  },
+  "globals" : {
+    "artifacts": false,
+    "contract": false,
+    "assert": false,
+    "web3": false,
+  },
+  "settings": {
+    "react": {
+      "createClass": "createReactClass", // Regex for Component Factory to use,
+                                       // default to "createReactClass"
+      "pragma": "React",  // Pragma to use, default to "React"
+      "version": "detect", // React version. "detect" automatically picks the version you have installed.
+                         // You can also use `16.0`, `16.3`, etc, if you want to override the detected value.
+                         // default to latest and warns if missing
+                         // It will default to "detect" in the future
+      "flowVersion": "0.53" // Flow version
+    },
+    "propWrapperFunctions": [
+      // The names of any function used to wrap propTypes, e.g. `forbidExtraProps`. If this isn't set, any propTypes wrapped in a function will be skipped.
+      "forbidExtraProps",
+      {"property": "freeze", "object": "Object"},
+      {"property": "myFavoriteWrapper"}
+    ],
+    "linkComponents": [
+      // Components used as alternatives to <a> for linking, eg. <Link to={ url } />
+      "Hyperlink",
+      {"name": "Link", "linkAttribute": "to"}
+    ]
+  },
+  "rules": {
+
+    // Strict mode
+    "strict": ["error", "global"],
+
+    // Code style
+    "camelcase": ["error", {"properties": "always"}],
+    "comma-dangle": ["error", "always-multiline"],
+    "comma-spacing": ["error", {"before": false, "after": true}],
+    "dot-notation": ["error", {"allowKeywords": true, "allowPattern": ""}],
+    "eol-last": ["error", "always"],
+    "eqeqeq": ["error", "smart"],
+    "generator-star-spacing": ["error", "before"],
+    "indent": ["error", 2],
+    "linebreak-style": ["error", "unix"],
+    "max-len": ["error", 120, 2],
+    "no-debugger": "off",
+    "no-dupe-args": "error",
+    "no-dupe-keys": "error",
+    "no-mixed-spaces-and-tabs": ["error", "smart-tabs"],
+    "no-redeclare": ["error", {"builtinGlobals": true}],
+    "no-trailing-spaces": ["error", { "skipBlankLines": false }],
+    "no-undef": "error",
+    "no-use-before-define": "off",
+    "no-var": "error",
+    "object-curly-spacing": ["error", "always"],
+    "prefer-const": "error",
+    "quotes": ["error", "single"],
+    "react/jsx-uses-react": "error",
+    "react/jsx-uses-vars": "error",
+    "react/prop-types": 0,
+    "semi": ["error", "always"],
+    "space-before-function-paren": ["error", "always"],
+
+    "mocha-no-only/mocha-no-only": ["error"],
+
+    "promise/always-return": "off",
+    "promise/avoid-new": "off",
+  },
+  "parserOptions": {
+    "ecmaFeatures": {
+      "jsx": true
+    }
+  }
+}
