@@ -1,4 +1,4 @@
-const Governance = artifacts.require('Governance')
+const Governance = artifacts.require('Governance');
 
 module.exports = async (deployer, network, accounts) => {
   deployer
@@ -15,7 +15,7 @@ module.exports = async (deployer, network, accounts) => {
         break;
       case 'ropsten':
       case 'rinkeby':
-        //newModerator = '0xA7899114e93880A5790a68F9df66174FC038849a'
+        // newModerator = '0xA7899114e93880A5790a68F9df66174FC038849a'
         break;
       default:
         throw new Error('No ownership transfer defined for this network');
