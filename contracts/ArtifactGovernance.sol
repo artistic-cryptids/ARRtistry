@@ -6,7 +6,9 @@ import "./ArtistryCore.sol";
  * @title ArtifactGovernance
  * @dev Manage the creation of new art pieces, artifacts
  */
-contract ArtifactGovernance {
+contract ArtifactGovernance is ArtistryCore {
+
+  enum Status { Approved, Rejected, Pending }
 
   struct ArtifactProposal {
     address artist;
@@ -15,44 +17,79 @@ contract ArtifactGovernance {
     string edition;
     string created; // TODO(mm5917): better data type
     string metaUri;
+    Status status;
   }
 
-  event SubmitArtPiece();
-  event ApproveArtPiece();
-  event UnSubmitArtPiece();
-  event RejectArtPiece();
+  event SubmitArtifactProposal();
+  event ApproveArtifactProposal();
+  event RejectArtifactProposal();
 
   ArtifactProposal[] public proposals;
 
-  function submitArtifactProposal(address artist, string memory metaUri) public returns (uint256) {
-    // TODO(mm5917): this
+  // So we can get back to an approved proposal after minting a token for it
+  mapping (uint256 => uint) public tokenToApprovedProposal;
 
-    return 0;
+  // TODO(mm5917): should submitting cost ether?
+  function submitArtifactProposal(
+    address _artist,
+    string memory _title,
+    string memory _medium,
+    string memory _edition,
+    string memory _created,
+    string memory _metaUri
+  ) public returns (uint) {
+
+    // TODO(mm5917): sanity checks on sender and other things
+    // require(msg.sender != address(this) && target != address(token), "Governance::proposeWithFeeRecipient: Invalid proposal");
+    // require(token.transferFrom(msg.sender, address(this), proposalFee), "Governance::proposeWithFeeRecipient: Transfer failed");
+
+    uint proposalId = proposals.length;
+
+    // Create a new proposal
+    ArtifactProposal memory proposal;
+    proposal.artist = _artist;
+    proposal.title = _title;
+    proposal.medium = _medium;
+    proposal.edition = _edition;
+    proposal.created = _created;
+    proposal.metaUri = _metaUri;
+    proposal.status = Status.Pending;
+
+    proposals.push(proposal);
+
+    emit SubmitArtifactProposal();
+
+    return proposalId;
   }
 
-  function removeArtifactProposal(ArtifactProposal proposal) {
-    require(msg.sender == proposal.artist, "Only the artist can un-submit a piece of work");
-    removeProposal();
-    emit UnSubmitArtPiece();
-  }
+  function approveArtifactProposal(uint proposalId) public onlyModerator returns (uint256) {
+    ArtifactProposal memory proposal = proposals[proposalId];
+    require(
+      proposal.status == Status.Pending,
+      "Artifact proposal must not already have been rejected or approved"
+    );
 
-  function approveArtifactProposal() onlyModerator {
-    // TODO(mm5917): this is just example code
     _tokenIds.increment();
+    uint256 newTokenId = _tokenIds.current();
 
-    uint256 newItemId = _tokenIds.current();
-    _mint(player, newItemId);
-    _setTokenURI(newItemId, metadataUri);
+    // Mint the new token
+    _mint(proposal.artist, newTokenId);
+    _setTokenURI(newTokenId, proposal.metaUri);
 
-    // return newItemId;
+    // Record everywhere that we have a new artifact
+    tokenToApprovedProposal[newTokenId] = proposalId;
+
+    return newTokenId;
   }
 
-  function rejectArtifactProposal() onlyModerator {
-    removeProposal();
-    emit RejectArtPiece();
-  }
+  function removeArtifactProposal(uint proposalId) public {
+    require(
+      msg.sender == proposal.artist || msg.sender == moderator,
+      "Only the proposer or moderator can reject a piece of work"
+    );
 
-  function removeProposal() private {
-    // TODO(mm5917): common logic to remove/reject proposal
+    proposals[proposalId].status = Status.Rejected;
+
+    emit RejectArtifactProposal();
   }
 }
