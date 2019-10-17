@@ -2,7 +2,11 @@ import React, { Component } from 'react';
 
 /* Class just for testing if data can be retrieved from blockchain */
 class User extends Component {
-  state = { dataKey: null };
+  constructor (props) {
+    super(props);
+
+    this.state = { dataKey: null };
+  }
 
   componentDidMount () {
     const { drizzle } = this.props;
