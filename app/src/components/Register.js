@@ -44,9 +44,8 @@ const styles = theme => ({
 });
 
 class Register extends Component {
-  constructor(props) {
+  constructor (props) {
     super(props);
-    
     this.submitArtifactProposal = this.submitArtifactProposal.bind(this);
   }
 
@@ -107,7 +106,7 @@ class Register extends Component {
                       id="pieceName"
                       label="Piece Name"
                       autoFocus
-                      onChange={(e) => this.setState({title: e.target.value})}
+                      onChange={(e) => this.setState({ title: e.target.value })}
                     />
                   </Grid>
                   <Grid item xs={12} sm={6}>
@@ -119,7 +118,7 @@ class Register extends Component {
                       id="artistName"
                       label="Artist Name"
                       name="artistName"
-                      onChange={(e) => this.setState({artistName: e.target.value})}
+                      onChange={(e) => this.setState({ artistName: e.target.value })}
                     />
                   </Grid>
                   <Grid item xs={12} sm={3}>
@@ -132,7 +131,7 @@ class Register extends Component {
                       id="birthYear"
                       label="Birth"
                       autoFocus
-                      onChange={(e) => this.setState({created: e.target.value})}
+                      onChange={(e) => this.setState({ created: e.target.value })}
                     />
                   </Grid>
                   <Grid item xs={12} sm={3}>
@@ -145,7 +144,7 @@ class Register extends Component {
                       id="deathYear"
                       label="Death"
                       autoFocus
-                      onChange={(e) => this.setState({edition: e.target.value})}
+                      onChange={(e) => this.setState({ edition: e.target.value })}
                     />
                   </Grid>
                   <Grid item xs={12} sm={6}>
@@ -158,7 +157,7 @@ class Register extends Component {
                       id="medium"
                       label="Medium"
                       autoFocus
-                      onChange={(e) => this.setState({medium: e.target.value})}
+                      onChange={(e) => this.setState({ medium: e.target.value })}
                     />
                   </Grid>
                   <Grid item xs={12}>
@@ -192,6 +191,5 @@ class Register extends Component {
 Register.propTypes = {
   classes: PropTypes.object.isRequired,
 };
-
 
 export default withStyles(styles)(Register);
