@@ -8,9 +8,9 @@ import { ArtifactRegistry } from "../ArtifactRegistry.sol";
  * This mock just provides a public mint, and burn functions for testing purposes
  */
 contract ArtifactRegistryMock is ArtifactRegistry {
-  constructor(address owner) public ArtifactRegistry(owner) {
-    
-  }
+
+  //solhint-disable-next-line no-empty-blocks
+  constructor(address owner) public ArtifactRegistry(owner) {}
 
   function mockMint(address to, uint256 tokenId) public {
     _mint(to, tokenId);
