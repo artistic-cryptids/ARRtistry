@@ -98,20 +98,20 @@ class Register extends Component {
                 <Grid container spacing={2}>
                   <Grid item xs={12} sm={6}>
                     <TextField
-                      autoComplete="pname"
+                      autoComplete="on"
                       name="title"
                       variant="outlined"
                       required
                       fullWidth
-                      id="pieceName"
-                      label="Piece Name"
+                      id="title"
+                      label="Title"
                       autoFocus
                       onChange={(e) => this.setState({ title: e.target.value })}
                     />
                   </Grid>
                   <Grid item xs={12} sm={6}>
                     <TextField
-                      autoComplete="aname"
+                      autoComplete="on"
                       variant="outlined"
                       required
                       fullWidth
@@ -121,33 +121,33 @@ class Register extends Component {
                       onChange={(e) => this.setState({ artistName: e.target.value })}
                     />
                   </Grid>
-                  <Grid item xs={12} sm={3}>
+                  <Grid item xs={12} sm={6}>
                     <TextField
-                      autoComplete="byear"
-                      name="birthYear"
+                      autoComplete="on"
+                      name="artworkCreationDate"
                       variant="outlined"
                       required
                       fullWidth
-                      id="birthYear"
-                      label="Birth"
+                      id="artworkCreationDate"
+                      label="Artwork Creation Date"
                       autoFocus
-                      onChange={(e) => this.setState({ created: e.target.value })}
+                      onChange={(e) => this.setState({ artworkCreationDate: e.target.value })}
                     />
                   </Grid>
                   <Grid item xs={12} sm={3}>
                     <TextField
-                      autoComplete="dyear"
-                      name="deathYear"
+                      autoComplete="on"
+                      name="edition"
                       variant="outlined"
                       required
                       fullWidth
-                      id="deathYear"
-                      label="Death"
+                      id="edition"
+                      label="Edition"
                       autoFocus
                       onChange={(e) => this.setState({ edition: e.target.value })}
                     />
                   </Grid>
-                  <Grid item xs={12} sm={6}>
+                  <Grid item xs={12} sm={3}>
                     <TextField
                       autoComplete="med"
                       name="medium"
