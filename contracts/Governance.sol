@@ -1,4 +1,5 @@
 pragma solidity 0.5.8;
+pragma experimental ABIEncoderV2;
 
 import { Moderated } from "./Moderated.sol";
 
@@ -28,9 +29,6 @@ contract Governance is Moderated {
   // Maps the proposal id to the proposer of the artifact.
   mapping (uint => address) public proposalToProposer;
 
-  // So we can get back to an approved proposal after minting a token for it
-  mapping (uint256 => uint) public tokenToApprovedProposal;
-
   // TODO(mm5917): should submitting cost ether?
   function propose(address target, bytes memory data) public returns (uint) {
     require(msg.sender != address(this), "Governance::propose: Invalid proposal");
@@ -52,13 +50,15 @@ contract Governance is Moderated {
     return proposalId;
   }
 
-  //TODO: Needs an iteration function
+  function getProposal(uint proposalId) public view returns (Proposal memory) {
+    return proposals[proposalId];
+  }
 
   function approve(uint proposalId) public onlyModerator {
     Proposal memory proposal = proposals[proposalId];
     require(
       proposal.status == Status.Pending,
-      "Governance::approve: Artifact proposal must not already have been rejected or approved"
+      "Governance::approve: Proposal is already finalized"
     );
 
     proposals[proposalId].status = Status.Approved;
@@ -72,7 +72,11 @@ contract Governance is Moderated {
   function reject(uint proposalId) public {
     require(
       msg.sender == proposals[proposalId].proposer || msg.sender == moderator,
-      "Governance::reject: Only the proposer or moderator can reject a piece of work"
+      "Governance::reject: Only the proposer or moderator can reject a proposal"
+    );
+    require(
+      proposals[proposalId].status == Status.Pending,
+      "Governance::reject: Proposal is already finalized"
     );
 
     proposals[proposalId].status = Status.Rejected;
