@@ -17,8 +17,8 @@ export default () => (
       return (
         <div>
           <User drizzle={drizzle} drizzleState={drizzleState} />
-          <ArtPieceList />
-          <Register />
+          {/*<ArtPieceList /> new ui elements
+          <Register />*/}
         </div>
       );
     }}
