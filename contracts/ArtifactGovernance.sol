@@ -26,6 +26,9 @@ contract ArtifactGovernance is ArtistryCore {
 
   ArtifactProposal[] public proposals;
 
+  // Maps the proposal id to the proposer of the artifact.
+  mapping (uint => address) public proposalToProposer;
+
   // So we can get back to an approved proposal after minting a token for it
   mapping (uint256 => uint) public tokenToApprovedProposal;
 
@@ -55,12 +58,16 @@ contract ArtifactGovernance is ArtistryCore {
     proposal.metaUri = _metaUri;
     proposal.status = Status.Pending;
 
+    proposalToProposer[proposalId] = msg.sender;
+
     proposals.push(proposal);
 
     emit SubmitArtifactProposal();
 
     return proposalId;
   }
+
+  //TODO: Needs an iteration function
 
   function approveArtifactProposal(uint proposalId) public onlyModerator returns (uint256) {
     ArtifactProposal memory proposal = proposals[proposalId];
