@@ -18,7 +18,7 @@ contract ArtifactRegistry is IArtifactRegistry, Ownable, ERC721Full {
   Counters.Counter public _tokenIds;
   mapping (uint256 => Artifact) public artifacts;
 
-  constructor(address owner) ERC721Full("Artifact", "ART") public {
+  constructor(address owner) public ERC721Full("Artifact", "ART") {
     _transferOwnership(owner);
   }
 

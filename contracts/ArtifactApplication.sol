@@ -18,8 +18,8 @@ contract ArtifactApplication {
   IArtifactRegistry public registry;
 
   constructor(IGovernance _governance, IArtifactRegistry _registry) public {
-      governance = _governance;
-      registry = _registry;
+    governance = _governance;
+    registry = _registry;
   }
 
   function applyFor(address who, IArtifactRegistry.Artifact memory _artifact) public returns (uint) {

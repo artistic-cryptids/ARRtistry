@@ -16,7 +16,7 @@ contract Moderated is Ownable {
     _;
   }
 
-  constructor() Ownable() public {
+  constructor() public Ownable() {
     moderator = owner();
   }
 

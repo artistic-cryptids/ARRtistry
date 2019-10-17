@@ -44,7 +44,7 @@ contract Governance is Moderated {
     proposal.data = data;
     proposal.proposer = msg.sender;
     proposal.status = Status.Pending;
-    
+
     proposals.push(proposal);
 
     emit Propose(proposalId, msg.sender, target, data);
@@ -64,6 +64,7 @@ contract Governance is Moderated {
     proposals[proposalId].status = Status.Approved;
 
     emit Approve(proposalId);
+    // solhint-disable-next-line avoid-low-level-calls
     (bool success, ) = proposal.target.call(proposal.data);
     require(success, "Governance::approve: Proposal target call was unsuccessful");
   }
