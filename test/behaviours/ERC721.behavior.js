@@ -1,6 +1,6 @@
 // Based on openzeppelin-contracts/test/token/ERC721/ERC721.behaviour.js
 
-const { BigNumber } = web3;
+const { toBN } = web3.utils;
 const { constants, expectEvent, expectRevert } = require('@openzeppelin/test-helpers');
 const { ZERO_ADDRESS } = constants;
 
@@ -9,16 +9,15 @@ const { shouldSupportInterfaces } = require('./SupportsInterface.behaviour.js');
 var { expect } = require('chai');
 
 const ERC721ReceiverMock = artifacts.require('ERC721ReceiverMock.sol');
-const ERC721Mock = artifacts.require('ERC721Mock.sol');
 
-function shouldBehaveLikeERC721BasicToken(
+function shouldBehaveLikeERC721(
   creator,
   minter,
   [owner, approved, anotherApproved, operator, other]
 ) {
-  const firstTokenId = 1;
-  const secondTokenId = 2;
-  const unknownTokenId = 3;
+  const firstTokenId = toBN(1);
+  const secondTokenId = toBN(2);
+  const unknownTokenId = toBN(3);
   const RECEIVER_MAGIC_VALUE = '0x150b7a02';
 
   describe('like an ERC721', function () {
@@ -324,68 +323,6 @@ function shouldBehaveLikeERC721BasicToken(
             const invalidReceiver = this.token;
             await expectRevert.unspecified(
               this.token.safeTransferFrom(owner, invalidReceiver.address, tokenId, { from: owner })
-            );
-          });
-        });
-      });
-    });
-
-    describe('safe mint', function () {
-      const fourthTokenId = new BN(4);
-      const tokenId = fourthTokenId;
-      const data = '0x42';
-
-      beforeEach(async function () {
-        this.ERC721Mock = await ERC721Mock.new();
-      });
-
-      describe('via safeMint', function () { // regular minting is tested in ERC721Mintable.test.js and others
-        it('should call onERC721Received — with data', async function () {
-          this.receiver = await ERC721ReceiverMock.new(RECEIVER_MAGIC_VALUE, false);
-          const receipt = await this.ERC721Mock.safeMint(this.receiver.address, tokenId, data);
-
-          await expectEvent.inTransaction(receipt.tx, ERC721ReceiverMock, 'Received', {
-            from: ZERO_ADDRESS,
-            tokenId: tokenId,
-            data: data,
-          });
-        });
-
-        it('should call onERC721Received — without data', async function () {
-          this.receiver = await ERC721ReceiverMock.new(RECEIVER_MAGIC_VALUE, false);
-          const receipt = await this.ERC721Mock.safeMint(this.receiver.address, tokenId);
-
-          await expectEvent.inTransaction(receipt.tx, ERC721ReceiverMock, 'Received', {
-            from: ZERO_ADDRESS,
-            tokenId: tokenId,
-          });
-        });
-
-        context('to a receiver contract returning unexpected value', function () {
-          it('reverts', async function () {
-            const invalidReceiver = await ERC721ReceiverMock.new('0x42', false);
-            await expectRevert(
-              this.ERC721Mock.safeMint(invalidReceiver.address, tokenId),
-              'ERC721: transfer to non ERC721Receiver implementer'
-            );
-          });
-        });
-
-        context('to a receiver contract that throws', function () {
-          it('reverts', async function () {
-            const invalidReceiver = await ERC721ReceiverMock.new(RECEIVER_MAGIC_VALUE, true);
-            await expectRevert(
-              this.ERC721Mock.safeMint(invalidReceiver.address, tokenId),
-              'ERC721ReceiverMock: reverting'
-            );
-          });
-        });
-
-        context('to a contract that does not implement the required function', function () {
-          it('reverts', async function () {
-            const invalidReceiver = this.token;
-            await expectRevert.unspecified(
-              this.ERC721Mock.safeMint(invalidReceiver.address, tokenId)
             );
           });
         });
