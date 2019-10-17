@@ -18,7 +18,9 @@ contract ArtifactRegistry is IArtifactRegistry, Ownable, ERC721Full {
   Counters.Counter public _tokenIds;
   mapping (uint256 => Artifact) public artifacts;
 
-  constructor() ERC721Full("Artifact", "ART") public {}
+  constructor(address owner) ERC721Full("Artifact", "ART") public {
+    _transferOwnership(owner);
+  }
 
   function mint(address who, Artifact memory _artifact) public returns (uint256) {
     require(msg.sender == owner(), "ArtifactRegistry::mint: Not minted by the owner");
@@ -34,7 +36,7 @@ contract ArtifactRegistry is IArtifactRegistry, Ownable, ERC721Full {
     return newTokenId;
   }
 
-  function getArtifactForToken(uint256 tokenId) public view returns (Artifact) {
+  function getArtifactForToken(uint256 tokenId) public view returns (Artifact memory) {
     return artifacts[tokenId];
   }
 }
