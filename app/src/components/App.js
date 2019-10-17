@@ -4,7 +4,7 @@ import User from './User';
 import ArtPieceList from './ArtPieceList';
 import Register from './Register';
 
-export default () => (
+const AppComponent = (
   <DrizzleContext.Consumer>
     {drizzleContext => {
       const { drizzle, drizzleState, initialized } = drizzleContext;
@@ -24,3 +24,5 @@ export default () => (
     }}
   </DrizzleContext.Consumer>
 );
+
+export default () => AppComponent;

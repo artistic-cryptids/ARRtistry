@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
-import App from './App';
+import App from './components/App.js';
 import * as serviceWorker from './serviceWorker';
 
 import { Drizzle, generateStore } from 'drizzle';
@@ -22,8 +22,8 @@ const drizzleStore = generateStore(options);
 const drizzle = new Drizzle(options, drizzleStore);
 
 ReactDOM.render(
-  <DrizzleContext.Provider drizzle={ drizzle }>
-    <App />
+  <DrizzleContext.Provider drizzle={ drizzle }>,
+    <App/>,
   </DrizzleContext.Provider>,
   document.getElementById('root')
 );

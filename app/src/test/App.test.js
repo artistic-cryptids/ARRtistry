@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import App from './App';
+import App from '../components/App';
 import { Drizzle, generateStore } from 'drizzle';
 import { DrizzleContext } from 'drizzle-react';
 
@@ -19,8 +19,8 @@ it('renders without crashing', () => {
   const drizzle = new Drizzle(options, drizzleStore);
   const div = document.createElement('div');
   ReactDOM.render(
-    <DrizzleContext.Provider drizzle={ drizzle }>
-      <App />
+    <DrizzleContext.Provider drizzle={ drizzle }>,
+      <App/>
     </DrizzleContext.Provider>,
     div
   );
