@@ -72,6 +72,8 @@
     "object-curly-spacing": ["error", "always"],
     "prefer-const": "error",
     "quotes": ["error", "single"],
+    "react/jsx-uses-react": "error",
+    "react/jsx-uses-vars": "error",
     "react/prop-types": 0,
     "semi": ["error", "always"],
     "space-before-function-paren": ["error", "always"],
@@ -80,5 +82,10 @@
 
     "promise/always-return": "off",
     "promise/avoid-new": "off",
+  },
+  "parserOptions": {
+    "ecmaFeatures": {
+      "jsx": true
+    }
   }
 }
