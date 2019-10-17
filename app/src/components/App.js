@@ -2,7 +2,7 @@ import React from 'react';
 import { DrizzleContext } from 'drizzle-react';
 import User from './User';
 
-export default () => (
+const AppComponent = (
   <DrizzleContext.Consumer>
     {drizzleContext => {
       const { drizzle, drizzleState, initialized } = drizzleContext;
@@ -18,3 +18,5 @@ export default () => (
     }}
   </DrizzleContext.Consumer>
 );
+
+export default () => AppComponent;
