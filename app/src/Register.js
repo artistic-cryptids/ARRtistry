@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -7,53 +8,63 @@ import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
-import { makeStyles } from '@material-ui/core/styles';
+import { withStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import CardContent from '@material-ui/core/CardContent';
 import Card from '@material-ui/core/Card';
 import Divider from '@material-ui/core/Divider';
 
-class Register extends Component {
-  RegisterForm (props) {
-    const useStyles = makeStyles(theme => ({
-      '@global': {
-        body: {
-          backgroundColor: theme.palette.common.white,
-        },
-      },
-      paper: {
-        marginTop: theme.spacing(8),
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-      },
-      avatar: {
-        margin: theme.spacing(1),
-        backgroundColor: theme.palette.secondary.main,
-      },
-      form: {
-        width: '100%', // Fix IE 11 issue.
-        marginTop: theme.spacing(3),
-      },
-      submit: {
-        margin: theme.spacing(3, 0, 2),
-      },
-      card: {
-        margin: theme.spacing(5, 0, 5, 0), // top right bottom left
-        minWidth: 250,
-      },
-    }));
-    const classes = useStyles();
+const styles = theme => ({
+  '@global': {
+    body: {
+      backgroundColor: theme.palette.common.white,
+    },
+  },
+  paper: {
+    marginTop: theme.spacing(8),
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+  },
+  avatar: {
+    margin: theme.spacing(1),
+    backgroundColor: theme.palette.secondary.main,
+  },
+  form: {
+    width: '100%', // Fix IE 11 issue.
+    marginTop: theme.spacing(3),
+  },
+  submit: {
+    margin: theme.spacing(3, 0, 2),
+  },
+  card: {
+    margin: theme.spacing(5, 0, 5, 0), // top right bottom left
+    minWidth: 250,
+  },
+});
 
+class Register extends Component {
+  constructor(props) {
+    super(props);
+    
+    this.submitArtifactProposal = this.submitArtifactProposal.bind(this);
+  }
+
+  submitArtifactProposal () {
+    console.log(this.state);
+  }
+
+  render () {
+    const { classes } = this.props;
     return (
       <Container component="main" maxWidth="md">
         <CssBaseline />
         <div className={classes.paper}>
           <Avatar className={classes.avatar}>
-                        R
+            R
           </Avatar>
           <Typography component="h1" variant="h5">
-                        Register a Piece
+            Register a Piece
           </Typography>
           <Divider />
           <Grid container direction="row" spacing={5} align-items="flex-start">
@@ -74,35 +85,41 @@ class Register extends Component {
                     variant="contained"
                     className={classes.button}
                   >
-                                        Upload Image
+                    Upload Image
                   </Button>
                 </label>
               </CardContent>
             </Card>
             <Grid item xs={12} sm={6}>
-              <form className={classes.form} noValidate>
+              <form
+                className={classes.form}
+                noValidate
+                onSubmit={this.submitArtifactProposal}
+              >
                 <Grid container spacing={2}>
                   <Grid item xs={12} sm={6}>
                     <TextField
                       autoComplete="pname"
-                      name="pieceName"
+                      name="title"
                       variant="outlined"
                       required
                       fullWidth
                       id="pieceName"
                       label="Piece Name"
                       autoFocus
+                      onChange={(e) => this.setState({title: e.target.value})}
                     />
                   </Grid>
                   <Grid item xs={12} sm={6}>
                     <TextField
+                      autoComplete="aname"
                       variant="outlined"
                       required
                       fullWidth
                       id="artistName"
                       label="Artist Name"
                       name="artistName"
-                      autoComplete="aname"
+                      onChange={(e) => this.setState({artistName: e.target.value})}
                     />
                   </Grid>
                   <Grid item xs={12} sm={3}>
@@ -115,6 +132,7 @@ class Register extends Component {
                       id="birthYear"
                       label="Birth"
                       autoFocus
+                      onChange={(e) => this.setState({created: e.target.value})}
                     />
                   </Grid>
                   <Grid item xs={12} sm={3}>
@@ -127,6 +145,7 @@ class Register extends Component {
                       id="deathYear"
                       label="Death"
                       autoFocus
+                      onChange={(e) => this.setState({edition: e.target.value})}
                     />
                   </Grid>
                   <Grid item xs={12} sm={6}>
@@ -139,6 +158,7 @@ class Register extends Component {
                       id="medium"
                       label="Medium"
                       autoFocus
+                      onChange={(e) => this.setState({medium: e.target.value})}
                     />
                   </Grid>
                   <Grid item xs={12}>
@@ -152,13 +172,13 @@ class Register extends Component {
                   </Grid>
                 </Grid>
                 <Button
-                  type="submit"
                   fullWidth
                   variant="contained"
                   color="primary"
                   className={classes.submit}
+                  onClick={this.submitArtifactProposal}
                 >
-                                    + Register
+                  + Register
                 </Button>
               </form>
             </Grid>
@@ -167,16 +187,11 @@ class Register extends Component {
       </Container >
     );
   }
-
-  componentDidMount () {
-
-  }
-
-  render () {
-    return (
-      <this.RegisterForm />
-    );
-  }
 }
 
-export default Register;
+Register.propTypes = {
+  classes: PropTypes.object.isRequired,
+};
+
+
+export default withStyles(styles)(Register);
