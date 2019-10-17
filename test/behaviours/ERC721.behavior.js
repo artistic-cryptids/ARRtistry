@@ -1,20 +1,17 @@
-// Based on openzeppelin-contracts/test/token/ERC721/ERC721.behaiour.js
+// Based on openzeppelin-contracts/test/token/ERC721/ERC721.behaviour.js
 
 const { BigNumber } = web3;
 const { constants, expectEvent, expectRevert } = require('@openzeppelin/test-helpers');
 const { ZERO_ADDRESS } = constants;
 
-const { shouldSupportInterfaces } = require('SupportsInterface.behavior');
+const { shouldSupportInterfaces } = require('./SupportsInterface.behaviour.js');
 
+var { expect } = require('chai');
 
-require('chai')
-  .use(require('chai-bignumber')(BigNumber))
-  .should()
+const ERC721ReceiverMock = artifacts.require('ERC721ReceiverMock.sol');
+const ERC721Mock = artifacts.require('ERC721Mock.sol');
 
-// const ERC721ReceiverMock = artifacts.require('ERC721ReceiverMock.sol');
-// const ERC721Mock = artifacts.require('ERC721Mock.sol');
-
-export default function shouldBehaveLikeERC721BasicToken(
+function shouldBehaveLikeERC721BasicToken(
   creator,
   minter,
   [owner, approved, anotherApproved, operator, other]
@@ -629,3 +626,7 @@ export default function shouldBehaveLikeERC721BasicToken(
     ]);
   });
 }
+
+module.exports = {
+  shouldBehaveLikeERC721,
+};
