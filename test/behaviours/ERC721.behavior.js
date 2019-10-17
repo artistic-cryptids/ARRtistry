@@ -6,11 +6,11 @@ const { ZERO_ADDRESS } = constants;
 
 const { shouldSupportInterfaces } = require('./SupportsInterface.behaviour.js');
 
-var { expect } = require('chai');
+const { expect } = require('chai');
 
 const ERC721ReceiverMock = artifacts.require('ERC721ReceiverMock.sol');
 
-function shouldBehaveLikeERC721(
+function shouldBehaveLikeERC721 (
   creator,
   minter,
   [owner, approved, anotherApproved, operator, other]
