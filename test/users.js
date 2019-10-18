@@ -1,4 +1,4 @@
-const Users = artifacts.require('./Users.sol');
+const Users = artifacts.require('Users');
 
 contract('Users', async accounts => {
   let instance;
