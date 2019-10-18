@@ -1,6 +1,5 @@
 import React from 'react';
 import { DrizzleContext } from 'drizzle-react';
-import User from './User';
 import ArtPieceList from './ArtPieceList';
 import Register from './Register';
 
@@ -16,9 +15,8 @@ const AppComponent = (
 
       return (
         <div>
-          <User drizzle={drizzle} drizzleState={drizzleState} />
-          <ArtPieceList /> new ui elements
-          <Register />
+          <ArtPieceList />
+          <Register drizzle={drizzle} drizzleState={drizzleState} />
         </div>
       );
     }}
