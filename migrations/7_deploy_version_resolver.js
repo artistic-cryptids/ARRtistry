@@ -1,5 +1,5 @@
 const VersionResolver = artifacts.require('VersionResolver');
 
-module.exports = function (deployer) {
+module.exports = (deployer, network, accounts) => {
   deployer.deploy(VersionResolver);
 };
