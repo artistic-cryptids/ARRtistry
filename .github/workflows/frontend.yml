@@ -29,4 +29,5 @@ jobs:
         CI: true
     - name: lint
       run:
+        cd app
         npm run lint
