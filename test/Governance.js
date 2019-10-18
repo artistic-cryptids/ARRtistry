@@ -49,14 +49,15 @@ contract('Governance', async accounts => {
   });
 
   describe('reject', async () => {
-
     let proposalId;
+    let proposal;
 
     beforeEach(async () => {
       const target = await MockTarget.new();
       const data = await target.data();
       proposalId = await governance.propose.call(target.address, data, { from: proposer });
       await governance.propose(target.address, data, { from: proposer });
+      proposal = await governance.getProposal(proposalId);
     });
 
     it('should revert if proposal is not pending', async () => {
@@ -83,21 +84,22 @@ contract('Governance', async accounts => {
     it('should set the proposal status to rejected', async () => {
       await governance.reject(proposalId, { from: proposer });
       proposal = await governance.getProposal(proposalId);
-      expect(parseInt(proposal[0])).to.equal(1);;
+      expect(parseInt(proposal[0])).to.equal(1); ;
     });
   });
 
   describe('approve', async () => {
-
     context('with a valid proposition', async () => {
       let proposalId;
       let target;
+      let proposal;
 
       beforeEach(async () => {
         target = await MockTarget.new();
         const data = await target.data();
         proposalId = await governance.propose.call(target.address, data, { from: proposer });
         await governance.propose(target.address, data, { from: proposer });
+        proposal = await governance.getProposal(proposalId);
       });
 
       it('should revert if proposal is not pending', async () => {
@@ -126,7 +128,7 @@ contract('Governance', async accounts => {
       it('should set the proposal status to approved', async () => {
         await governance.approve(proposalId, { from: moderator });
         proposal = await governance.getProposal(proposalId);
-        expect(parseInt(proposal[0])).to.equal(0);;
+        expect(parseInt(proposal[0])).to.equal(0); ;
       });
 
       it('should execute the proposal', async () => {
