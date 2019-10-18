@@ -1,4 +1,3 @@
-const { toBN } = web3.utils;
 const { constants, expectRevert } = require('@openzeppelin/test-helpers');
 const { ZERO_ADDRESS } = constants;
 const { expect } = require('chai');
@@ -13,11 +12,11 @@ contract('ArtifactRegistry', async accounts => {
   const tokenOwner = accounts[1];
   const ARTIFACT = {
     artist: ZERO_ADDRESS,
-    title: "Sunshine in Gold",
-    medium: "Wood",
-    edition: "12",
-    created: "10-10-10",
-    metaUri: "SpecialString"
+    title: 'Sunshine in Gold',
+    medium: 'Wood',
+    edition: '12',
+    created: '10-10-10',
+    metaUri: 'SpecialString',
   };
   const TOKEN_ID = 1;
 
@@ -43,14 +42,14 @@ contract('ArtifactRegistry', async accounts => {
 
     before(async () => {
       await registry.mint(tokenOwner, ARTIFACT, { from: creator });
-    })
+    });
 
     it('should allow the owner to mint a token', async () => {
-      registry.mint.call(tokenOwner, ARTIFACT, { from: creator })
+      registry.mint.call(tokenOwner, ARTIFACT, { from: creator });
     });
 
     it('should increment the token ids', async () => {
-      const tokenId = await registry._tokenIds.call()
+      const tokenId = await registry._tokenIds.call();
       expect(tokenId.toString()).to.be.equal('1');
     });
 
@@ -69,13 +68,13 @@ contract('ArtifactRegistry', async accounts => {
     });
 
     it('should retrieve the artifact for the token', async () => {
-      artifactArray = await registry.getArtifactForToken(TOKEN_ID);
-      expect(artifactArray[0]).to.be.equal(ARTIFACT.artist);
-      expect(artifactArray[1]).to.be.equal(ARTIFACT.title);
-      expect(artifactArray[2]).to.be.equal(ARTIFACT.medium);
-      expect(artifactArray[3]).to.be.equal(ARTIFACT.edition);
-      expect(artifactArray[4]).to.be.equal(ARTIFACT.created);
-      expect(artifactArray[5]).to.be.equal(ARTIFACT.metaUri);
+      const artifact = await registry.getArtifactForToken(TOKEN_ID);
+      expect(artifact.artist).to.be.equal(ARTIFACT.artist);
+      expect(artifact.title).to.be.equal(ARTIFACT.title);
+      expect(artifact.medium).to.be.equal(ARTIFACT.medium);
+      expect(artifact.edition).to.be.equal(ARTIFACT.edition);
+      expect(artifact.created).to.be.equal(ARTIFACT.created);
+      expect(artifact.metaUri).to.be.equal(ARTIFACT.metaUri);
     });
   });
 }); // end Registry contract
