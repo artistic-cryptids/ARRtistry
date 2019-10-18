@@ -25,7 +25,6 @@ jobs:
         npm install
         npm run build --if-present
         npm test
-        cd ..
       env:
         CI: true
     - name: lint
