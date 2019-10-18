@@ -8,7 +8,6 @@ import Avatar from '@material-ui/core/Avatar';
 import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid';
 
-
 class ArtPieceList extends Component {
   ArtPieceListItems (props) {
     const placeholderJson = {
@@ -38,7 +37,7 @@ class ArtPieceList extends Component {
         maxWidth: 560,
         minWidth: 100,
         backgroundColor: theme.palette.background.paper,
-        alignItems: "center"
+        alignItems: 'center',
       },
       inline: {
         display: 'inline',
