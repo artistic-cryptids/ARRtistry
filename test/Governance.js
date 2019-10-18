@@ -1,5 +1,3 @@
-// Based on openzeppelin-contracts/test/token/ERC721/ERC721.behaviour.js
-
 const { toBN } = web3.utils;
 const { expect } = require('chai');
 const { expectRevert } = require('@openzeppelin/test-helpers');
