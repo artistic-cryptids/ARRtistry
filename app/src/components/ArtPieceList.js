@@ -6,6 +6,7 @@ import ListItemText from '@material-ui/core/ListItemText';
 import ListItemAvatar from '@material-ui/core/ListItemAvatar';
 import Avatar from '@material-ui/core/Avatar';
 import Typography from '@material-ui/core/Typography';
+import Grid from '@material-ui/core/Grid';
 
 class ArtPieceList extends Component {
   ArtPieceListItems (props) {
@@ -22,8 +23,8 @@ class ArtPieceList extends Component {
         {
           'piece_name': 'Impression, Sunrise',
           'artist_name': 'Claude Monet',
-          'birthyear': '1234',
-          'deathyear': '5687',
+          'birthyear': '1840',
+          'deathyear': '1926',
           'medium': 'Oil on Toilet Paper',
           'code': '0x222222',
         },
@@ -34,7 +35,9 @@ class ArtPieceList extends Component {
       root: {
         width: '100%',
         maxWidth: 560,
+        minWidth: 100,
         backgroundColor: theme.palette.background.paper,
+        alignItems: 'center',
       },
       inline: {
         display: 'inline',
@@ -78,9 +81,9 @@ class ArtPieceList extends Component {
 
   render () {
     return (
-      <div>
+      <Grid container alignItems="center" spacing={5} direction="column">
         <this.ArtPieceListItems artpieces={this.placeholderJson} />
-      </div>
+      </Grid>
     );
   }
 }

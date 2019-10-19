@@ -44,9 +44,8 @@ const styles = theme => ({
 });
 
 class Register extends Component {
-  constructor(props) {
+  constructor (props) {
     super(props);
-    
     this.submitArtifactProposal = this.submitArtifactProposal.bind(this);
   }
 
@@ -99,56 +98,56 @@ class Register extends Component {
                 <Grid container spacing={2}>
                   <Grid item xs={12} sm={6}>
                     <TextField
-                      autoComplete="pname"
+                      autoComplete="on"
                       name="title"
                       variant="outlined"
                       required
                       fullWidth
-                      id="pieceName"
-                      label="Piece Name"
+                      id="title"
+                      label="Title"
                       autoFocus
-                      onChange={(e) => this.setState({title: e.target.value})}
+                      onChange={(e) => this.setState({ title: e.target.value })}
                     />
                   </Grid>
                   <Grid item xs={12} sm={6}>
                     <TextField
-                      autoComplete="aname"
+                      autoComplete="on"
                       variant="outlined"
                       required
                       fullWidth
                       id="artistName"
                       label="Artist Name"
                       name="artistName"
-                      onChange={(e) => this.setState({artistName: e.target.value})}
-                    />
-                  </Grid>
-                  <Grid item xs={12} sm={3}>
-                    <TextField
-                      autoComplete="byear"
-                      name="birthYear"
-                      variant="outlined"
-                      required
-                      fullWidth
-                      id="birthYear"
-                      label="Birth"
-                      autoFocus
-                      onChange={(e) => this.setState({created: e.target.value})}
-                    />
-                  </Grid>
-                  <Grid item xs={12} sm={3}>
-                    <TextField
-                      autoComplete="dyear"
-                      name="deathYear"
-                      variant="outlined"
-                      required
-                      fullWidth
-                      id="deathYear"
-                      label="Death"
-                      autoFocus
-                      onChange={(e) => this.setState({edition: e.target.value})}
+                      onChange={(e) => this.setState({ artistName: e.target.value })}
                     />
                   </Grid>
                   <Grid item xs={12} sm={6}>
+                    <TextField
+                      autoComplete="on"
+                      name="artworkCreationDate"
+                      variant="outlined"
+                      required
+                      fullWidth
+                      id="artworkCreationDate"
+                      label="Artwork Creation Date"
+                      autoFocus
+                      onChange={(e) => this.setState({ artworkCreationDate: e.target.value })}
+                    />
+                  </Grid>
+                  <Grid item xs={12} sm={3}>
+                    <TextField
+                      autoComplete="on"
+                      name="edition"
+                      variant="outlined"
+                      required
+                      fullWidth
+                      id="edition"
+                      label="Edition"
+                      autoFocus
+                      onChange={(e) => this.setState({ edition: e.target.value })}
+                    />
+                  </Grid>
+                  <Grid item xs={12} sm={3}>
                     <TextField
                       autoComplete="med"
                       name="medium"
@@ -158,7 +157,7 @@ class Register extends Component {
                       id="medium"
                       label="Medium"
                       autoFocus
-                      onChange={(e) => this.setState({medium: e.target.value})}
+                      onChange={(e) => this.setState({ medium: e.target.value })}
                     />
                   </Grid>
                   <Grid item xs={12}>
@@ -192,6 +191,5 @@ class Register extends Component {
 Register.propTypes = {
   classes: PropTypes.object.isRequired,
 };
-
 
 export default withStyles(styles)(Register);

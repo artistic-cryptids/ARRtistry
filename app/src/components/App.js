@@ -1,10 +1,9 @@
 import React from 'react';
 import { DrizzleContext } from 'drizzle-react';
-import User from './User';
 import ArtPieceList from './ArtPieceList';
 import Register from './Register';
 
-export default () => (
+const AppComponent = (
   <DrizzleContext.Consumer>
     {drizzleContext => {
       const { drizzle, drizzleState, initialized } = drizzleContext;
@@ -16,11 +15,12 @@ export default () => (
 
       return (
         <div>
-          <User drizzle={drizzle} drizzleState={drizzleState} />
-          <ArtPieceList /> new ui elements
-          <Register />
+          <ArtPieceList />
+          <Register drizzle={drizzle} drizzleState={drizzleState} />
         </div>
       );
     }}
   </DrizzleContext.Consumer>
 );
+
+export default () => AppComponent;
