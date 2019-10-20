@@ -6,10 +6,11 @@ import * as serviceWorker from './serviceWorker';
 
 import { Drizzle, generateStore } from 'drizzle';
 import { DrizzleContext } from 'drizzle-react';
-import Users from './contracts/Users.json';
+import ArtifactApplication from './contracts/ArtifactApplication.json';
+import Governance from './contracts/Governance.json';
 
 const options = {
-  contracts: [Users],
+  contracts: [ArtifactApplication, Governance],
   web3: {
     fallback: {
       type: 'ws',

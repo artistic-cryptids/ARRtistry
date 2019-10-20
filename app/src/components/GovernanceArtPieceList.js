@@ -10,29 +10,19 @@ import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
 
 class GovernanceArtPieceList extends Component {
-  GovernanceArtPieceListItems (props) {
-    const placeholderJson = {
-      'data': [
-        {
-          'piece_name': 'GOV GOV Guernica',
-          'artist_name': 'Pablo Picasso',
-          'birthyear': '1881',
-          'deathyear': '1973',
-          'medium': 'Oil on Canvas',
-          'code': '0x11111',
-        },
-        {
-          'piece_name': 'GOV GOV Impression, Sunrise',
-          'artist_name': 'Claude Monet',
-          'birthyear': '1234',
-          'deathyear': '5687',
-          'medium': 'Oil on Toilet Paper',
-          'code': '0x222222',
-        },
-      ],
-    };
+  constructor (props, context) {
+    super(props);
 
-    const useStyles = makeStyles(theme => ({
+    this.contracts = this.props.drizzle.contracts;
+    this.isGovernorKey = this.props.drizzle.contracts.Governance.methods.isGovernor.cacheCall(this.props.drizzleState.accounts[0]);
+
+    this.state = {
+      artpieces: []
+    }
+  }
+
+  GovernanceArtPieceListItems = () => {
+    const classes = makeStyles(theme => ({
       root: {
         width: '100%',
         maxWidth: 700,
@@ -50,74 +40,109 @@ class GovernanceArtPieceList extends Component {
       },
     }));
 
-    const classes = useStyles();
-    const artpieces = placeholderJson.data;
-    const returnListItem = function (artpiece) {
-      // TODO: extract these
-      // the scoping of 'this' is really difficult
-      const rejectProposal = function (code) {
-        console.log(code);
-      };
-      const approveProposal = function (code) {
-        console.log(code);
-      };
+    const artpieces = this.state.artpieces;
 
-      return <ListItem alignItems="flex-start" key={artpiece.code}>
-        <Grid container direction="row">
-          <ListItemAvatar>
-            {/* TODO: replace with thumbnail image?? */}
-            <Avatar alt={artpiece.piece_name}>{artpiece.piece_name.charAt(0)}</Avatar>
-          </ListItemAvatar>
-          <ListItemText
-            primary={artpiece.piece_name}
-            secondary={
-              <React.Fragment>
-                <Typography
-                  component="span"
-                  variant="body2"
-                  className={classes.inline}
-                  color="textPrimary"
-                >
-                  {artpiece.artist_name} <br />
-                </Typography>
-                {artpiece.birthyear}&ndash;{artpiece.deathyear}. {artpiece.medium}
-              </React.Fragment>
-            }
-          />
-          <Button
-            variant="contained"
-            color="primary"
-            className={classes.approve}
-            onClick={(e) => approveProposal(artpiece.code)}>
-                        Approve
-          </Button>
-          <Button
-            variant="contained"
-            color="secondary"
-            className={classes.reject}
-            onClick={(e) => rejectProposal(artpiece.code)}>
-                        Reject
-          </Button>
-        </Grid>
-      </ListItem >;
-    };
-    const listItems = artpieces.map((artpiece) => returnListItem(artpiece));
+    const listItems = artpieces.map((artpiece) => this.returnListItem(artpiece, classes));
     return (
       <List className={classes.root}>{listItems}</List>
     );
   }
 
+  rejectProposal = (code) => {
+    console.log("Rejecting proposal " + code);
+    this.props.drizzle.contracts.Governance.methods.reject(code).send({from: this.props.drizzleState.accounts[0]});
+  }
+
+  approveProposal = (code) => {
+    console.log("Approving proposal " + code);
+    this.props.drizzle.contracts.Governance.methods.approve(code).send({from: this.props.drizzleState.accounts[0]});
+  }
+
+  returnListItem = (artpiece, classes) => {
+    return <ListItem alignItems="flex-start" key={artpiece.id}>
+      <Grid container direction="row">
+        <ListItemAvatar>
+          {/* TODO: replace with thumbnail image?? */}
+          <Avatar alt={artpiece.title}>{artpiece.edition}</Avatar>
+        </ListItemAvatar>
+        <ListItemText
+          primary={artpiece.title}
+          secondary={
+            <React.Fragment>
+              <Typography
+                component="span"
+                variant="body2"
+                className={classes.inline}
+                color="textPrimary"
+              >
+                {artpiece.artist_name}<br/>
+              </Typography>
+              {artpiece.created}. {artpiece.medium}
+            </React.Fragment>
+          }
+        />
+        <Button
+          variant="contained"
+          color="primary"
+          className={classes.approve}
+          onClick={(e) => this.approveProposal(artpiece.id)}>
+          Approve
+        </Button>
+        <Button
+          variant="contained"
+          color="secondary"
+          className={classes.reject}
+          onClick={(e) => this.rejectProposal(artpiece.id)}>
+          Reject
+        </Button>
+      </Grid>
+    </ListItem >;
+  };
+
   componentDidMount () {
+    const proposals = [];
+    this.props.drizzle.contracts.Governance.methods.getProposals().call()
+      .then((proposalIds) => {
+        for (let proposalId in proposalIds) {
+          const proposal = this.props.drizzle.contracts.ArtifactApplication.methods.getProposal(proposalId).call()
+            .then((proposalData) => {
+              const proposal = {
+                id: proposalId,
+                title: proposalData[2],
+                medium: proposalData[3],
+                edition: proposalData[4],
+                created: proposalData[5],
+                metaUri: proposalData[6]
+              };
+              return proposal;
+            });
+          proposals.push(proposal);
+        }
+
+        return Promise.all(proposals);
+      })
+      .then((proposals) => this.setState({artpieces: proposals}));
   }
 
   render () {
+    if (!(this.isGovernorKey in this.props.drizzleState.contracts.Governance.isGovernor)) {
+      return (
+        <span>Loading...</span>
+      )
+    }
+
+    if (this.props.drizzleState.contracts.Governance.isGovernor[this.isGovernorKey].value) {
+      return (
+        <Grid container alignItems="center" spacing={5} direction="column">
+          <Grid item><Typography>You are an approved moderator.</Typography></Grid>
+          <Grid item><this.GovernanceArtPieceListItems/></Grid>
+        </Grid>
+       );
+    }
+
     return (
-      <Grid container alignItems="center" spacing={5} direction="column">
-        <Grid item><Typography>You are an approved moderator.</Typography></Grid>
-        <Grid item>
-          <this.GovernanceArtPieceListItems artpieces={this.placeholderJson} /></Grid>
-      </Grid>
-    );
+      <span>Unauthorized to use governor</span>
+    )
   }
 }
 
