@@ -7,8 +7,8 @@ import * as serviceWorker from './serviceWorker';
 import { Drizzle, generateStore } from 'drizzle';
 import { DrizzleContext } from 'drizzle-react';
 
-import * as Governance from './contracts/Governance.json';
-import * as ArtifactApplication from './contracts/ArtifactApplication.json';
+import Governance from './contracts/Governance.json';
+import ArtifactApplication from './contracts/ArtifactApplication.json';
 
 const options = {
   contracts: [ArtifactApplication, Governance],

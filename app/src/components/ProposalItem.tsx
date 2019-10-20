@@ -46,7 +46,7 @@ class ProposalItem extends React.Component<ProposalItemProps, ProposalItemState>
   }
 
   render (): React.ReactNode {
-    if (!this.state.proposal) {
+    if (!this.state) {
       return "Loading...";
     }
 

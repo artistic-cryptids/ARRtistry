@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { makeStyles } from '@material-ui/core/styles';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
@@ -7,8 +6,14 @@ import ListItemAvatar from '@material-ui/core/ListItemAvatar';
 import Avatar from '@material-ui/core/Avatar';
 import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid';
+import { withStyles } from '@material-ui/core/styles';
+import Styles from '../theme';
 
-class ArtPieceList extends React.Component {
+interface RegisterProps {
+  classes: any;
+}
+
+class ArtPieceList extends React.Component<RegisterProps, {}> {
   private renderArtPieceListItems (): React.ReactNode {
     const placeholderJson = {
       'data': [
@@ -31,20 +36,6 @@ class ArtPieceList extends React.Component {
       ],
     };
 
-    const useStyles = makeStyles(theme => ({
-      root: {
-        width: '100%',
-        maxWidth: 560,
-        minWidth: 100,
-        backgroundColor: theme.palette.background.paper,
-        alignItems: 'center',
-      },
-      inline: {
-        display: 'inline',
-      },
-    }));
-
-    const classes = useStyles(this.props);
     const artpieces = placeholderJson.data;
     const listItems = artpieces.map((artpiece) =>
       <ListItem alignItems="flex-start" key={artpiece.code}>
@@ -59,7 +50,7 @@ class ArtPieceList extends React.Component {
               <Typography
                 component="span"
                 variant="body2"
-                className={classes.inline}
+                className={this.props.classes.inline}
                 color="textPrimary"
               >
                 {artpiece.artist_name} <br />
@@ -71,7 +62,7 @@ class ArtPieceList extends React.Component {
       </ListItem >
     );
     return (
-      <List className={classes.root}>{listItems}</List>
+      <List className={this.props.classes.root}>{listItems}</List>
     );
   }
 
@@ -84,4 +75,4 @@ class ArtPieceList extends React.Component {
   }
 }
 
-export default ArtPieceList;
+export default withStyles(Styles)(ArtPieceList);

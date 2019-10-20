@@ -9,26 +9,17 @@ interface GovernanceProps {
 }
 
 type GovernanceState = {
-  isGovernorKey: ""
+  isGovernor: false
 }
 
 class Governance extends React.Component<GovernanceProps, GovernanceState> {
-  constructor(props: GovernanceProps) {
-    super(props);
-
-    this.setState({isGovernorKey: this.props.drizzle.contracts.Governance.methods.isGovernor.cacheCall(this.props.drizzleState.account)});
+  componentDidMount () {
+    this.props.drizzle.contracts.Governance.methods.isGovernor(this.props.drizzleState.accounts[0]).call()
+      .then((isGovernor: any) => this.setState({isGovernor : isGovernor}));
   }
 
-  componentDidMount () {}
-
   render () : React.ReactNode {
-    if (!(this.state.isGovernorKey in this.props.drizzleState.contracts.Governance.isGovernor)) {
-      return (
-        <span>Loading...</span>
-      )
-    }
-
-    if (this.props.drizzleState.contracts.Governance.isGovernor[this.state.isGovernorKey].value) {
+    if (!this.state || this.state.isGovernor) {
       return (
         <Grid container alignItems="center" spacing={5} direction="column">
           <Grid item><Typography>You are an approved moderator.</Typography></Grid>

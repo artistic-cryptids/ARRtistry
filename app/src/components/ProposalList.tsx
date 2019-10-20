@@ -21,6 +21,12 @@ class ProposalList extends React.Component<ProposalListProps, ProposalListState>
   }
 
   render (): React.ReactNode {
+    if (!this.state) {
+      return (
+          <span>Loading proposals...</span>
+        )
+    }
+
     const listItems = this.state.ids.map((id: any) => <ProposalItem drizzle={this.props.drizzle} drizzleState={this.props.drizzleState} id={id}/>);
 
     return (
