@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import * as React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
@@ -9,8 +9,8 @@ import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
 
-class GovernanceArtPieceList extends Component {
-  GovernanceArtPieceListItems (props) {
+class GovernanceArtPieceList extends React.Component<{}, {}> {
+  private renderGovernanceArtPieceListItems (): React.ReactNode {
     const placeholderJson = {
       'data': [
         {
@@ -50,15 +50,15 @@ class GovernanceArtPieceList extends Component {
       },
     }));
 
-    const classes = useStyles();
+    const classes = useStyles(this.props);
     const artpieces = placeholderJson.data;
-    const returnListItem = function (artpiece) {
+    const returnListItem = function (artpiece: any): any {
       // TODO: extract these
       // the scoping of 'this' is really difficult
-      const rejectProposal = function (code) {
+      const rejectProposal = function (code: any): any {
         console.log(code);
       };
-      const approveProposal = function (code) {
+      const approveProposal = function (code: any): any {
         console.log(code);
       };
 
@@ -107,15 +107,13 @@ class GovernanceArtPieceList extends Component {
     );
   }
 
-  componentDidMount () {
-  }
-
-  render () {
+  render (): React.ReactNode {
     return (
       <Grid container alignItems="center" spacing={5} direction="column">
         <Grid item><Typography>You are an approved moderator.</Typography></Grid>
         <Grid item>
-          <this.GovernanceArtPieceListItems artpieces={this.placeholderJson} /></Grid>
+          { this.renderGovernanceArtPieceListItems() }
+        </Grid>
       </Grid>
     );
   }

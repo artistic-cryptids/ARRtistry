@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import * as React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
@@ -8,8 +8,8 @@ import Avatar from '@material-ui/core/Avatar';
 import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid';
 
-class ArtPieceList extends Component {
-  ArtPieceListItems (props) {
+class ArtPieceList extends React.Component {
+  private renderArtPieceListItems (): React.ReactNode {
     const placeholderJson = {
       'data': [
         {
@@ -44,7 +44,7 @@ class ArtPieceList extends Component {
       },
     }));
 
-    const classes = useStyles();
+    const classes = useStyles(this.props);
     const artpieces = placeholderJson.data;
     const listItems = artpieces.map((artpiece) =>
       <ListItem alignItems="flex-start" key={artpiece.code}>
@@ -75,14 +75,10 @@ class ArtPieceList extends Component {
     );
   }
 
-  componentDidMount () {
-
-  }
-
-  render () {
+  render (): React.ReactNode {
     return (
       <Grid container alignItems="center" spacing={5} direction="column">
-        <this.ArtPieceListItems artpieces={this.placeholderJson} />
+        { this.renderArtPieceListItems() }
       </Grid>
     );
   }

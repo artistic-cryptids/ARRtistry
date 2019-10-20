@@ -1,12 +1,13 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
+import * as React from 'react';
+import * as ReactDOM from 'react-dom';
 import './index.css';
-import App from './components/App.js';
+import App from './components/App';
 import * as serviceWorker from './serviceWorker';
 
 import { Drizzle, generateStore } from 'drizzle';
 import { DrizzleContext } from 'drizzle-react';
-import Users from './contracts/Users.json';
+
+import * as Users from './contracts/Users.json';
 
 const options = {
   contracts: [Users],
