@@ -1,5 +1,4 @@
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
+import * as React from 'react';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -13,47 +12,25 @@ import Container from '@material-ui/core/Container';
 import CardContent from '@material-ui/core/CardContent';
 import Card from '@material-ui/core/Card';
 import Divider from '@material-ui/core/Divider';
+import styles from '../theme';
 
-const styles = theme => ({
-  '@global': {
-    body: {
-      backgroundColor: theme.palette.common.white,
-    },
-  },
-  paper: {
-    marginTop: theme.spacing(8),
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-  },
-  avatar: {
-    margin: theme.spacing(1),
-    backgroundColor: theme.palette.secondary.main,
-  },
-  form: {
-    width: '100%', // Fix IE 11 issue.
-    marginTop: theme.spacing(3),
-  },
-  submit: {
-    margin: theme.spacing(3, 0, 2),
-  },
-  card: {
-    margin: theme.spacing(5, 0, 5, 0), // top right bottom left
-    minWidth: 250,
-  },
-});
+interface RegisterProps {
+  drizzle: any;
+  drizzleState: any;
+  classes: any;
+}
 
-class Register extends Component {
-  constructor (props) {
+class Register extends React.Component<RegisterProps, {}> {
+  constructor (props: RegisterProps) {
     super(props);
     this.submitArtifactProposal = this.submitArtifactProposal.bind(this);
   }
 
-  submitArtifactProposal () {
+  private submitArtifactProposal (): void {
     console.log(this.state);
   }
 
-  render () {
+  render (): React.ReactNode {
     const { classes } = this.props;
     return (
       <Container component="main" maxWidth="md">
@@ -187,9 +164,5 @@ class Register extends Component {
     );
   }
 }
-
-Register.propTypes = {
-  classes: PropTypes.object.isRequired,
-};
 
 export default withStyles(styles)(Register);

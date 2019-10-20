@@ -1,6 +1,6 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
-import App from '../components/App';
+import * as React from 'react';
+import * as ReactDOM from 'react-dom';
+import App from './App';
 import { Drizzle, generateStore } from 'drizzle';
 import { DrizzleContext } from 'drizzle-react';
 

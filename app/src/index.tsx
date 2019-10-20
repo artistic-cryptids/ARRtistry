@@ -1,13 +1,14 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
+import * as React from 'react';
+import * as ReactDOM from 'react-dom';
 import './index.css';
-import App from './components/App.js';
+import App from './components/App';
 import * as serviceWorker from './serviceWorker';
 
 import { Drizzle, generateStore } from 'drizzle';
 import { DrizzleContext } from 'drizzle-react';
-import ArtifactApplication from './contracts/ArtifactApplication.json';
-import Governance from './contracts/Governance.json';
+
+import * as Governance from './contracts/Governance.json';
+import * as ArtifactApplication from './contracts/ArtifactApplication.json';
 
 const options = {
   contracts: [ArtifactApplication, Governance],
