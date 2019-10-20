@@ -22,8 +22,25 @@ contract ArtifactApplication {
     registry = _registry;
   }
 
-  function applyFor(address who, IArtifactRegistry.Artifact memory _artifact) public returns (uint) {
-    bytes memory data = abi.encodeWithSelector(registry.mint.selector, who, _artifact);
+  function applyFor(
+    address who,
+    address _artist,
+    string memory _title,
+    string memory _medium,
+    string memory _edition,
+    string memory _created,
+    string memory _metaUri
+  ) public returns (uint) {
+    IArtifactRegistry.Artifact memory artifact = IArtifactRegistry.Artifact(
+        _artist,
+        _title,
+        _medium,
+        _edition,
+        _created,
+        _metaUri
+    );
+
+    bytes memory data = abi.encodeWithSelector(registry.mint.selector, who, artifact);
     return governance.propose(address(registry), data);
   }
 }

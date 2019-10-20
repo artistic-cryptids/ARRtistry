@@ -46,13 +46,59 @@ const styles = theme => ({
 class Register extends Component {
   constructor (props) {
     super(props);
-    this.submitArtifactProposal = this.submitArtifactProposal.bind(this);
+    this.state = { registerTransactionStackId: null };
+
+    this.registerArtifact = this.registerArtifact.bind(this);
+    this.getRegisterTransactionStatus = this.getRegisterTransactionStatus.bind(this);
   }
 
-  submitArtifactProposal () {
-    console.log(this.state);
+  registerArtifact () {
+    const { drizzle, drizzleState } = this.props;
+
+    const currentAccount = drizzleState.accounts[0];
+    const artist = drizzleState.accounts[0]; // TODO: Update this to real artist's account
+    const imageUri = ''; // TODO: Implement image uploading
+
+    const stackId = drizzle.contracts.ArtifactApplication.methods.applyFor.cacheSend(
+      currentAccount,
+      artist,
+      this.state.title,
+      this.state.medium,
+      this.state.edition,
+      this.state.artworkCreationDate,
+      imageUri,
+      {
+        from: drizzleState.accounts[0],
+        gasLimit: 6000000,
+      }
+    ); // TODO: Catch error when this function fails and display error to user
+
+    this.setState({
+      registerTransactionStackId: stackId,
+    });
   }
 
+  getRegisterTransactionStatus () {
+    const { transactions, transactionStack } = this.props.drizzleState;
+
+    const registerTransactionHash = transactionStack[this.state.registerTransactionStackId];
+    if (!registerTransactionHash) {
+      return null;
+    }
+
+    if (!transactions[registerTransactionHash]) {
+      return null;
+    }
+
+    if (transactions[registerTransactionHash].status === 'success') {
+      return 'Successfully registered artwork for approval';
+    } else {
+      return 'Error occured while registering artwork for approval';
+    }
+  };
+
+  // TODO: Split these into more manageable components
+  // TODO: Make required fields actually required
   render () {
     const { classes } = this.props;
     return (
@@ -175,13 +221,14 @@ class Register extends Component {
                   variant="contained"
                   color="primary"
                   className={classes.submit}
-                  onClick={this.submitArtifactProposal}
+                  onClick={this.registerArtifact}
                 >
                   + Register
                 </Button>
               </form>
             </Grid>
           </Grid>
+          <div>{this.getRegisterTransactionStatus()}</div>
         </div>
       </Container >
     );
