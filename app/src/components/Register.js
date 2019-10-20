@@ -52,7 +52,8 @@ class Register extends Component {
     this.getRegisterTransactionStatus = this.getRegisterTransactionStatus.bind(this);
   }
 
-  registerArtifact () {
+  registerArtifact (event) {
+    event.preventDefault();
     const { drizzle, drizzleState } = this.props;
 
     const currentAccount = drizzleState.accounts[0];
@@ -139,7 +140,7 @@ class Register extends Component {
               <form
                 className={classes.form}
                 noValidate
-                onSubmit={this.submitArtifactProposal}
+                onSubmit={this.registerArtifact}
               >
                 <Grid container spacing={2}>
                   <Grid item xs={12} sm={6}>
@@ -195,7 +196,7 @@ class Register extends Component {
                   </Grid>
                   <Grid item xs={12} sm={3}>
                     <TextField
-                      autoComplete="med"
+                      autoComplete="on"
                       name="medium"
                       variant="outlined"
                       required
@@ -221,7 +222,7 @@ class Register extends Component {
                   variant="contained"
                   color="primary"
                   className={classes.submit}
-                  onClick={this.registerArtifact}
+                  type="submit"
                 >
                   + Register
                 </Button>
