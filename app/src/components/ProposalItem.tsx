@@ -1,13 +1,10 @@
 import * as React from 'react';
 import ListItem from '@material-ui/core/ListItem';
-import ListItemText from '@material-ui/core/ListItemText';
-import ListItemAvatar from '@material-ui/core/ListItemAvatar';
-import Avatar from '@material-ui/core/Avatar';
-import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
 import { withStyles } from '@material-ui/core/styles';
 import Styles from '../theme';
+import ArtworkInfo from './ArtworkInfo';
 
 interface ProposalItemProps {
   drizzle: any;
@@ -52,26 +49,7 @@ class ProposalItem extends React.Component<ProposalItemProps, ProposalItemState>
 
     return <ListItem alignItems="flex-start" key={this.props.id}>
        <Grid container direction="row">
-         <ListItemAvatar>
-           {/* TODO: replace with thumbnail image?? */}
-           <Avatar alt={this.state.proposal.title}>{this.state.proposal.edition}</Avatar>
-         </ListItemAvatar>
-         <ListItemText
-           primary={this.state.proposal.title}
-           secondary={
-             <React.Fragment>
-               <Typography
-                 component="span"
-                 variant="body2"
-                 className={this.props.classes.inline}
-                 color="textPrimary"
-               >
-                 {this.state.proposal.artist_name}<br/>
-               </Typography>
-               {this.state.proposal.created}. {this.state.proposal.medium}
-             </React.Fragment>
-           }
-         />
+         <ArtworkInfo artwork={this.state.proposal} id={this.props.id}/>
          <Button
            variant="contained"
            color="primary"

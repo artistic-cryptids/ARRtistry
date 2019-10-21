@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { DrizzleContext } from 'drizzle-react';
-import ArtPieceList from './ArtPieceList';
+import ArtworkList from './ArtworkList';
 import Register from './Register';
 import Governance from './Governance';
 
@@ -17,7 +17,7 @@ const AppComponent: React.FC = () => {
 
         return (
           <div>
-            <ArtPieceList/>
+            <ArtworkList drizzle={drizzle} drizzleState={drizzleState}/>
             <Register drizzle={drizzle} drizzleState={drizzleState}/>
             <Governance drizzle={drizzle} drizzleState={drizzleState}/>
           </div>

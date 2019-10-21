@@ -1,44 +1,30 @@
 import * as React from 'react';
 import ListItem from '@material-ui/core/ListItem';
-import Grid from '@material-ui/core/Grid';
-import Button from '@material-ui/core/Button';
-import { withStyles } from '@material-ui/core/styles';
-import Styles from '../theme';
 import ArtworkInfo from './ArtworkInfo';
 
-interface ProposalItemProps {
+interface ArtworkItemProps {
   drizzle: any;
   drizzleState: any;
   id: any;
-  classes: any;
 }
 
-type ProposalItemState = {
-  proposal: any
+type ArtworkItemState = {
+  artwork: any
 }
 
-class ProposalItem extends React.Component<ProposalItemProps, ProposalItemState> {
-  rejectProposal = () => {
-    console.log("Rejecting proposal " + this.props.id);
-    this.props.drizzle.contracts.Governance.methods.reject(this.props.id).send({from: this.props.drizzleState.accounts[0]});
-  }
-
-  approveProposal = () => {
-    console.log("Approving proposal " + this.props.id);
-    this.props.drizzle.contracts.Governance.methods.approve(this.props.id).send({from: this.props.drizzleState.accounts[0]});
-  }
-
+class ArtworkItem extends React.Component<ArtworkItemProps, ArtworkItemState> {
   componentDidMount () {
-    this.props.drizzle.contracts.ArtifactApplication.methods.getProposal(this.props.id).call()
-      .then((proposalData: any) => {
-        const proposal = {
-          title: proposalData[2],
-          medium: proposalData[3],
-          edition: proposalData[4],
-          created: proposalData[5],
-          metaUri: proposalData[6]
+    this.props.drizzle.contracts.ArtifactRegistry.methods.tokenOfOwnerByIndex(this.props.drizzleState.accounts[0], this.props.id).call()
+      .then((tokenId: any) => this.props.drizzle.contracts.ArtifactRegistry.methods.getArtifactForToken(tokenId).call())
+      .then((artworkData: any) => {
+        const artwork = {
+          title: artworkData[1],
+          medium: artworkData[2],
+          edition: artworkData[3],
+          created: artworkData[4],
+          metaUri: artworkData[5]
         };
-        this.setState({proposal: proposal});
+        this.setState({artwork: artwork});
       });
   }
 
@@ -47,26 +33,12 @@ class ProposalItem extends React.Component<ProposalItemProps, ProposalItemState>
       return "Loading...";
     }
 
+    console.log("Artwork " + JSON.stringify(this.state.artwork));
+
     return <ListItem alignItems="flex-start" key={this.props.id}>
-       <Grid container direction="row">
-         <ArtworkInfo artwork={this.state.proposal} id={this.props.id}/>
-         <Button
-           variant="contained"
-           color="primary"
-           className={this.props.classes.approve}
-           onClick={(e) => this.approveProposal()}>
-           Approve
-         </Button>
-         <Button
-           variant="contained"
-           color="secondary"
-           className={this.props.classes.reject}
-           onClick={(e) => this.rejectProposal()}>
-           Reject
-         </Button>
-       </Grid>
-     </ListItem >;
+       <ArtworkInfo artwork={this.state.artwork} id={this.props.id}/>
+     </ListItem>;
   }
 }
 
-export default withStyles(Styles)(ProposalItem);
+export default ArtworkItem;

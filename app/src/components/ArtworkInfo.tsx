@@ -1,5 +1,4 @@
 import * as React from 'react';
-import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import ListItemAvatar from '@material-ui/core/ListItemAvatar';
 import Avatar from '@material-ui/core/Avatar';
@@ -8,13 +7,13 @@ import Grid from '@material-ui/core/Grid';
 import { withStyles } from '@material-ui/core/styles';
 import Styles from '../theme';
 
-interface ArtworkItemProps {
+interface ArtworkInfoProps {
   artwork: any
   id: any
   classes: any
 }
 
-class ArtworkItem extends React.Component<ArtworkItemProps, {}> {
+class ArtworkInfo extends React.Component<ArtworkInfoProps, {}> {
   componentDidMount () {}
 
   render (): React.ReactNode {
@@ -43,4 +42,4 @@ class ArtworkItem extends React.Component<ArtworkItemProps, {}> {
   }
 }
 
-export default withStyles(Styles)(ArtworkItem);
+export default withStyles(Styles)(ArtworkInfo);
