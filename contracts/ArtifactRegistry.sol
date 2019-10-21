@@ -36,7 +36,9 @@ contract ArtifactRegistry is IArtifactRegistry, Ownable, ERC721Full {
     return newTokenId;
   }
 
-  function getArtifactForToken(uint256 tokenId) public view returns (Artifact memory) {
-    return artifacts[tokenId];
+  function getArtifactForToken(uint256 tokenId) public view returns (address, string memory, string memory, string memory, string memory, string memory) {
+    Artifact memory artwork = artifacts[tokenId];
+
+    return (artwork.artist, artwork.title, artwork.medium, artwork.edition, artwork.created, artwork.metaUri);
   }
 }

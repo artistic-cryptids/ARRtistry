@@ -43,4 +43,19 @@ contract ArtifactApplication {
     bytes memory data = abi.encodeWithSelector(registry.mint.selector, who, artifact);
     return governance.propose(address(registry), data);
   }
+
+  function getProposal(uint proposalId) public view returns (address, address, string memory, string memory, string memory, string memory, string memory) {
+    IGovernance.Proposal memory proposal = governance.getProposal(proposalId);
+    bytes memory data = proposal.data;
+    bytes memory artifactData = new bytes(data.length - 4);
+
+    // Slice off first 4 selector bytes
+    for (uint i = 0; i < data.length - 5; i++) {
+      artifactData[i] = data[i + 4];
+    }
+
+    (address who, IArtifactRegistry.Artifact memory artifact) = abi.decode(artifactData, (address, IArtifactRegistry.Artifact));
+
+    return (who, artifact.artist, artifact.title, artifact.medium, artifact.edition, artifact.created, artifact.metaUri);
+  }
 }
