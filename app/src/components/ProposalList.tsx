@@ -17,17 +17,25 @@ type ProposalListState = {
 class ProposalList extends React.Component<ProposalListProps, ProposalListState> {
   componentDidMount () {
     this.props.drizzle.contracts.Governance.methods.getProposals().call()
-      .then((ids: any) => this.setState({ids: ids}));
+      .then((ids: any) => this.setState({ ids: ids }))
+      .catch((err: any) => { console.log(err); });
   }
 
   render (): React.ReactNode {
     if (!this.state) {
       return (
-          <span>Loading proposals...</span>
-        )
+        <span>Loading proposals...</span>
+      );
     }
 
-    const listItems = this.state.ids.map((id: any) => <ProposalItem drizzle={this.props.drizzle} drizzleState={this.props.drizzleState} id={id}/>);
+    const listItems = this.state.ids.map((id: any) =>
+      <ProposalItem
+        drizzle={this.props.drizzle}
+        drizzleState={this.props.drizzleState}
+        id={id}
+        key={id}
+      />
+    );
 
     return (
       <List className={this.props.classes.root}>{listItems}</List>

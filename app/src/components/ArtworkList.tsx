@@ -17,20 +17,21 @@ type ArtworkListState = {
 class ArtworkList extends React.Component<ArtworkListProps, ArtworkListState> {
   componentDidMount () {
     this.props.drizzle.contracts.ArtifactRegistry.methods.balanceOf(this.props.drizzleState.accounts[0]).call()
-      .then((balance: any) => this.setState({balance: balance}));
+      .then((balance: any) => this.setState({ balance: balance }))
+      .catch((err: any) => { console.log(err); });
   }
 
   render (): React.ReactNode {
     if (!this.state) {
       return (
-          <span>Loading artworks...</span>
-        )
+        <span>Loading artworks...</span>
+      );
     }
 
     if (!this.state.balance) {
       return (
         <span>No artworks to show, please register one below</span>
-        )
+      );
     }
 
     const indices = [];
@@ -42,7 +43,14 @@ class ArtworkList extends React.Component<ArtworkListProps, ArtworkListState> {
       index++;
     }
 
-    const listItems = indices.map((id: any) => <ArtworkItem drizzle={this.props.drizzle} drizzleState={this.props.drizzleState} id={id}/>);
+    const listItems = indices.map((id: any) =>
+      <ArtworkItem
+        drizzle={this.props.drizzle}
+        drizzleState={this.props.drizzleState}
+        id={id}
+        key={id}
+      />
+    );
 
     return (
       <List className={this.props.classes.root}>{listItems}</List>
