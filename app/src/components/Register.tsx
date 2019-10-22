@@ -36,13 +36,13 @@ class Register extends React.Component<RegisterProps, RegisterState> {
     super(props);
     this.state = {
       registerTransactionStackId: null,
+      title: '',
       artistName: '',
       artistNationality: '',
-      title: '',
+      artistBirthYear: '',
       artworkCreationDate: '',
       medium: '',
       size: '',
-      edition: '',
     };
 
     this.registerArtifact = this.registerArtifact.bind(this);
@@ -60,13 +60,13 @@ class Register extends React.Component<RegisterProps, RegisterState> {
     const stackId = drizzle.contracts.ArtifactApplication.methods.applyFor.cacheSend(
       currentAccount,
       artist,
+      this.state.title,
       this.state.artistName,
       this.state.artistNationality,
-      this.state.title,
+      this.state.artistBirthYear
       this.state.artworkCreationDate,
       this.state.medium,
       this.state.size,
-      this.state.edition,
       imageUri,
       {
         from: drizzleState.accounts[0],

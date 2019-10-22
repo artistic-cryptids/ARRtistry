@@ -20,13 +20,13 @@ class ArtworkItem extends React.Component<ArtworkItemProps, ArtworkItemState> {
       .then((tokenId: any) => this.props.drizzle.contracts.ArtifactRegistry.methods.getArtifactForToken(tokenId).call())
       .then((artworkData: any) => {
         const artwork = {
-          artistName: artworkData[1],
-          artistNationality: artworkData[2],
-          title: artworkData[3],
-          createdDate: artworkData[4],
-          medium: artworkData[5],
-          size: artworkData[6],
-          edition: artworkData[7]
+          title: artworkData[1],
+          artistName: artworkData[2],
+          artistNationality: artworkData[3],
+          artistBirthYear: artworkData[4],
+          createdDate: artworkData[5],
+          medium: artworkData[6],
+          size: artworkData[7],
         };
         this.setState({ artwork: artwork });
       })
