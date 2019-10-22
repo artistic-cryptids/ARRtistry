@@ -21,14 +21,14 @@ interface RegisterProps {
 }
 
 type RegisterState = {
+  title: string;
   registerTransactionStackId: any;
   artistName: string;
   artistNationality: string;
-  title: string;
+  artistBirthYear: string;
   artworkCreationDate: string;
   medium: string;
   size: string;
-  edition: string;
 }
 
 class Register extends React.Component<RegisterProps, RegisterState> {
@@ -184,14 +184,14 @@ class Register extends React.Component<RegisterProps, RegisterState> {
                   <Grid item xs={12} sm={3}>
                     <TextField
                       autoComplete="on"
-                      name="edition"
+                      name="artistNationality"
                       variant="outlined"
                       required
                       fullWidth
-                      id="edition"
-                      label="Edition"
+                      id="nationality"
+                      label="Artist's Nationality"
                       autoFocus
-                      onChange={(e): void => this.setState({ edition: e.target.value })}
+                      onChange={(e): void => this.setState({ artistNationality: e.target.value })}
                     />
                   </Grid>
                   <Grid item xs={12} sm={3}>
