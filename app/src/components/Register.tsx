@@ -63,7 +63,7 @@ class Register extends React.Component<RegisterProps, RegisterState> {
       this.state.title,
       this.state.artistName,
       this.state.artistNationality,
-      this.state.artistBirthYear
+      this.state.artistBirthYear,
       this.state.artworkCreationDate,
       this.state.medium,
       this.state.size,
