@@ -69,12 +69,12 @@ contract('ArtifactRegistry', async accounts => {
 
     it('should retrieve the artifact for the token', async () => {
       const artifact = await registry.getArtifactForToken(TOKEN_ID);
-      expect(artifact.artist).to.be.equal(ARTIFACT.artist);
-      expect(artifact.title).to.be.equal(ARTIFACT.title);
-      expect(artifact.medium).to.be.equal(ARTIFACT.medium);
-      expect(artifact.edition).to.be.equal(ARTIFACT.edition);
-      expect(artifact.created).to.be.equal(ARTIFACT.created);
-      expect(artifact.metaUri).to.be.equal(ARTIFACT.metaUri);
+      expect(artifact[0]).to.be.equal(ARTIFACT.artist);
+      expect(artifact[1]).to.be.equal(ARTIFACT.title);
+      expect(artifact[2]).to.be.equal(ARTIFACT.medium);
+      expect(artifact[3]).to.be.equal(ARTIFACT.edition);
+      expect(artifact[4]).to.be.equal(ARTIFACT.created);
+      expect(artifact[5]).to.be.equal(ARTIFACT.metaUri);
     });
   });
 }); // end Registry contract
