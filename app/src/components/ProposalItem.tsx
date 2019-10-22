@@ -9,7 +9,7 @@ import ArtworkInfo from './ArtworkInfo';
 interface ProposalItemProps {
   drizzle: any;
   drizzleState: any;
-  id: any;
+  id: number;
   classes: any;
 }
 
@@ -27,13 +27,15 @@ class ProposalItem extends React.Component<ProposalItemProps, ProposalItemState>
 
   approveProposal = () => {
     console.log('Approving proposal ' + this.props.id);
-    this.props.drizzle.contracts.Governance.methods.approve(this.props.id).send({
-      from: this.props.drizzleState.accounts[0],
-    });
+    this.props.drizzle.contracts.Governance.methods.approve(this.props.id)
+      .send({
+        from: this.props.drizzleState.accounts[0],
+      });
   }
 
   componentDidMount () {
-    this.props.drizzle.contracts.ArtifactApplication.methods.getProposal(this.props.id).call()
+    this.props.drizzle.contracts.ArtifactApplication.methods.getProposal(this.props.id)
+      .call()
       .then((proposalData: any) => {
         const proposal = {
           title: proposalData[2],
@@ -60,18 +62,18 @@ class ProposalItem extends React.Component<ProposalItemProps, ProposalItemState>
             variant="contained"
             color="primary"
             className={this.props.classes.approve}
-            onClick={(e) => this.approveProposal()}>
+            onClick={(e) => { this.approveProposal(); }}>
             Approve
           </Button>
           <Button
             variant="contained"
             color="secondary"
             className={this.props.classes.reject}
-            onClick={(e) => this.rejectProposal()}>
+            onClick={(e) => { this.rejectProposal(); }}>
             Reject
           </Button>
         </Grid>
-      </ListItem >
+      </ListItem>
     );
   }
 }

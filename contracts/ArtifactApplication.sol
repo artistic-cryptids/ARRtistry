@@ -23,7 +23,7 @@ contract ArtifactApplication {
   }
 
   function applyFor(
-    address who,
+    address proposer,
     address _artist,
     string memory _title,
     string memory _medium,
@@ -40,7 +40,7 @@ contract ArtifactApplication {
         _metaUri
     );
 
-    bytes memory data = abi.encodeWithSelector(registry.mint.selector, who, artifact);
+    bytes memory data = abi.encodeWithSelector(registry.mint.selector, proposer, artifact);
     return governance.propose(address(registry), data);
   }
 
