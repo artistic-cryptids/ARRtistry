@@ -27,8 +27,8 @@ module.exports = async (deployer, network, accounts) => {
       console.log('Transferring governance ownership to', newModerator);
       await governance.transferOwnership(newModerator);
 
-      console.log('Transferring governance moderatorship to', newModerator);
-      await governance.setModerator(newModerator);
+      console.log('Adding governance moderatorship for', newModerator);
+      await governance.addModerator(newModerator);
     })
     .catch((error) => {
       console.error(error);
