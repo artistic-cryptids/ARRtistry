@@ -135,5 +135,53 @@ contract('Governance', async accounts => {
         expect(value.toString()).to.be.equal('42');
       });
     });
+
+    describe('isGovernor', async () => {
+      it('should return false if not account not approved governor', async () => {
+        const result = await governance.isGovernor(accounts[9]);
+        expect(result).to.be.equal(false);
+      });
+
+      it('should return true if account approved governor', async () => {
+        const result = await governance.isGovernor(moderator);
+        expect(result).to.be.equal(true);
+      });
+    });
+
+    describe('getProposals', async () => {
+      let data;
+      let target;
+      beforeEach(async () => {
+        target = await MockTarget.new();
+        data = await target.data();
+        governance = await Governance.new({ from: moderator });
+      });
+
+      it('should return empty list for no proposals', async () => {
+        const proposalIds = await governance.getProposals();
+        expect(proposalIds).to.eql([]);
+      });
+
+      it('should return list of pending proposals', async () => {
+        await governance.propose(target.address, data, { from: proposer });
+        await governance.propose(target.address, data, { from: proposer });
+        await governance.propose(target.address, data, { from: proposer });
+
+        const proposalIds = await governance.getProposals();
+        expect(proposalIds).to.eql([toBN(0), toBN(1), toBN(2)]);
+      });
+
+      it('should ignore accepted/rejected proposals', async () => {
+        await governance.propose(target.address, data, { from: proposer });
+        await governance.propose(target.address, data, { from: proposer });
+        await governance.propose(target.address, data, { from: proposer });
+
+        await governance.approve(0, { from: moderator });
+        await governance.reject(1, { from: moderator });
+
+        const proposalIds = await governance.getProposals();
+        expect(proposalIds).to.eql([toBN(2)]);
+      });
+    });
   });
 }); // end Registry contract
