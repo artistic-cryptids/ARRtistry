@@ -6,9 +6,9 @@ const Governance = artifacts.require('Governance');
 const MockTarget = artifacts.require('MockTarget');
 
 contract('Governance', async accounts => {
-  const creator = accounts[0];
   const moderator = accounts[1];
   const proposer = accounts[2];
+  const notProposerOrModerator = accounts[3];
 
   const PROPOSAL_ID = toBN(0);
 
@@ -66,7 +66,7 @@ contract('Governance', async accounts => {
     });
 
     it('should revert if not moderator or proposer', async () => {
-      return expectRevert(governance.reject(proposalId, { from: creator }),
+      return expectRevert(governance.reject(proposalId, { from: notProposerOrModerator }),
         'Governance::reject: Only the proposer or moderator can reject a proposal'
       );
     });
@@ -108,7 +108,7 @@ contract('Governance', async accounts => {
       });
 
       it('should revert if not moderator or proposer', async () => {
-        return expectRevert(governance.approve(proposalId, { from: creator }),
+        return expectRevert(governance.approve(proposalId, { from: notProposerOrModerator }),
           'Only a moderator can do this'
         );
       });

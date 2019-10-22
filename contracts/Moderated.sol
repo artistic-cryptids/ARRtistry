@@ -9,20 +9,20 @@ import "@openzeppelin/contracts/ownership/Ownable.sol";
 contract Moderated is Ownable {
 
   // The address of the moderator
-  address public moderator;
+  mapping(address => bool) public moderators;
 
   modifier onlyModerator() {
-    require(msg.sender == moderator, "Only a moderator can do this");
+    require(moderators[msg.sender], "Only a moderator can do this");
     _;
   }
 
   constructor() public Ownable() {
-    moderator = owner();
+    moderators[owner()] = true;
   }
 
-  // Update the moderator required to approve new art pieces etc.
-  function setModerator(address newModerator) public onlyModerator {
-    moderator = newModerator;
+  // Add new moderators so they can approve new art pieces etc.
+  function addModerator(address newModerator) public onlyModerator {
+    moderators[newModerator] = true;
   }
 
 }

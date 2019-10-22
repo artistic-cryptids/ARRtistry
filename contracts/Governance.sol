@@ -61,7 +61,7 @@ contract Governance is IGovernance, Moderated {
 
   function reject(uint proposalId) public {
     require(
-      msg.sender == proposals[proposalId].proposer || msg.sender == moderator,
+      msg.sender == proposals[proposalId].proposer || moderators[msg.sender],
       "Governance::reject: Only the proposer or moderator can reject a proposal"
     );
     require(
@@ -75,7 +75,7 @@ contract Governance is IGovernance, Moderated {
   }
 
   function isGovernor(address account) public view returns (bool) {
-    return account == moderator;
+    return moderators[account];
   }
 
   // As far as I can work out you can't have a memory array be dynamic
