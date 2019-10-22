@@ -38,8 +38,11 @@
   },
   "homepage": "https://github.com/artistic-cryptids/contract#readme",
   "dependencies": {
-    "truffle": "^5.0.39",
-    "@openzeppelin/contracts": "^2.3.0"
+    "@ensdomains/ens": "^0.3.11",
+    "@ensdomains/resolver": "^0.1.10",
+    "@openzeppelin/contracts": "^2.3.0",
+    "eth-ens-namehash": "^2.0.8",
+    "truffle": "^5.0.39"
   },
   "devDependencies": {
     "@openzeppelin/test-helpers": "^0.5.1",
