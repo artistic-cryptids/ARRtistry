@@ -35,7 +35,7 @@ contract('ArtifactApplication', async accounts => {
 
     beforeEach(async () => {
       governance = await Governance.new({from: creator});
-      registry = await ArtifactRegistry.new(creator, {from : creator});
+      registry = await ArtifactRegistry.new(governance.address, {from : creator});
       artifactApplication = await ArtifactApplication.new(governance.address, registry.address, {from : creator});
     });
 
@@ -55,7 +55,7 @@ contract('ArtifactApplication', async accounts => {
 
     beforeEach(async () => {
       governance = await Governance.new({from: creator});
-      registry = await ArtifactRegistry.new(creator, {from : creator});
+      registry = await ArtifactRegistry.new(governance.address, {from : creator});
       artifactApplication = await ArtifactApplication.new(governance.address, registry.address, {from : creator});
     });
 
