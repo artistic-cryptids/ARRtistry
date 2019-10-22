@@ -2,12 +2,14 @@
   "extends" : [
     "standard",
     "plugin:promise/recommended",
-    "plugin:react/recommended"
+    "plugin:react/recommended",
+    "plugin:@typescript-eslint/recommended"
   ],
   "plugins": [
     "mocha-no-only",
     "promise",
-    "react"
+    "react",
+    "@typescript-eslint"
   ],
   "env": {
     "browser" : true,
@@ -83,6 +85,7 @@
     "promise/always-return": "off",
     "promise/avoid-new": "off",
   },
+  "parser": "@typescript-eslint/parser",
   "parserOptions": {
     "ecmaFeatures": {
       "jsx": true

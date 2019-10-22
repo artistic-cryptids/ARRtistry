@@ -1,14 +1,23 @@
-import React, { Component } from 'react';
+import * as React from 'react';
+
+interface UserProps {
+  drizzle: any;
+  drizzleState: any;
+}
+
+interface UserState {
+  dataKey: any;
+}
 
 /* Class just for testing if data can be retrieved from blockchain */
-class User extends Component {
-  constructor (props) {
+class User extends React.Component<UserProps, UserState> {
+  constructor (props: UserProps) {
     super(props);
 
     this.state = { dataKey: null };
   }
 
-  componentDidMount () {
+  componentDidMount (): void {
     const { drizzle } = this.props;
     const contract = drizzle.contracts.Users;
 
@@ -17,7 +26,7 @@ class User extends Component {
     this.setState({ dataKey });
   }
 
-  render () {
+  render (): React.ReactNode {
     const { Users } = this.props.drizzleState.contracts;
     const totalUsers = Users.totalUsers[this.state.dataKey];
     return (
