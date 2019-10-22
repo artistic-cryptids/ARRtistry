@@ -26,7 +26,7 @@ class ArtworkItem extends React.Component<ArtworkItemProps, ArtworkItemState> {
           artistBirthYear: artworkData[4],
           createdDate: artworkData[5],
           medium: artworkData[6],
-          size: artworkData[7]
+          size: artworkData[7],
         };
         this.setState({ artwork: artwork });
       })
