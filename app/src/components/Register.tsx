@@ -171,6 +171,18 @@ class Register extends React.Component<RegisterProps, RegisterState> {
                   <Grid item xs={12} sm={6}>
                     <TextField
                       autoComplete="on"
+                      variant="outlined"
+                      required
+                      fullWidth
+                      id="artistNationality"
+                      label="Artist's Nationality"
+                      name="artistNationality"
+                      onChange={(e) => this.setState({ artistNationality: e.target.value })}
+                    />
+                  </Grid>
+                  <Grid item xs={12} sm={6}>
+                    <TextField
+                      autoComplete="on"
                       name="artworkCreationDate"
                       variant="outlined"
                       required
@@ -181,20 +193,33 @@ class Register extends React.Component<RegisterProps, RegisterState> {
                       onChange={(e): void => this.setState({ artworkCreationDate: e.target.value })}
                     />
                   </Grid>
-                  <Grid item xs={12} sm={3}>
+                  <Grid item xs={12} sm={4}>
                     <TextField
                       autoComplete="on"
-                      name="artistNationality"
+                      name="artistBirthYear"
                       variant="outlined"
                       required
                       fullWidth
-                      id="nationality"
-                      label="Artist's Nationality"
+                      id="artistBirthYear"
+                      label="Artisit Year of Birth"
                       autoFocus
-                      onChange={(e): void => this.setState({ artistNationality: e.target.value })}
+                      onChange={(e): void => this.setState({ artistBirthYear: e.target.value })}
                     />
                   </Grid>
-                  <Grid item xs={12} sm={3}>
+                  <Grid item xs={12} sm={4}>
+                    <TextField
+                      autoComplete="on"
+                      name="size"
+                      variant="outlined"
+                      required
+                      fullWidth
+                      id="size"
+                      label="Size"
+                      autoFocus
+                      onChange={(e): void => this.setState({ size: e.target.value })}
+                    />
+                  </Grid>
+                  <Grid item xs={12} sm={4}>
                     <TextField
                       autoComplete="on"
                       name="medium"
