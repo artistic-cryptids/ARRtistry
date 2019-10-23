@@ -1,13 +1,6 @@
-interface Styles {
-  '@global': any;
-  paper: any;
-  avatar: any;
-  form: any;
-  submit: any;
-  card: any;
-}
+import { createStyles, Theme } from "@material-ui/core";
 
-const styles = (theme: any): Styles => ({
+const styles = (theme: Theme) => createStyles({
   '@global': {
     body: {
       backgroundColor: theme.palette.common.white,
