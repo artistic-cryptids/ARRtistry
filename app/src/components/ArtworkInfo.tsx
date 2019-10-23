@@ -19,7 +19,7 @@ class ArtworkInfo extends React.Component<ArtworkInfoProps, {}> {
       <Grid container direction="row">
         <ListItemAvatar>
           {/* TODO: replace with thumbnail image?? */}
-          <Avatar alt={this.props.artwork.title}>{this.props.artwork.edition}</Avatar>
+          <Avatar alt={this.props.artwork.title}>{this.props.artwork.artworkCreationDate}</Avatar>
         </ListItemAvatar>
         <ListItemText
           primary={this.props.artwork.title}
