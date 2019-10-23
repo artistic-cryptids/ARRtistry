@@ -44,7 +44,7 @@ class ProposalItem extends React.Component<ProposalItemProps, ProposalItemState>
           artistBirthYear: proposalData[4],
           createdDate: proposalData[5],
           medium: proposalData[6],
-          size: proposalData[7]
+          size: proposalData[7],
         };
         this.setState({ proposal: proposal });
       })
