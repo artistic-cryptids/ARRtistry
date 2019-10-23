@@ -3,23 +3,26 @@ import { DrizzleContext } from 'drizzle-react';
 import ArtworkList from './ArtworkList';
 import Register from './Register';
 import Governance from './Governance';
+import Loading from './Loading';
+import NetworkAside from './NetworkAside';
 
 const AppComponent: React.FC = () => {
   return (
     <DrizzleContext.Consumer>
       {(drizzleContext: any): React.ReactNode => {
         const { drizzle, drizzleState, initialized } = drizzleContext;
-
-        if (!initialized) {
-          // TODO: Show a more user-friendly loading screen
-          return 'Loading...';
-        }
-
         return (
           <div>
-            <ArtworkList drizzle={drizzle} drizzleState={drizzleState}/>
-            <Register drizzle={drizzle} drizzleState={drizzleState}/>
-            <Governance drizzle={drizzle} drizzleState={drizzleState}/>
+            {!initialized ? (
+               ''
+            ) : (
+              <div>
+                <NetworkAside drizzle={drizzle}/>
+                <ArtworkList drizzle={drizzle} drizzleState={drizzleState}/>
+                <Register drizzle={drizzle} drizzleState={drizzleState}/>
+                <Governance drizzle={drizzle} drizzleState={drizzleState}/>
+              </div>
+            )}
           </div>
         );
       }}
