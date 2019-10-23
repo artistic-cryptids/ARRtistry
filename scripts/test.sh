@@ -20,8 +20,7 @@ if ganache::is_running; then
   echo "Using existing ganache instance"
 else
   echo "Starting our own ganache instance"
-  local accountKey="$(dirname $SCRIPT_PATH)/acctKeys.json"
-  ganache_pid=$(ganache::start $accountKey)
+  ganache_pid=$(ganache::start "$(dirname $SCRIPT_PATH)/acctKeys.json")
 
   ganache::wait_for_launch
 fi
