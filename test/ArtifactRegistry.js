@@ -13,9 +13,11 @@ contract('ArtifactRegistry', async accounts => {
   const ARTIFACT = {
     artist: ZERO_ADDRESS,
     title: 'Sunshine in Gold',
-    medium: 'Wood',
-    edition: '12',
+    artistNationality: 'British',
+    artistBirthYear: '1998',
     created: '10-10-10',
+    medium: 'Wood',
+    size: '50*25'
     metaUri: 'SpecialString',
   };
   const TOKEN_ID = 1;
@@ -71,10 +73,12 @@ contract('ArtifactRegistry', async accounts => {
       const artifact = await registry.getArtifactForToken(TOKEN_ID);
       expect(artifact[0]).to.be.equal(ARTIFACT.artist);
       expect(artifact[1]).to.be.equal(ARTIFACT.title);
-      expect(artifact[2]).to.be.equal(ARTIFACT.medium);
-      expect(artifact[3]).to.be.equal(ARTIFACT.edition);
+      expect(artifact[2]).to.be.equal(ARTIFACT.artistNationality);
+      expect(artifact[3]).to.be.equal(ARTIFACT.artistBirthYear);
       expect(artifact[4]).to.be.equal(ARTIFACT.created);
-      expect(artifact[5]).to.be.equal(ARTIFACT.metaUri);
+      expect(artifact[5]).to.be.equal(ARTIFACT.medium);
+      expect(artifact[6]).to.be.equal(ARTIFACT.medium);
+      expect(artifact[7]).to.be.equal(ARTIFACT.metaUri);
     });
   });
 }); // end Registry contract
