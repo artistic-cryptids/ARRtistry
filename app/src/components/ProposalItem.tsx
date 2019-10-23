@@ -45,6 +45,7 @@ class ProposalItem extends React.Component<ProposalItemProps, ProposalItemState>
           createdDate: proposalData[5],
           medium: proposalData[6],
           size: proposalData[7],
+          metaUri: proposalData[8],
         };
         this.setState({ proposal: proposal });
       })
