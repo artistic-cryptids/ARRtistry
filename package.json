@@ -1,6 +1,6 @@
 {
   "name": "contract",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Smart contracts for the art market",
   "main": "truffle-config.js",
   "files": [
