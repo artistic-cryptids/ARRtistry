@@ -3,7 +3,6 @@ import { DrizzleContext } from 'drizzle-react';
 import ArtworkList from './ArtworkList';
 import Register from './Register';
 import Governance from './Governance';
-import Loading from './Loading';
 import NetworkAside from './NetworkAside';
 
 const AppComponent: React.FC = () => {
@@ -14,7 +13,7 @@ const AppComponent: React.FC = () => {
         return (
           <div>
             {!initialized ? (
-               ''
+              ''
             ) : (
               <div>
                 <NetworkAside drizzle={drizzle}/>

@@ -13,7 +13,7 @@ type GovernanceState = {
 }
 
 class Governance extends React.Component<GovernanceProps, GovernanceState> {
-  componentDidMount () {
+  componentDidMount (): void {
     this.props.drizzle.contracts.Governance.methods.isGovernor(this.props.drizzleState.accounts[0]).call()
       .then((isGovernor: any) => this.setState({ isGovernor: isGovernor }))
       .catch((err: any) => { console.log(err); });

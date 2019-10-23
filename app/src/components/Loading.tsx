@@ -1,9 +1,9 @@
-import React from "react";
+import React from 'react';
 import { DrizzleContext } from 'drizzle-react';
 
-import FadeIn from "react-fade-in";
-import Lottie from "react-lottie";
-import ReactLoading from "react-loading";
+// import FadeIn from 'react-fade-in';
+// import Lottie from 'react-lottie';
+import ReactLoading from 'react-loading';
 
 import ArtworkList from './ArtworkList';
 import Register from './Register';
@@ -15,21 +15,21 @@ type LoadingState = {
 }
 
 export default class Loading extends React.Component<{}, LoadingState> {
-  constructor(props: {}) {
+  constructor (props: {}) {
     super(props);
     this.state = {
-      done: false
+      done: false,
     };
   }
 
-  render() {
+  render (): React.ReactNode {
     return <DrizzleContext.Consumer>
       {(drizzleContext: any): React.ReactNode => {
         const { drizzle, drizzleState, initialized } = drizzleContext;
         return (
           <div>
             {!initialized ? (
-              <ReactLoading type={"cubes"} color={"black"} />
+              <ReactLoading type={'cubes'} color={'black'} />
             ) : (
               <div>
                 <NetworkAside drizzle={drizzle}/>
@@ -41,7 +41,6 @@ export default class Loading extends React.Component<{}, LoadingState> {
           </div>
         );
       }}
-    </DrizzleContext.Consumer>
-
+    </DrizzleContext.Consumer>;
   }
 }
