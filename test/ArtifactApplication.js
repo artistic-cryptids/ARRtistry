@@ -18,12 +18,14 @@ contract('ArtifactApplication', async accounts => {
 
   const artifactEquality = (result, who) => {
     expect(result[0]).to.be.equal(who);
-    expect(result[1]).to.be.equal(ARTIFACT.artist);
-    expect(result[2]).to.be.equal(ARTIFACT.title);
-    expect(result[3]).to.be.equal(ARTIFACT.medium);
-    expect(result[4]).to.be.equal(ARTIFACT.edition);
+    expect(result[1]).to.be.equal(ARTIFACT.title);
+    expect(result[2]).to.be.equal(ARTIFACT.artistName);
+    expect(result[3]).to.be.equal(ARTIFACT.artistNationality);
+    expect(result[4]).to.be.equal(ARTIFACT.artistBirthYear);
     expect(result[5]).to.be.equal(ARTIFACT.created);
-    expect(result[6]).to.be.equal(ARTIFACT.metaUri);
+    expect(result[6]).to.be.equal(ARTIFACT.medium);
+    expect(result[7]).to.be.equal(ARTIFACT.size);
+    expect(result[8]).to.be.equal(ARTIFACT.metaUri);
   };
 
   describe('Artifact Application', async () => {
@@ -40,11 +42,13 @@ contract('ArtifactApplication', async accounts => {
     it('should be able to apply for a proposal and get it back', async () => {
       await artifactApplication.applyFor(
         accounts[0],
-        ARTIFACT.artist,
         ARTIFACT.title,
-        ARTIFACT.medium,
-        ARTIFACT.edition,
+        ARTIFACT.artistName,
+        ARTIFACT.artistNationality,
+        ARTIFACT.artistBirthYear,
         ARTIFACT.created,
+        ARTIFACT.medium,
+        ARTIFACT.size,
         ARTIFACT.metaUri
       );
 
@@ -67,11 +71,13 @@ contract('ArtifactApplication', async accounts => {
     it('should be able to retrieve a proposal thats pending', async () => {
       await artifactApplication.applyFor(
         accounts[0],
-        ARTIFACT.artist,
         ARTIFACT.title,
-        ARTIFACT.medium,
-        ARTIFACT.edition,
+        ARTIFACT.artistName,
+        ARTIFACT.artistNationality,
+        ARTIFACT.artistBirthYear,
         ARTIFACT.created,
+        ARTIFACT.medium,
+        ARTIFACT.size,
         ARTIFACT.metaUri
       );
 
@@ -82,11 +88,13 @@ contract('ArtifactApplication', async accounts => {
     it('should not be able to retrieve a proposal thats accepted', async () => {
       await artifactApplication.applyFor(
         accounts[0],
-        ARTIFACT.artist,
         ARTIFACT.title,
-        ARTIFACT.medium,
-        ARTIFACT.edition,
+        ARTIFACT.artistName,
+        ARTIFACT.artistNationality,
+        ARTIFACT.artistBirthYear,
         ARTIFACT.created,
+        ARTIFACT.medium,
+        ARTIFACT.size,
         ARTIFACT.metaUri
       );
 
@@ -100,11 +108,13 @@ contract('ArtifactApplication', async accounts => {
 
     it('should not be able to retrieve a proposal thats rejected', async () => {
       await artifactApplication.applyFor(accounts[0],
-        ARTIFACT.artist,
         ARTIFACT.title,
-        ARTIFACT.medium,
-        ARTIFACT.edition,
+        ARTIFACT.artistName,
+        ARTIFACT.artistNationality,
+        ARTIFACT.artistBirthYear,
         ARTIFACT.created,
+        ARTIFACT.medium,
+        ARTIFACT.size,
         ARTIFACT.metaUri
       );
 
