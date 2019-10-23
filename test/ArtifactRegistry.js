@@ -17,7 +17,7 @@ contract('ArtifactRegistry', async accounts => {
     artistBirthYear: '1998',
     created: '10-10-10',
     medium: 'Wood',
-    size: '50*25'
+    size: '50*25',
     metaUri: 'SpecialString',
   };
   const TOKEN_ID = 1;
