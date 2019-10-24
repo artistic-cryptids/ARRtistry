@@ -1,6 +1,8 @@
 import * as React from 'react';
 import ListItem from '@material-ui/core/ListItem';
+import Grid from '@material-ui/core/Grid';
 import ArtworkInfo from './ArtworkInfo';
+import TransferArtwork from './TransferArtwork';
 
 interface ArtworkItemProps {
   drizzle: any;
@@ -39,7 +41,17 @@ class ArtworkItem extends React.Component<ArtworkItemProps, ArtworkItemState> {
     console.log('Artwork ' + JSON.stringify(this.state.artwork));
 
     return <ListItem alignItems="flex-start" key={this.props.id}>
-      <ArtworkInfo artwork={this.state.artwork} id={this.props.id}/>
+      <Grid container direction="row">
+        <ArtworkInfo
+          artwork={this.state.artwork}
+          id={this.props.id}
+        />
+        <TransferArtwork
+          drizzle={this.props.drizzle}
+          drizzleState={this.props.drizzleState}
+          id={this.props.id}
+        />
+      </Grid>
     </ListItem>;
   }
 }
