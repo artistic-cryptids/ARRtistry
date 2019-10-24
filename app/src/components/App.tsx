@@ -3,6 +3,7 @@ import { DrizzleContext } from 'drizzle-react';
 import ArtworkList from './ArtworkList';
 import Register from './Register';
 import Governance from './Governance';
+import TopNavBar from './TopNavBar';
 
 const AppComponent: React.FC = () => {
   return (
@@ -17,6 +18,7 @@ const AppComponent: React.FC = () => {
 
         return (
           <div>
+            <TopNavBar/>
             <ArtworkList drizzle={drizzle} drizzleState={drizzleState}/>
             <Register drizzle={drizzle} drizzleState={drizzleState}/>
             <Governance drizzle={drizzle} drizzleState={drizzleState}/>
