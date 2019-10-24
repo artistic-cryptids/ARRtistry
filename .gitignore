@@ -6,3 +6,5 @@ package-lock.json
 coverage.json
 coverage
 npm-debug.log
+acctKeys.json
+local.env
