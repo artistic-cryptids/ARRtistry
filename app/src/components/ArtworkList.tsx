@@ -10,15 +10,15 @@ interface ArtworkListProps {
   classes: any;
 }
 
-type ArtworkListState = {
-  balance: any;
+interface ArtworkListState {
+  balance: number;
 }
 
 class ArtworkList extends React.Component<ArtworkListProps, ArtworkListState> {
-  componentDidMount () {
+  componentDidMount (): void {
     this.props.drizzle.contracts.ArtifactRegistry.methods.balanceOf(this.props.drizzleState.accounts[0]).call()
-      .then((balance: any) => this.setState({ balance: balance }))
-      .catch((err: any) => { console.log(err); });
+      .then((balance: number) => this.setState({ balance: balance }))
+      .catch((err: number) => { console.log(err); });
   }
 
   render (): React.ReactNode {
@@ -43,7 +43,7 @@ class ArtworkList extends React.Component<ArtworkListProps, ArtworkListState> {
       index++;
     }
 
-    const listItems = indices.map((id: any) =>
+    const listItems = indices.map((id: number) =>
       <ArtworkItem
         drizzle={this.props.drizzle}
         drizzleState={this.props.drizzleState}
