@@ -31,7 +31,7 @@ contract ArtifactRegistry is IArtifactRegistry, Ownable, ERC721Full {
     artifacts[newTokenId] = _artifact;
 
     _mint(who, newTokenId);
-    _setTokenURI(newTokenId, _artifact._metaUri);
+    _setTokenURI(newTokenId, _artifact.metaUri);
 
     return newTokenId;
   }
@@ -39,6 +39,6 @@ contract ArtifactRegistry is IArtifactRegistry, Ownable, ERC721Full {
   function getArtifactForToken(uint256 tokenId) public view returns (address, string memory, string memory, string memory, string memory, string memory, string memory, string memory, string memory) {
     Artifact memory artwork = artifacts[tokenId];
 
-    return (artwork.artist, artwork._title, artwork._artistName, artwork._artistNationality, artwork._artistBirthYear, artwork._created, artwork._medium, artwork._size, artwork._metaUri);
+    return (artwork.artist, artwork.title, artwork.artistName, artwork.artistNationality, artwork.artistBirthYear, artwork.created, artwork.medium, artwork.size, artwork.metaUri);
   }
 }

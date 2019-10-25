@@ -1,36 +1,14 @@
 const { expectRevert } = require('@openzeppelin/test-helpers');
 const { expect } = require('chai');
 
+const { ARTIFACT, proposalEquality } = require('./constants/artifact');
+
 const Governance = artifacts.require('./Governance.sol');
 const ArtifactRegistry = artifacts.require('./ArtifactRegistry.sol');
 const ArtifactApplication = artifacts.require('./ArtifactApplication.sol');
 
 contract('ArtifactApplication', async accounts => {
   const creator = accounts[0];
-  const ARTIFACT = {
-    artist: accounts[4],
-    title: 'Sunshine in Gold',
-    artistName: 'Monet',
-    artistNationality: 'Italian',
-    artistBirthYear: '1923',
-    created: '10-10-10',
-    medium: 'Wood',
-    size: '12*20',
-    metaUri: 'SpecialString',
-  };
-
-  function artifactEquality (result, who) {
-    expect(result[0]).to.be.equal(who);
-    expect(result[1]).to.be.equal(ARTIFACT.artist);
-    expect(result[2]).to.be.equal(ARTIFACT.title);
-    expect(result[3]).to.be.equal(ARTIFACT.artistName);
-    expect(result[4]).to.be.equal(ARTIFACT.artistNationality);
-    expect(result[5]).to.be.equal(ARTIFACT.artistBirthYear);
-    expect(result[6]).to.be.equal(ARTIFACT.created);
-    expect(result[7]).to.be.equal(ARTIFACT.medium);
-    expect(result[8]).to.be.equal(ARTIFACT.size);
-    expect(result[9]).to.be.equal(ARTIFACT.metaUri);
-  };
 
   describe('Artifact Application', async () => {
     let artifactApplication;
@@ -58,7 +36,7 @@ contract('ArtifactApplication', async accounts => {
       );
 
       const result = await artifactApplication.getProposal(0);
-      artifactEquality(result, accounts[0]);
+      proposalEquality(result, accounts[0], ARTIFACT);
     });
   });
 
@@ -88,7 +66,7 @@ contract('ArtifactApplication', async accounts => {
       );
 
       const result = await artifactApplication.getProposal(0);
-      artifactEquality(result, accounts[0]);
+      proposalEquality(result, accounts[0], ARTIFACT);
     });
 
     it('should not be able to retrieve a proposal thats accepted', async () => {

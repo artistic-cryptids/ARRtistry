@@ -64,6 +64,6 @@ contract ArtifactApplication {
 
     (address who, IArtifactRegistry.Artifact memory artifact) = abi.decode(artifactData, (address, IArtifactRegistry.Artifact));
 
-    return (who, artifact.artist, artifact._title, artifact._artistName, artifact._artistNationality, artifact._artistBirthYear, artifact._created, artifact._medium, artifact._size, artifact._metaUri);
+    return (who, artifact.artist, artifact.title, artifact.artistName, artifact.artistNationality, artifact.artistBirthYear, artifact.created, artifact.medium, artifact.size, artifact.metaUri);
   }
 }
