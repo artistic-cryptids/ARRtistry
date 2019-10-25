@@ -16,13 +16,18 @@ type ProposalListState = {
 
 class ProposalList extends React.Component<ProposalListProps, ProposalListState> {
   componentDidMount (): void {
-    this.componentDidUpdate();
+    this.shouldComponentUpdate();
   }
 
-  componentDidUpdate (): void {
+  shouldComponentUpdate (): boolean {
     this.props.drizzle.contracts.Governance.methods.getProposals().call()
-      .then((ids: any) => this.setState({ ids: ids }))
+      .then((ids: any) => {
+        this.setState({ ids: ids });
+        return true;
+      })
       .catch((err: any) => { console.log(err); });
+
+      return false;
   }
 
   render (): React.ReactNode {
