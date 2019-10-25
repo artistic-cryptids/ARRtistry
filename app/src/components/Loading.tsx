@@ -1,6 +1,7 @@
 import React from 'react';
 import { DrizzleContext } from 'drizzle-react';
 
+// TODO: Add animation for loading
 // import FadeIn from 'react-fade-in';
 // import Lottie from 'react-lottie';
 import ReactLoading from 'react-loading';
