@@ -7,6 +7,7 @@ contract IArtifactRegistry is IERC721 {
   struct Artifact {
     address artist;
     string _title;
+    sttring _artistName;
     string _artistNationality;
     string _artistBirthYear; // TODO(mm5917): better data type
     string _created; // TODO(mm5917): better data type
