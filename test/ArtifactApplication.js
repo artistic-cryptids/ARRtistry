@@ -74,6 +74,7 @@ contract('ArtifactApplication', async accounts => {
     it('should be able to retrieve a proposal thats pending', async () => {
       await artifactApplication.applyFor(
         accounts[0],
+        ARTIFACT.artist,
         ARTIFACT.title,
         ARTIFACT.artistName,
         ARTIFACT.artistNationality,
@@ -91,6 +92,7 @@ contract('ArtifactApplication', async accounts => {
     it('should not be able to retrieve a proposal thats accepted', async () => {
       await artifactApplication.applyFor(
         accounts[0],
+        ARTIFACT.artist,
         ARTIFACT.title,
         ARTIFACT.artistName,
         ARTIFACT.artistNationality,
@@ -111,6 +113,7 @@ contract('ArtifactApplication', async accounts => {
 
     it('should not be able to retrieve a proposal thats rejected', async () => {
       await artifactApplication.applyFor(accounts[0],
+        ARTIFACT.artist,
         ARTIFACT.title,
         ARTIFACT.artistName,
         ARTIFACT.artistNationality,
