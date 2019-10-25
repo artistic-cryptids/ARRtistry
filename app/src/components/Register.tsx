@@ -14,6 +14,8 @@ import Card from '@material-ui/core/Card';
 import Divider from '@material-ui/core/Divider';
 import styles from '../theme';
 
+import ipfs from '../ipfs';
+
 interface RegisterProps {
   drizzle: any;
   drizzleState: any;
@@ -27,6 +29,8 @@ type RegisterState = {
   medium: string;
   edition: string;
   artworkCreationDate: string;
+  imageIpfsHash: string;
+  buffer: Buffer | null;
 }
 
 class Register extends React.Component<RegisterProps, RegisterState> {
@@ -39,14 +43,19 @@ class Register extends React.Component<RegisterProps, RegisterState> {
       medium: '',
       edition: '',
       artworkCreationDate: '',
+      imageIpfsHash: '',
+      buffer: null,
     };
 
     this.registerArtifact = this.registerArtifact.bind(this);
     this.getRegisterTransactionStatus = this.getRegisterTransactionStatus.bind(this);
+
+    this.captureFile = this.captureFile.bind(this);
   }
 
   registerArtifact (event: any): void {
     event.preventDefault();
+
     const { drizzle, drizzleState } = this.props;
 
     const currentAccount = drizzleState.accounts[0];
@@ -91,6 +100,27 @@ class Register extends React.Component<RegisterProps, RegisterState> {
     }
   };
 
+  captureFile (event: React.ChangeEvent<HTMLInputElement>) {
+    event.stopPropagation()
+    event.preventDefault()
+    this.saveToIpfs(event.target.files)
+  }
+
+  saveToIpfs (files: any) {
+    let ipfsId: string; 
+    ipfs.add([...files], { progress: (prog: any) => console.log(`received: ${prog}`) })
+      .then((response: any) => {
+        console.log(response)
+        ipfsId = response[0].hash
+        console.log(ipfsId)
+        this.setState({ imageIpfsHash: ipfsId })
+      }).catch((err: any) => {
+        console.error(err)
+      })
+  }
+
+
+
   // TODO: Split these into more manageable components
   // TODO: Make required fields actually required
   render (): React.ReactNode {
@@ -116,6 +146,7 @@ class Register extends React.Component<RegisterProps, RegisterState> {
                   id="image-upload-button"
                   multiple
                   type="file"
+                  onChange={this.captureFile}
                 />
                 <label htmlFor="image-upload-button">
                   <Button
@@ -127,6 +158,10 @@ class Register extends React.Component<RegisterProps, RegisterState> {
                     Upload Image
                   </Button>
                 </label>
+                <a
+                  href={'https://ipfs.io/ipfs/' + this.state.imageIpfsHash}>
+                  {this.state.imageIpfsHash}
+                </a>
               </CardContent>
             </Card>
             <Grid item xs={12} sm={6}>
