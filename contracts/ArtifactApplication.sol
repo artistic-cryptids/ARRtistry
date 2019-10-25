@@ -50,7 +50,7 @@ contract ArtifactApplication {
     return governance.propose(address(registry), data);
   }
 
-  function getProposal(uint proposalId) public view returns (address, address, string memory, string memory, string memory, string memory, string memory, string memory, string memory) {
+  function getProposal(uint proposalId) public view returns (address, address, string memory, string memory, string memory, string memory, string memory, string memory, string memory, string memory) {
     IGovernance.Proposal memory proposal = governance.getProposal(proposalId);
     require(proposal.status == IGovernance.Status.Pending, "ArtifactApplication::getProposal: proposal is not pending");
 
