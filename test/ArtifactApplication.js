@@ -44,6 +44,7 @@ contract('ArtifactApplication', async accounts => {
     it('should be able to apply for a proposal and get it back', async () => {
       await artifactApplication.applyFor(
         accounts[0],
+        ARTIFACT.artist,
         ARTIFACT.title,
         ARTIFACT.artistName,
         ARTIFACT.artistNationality,
