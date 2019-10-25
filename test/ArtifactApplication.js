@@ -21,13 +21,12 @@ contract('ArtifactApplication', async accounts => {
   const artifactEquality = (result, who) => {
     expect(result[0]).to.be.equal(who);
     expect(result[1]).to.be.equal(ARTIFACT.title);
-    expect(result[2]).to.be.equal(ARTIFACT.artistName);
-    expect(result[3]).to.be.equal(ARTIFACT.artistNationality);
-    expect(result[4]).to.be.equal(ARTIFACT.artistBirthYear);
-    expect(result[5]).to.be.equal(ARTIFACT.created);
-    expect(result[6]).to.be.equal(ARTIFACT.medium);
-    expect(result[7]).to.be.equal(ARTIFACT.size);
-    expect(result[8]).to.be.equal(ARTIFACT.metaUri);
+    expect(result[2]).to.be.equal(ARTIFACT.artistNationality);
+    expect(result[3]).to.be.equal(ARTIFACT.artistBirthYear);
+    expect(result[4]).to.be.equal(ARTIFACT.created);
+    expect(result[5]).to.be.equal(ARTIFACT.medium);
+    expect(result[6]).to.be.equal(ARTIFACT.size);
+    expect(result[7]).to.be.equal(ARTIFACT.metaUri);
   };
 
   describe('Artifact Application', async () => {
