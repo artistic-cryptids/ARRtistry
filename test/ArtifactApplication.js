@@ -10,9 +10,11 @@ contract('ArtifactApplication', async accounts => {
   const ARTIFACT = {
     artist: accounts[4],
     title: 'Sunshine in Gold',
-    medium: 'Wood',
-    edition: '12',
+    artistNationality: 'Italian',
+    artistBirthYear: '1923',
     created: '10-10-10',
+    medium: 'Wood',
+    size: '12*20',
     metaUri: 'SpecialString',
   };
 
