@@ -26,7 +26,7 @@ contract ArtifactApplication {
     address proposer,
     address _artist,
     string memory _title,
-    string memory _artistName
+    string memory _artistName,
     string memory _artistNationality,
     string memory _artistBirthYear,
     string memory _created,
@@ -37,7 +37,7 @@ contract ArtifactApplication {
     IArtifactRegistry.Artifact memory artifact = IArtifactRegistry.Artifact(
         _artist,
         _title,
-        _artistName
+        _artistName,
         _artistNationality,
         _artistBirthYear,
         _created,
@@ -64,6 +64,6 @@ contract ArtifactApplication {
 
     (address who, IArtifactRegistry.Artifact memory artifact) = abi.decode(artifactData, (address, IArtifactRegistry.Artifact));
 
-    return (who, artifact.artist, artifact._title, artifact._artistName artifact._artistNationality, artifact._artistBirthYear, artifact._created, artifact._medium, artifact._size, artifact._metaUri);
+    return (who, artifact.artist, artifact._title, artifact._artistName, artifact._artistNationality, artifact._artistBirthYear, artifact._created, artifact._medium, artifact._size, artifact._metaUri);
   }
 }
