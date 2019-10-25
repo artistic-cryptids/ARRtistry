@@ -1,6 +1,6 @@
-const ENS = artifacts.require('@ensdomains/ens/ENSRegistry');
-const FIFSRegistrar = artifacts.require('@ensdomains/ens/FIFSRegistrar');
-const PublicResolver = artifacts.require('@ensdomains/resolver/PublicResolver');
+const ENS = artifacts.require('ENSRegistry');
+const FIFSRegistrar = artifacts.require('FIFSRegistrar');
+const ENSResolver = artifacts.require('ENSResolver');
 
 const utils = require('web3-utils');
 const namehash = require('eth-ens-namehash');
@@ -15,8 +15,8 @@ module.exports = async (deployer, network, accounts) => {
   await deployer.deploy(ENS);
   const ens = await ENS.deployed();
 
-  await deployer.deploy(PublicResolver, ens.address);
-  const resolver = await PublicResolver.deployed();
+  await deployer.deploy(ENSResolver, ens.address);
+  const resolver = await ENSResolver.deployed();
   await setupResolver(ens, resolver, accounts);
 
   await deployer.deploy(FIFSRegistrar, ens.address, namehash.hash(TLD));

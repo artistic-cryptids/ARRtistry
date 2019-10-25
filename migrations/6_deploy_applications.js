@@ -1,7 +1,7 @@
 const ArtifactApplication = artifacts.require('ArtifactApplication');
 const ArtifactRegistry = artifacts.require('ArtifactRegistry');
 const Governance = artifacts.require('Governance');
-const PublicResolver = artifacts.require('PublicResolver');
+const ENSResolver = artifacts.require('ENSResolver');
 const FIFSRegistrar = artifacts.require('FIFSRegistrar');
 
 const newLabel = require('./helper/LoggedRegistration');
@@ -14,7 +14,7 @@ module.exports = async (deployer, network, accounts) => {
   await newLabel(
     'application',
     accounts[0],
-    await PublicResolver.deployed(),
+    await ENSResolver.deployed(),
     await FIFSRegistrar.deployed(),
     await ArtifactApplication.deployed()
   );
