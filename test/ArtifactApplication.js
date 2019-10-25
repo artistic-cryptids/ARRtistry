@@ -1,5 +1,4 @@
 const { expectRevert } = require('@openzeppelin/test-helpers');
-const { expect } = require('chai');
 
 const { ARTIFACT, proposalEquality } = require('./constants/artifact');
 

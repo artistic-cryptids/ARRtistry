@@ -1,4 +1,4 @@
-const { constants, expectRevert } = require('@openzeppelin/test-helpers');
+const { constants } = require('@openzeppelin/test-helpers');
 const { ZERO_ADDRESS } = constants;
 
 const ARTIFACT = {
@@ -18,7 +18,7 @@ function proposalEquality (actual, proposer, expectedArtifact) {
   artifactEquality(actual, expectedArtifact, 1);
 };
 
-function artifactEquality (actual, expected, offset=0) {
+function artifactEquality (actual, expected, offset = 0) {
   expect(actual[offset]).to.be.equal(expected.artist);
   expect(actual[offset + 1]).to.be.equal(expected.title);
   expect(actual[offset + 2]).to.be.equal(expected.artistName);
