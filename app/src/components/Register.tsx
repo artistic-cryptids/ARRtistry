@@ -30,7 +30,6 @@ type RegisterState = {
   edition: string;
   artworkCreationDate: string;
   imageIpfsHash: string;
-  buffer: Buffer | null;
 }
 
 class Register extends React.Component<RegisterProps, RegisterState> {
@@ -44,7 +43,6 @@ class Register extends React.Component<RegisterProps, RegisterState> {
       edition: '',
       artworkCreationDate: '',
       imageIpfsHash: '',
-      buffer: null,
     };
 
     this.registerArtifact = this.registerArtifact.bind(this);
