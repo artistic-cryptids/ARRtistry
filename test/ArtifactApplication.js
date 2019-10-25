@@ -10,6 +10,7 @@ contract('ArtifactApplication', async accounts => {
   const ARTIFACT = {
     artist: accounts[4],
     title: 'Sunshine in Gold',
+    artistName: 'Monet',
     artistNationality: 'Italian',
     artistBirthYear: '1923',
     created: '10-10-10',
@@ -18,16 +19,17 @@ contract('ArtifactApplication', async accounts => {
     metaUri: 'SpecialString',
   };
 
-  const artifactEquality = (result, who) => {
+  function artifactEquality (result, who) {
     expect(result[0]).to.be.equal(who);
-    expect(result[1]).to.be.equal(ARTIFACT.title);
-    expect(result[2]).to.be.equal(ARTIFACT.artistName);
-    expect(result[3]).to.be.equal(ARTIFACT.artistNationality);
-    expect(result[4]).to.be.equal(ARTIFACT.artistBirthYear);
-    expect(result[5]).to.be.equal(ARTIFACT.created);
-    expect(result[6]).to.be.equal(ARTIFACT.medium);
-    expect(result[7]).to.be.equal(ARTIFACT.size);
-    expect(result[8]).to.be.equal(ARTIFACT.metaUri);
+    expect(result[1]).to.be.equal(ARTIFACT.artist);
+    expect(result[2]).to.be.equal(ARTIFACT.title);
+    expect(result[3]).to.be.equal(ARTIFACT.artistName);
+    expect(result[4]).to.be.equal(ARTIFACT.artistNationality);
+    expect(result[5]).to.be.equal(ARTIFACT.artistBirthYear);
+    expect(result[6]).to.be.equal(ARTIFACT.created);
+    expect(result[7]).to.be.equal(ARTIFACT.medium);
+    expect(result[8]).to.be.equal(ARTIFACT.size);
+    expect(result[9]).to.be.equal(ARTIFACT.metaUri);
   };
 
   describe('Artifact Application', async () => {
