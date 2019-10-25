@@ -13,7 +13,7 @@ type ArtworkItemState = {
 }
 
 class ArtworkItem extends React.Component<ArtworkItemProps, ArtworkItemState> {
-  componentDidMount () {
+  componentDidMount (): void {
     this.props.drizzle.contracts.ArtifactRegistry.methods.tokenOfOwnerByIndex(
       this.props.drizzleState.accounts[0], this.props.id)
       .call()
