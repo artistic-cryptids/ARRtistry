@@ -13,6 +13,7 @@ contract('ArtifactRegistry', async accounts => {
   const ARTIFACT = {
     artist: ZERO_ADDRESS,
     title: 'Sunshine in Gold',
+    artistName: 'Jimmy Dalboth',
     artistNationality: 'British',
     artistBirthYear: '1998',
     created: '10-10-10',
