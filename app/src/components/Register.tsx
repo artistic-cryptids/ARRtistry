@@ -97,20 +97,21 @@ class Register extends React.Component<RegisterProps, RegisterState> {
     }
   };
 
-  captureFile (event: React.ChangeEvent<HTMLInputElement>) {
-    event.stopPropagation()
-    event.preventDefault()
-    this.saveToIpfs(event.target.files)
+  captureFile (event: React.ChangeEvent<HTMLInputElement>): void {
+    event.stopPropagation();
+    event.preventDefault();
+    this.saveToIpfs(event.target.files);
   }
 
-  saveToIpfs (files: any) {
-    let ipfsId: string; 
+  saveToIpfs (files: any): void {
+    let ipfsId: string;
     ipfs.add([...files], { progress: (prog: any) => console.log(`received: ${prog}`) })
       .then((response: any) => {
-        ipfsId = response[0].hash
-        this.setState({ imageIpfsHash: ipfsId })
+        ipfsId = response[0].hash;
+        this.setState({ imageIpfsHash: ipfsId });
       }).catch((err: any) => {
-      })
+        console.log(err);
+      });
   }
 
   // TODO: Split these into more manageable components

@@ -1,5 +1,6 @@
-// import ipfsClient from 'ipfs-http-client';
+// eslint-disable-next-line
 const ipfsClient = require('ipfs-http-client');
+// equivalent import statement does not work.
 
 // create a new ipfs client pointing to infura
 const ipfs = ipfsClient({
