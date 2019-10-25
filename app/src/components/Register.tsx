@@ -146,7 +146,7 @@ class Register extends React.Component<RegisterProps, RegisterState> {
                       id="title"
                       label="Title"
                       autoFocus
-                      onChange={(e) => this.setState({ title: e.target.value })}
+                      onChange={(e): void => this.setState({ title: e.target.value })}
                     />
                   </Grid>
                   <Grid item xs={12} sm={6}>
@@ -158,7 +158,7 @@ class Register extends React.Component<RegisterProps, RegisterState> {
                       id="artistName"
                       label="Artist Name"
                       name="artistName"
-                      onChange={(e) => this.setState({ artistName: e.target.value })}
+                      onChange={(e): void => this.setState({ artistName: e.target.value })}
                     />
                   </Grid>
                   <Grid item xs={12} sm={6}>
@@ -171,7 +171,7 @@ class Register extends React.Component<RegisterProps, RegisterState> {
                       id="artworkCreationDate"
                       label="Artwork Creation Date"
                       autoFocus
-                      onChange={(e) => this.setState({ artworkCreationDate: e.target.value })}
+                      onChange={(e): void => this.setState({ artworkCreationDate: e.target.value })}
                     />
                   </Grid>
                   <Grid item xs={12} sm={3}>
@@ -184,7 +184,7 @@ class Register extends React.Component<RegisterProps, RegisterState> {
                       id="edition"
                       label="Edition"
                       autoFocus
-                      onChange={(e) => this.setState({ edition: e.target.value })}
+                      onChange={(e): void => this.setState({ edition: e.target.value })}
                     />
                   </Grid>
                   <Grid item xs={12} sm={3}>
@@ -197,7 +197,7 @@ class Register extends React.Component<RegisterProps, RegisterState> {
                       id="medium"
                       label="Medium"
                       autoFocus
-                      onChange={(e) => this.setState({ medium: e.target.value })}
+                      onChange={(e): void => this.setState({ medium: e.target.value })}
                     />
                   </Grid>
                   <Grid item xs={12}>

@@ -11,14 +11,25 @@ interface ArtworkListProps {
 }
 
 type ArtworkListState = {
-  balance: any;
+  balance: number;
 }
 
 class ArtworkList extends React.Component<ArtworkListProps, ArtworkListState> {
-  componentDidMount () {
+  componentDidMount (): void {
+    this.shouldComponentUpdate();
+  }
+
+  shouldComponentUpdate (): boolean {
     this.props.drizzle.contracts.ArtifactRegistry.methods.balanceOf(this.props.drizzleState.accounts[0]).call()
-      .then((balance: any) => this.setState({ balance: balance }))
+      .then((balance: number) => {
+        console.log('balance is', balance);
+        if (!this.state || this.state.balance !== balance) {
+          this.setState({ balance: balance });
+        }
+      })
       .catch((err: any) => { console.log(err); });
+
+    return true;
   }
 
   render (): React.ReactNode {
