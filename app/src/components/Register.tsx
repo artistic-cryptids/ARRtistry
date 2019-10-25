@@ -13,7 +13,6 @@ import CardContent from '@material-ui/core/CardContent';
 import Card from '@material-ui/core/Card';
 import Divider from '@material-ui/core/Divider';
 import styles from '../theme';
-
 import ipfs from '../ipfs';
 
 interface RegisterProps {
@@ -108,16 +107,11 @@ class Register extends React.Component<RegisterProps, RegisterState> {
     let ipfsId: string; 
     ipfs.add([...files], { progress: (prog: any) => console.log(`received: ${prog}`) })
       .then((response: any) => {
-        console.log(response)
         ipfsId = response[0].hash
-        console.log(ipfsId)
         this.setState({ imageIpfsHash: ipfsId })
       }).catch((err: any) => {
-        console.error(err)
       })
   }
-
-
 
   // TODO: Split these into more manageable components
   // TODO: Make required fields actually required
@@ -156,6 +150,7 @@ class Register extends React.Component<RegisterProps, RegisterState> {
                     Upload Image
                   </Button>
                 </label>
+                {/* TODO: Make this actually display the image... */}
                 <a
                   href={'https://ipfs.io/ipfs/' + this.state.imageIpfsHash}>
                   {this.state.imageIpfsHash}
