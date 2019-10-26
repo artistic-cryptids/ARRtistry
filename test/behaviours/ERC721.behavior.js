@@ -13,7 +13,7 @@ const ERC721ReceiverMock = artifacts.require('ERC721ReceiverMock.sol');
 function shouldBehaveLikeERC721 (
   creator,
   minter,
-  [owner, approved, anotherApproved, operator, other]
+  [owner, approved, anotherApproved, operator, other],
 ) {
   const firstTokenId = toBN(1);
   const secondTokenId = toBN(2);

@@ -31,7 +31,7 @@ contract('ArtifactApplication', async accounts => {
         ARTIFACT.created,
         ARTIFACT.medium,
         ARTIFACT.size,
-        ARTIFACT.metaUri
+        ARTIFACT.metaUri,
       );
 
       const result = await artifactApplication.getProposal(0);
@@ -61,7 +61,7 @@ contract('ArtifactApplication', async accounts => {
         ARTIFACT.created,
         ARTIFACT.medium,
         ARTIFACT.size,
-        ARTIFACT.metaUri
+        ARTIFACT.metaUri,
       );
 
       const result = await artifactApplication.getProposal(0);
@@ -79,14 +79,14 @@ contract('ArtifactApplication', async accounts => {
         ARTIFACT.created,
         ARTIFACT.medium,
         ARTIFACT.size,
-        ARTIFACT.metaUri
+        ARTIFACT.metaUri,
       );
 
       await governance.approve(0);
 
       await expectRevert(
         artifactApplication.getProposal(0),
-        'ArtifactApplication::getProposal: proposal is not pending'
+        'ArtifactApplication::getProposal: proposal is not pending',
       );
     });
 
@@ -100,14 +100,14 @@ contract('ArtifactApplication', async accounts => {
         ARTIFACT.created,
         ARTIFACT.medium,
         ARTIFACT.size,
-        ARTIFACT.metaUri
+        ARTIFACT.metaUri,
       );
 
       await governance.reject(0);
 
       await expectRevert(
         artifactApplication.getProposal(0),
-        'ArtifactApplication::getProposal: proposal is not pending'
+        'ArtifactApplication::getProposal: proposal is not pending',
       );
     });
   });

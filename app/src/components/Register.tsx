@@ -71,7 +71,7 @@ class Register extends React.Component<RegisterProps, RegisterState> {
       {
         from: drizzleState.accounts[0],
         gasLimit: 6000000,
-      }
+      },
     ); // TODO: Catch error when this function fails and display error to user
 
     this.setState({

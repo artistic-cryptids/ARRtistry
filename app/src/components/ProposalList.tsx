@@ -38,7 +38,7 @@ class ProposalList extends React.Component<ProposalListProps, ProposalListState>
         drizzleState={this.props.drizzleState}
         id={id}
         key={id}
-      />
+      />,
     );
 
     return (

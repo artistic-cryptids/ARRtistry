@@ -28,7 +28,7 @@ contract('ArtifactRegistry', async accounts => {
     it('should not allow anyone but owner to mint tokens', async () => {
       await expectRevert(
         registry.mint(tokenOwner, ARTIFACT, { from: tokenOwner }),
-        'ArtifactRegistry::mint: Not minted by the owner'
+        'ArtifactRegistry::mint: Not minted by the owner',
       );
     });
 
