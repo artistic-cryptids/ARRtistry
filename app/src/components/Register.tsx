@@ -26,7 +26,7 @@ type RegisterState = {
   artistName: string;
   artistNationality: string;
   artistBirthYear: string;
-  artworkCreationDate: string;
+  createdDate: string;
   medium: string;
   size: string;
 }
@@ -40,7 +40,7 @@ class Register extends React.Component<RegisterProps, RegisterState> {
       artistName: '',
       artistNationality: '',
       artistBirthYear: '',
-      artworkCreationDate: '',
+      createdDate: '',
       medium: '',
       size: '',
     };
@@ -64,7 +64,7 @@ class Register extends React.Component<RegisterProps, RegisterState> {
       this.state.artistName,
       this.state.artistNationality,
       this.state.artistBirthYear,
-      this.state.artworkCreationDate,
+      this.state.createdDate,
       this.state.medium,
       this.state.size,
       imageUri,
@@ -183,14 +183,14 @@ class Register extends React.Component<RegisterProps, RegisterState> {
                   <Grid item xs={12} sm={6}>
                     <TextField
                       autoComplete="on"
-                      name="artworkCreationDate"
+                      name="createdDate"
                       variant="outlined"
                       required
                       fullWidth
-                      id="artworkCreationDate"
+                      id="createdDate"
                       label="Artwork Creation Date"
                       autoFocus
-                      onChange={(e): void => this.setState({ artworkCreationDate: e.target.value })}
+                      onChange={(e): void => this.setState({ createdDate: e.target.value })}
                     />
                   </Grid>
                   <Grid item xs={12} sm={4}>
