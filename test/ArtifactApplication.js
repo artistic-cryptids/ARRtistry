@@ -1,5 +1,6 @@
 const { expectRevert } = require('@openzeppelin/test-helpers');
-const { expect } = require('chai');
+
+const { ARTIFACT, proposalEquality } = require('./constants/artifact');
 
 const Governance = artifacts.require('./Governance.sol');
 const ArtifactRegistry = artifacts.require('./ArtifactRegistry.sol');
@@ -7,24 +8,6 @@ const ArtifactApplication = artifacts.require('./ArtifactApplication.sol');
 
 contract('ArtifactApplication', async accounts => {
   const creator = accounts[0];
-  const ARTIFACT = {
-    artist: accounts[4],
-    title: 'Sunshine in Gold',
-    medium: 'Wood',
-    edition: '12',
-    created: '10-10-10',
-    metaUri: 'SpecialString',
-  };
-
-  const artifactEquality = (result, who) => {
-    expect(result[0]).to.be.equal(who);
-    expect(result[1]).to.be.equal(ARTIFACT.artist);
-    expect(result[2]).to.be.equal(ARTIFACT.title);
-    expect(result[3]).to.be.equal(ARTIFACT.medium);
-    expect(result[4]).to.be.equal(ARTIFACT.edition);
-    expect(result[5]).to.be.equal(ARTIFACT.created);
-    expect(result[6]).to.be.equal(ARTIFACT.metaUri);
-  };
 
   describe('Artifact Application', async () => {
     let artifactApplication;
@@ -42,14 +25,17 @@ contract('ArtifactApplication', async accounts => {
         accounts[0],
         ARTIFACT.artist,
         ARTIFACT.title,
-        ARTIFACT.medium,
-        ARTIFACT.edition,
+        ARTIFACT.artistName,
+        ARTIFACT.artistNationality,
+        ARTIFACT.artistBirthYear,
         ARTIFACT.created,
-        ARTIFACT.metaUri
+        ARTIFACT.medium,
+        ARTIFACT.size,
+        ARTIFACT.metaUri,
       );
 
       const result = await artifactApplication.getProposal(0);
-      artifactEquality(result, accounts[0]);
+      proposalEquality(result, accounts[0], ARTIFACT);
     });
   });
 
@@ -69,14 +55,17 @@ contract('ArtifactApplication', async accounts => {
         accounts[0],
         ARTIFACT.artist,
         ARTIFACT.title,
-        ARTIFACT.medium,
-        ARTIFACT.edition,
+        ARTIFACT.artistName,
+        ARTIFACT.artistNationality,
+        ARTIFACT.artistBirthYear,
         ARTIFACT.created,
-        ARTIFACT.metaUri
+        ARTIFACT.medium,
+        ARTIFACT.size,
+        ARTIFACT.metaUri,
       );
 
       const result = await artifactApplication.getProposal(0);
-      artifactEquality(result, accounts[0]);
+      proposalEquality(result, accounts[0], ARTIFACT);
     });
 
     it('should not be able to retrieve a proposal thats accepted', async () => {
@@ -84,17 +73,20 @@ contract('ArtifactApplication', async accounts => {
         accounts[0],
         ARTIFACT.artist,
         ARTIFACT.title,
-        ARTIFACT.medium,
-        ARTIFACT.edition,
+        ARTIFACT.artistName,
+        ARTIFACT.artistNationality,
+        ARTIFACT.artistBirthYear,
         ARTIFACT.created,
-        ARTIFACT.metaUri
+        ARTIFACT.medium,
+        ARTIFACT.size,
+        ARTIFACT.metaUri,
       );
 
       await governance.approve(0);
 
       await expectRevert(
         artifactApplication.getProposal(0),
-        'ArtifactApplication::getProposal: proposal is not pending'
+        'ArtifactApplication::getProposal: proposal is not pending',
       );
     });
 
@@ -102,17 +94,20 @@ contract('ArtifactApplication', async accounts => {
       await artifactApplication.applyFor(accounts[0],
         ARTIFACT.artist,
         ARTIFACT.title,
-        ARTIFACT.medium,
-        ARTIFACT.edition,
+        ARTIFACT.artistName,
+        ARTIFACT.artistNationality,
+        ARTIFACT.artistBirthYear,
         ARTIFACT.created,
-        ARTIFACT.metaUri
+        ARTIFACT.medium,
+        ARTIFACT.size,
+        ARTIFACT.metaUri,
       );
 
       await governance.reject(0);
 
       await expectRevert(
         artifactApplication.getProposal(0),
-        'ArtifactApplication::getProposal: proposal is not pending'
+        'ArtifactApplication::getProposal: proposal is not pending',
       );
     });
   });

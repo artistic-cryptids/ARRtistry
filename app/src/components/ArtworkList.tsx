@@ -60,7 +60,7 @@ class ArtworkList extends React.Component<ArtworkListProps, ArtworkListState> {
         drizzleState={this.props.drizzleState}
         id={id}
         key={id}
-      />
+      />,
     );
 
     return (

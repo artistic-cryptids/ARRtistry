@@ -21,10 +21,13 @@ class ArtworkItem extends React.Component<ArtworkItemProps, ArtworkItemState> {
       .then((artworkData: any) => {
         const artwork = {
           title: artworkData[1],
-          medium: artworkData[2],
-          edition: artworkData[3],
-          created: artworkData[4],
-          metaUri: artworkData[5],
+          artistName: artworkData[2],
+          artistNationality: artworkData[3],
+          artistBirthYear: artworkData[4],
+          createdDate: artworkData[5],
+          medium: artworkData[6],
+          size: artworkData[7],
+          metaUri: artworkData[8],
         };
         this.setState({ artwork: artwork });
       })

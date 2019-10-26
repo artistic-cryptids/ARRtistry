@@ -19,7 +19,7 @@ class ArtworkInfo extends React.Component<ArtworkInfoProps, {}> {
       <Grid container direction="row">
         <ListItemAvatar>
           {/* TODO: replace with thumbnail image?? */}
-          <Avatar alt={this.props.artwork.title}>{this.props.artwork.edition}</Avatar>
+          <Avatar alt={this.props.artwork.title}>{this.props.artwork.createdDate}</Avatar>
         </ListItemAvatar>
         <ListItemText
           primary={this.props.artwork.title}
@@ -31,9 +31,9 @@ class ArtworkInfo extends React.Component<ArtworkInfoProps, {}> {
                 className={this.props.classes.inline}
                 color="textPrimary"
               >
-                {this.props.artwork.artist_name}<br/>
+                {this.props.artwork.artistName}<br/>
               </Typography>
-              {this.props.artwork.created}. {this.props.artwork.medium}
+              {this.props.artwork.createdDate}. {this.props.artwork.medium}
             </React.Fragment>
           }
         />
