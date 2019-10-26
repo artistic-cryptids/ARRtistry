@@ -61,13 +61,13 @@ contract('Governance', async accounts => {
     it('should revert if proposal is not pending', async () => {
       await governance.reject(proposalId, { from: proposer });
       return expectRevert(governance.reject(proposalId, { from: proposer }),
-        'Governance::reject: Proposal is already finalized'
+        'Governance::reject: Proposal is already finalized',
       );
     });
 
     it('should revert if not moderator or proposer', async () => {
       return expectRevert(governance.reject(proposalId, { from: notProposerOrModerator }),
-        'Governance::reject: Only the proposer or moderator can reject a proposal'
+        'Governance::reject: Only the proposer or moderator can reject a proposal',
       );
     });
 
@@ -103,13 +103,13 @@ contract('Governance', async accounts => {
       it('should revert if proposal is not pending', async () => {
         await governance.approve(proposalId, { from: moderator });
         return expectRevert(governance.approve(proposalId, { from: moderator }),
-          'Governance::approve: Proposal is already finalized'
+          'Governance::approve: Proposal is already finalized',
         );
       });
 
       it('should revert if not moderator or proposer', async () => {
         return expectRevert(governance.approve(proposalId, { from: notProposerOrModerator }),
-          'Only a moderator can do this'
+          'Only a moderator can do this',
         );
       });
 
@@ -119,7 +119,7 @@ contract('Governance', async accounts => {
 
       it('should revert if is proposer', async () => {
         await expectRevert(governance.approve(proposalId, { from: proposer }),
-          'Only a moderator can do this'
+          'Only a moderator can do this',
         );
       });
 

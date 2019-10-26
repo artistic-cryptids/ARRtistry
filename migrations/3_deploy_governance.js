@@ -12,6 +12,6 @@ module.exports = async (deployer, network, accounts) => {
     accounts[0],
     await ENSResolver.deployed(),
     await FIFSRegistrar.deployed(),
-    await Governance.deployed()
+    await Governance.deployed(),
   );
 };
