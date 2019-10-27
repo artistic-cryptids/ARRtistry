@@ -13,6 +13,7 @@ import CardContent from '@material-ui/core/CardContent';
 import Card from '@material-ui/core/Card';
 import Divider from '@material-ui/core/Divider';
 import styles from '../theme';
+import ipfs from '../ipfs';
 
 interface RegisterProps {
   drizzle: any;
@@ -28,6 +29,9 @@ type RegisterState = {
   artistBirthYear: string;
   createdDate: string;
   medium: string;
+  edition: string;
+  artworkCreationDate: string;
+  imageIpfsHash: string;
   size: string;
 }
 
@@ -42,6 +46,9 @@ class Register extends React.Component<RegisterProps, RegisterState> {
       artistBirthYear: '',
       createdDate: '',
       medium: '',
+      edition: '',
+      artworkCreationDate: '',
+      imageIpfsHash: '',
       size: '',
     };
 
@@ -51,11 +58,13 @@ class Register extends React.Component<RegisterProps, RegisterState> {
 
   registerArtifact (event: any): void {
     event.preventDefault();
+
     const { drizzle, drizzleState } = this.props;
 
     const currentAccount = drizzleState.accounts[0];
     const artist = drizzleState.accounts[0]; // TODO: Update this to real artist's account
-    const imageUri = ''; // TODO: Implement image uploading
+
+    const metaUri = '';
 
     const stackId = drizzle.contracts.ArtifactApplication.methods.applyFor.cacheSend(
       currentAccount,
@@ -67,7 +76,8 @@ class Register extends React.Component<RegisterProps, RegisterState> {
       this.state.createdDate,
       this.state.medium,
       this.state.size,
-      imageUri,
+      this.state.imageIpfsHash,
+      metaUri,
       {
         from: drizzleState.accounts[0],
         gasLimit: 6000000,
@@ -98,10 +108,28 @@ class Register extends React.Component<RegisterProps, RegisterState> {
     }
   };
 
+  async saveToIpfs (files: any): Promise<void> {
+    let ipfsId: string;
+    await ipfs.add([...files], { progress: (prog: any) => console.log(`received: ${prog}`) })
+      .then((response: any) => {
+        ipfsId = response[0].hash;
+        this.setState({ imageIpfsHash: ipfsId });
+      }).catch((err: any) => {
+        console.log(err);
+      });
+  }
+
   // TODO: Split these into more manageable components
   // TODO: Make required fields actually required
   render (): React.ReactNode {
     const { classes } = this.props;
+
+    let imgDisplay;
+    if (this.state.imageIpfsHash === '') {
+      imgDisplay = (<Typography>No image given.</Typography>);
+    } else {
+      imgDisplay = (<img alt="artwork on ipfs" src={'https://ipfs.io/ipfs/' + this.state.imageIpfsHash} />);
+    }
     return (
       <Container component="main" maxWidth="md">
         <CssBaseline />
@@ -123,6 +151,18 @@ class Register extends React.Component<RegisterProps, RegisterState> {
                   id="image-upload-button"
                   multiple
                   type="file"
+                  onChange={(e): void => {
+                    e.stopPropagation();
+                    e.preventDefault();
+                    const files = e.target.files;
+                    if (files != null && files[0].size < 1000000) {
+                      // max file size of one megabyte
+                      this.saveToIpfs(files);
+                    } else {
+                      // TODO: nicer way of alerting
+                      alert('Image cannot be greater than 1 MB!');
+                    }
+                  }}
                 />
                 <label htmlFor="image-upload-button">
                   <Button
@@ -134,6 +174,7 @@ class Register extends React.Component<RegisterProps, RegisterState> {
                     Upload Image
                   </Button>
                 </label>
+                {imgDisplay}
               </CardContent>
             </Card>
             <Grid item xs={12} sm={6}>
@@ -177,7 +218,7 @@ class Register extends React.Component<RegisterProps, RegisterState> {
                       id="artistNationality"
                       label="Artist's Nationality"
                       name="artistNationality"
-                      onChange={(e) => this.setState({ artistNationality: e.target.value })}
+                      onChange={(e): void => this.setState({ artistNationality: e.target.value })}
                     />
                   </Grid>
                   <Grid item xs={12} sm={6}>
