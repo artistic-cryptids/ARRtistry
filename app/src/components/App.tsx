@@ -14,8 +14,7 @@ import {
   Route,
   Link,
   Redirect,
-  useLocation,
-} from "react-router-dom";
+} from 'react-router-dom';
 
 const App: React.FC = () => {
   return (
@@ -24,7 +23,7 @@ const App: React.FC = () => {
         <Navigation/>
         <Switch>
           <Route exact path="/">
-            <Redirect to={{ pathname: "/artifacts" }} />
+            <Redirect to={{ pathname: '/artifacts' }} />
           </Route>
           <Route path="*">
             <DrizzledApp />
@@ -51,11 +50,10 @@ const Navigation: React.FC = () => {
         <Link to="/governance">Governance</Link>
       </li>
     </ul>
-  </nav>
-}
+  </nav>;
+};
 
 const DrizzledApp: React.FC = () => {
-  let location = useLocation();
   return <DrizzleContext.Consumer>
     {(drizzleContext: any): React.ReactNode => {
       const { drizzle, drizzleState, initialized } = drizzleContext;
@@ -76,7 +74,7 @@ const DrizzledApp: React.FC = () => {
         </>
       ) : null;
     }}
-  </DrizzleContext.Consumer>
-}
+  </DrizzleContext.Consumer>;
+};
 
 export default App;
