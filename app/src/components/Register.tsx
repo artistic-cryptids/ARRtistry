@@ -128,7 +128,7 @@ class Register extends React.Component<RegisterProps, RegisterState> {
     if (this.state.imageIpfsHash === '') {
       imgDisplay = (<Typography>No image given.</Typography>);
     } else {
-      imgDisplay = (<img alt="image of artwork" src={'https://ipfs.io/ipfs/' + this.state.imageIpfsHash} />);
+      imgDisplay = (<img alt="artwork on ipfs" src={'https://ipfs.io/ipfs/' + this.state.imageIpfsHash} />);
     }
     return (
       <Container component="main" maxWidth="md">
