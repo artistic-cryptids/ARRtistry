@@ -22,13 +22,17 @@ interface RegisterProps {
 }
 
 type RegisterState = {
-  registerTransactionStackId: any;
   title: string;
+  registerTransactionStackId: any;
   artistName: string;
+  artistNationality: string;
+  artistBirthYear: string;
+  createdDate: string;
   medium: string;
   edition: string;
   artworkCreationDate: string;
   imageIpfsHash: string;
+  size: string;
 }
 
 class Register extends React.Component<RegisterProps, RegisterState> {
@@ -38,10 +42,14 @@ class Register extends React.Component<RegisterProps, RegisterState> {
       registerTransactionStackId: null,
       title: '',
       artistName: '',
+      artistNationality: '',
+      artistBirthYear: '',
+      createdDate: '',
       medium: '',
       edition: '',
       artworkCreationDate: '',
       imageIpfsHash: '',
+      size: '',
     };
 
     this.registerArtifact = this.registerArtifact.bind(this);
@@ -62,14 +70,19 @@ class Register extends React.Component<RegisterProps, RegisterState> {
       currentAccount,
       artist,
       this.state.title,
+      this.state.artistName,
+      this.state.artistNationality,
+      this.state.artistBirthYear,
+      this.state.createdDate,
       this.state.medium,
       this.state.edition,
       this.state.artworkCreationDate,
       this.state.imageIpfsHash,
+      this.state.size,
       {
         from: drizzleState.accounts[0],
         gasLimit: 6000000,
-      }
+      },
     ); // TODO: Catch error when this function fails and display error to user
 
     this.setState({
@@ -181,7 +194,7 @@ class Register extends React.Component<RegisterProps, RegisterState> {
                       id="title"
                       label="Title"
                       autoFocus
-                      onChange={(e) => this.setState({ title: e.target.value })}
+                      onChange={(e): void => this.setState({ title: e.target.value })}
                     />
                   </Grid>
                   <Grid item xs={12} sm={6}>
@@ -193,36 +206,61 @@ class Register extends React.Component<RegisterProps, RegisterState> {
                       id="artistName"
                       label="Artist Name"
                       name="artistName"
-                      onChange={(e) => this.setState({ artistName: e.target.value })}
+                      onChange={(e): void => this.setState({ artistName: e.target.value })}
                     />
                   </Grid>
                   <Grid item xs={12} sm={6}>
                     <TextField
                       autoComplete="on"
-                      name="artworkCreationDate"
                       variant="outlined"
                       required
                       fullWidth
-                      id="artworkCreationDate"
-                      label="Artwork Creation Date"
-                      autoFocus
-                      onChange={(e) => this.setState({ artworkCreationDate: e.target.value })}
+                      id="artistNationality"
+                      label="Artist's Nationality"
+                      name="artistNationality"
+                      onChange={(e) => this.setState({ artistNationality: e.target.value })}
                     />
                   </Grid>
-                  <Grid item xs={12} sm={3}>
+                  <Grid item xs={12} sm={6}>
                     <TextField
                       autoComplete="on"
-                      name="edition"
+                      name="createdDate"
                       variant="outlined"
                       required
                       fullWidth
-                      id="edition"
-                      label="Edition"
+                      id="createdDate"
+                      label="Artwork Creation Date"
                       autoFocus
-                      onChange={(e) => this.setState({ edition: e.target.value })}
+                      onChange={(e): void => this.setState({ createdDate: e.target.value })}
                     />
                   </Grid>
-                  <Grid item xs={12} sm={3}>
+                  <Grid item xs={12} sm={4}>
+                    <TextField
+                      autoComplete="on"
+                      name="artistBirthYear"
+                      variant="outlined"
+                      required
+                      fullWidth
+                      id="artistBirthYear"
+                      label="Artisit Year of Birth"
+                      autoFocus
+                      onChange={(e): void => this.setState({ artistBirthYear: e.target.value })}
+                    />
+                  </Grid>
+                  <Grid item xs={12} sm={4}>
+                    <TextField
+                      autoComplete="on"
+                      name="size"
+                      variant="outlined"
+                      required
+                      fullWidth
+                      id="size"
+                      label="Size"
+                      autoFocus
+                      onChange={(e): void => this.setState({ size: e.target.value })}
+                    />
+                  </Grid>
+                  <Grid item xs={12} sm={4}>
                     <TextField
                       autoComplete="on"
                       name="medium"
@@ -232,7 +270,7 @@ class Register extends React.Component<RegisterProps, RegisterState> {
                       id="medium"
                       label="Medium"
                       autoFocus
-                      onChange={(e) => this.setState({ medium: e.target.value })}
+                      onChange={(e): void => this.setState({ medium: e.target.value })}
                     />
                   </Grid>
                   <Grid item xs={12}>

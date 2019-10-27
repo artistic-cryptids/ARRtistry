@@ -15,7 +15,11 @@ type ProposalListState = {
 }
 
 class ProposalList extends React.Component<ProposalListProps, ProposalListState> {
-  componentDidMount () {
+  componentDidMount (): void {
+    this.componentDidUpdate();
+  }
+
+  componentDidUpdate (): void {
     this.props.drizzle.contracts.Governance.methods.getProposals().call()
       .then((ids: any) => this.setState({ ids: ids }))
       .catch((err: any) => { console.log(err); });
@@ -34,7 +38,7 @@ class ProposalList extends React.Component<ProposalListProps, ProposalListState>
         drizzleState={this.props.drizzleState}
         id={id}
         key={id}
-      />
+      />,
     );
 
     return (
