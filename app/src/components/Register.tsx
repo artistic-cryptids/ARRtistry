@@ -78,16 +78,29 @@ class Register extends React.Component<RegisterProps, RegisterState> {
 
     const artworkJsonBuffer = new Array(Buffer.from(JSON.stringify(artworkJson))); 
 
-    this.saveToIpfs(artworkJsonBuffer); 
+    //this.saveToIpfs(artworkJsonBuffer); 
 
     console.log('lolll')
+
+    const files = artworkJsonBuffer; 
+    let ipfsId: string;
+    await ipfs.add([...files], { progress: (prog: any) => console.log(`received: ${prog}`) })
+      .then((response: any) => {
+        ipfsId = response[0].hash;
+        this.setState({ jsonIpfsHash: ipfsId });
+        console.log(ipfsId)
+      }).catch((err: any) => {
+        console.log(err);
+      });
+
+    console.log('json: ' + this.state.jsonIpfsHash)
 
     const { drizzle, drizzleState } = this.props;
 
     const currentAccount = drizzleState.accounts[0];
     const artist = drizzleState.accounts[0]; // TODO: Update this to real artist's account
 
-    /*const stackId = drizzle.contracts.ArtifactApplication.methods.applyFor.cacheSend(
+    const stackId = drizzle.contracts.ArtifactApplication.methods.applyFor.cacheSend(
       currentAccount,
       artist,
       this.state.jsonIpfsHash,
@@ -99,7 +112,7 @@ class Register extends React.Component<RegisterProps, RegisterState> {
 
     this.setState({
       registerTransactionStackId: stackId,
-    });*/
+    });
   }
 
   getRegisterTransactionStatus (): any {
