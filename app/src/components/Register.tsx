@@ -99,13 +99,13 @@ class Register extends React.Component<RegisterProps, RegisterState> {
   captureFile (event: React.ChangeEvent<HTMLInputElement>): void {
     event.stopPropagation();
     event.preventDefault();
-    var files = event.target.files;
+    const files = event.target.files;
     if (files != null && files[0].size < 1000000) {
       // max file size of one megabyte
       this.saveToIpfs(files);
     } else {
       // todo: nicer way of alerting
-      alert("Image cannot be greater than 1 MB!");
+      alert('Image cannot be greater than 1 MB!');
     }
   }
 
