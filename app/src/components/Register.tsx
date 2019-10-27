@@ -66,6 +66,8 @@ class Register extends React.Component<RegisterProps, RegisterState> {
     const currentAccount = drizzleState.accounts[0];
     const artist = drizzleState.accounts[0]; // TODO: Update this to real artist's account
 
+    const metaUri = '';
+
     const stackId = drizzle.contracts.ArtifactApplication.methods.applyFor.cacheSend(
       currentAccount,
       artist,
@@ -75,10 +77,9 @@ class Register extends React.Component<RegisterProps, RegisterState> {
       this.state.artistBirthYear,
       this.state.createdDate,
       this.state.medium,
-      this.state.edition,
-      this.state.artworkCreationDate,
-      this.state.imageIpfsHash,
       this.state.size,
+      this.state.imageIpfsHash,
+      metaUri,
       {
         from: drizzleState.accounts[0],
         gasLimit: 6000000,
@@ -117,14 +118,14 @@ class Register extends React.Component<RegisterProps, RegisterState> {
       // max file size of one megabyte
       this.saveToIpfs(files);
     } else {
-      // todo: nicer way of alerting
+      // TODO: nicer way of alerting
       alert('Image cannot be greater than 1 MB!');
     }
   }
 
-  saveToIpfs (files: any): void {
+  async saveToIpfs (files: any): Promise<void> {
     let ipfsId: string;
-    ipfs.add([...files], { progress: (prog: any) => console.log(`received: ${prog}`) })
+    await ipfs.add([...files], { progress: (prog: any) => console.log(`received: ${prog}`) })
       .then((response: any) => {
         ipfsId = response[0].hash;
         this.setState({ imageIpfsHash: ipfsId });
@@ -137,6 +138,13 @@ class Register extends React.Component<RegisterProps, RegisterState> {
   // TODO: Make required fields actually required
   render (): React.ReactNode {
     const { classes } = this.props;
+
+    let imgDisplay;
+    if (this.state.imageIpfsHash === '') {
+      imgDisplay = (<Typography>No image given.</Typography>);
+    } else {
+      imgDisplay = (<img alt="image of artwork" src={'https://ipfs.io/ipfs/' + this.state.imageIpfsHash} />);
+    }
     return (
       <Container component="main" maxWidth="md">
         <CssBaseline />
@@ -170,11 +178,7 @@ class Register extends React.Component<RegisterProps, RegisterState> {
                     Upload Image
                   </Button>
                 </label>
-                {/* TODO: Make this actually display the image... */}
-                <a
-                  href={'https://ipfs.io/ipfs/' + this.state.imageIpfsHash}>
-                  {this.state.imageIpfsHash}
-                </a>
+                {imgDisplay}
               </CardContent>
             </Card>
             <Grid item xs={12} sm={6}>
