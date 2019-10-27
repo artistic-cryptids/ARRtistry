@@ -54,8 +54,6 @@ class Register extends React.Component<RegisterProps, RegisterState> {
 
     this.registerArtifact = this.registerArtifact.bind(this);
     this.getRegisterTransactionStatus = this.getRegisterTransactionStatus.bind(this);
-
-    this.captureFile = this.captureFile.bind(this);
   }
 
   registerArtifact (event: any): void {
@@ -110,19 +108,6 @@ class Register extends React.Component<RegisterProps, RegisterState> {
     }
   };
 
-  captureFile (event: React.ChangeEvent<HTMLInputElement>): void {
-    event.stopPropagation();
-    event.preventDefault();
-    const files = event.target.files;
-    if (files != null && files[0].size < 1000000) {
-      // max file size of one megabyte
-      this.saveToIpfs(files);
-    } else {
-      // TODO: nicer way of alerting
-      alert('Image cannot be greater than 1 MB!');
-    }
-  }
-
   async saveToIpfs (files: any): Promise<void> {
     let ipfsId: string;
     await ipfs.add([...files], { progress: (prog: any) => console.log(`received: ${prog}`) })
@@ -166,7 +151,18 @@ class Register extends React.Component<RegisterProps, RegisterState> {
                   id="image-upload-button"
                   multiple
                   type="file"
-                  onChange={this.captureFile}
+                  onChange={(e): void => {
+                    e.stopPropagation();
+                    e.preventDefault();
+                    const files = e.target.files;
+                    if (files != null && files[0].size < 1000000) {
+                      // max file size of one megabyte
+                      this.saveToIpfs(files);
+                    } else {
+                      // TODO: nicer way of alerting
+                      alert('Image cannot be greater than 1 MB!');
+                    }
+                  }}
                 />
                 <label htmlFor="image-upload-button">
                   <Button
