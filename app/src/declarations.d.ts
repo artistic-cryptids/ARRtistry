@@ -3,19 +3,19 @@ declare module 'drizzle' {
   import { Store } from 'redux';
 
   export interface ABI {
-    constant: boolean;
+    constant?: boolean;
     inputs: {
       name: string;
       type: string;
       indexed?: boolean;
     }[];
-    name: string;
-    outputs: {
+    name?: string;
+    outputs?: {
       name: string;
       type: string;
     }[];
-    payable: boolean;
-    stateMutability: string;
+    payable?: boolean;
+    stateMutability?: string;
     type: string;
     anonymous?: boolean;
   }
@@ -42,20 +42,20 @@ declare module 'drizzle' {
     [key: number]: INetwork;
     [key: string]: INetwork;
   }
-
+  
   export interface INode {
     id: number;
     literals: string[];
     nodeType: string;
     src: string;
-    baseContracts: any[];
-    contractDependencies: any[];
-    contractKind: string;
+    baseContracts?: any[];
+    contractDependencies?: any[];
+    contractKind?: string;
     documentation?: any;
     fullyImplemented?: boolean;
-    linearizedBaseContracts: number[];
-    name: string;
-    nodes: any[];
+    linearizedBaseContracts?: number[];
+    name?: string;
+    nodes?: any[];
     scope?: number;
   }
 
