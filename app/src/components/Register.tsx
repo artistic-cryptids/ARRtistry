@@ -61,7 +61,7 @@ class Register extends React.Component<RegisterProps, RegisterState> {
       return;
     }
 
-    this.setState({validated: true});
+    this.setState({ validated: true });
 
     const { drizzle, drizzleState } = this.props;
 
@@ -127,95 +127,95 @@ class Register extends React.Component<RegisterProps, RegisterState> {
   }
 
   // This needs to be an arrow constructor to bind `this`, which is bonkers.
-  inputChangeHandler = (event: React.FormEvent<FormControlProps> & {target: {id: keyof RegisterFormFields, value: RegisterFormFields[keyof RegisterFormFields]}}) => {
-    var key = event.target.id;
-    var val = event.target.value;
-    var stateUpdate = {fields: this.state.fields as Pick<RegisterFormFields, keyof RegisterFormFields>};
+  inputChangeHandler = (event: React.FormEvent<FormControlProps> & {target: {id: keyof RegisterFormFields; value: RegisterFormFields[keyof RegisterFormFields]}}) => {
+    const key = event.target.id;
+    const val = event.target.value;
+    const stateUpdate = { fields: this.state.fields as Pick<RegisterFormFields, keyof RegisterFormFields> };
     stateUpdate.fields[key] = val;
     this.setState(stateUpdate);
   }
 
   renderArtifactInformation = (): React.ReactNode => {
-      return (
-        <Container>
-          <Form.Row>
-            <Form.Group as={Col} controlId="title">
-              <Form.Label>Title</Form.Label>
-              <Form.Control
-                required
-                type="text"
-                onChange={this.inputChangeHandler}/>
-              <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
-            </Form.Group>
-          </Form.Row>
+    return (
+      <Container>
+        <Form.Row>
+          <Form.Group as={Col} controlId="title">
+            <Form.Label>Title</Form.Label>
+            <Form.Control
+              required
+              type="text"
+              onChange={this.inputChangeHandler}/>
+            <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
+          </Form.Group>
+        </Form.Row>
 
-          <Form.Row>
-            <Form.Group as={Col} controlId="createdDate">
-              <Form.Label>Date of creation</Form.Label>
-              <Form.Control
-                required
-                type="text"
-                onChange={this.inputChangeHandler}/>
-              <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
-            </Form.Group>
-          </Form.Row>
+        <Form.Row>
+          <Form.Group as={Col} controlId="createdDate">
+            <Form.Label>Date of creation</Form.Label>
+            <Form.Control
+              required
+              type="text"
+              onChange={this.inputChangeHandler}/>
+            <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
+          </Form.Group>
+        </Form.Row>
 
-          <Form.Row>
-            <Form.Group as={Col} controlId="medium">
-              <Form.Label>Medium of Artwork</Form.Label>
-              <Form.Control
-                required
-                type="text"
-                onChange={this.inputChangeHandler}/>
-              <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
-            </Form.Group>
+        <Form.Row>
+          <Form.Group as={Col} controlId="medium">
+            <Form.Label>Medium of Artwork</Form.Label>
+            <Form.Control
+              required
+              type="text"
+              onChange={this.inputChangeHandler}/>
+            <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
+          </Form.Group>
 
-            <Form.Group as={Col} controlId="size">
-              <Form.Label>Size of Creation</Form.Label>
-              <Form.Control
-                required
-                type="text"
-                onChange={this.inputChangeHandler}/>
-              <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
-            </Form.Group>
-          </Form.Row>
-        </Container>
-      );
-    }
+          <Form.Group as={Col} controlId="size">
+            <Form.Label>Size of Creation</Form.Label>
+            <Form.Control
+              required
+              type="text"
+              onChange={this.inputChangeHandler}/>
+            <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
+          </Form.Group>
+        </Form.Row>
+      </Container>
+    );
+  }
 
-    renderArtistInformation = (): React.ReactNode => {
-      return (
-        <Container>
-          <Form.Row>
-            <Form.Group as={Col} controlId="artistName">
-              <Form.Label>Artist Name</Form.Label>
-              <Form.Control
-                required
-                type="text"
-                onChange={this.inputChangeHandler}/>
-              <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
-            </Form.Group>
-          </Form.Row>
-          <Form.Row>
-            <Form.Group as={Col} controlId="artistNationality">
-              <Form.Label>Artist Nationality</Form.Label>
-              <Form.Control
-                required
-                type="text"
-                onChange={this.inputChangeHandler}/>
-              <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
-            </Form.Group>
-            <Form.Group as={Col} controlId="artistBirthYear">
-              <Form.Label>Artist Birth Year</Form.Label>
-              <Form.Control
-                required
-                type="text"
-                onChange={this.inputChangeHandler}/>
-              <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
-            </Form.Group>
-          </Form.Row>
-        </Container>
-      );
+  renderArtistInformation = (): React.ReactNode => {
+    return (
+      <Container>
+        <Form.Row>
+          <Form.Group as={Col} controlId="artistName">
+            <Form.Label>Artist Name</Form.Label>
+            <Form.Control
+              required
+              type="text"
+              onChange={this.inputChangeHandler}/>
+            <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
+          </Form.Group>
+        </Form.Row>
+        <Form.Row>
+          <Form.Group as={Col} controlId="artistNationality">
+            <Form.Label>Artist Nationality</Form.Label>
+            <Form.Control
+              required
+              type="text"
+              onChange={this.inputChangeHandler}/>
+            <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
+          </Form.Group>
+          <Form.Group as={Col} controlId="artistBirthYear">
+            <Form.Label>Artist Birth Year</Form.Label>
+            <Form.Control
+              required
+              type="text"
+              onChange={this.inputChangeHandler}/>
+            <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
+          </Form.Group>
+        </Form.Row>
+      </Container>
+    );
   }
 
   // TODO: Split these into more manageable components
@@ -279,7 +279,7 @@ class Register extends React.Component<RegisterProps, RegisterState> {
                   </Accordion.Toggle>
                   <Accordion.Collapse eventKey="0">
                     <Card.Body>
-                    {this.renderArtifactInformation()}
+                      {this.renderArtifactInformation()}
                     </Card.Body>
                   </Accordion.Collapse>
                 </Card>
@@ -289,7 +289,7 @@ class Register extends React.Component<RegisterProps, RegisterState> {
                   </Accordion.Toggle>
                   <Accordion.Collapse eventKey="1">
                     <Card.Body>
-                    {this.renderArtistInformation()}
+                      {this.renderArtistInformation()}
                     </Card.Body>
                   </Accordion.Collapse>
                 </Card>

@@ -24,7 +24,7 @@ class ArtworkInfo extends React.Component<ArtworkInfoProps, {}> {
           <Card.Subtitle className="mb-2 text-muted">{artwork.artistName}</Card.Subtitle>
           <Card.Text>
             Some quick example text to build on the card title and make up the bulk of
-            the card's content.
+            the card&apos;s content.
             {this.props.artwork.createdDate}. {this.props.artwork.medium}
           </Card.Text>
           {this.props.children}

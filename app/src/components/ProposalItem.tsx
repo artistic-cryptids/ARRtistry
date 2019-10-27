@@ -1,8 +1,6 @@
 import * as React from 'react';
 import ArtworkInfo from './ArtworkInfo';
-import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
-import Col from 'react-bootstrap/Col';
 import Button from 'react-bootstrap/Button';
 import ButtonGroup from 'react-bootstrap/ButtonGroup';
 
@@ -59,8 +57,8 @@ class ProposalItem extends React.Component<ProposalItemProps, ProposalItemState>
 
     return (
       <ArtworkInfo
-      artwork={this.state.proposal}
-      id={this.props.id}>
+        artwork={this.state.proposal}
+        id={this.props.id}>
         <Row>
           <ButtonGroup aria-label="Actionbar" className="mx-auto">
             <Button variant="outline-success" onClick={this.approveProposal}>Approve</Button>

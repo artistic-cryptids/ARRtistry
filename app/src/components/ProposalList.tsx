@@ -12,7 +12,7 @@ interface ProposalListState {
 }
 
 class ProposalList extends React.Component<ProposalListProps, ProposalListState> {
-  constructor(props: ProposalListProps) {
+  constructor (props: ProposalListProps) {
     super(props);
     this.state = { ids: [] };
   }
@@ -26,7 +26,7 @@ class ProposalList extends React.Component<ProposalListProps, ProposalListState>
     return true;
   }
 
-  async loadProposals() {
+  async loadProposals () {
     const ids = await this.props.drizzle.contracts.Governance.methods.getProposals().call();
     if (!this.state || this.state.ids !== ids) {
       this.setState({ ids: ids });

@@ -45,10 +45,10 @@ class ArtworkItem extends React.Component<ArtworkItemProps, ArtworkItemState> {
     console.log('Artwork ' + JSON.stringify(this.state.artwork));
 
     return (
-    <ListGroup.Item>
-      <ArtworkInfo artwork={this.state.artwork} id={this.props.id}/>
-    </ListGroup.Item>
-  );
+      <ListGroup.Item>
+        <ArtworkInfo artwork={this.state.artwork} id={this.props.id}/>
+      </ListGroup.Item>
+    );
   }
 }
 
