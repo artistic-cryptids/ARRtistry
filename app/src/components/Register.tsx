@@ -218,7 +218,7 @@ class Register extends React.Component<RegisterProps, RegisterState> {
                       id="artistNationality"
                       label="Artist's Nationality"
                       name="artistNationality"
-                      onChange={(e) => this.setState({ artistNationality: e.target.value })}
+                      onChange={(e): void => this.setState({ artistNationality: e.target.value })}
                     />
                   </Grid>
                   <Grid item xs={12} sm={6}>
