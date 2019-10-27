@@ -41,6 +41,8 @@ type InputChangeEvent = React.FormEvent<FormControlProps> &
     };
   }
 
+const GENERIC_FEEDBACK = <Form.Control.Feedback>Looks good!</Form.Control.Feedback>;
+
 class Register extends React.Component<RegisterProps, RegisterState> {
   constructor (props: RegisterProps) {
     super(props);
@@ -153,7 +155,7 @@ class Register extends React.Component<RegisterProps, RegisterState> {
               required
               type="text"
               onChange={this.inputChangeHandler}/>
-            <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
+            {GENERIC_FEEDBACK}
           </Form.Group>
         </Form.Row>
 
@@ -164,7 +166,7 @@ class Register extends React.Component<RegisterProps, RegisterState> {
               required
               type="text"
               onChange={this.inputChangeHandler}/>
-            <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
+            {GENERIC_FEEDBACK}
           </Form.Group>
         </Form.Row>
 
@@ -175,7 +177,7 @@ class Register extends React.Component<RegisterProps, RegisterState> {
               required
               type="text"
               onChange={this.inputChangeHandler}/>
-            <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
+            {GENERIC_FEEDBACK}
           </Form.Group>
 
           <Form.Group as={Col} controlId="size">
@@ -184,7 +186,7 @@ class Register extends React.Component<RegisterProps, RegisterState> {
               required
               type="text"
               onChange={this.inputChangeHandler}/>
-            <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
+            {GENERIC_FEEDBACK}
           </Form.Group>
         </Form.Row>
       </Container>
@@ -201,7 +203,7 @@ class Register extends React.Component<RegisterProps, RegisterState> {
               required
               type="text"
               onChange={this.inputChangeHandler}/>
-            <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
+            {GENERIC_FEEDBACK}
           </Form.Group>
         </Form.Row>
         <Form.Row>
@@ -211,7 +213,7 @@ class Register extends React.Component<RegisterProps, RegisterState> {
               required
               type="text"
               onChange={this.inputChangeHandler}/>
-            <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
+            {GENERIC_FEEDBACK}
           </Form.Group>
           <Form.Group as={Col} controlId="artistBirthYear">
             <Form.Label>Artist Birth Year</Form.Label>
@@ -219,7 +221,7 @@ class Register extends React.Component<RegisterProps, RegisterState> {
               required
               type="text"
               onChange={this.inputChangeHandler}/>
-            <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
+            {GENERIC_FEEDBACK}
           </Form.Group>
         </Form.Row>
       </Container>
