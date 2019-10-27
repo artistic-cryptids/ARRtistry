@@ -31,6 +31,8 @@ class ArtworkInfo extends React.Component<ArtworkInfoProps, {}> {
                 className={this.props.classes.inline}
                 color="textPrimary"
               >
+                {/* image will be at https://ipfs.io/ipfs/METAURI */}
+                {this.props.artwork.imageUri} +
                 {this.props.artwork.artistName}<br/>
               </Typography>
               {this.props.artwork.createdDate}. {this.props.artwork.medium}

@@ -13,6 +13,7 @@ contract IArtifactRegistry is IERC721 {
     string created; // TODO(mm5917): better data type
     string medium;
     string size;
+    string imageUri;
     string metaUri;
   }
 

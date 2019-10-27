@@ -32,6 +32,7 @@ contract ArtifactApplication {
     string memory _created,
     string memory _medium,
     string memory _size,
+    string memory _imageUri,
     string memory _metaUri
   ) public returns (uint) {
     IArtifactRegistry.Artifact memory artifact = IArtifactRegistry.Artifact(
@@ -43,6 +44,7 @@ contract ArtifactApplication {
         _created,
         _medium,
         _size,
+        _imageUri,
         _metaUri
     );
 
@@ -50,7 +52,7 @@ contract ArtifactApplication {
     return governance.propose(address(registry), data);
   }
 
-  function getProposal(uint proposalId) public view returns (address, address, string memory, string memory, string memory, string memory, string memory, string memory, string memory, string memory) {
+  function getProposal(uint proposalId) public view returns (address, address, string memory, string memory, string memory, string memory, string memory, string memory, string memory, string memory, string memory) {
     IGovernance.Proposal memory proposal = governance.getProposal(proposalId);
     require(proposal.status == IGovernance.Status.Pending, "ArtifactApplication::getProposal: proposal is not pending");
 
@@ -64,6 +66,6 @@ contract ArtifactApplication {
 
     (address who, IArtifactRegistry.Artifact memory artifact) = abi.decode(artifactData, (address, IArtifactRegistry.Artifact));
 
-    return (who, artifact.artist, artifact.title, artifact.artistName, artifact.artistNationality, artifact.artistBirthYear, artifact.created, artifact.medium, artifact.size, artifact.metaUri);
+    return (who, artifact.artist, artifact.title, artifact.artistName, artifact.artistNationality, artifact.artistBirthYear, artifact.created, artifact.medium, artifact.size, artifact.imageUri, artifact.metaUri);
   }
 }
