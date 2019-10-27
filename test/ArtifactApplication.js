@@ -31,6 +31,7 @@ contract('ArtifactApplication', async accounts => {
         ARTIFACT.created,
         ARTIFACT.medium,
         ARTIFACT.size,
+        ARTIFACT.imageUri,
         ARTIFACT.metaUri,
       );
 
@@ -61,6 +62,7 @@ contract('ArtifactApplication', async accounts => {
         ARTIFACT.created,
         ARTIFACT.medium,
         ARTIFACT.size,
+        ARTIFACT.imageUri,
         ARTIFACT.metaUri,
       );
 
@@ -79,6 +81,7 @@ contract('ArtifactApplication', async accounts => {
         ARTIFACT.created,
         ARTIFACT.medium,
         ARTIFACT.size,
+        ARTIFACT.imageUri,
         ARTIFACT.metaUri,
       );
 
@@ -100,6 +103,7 @@ contract('ArtifactApplication', async accounts => {
         ARTIFACT.created,
         ARTIFACT.medium,
         ARTIFACT.size,
+        ARTIFACT.imageUri,
         ARTIFACT.metaUri,
       );
 
