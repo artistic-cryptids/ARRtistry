@@ -57,7 +57,6 @@ class Register extends React.Component<RegisterProps, RegisterState> {
 
     const currentAccount = drizzleState.accounts[0];
     const artist = drizzleState.accounts[0]; // TODO: Update this to real artist's account
-    const imageUri = ''; // TODO: Implement image uploading
 
     const stackId = drizzle.contracts.ArtifactApplication.methods.applyFor.cacheSend(
       currentAccount,
@@ -66,7 +65,7 @@ class Register extends React.Component<RegisterProps, RegisterState> {
       this.state.medium,
       this.state.edition,
       this.state.artworkCreationDate,
-      imageUri,
+      this.state.imageIpfsHash,
       {
         from: drizzleState.accounts[0],
         gasLimit: 6000000,
@@ -100,7 +99,14 @@ class Register extends React.Component<RegisterProps, RegisterState> {
   captureFile (event: React.ChangeEvent<HTMLInputElement>): void {
     event.stopPropagation();
     event.preventDefault();
-    this.saveToIpfs(event.target.files);
+    var files = event.target.files;
+    if (files != null && files[0].size < 1000000) {
+      // max file size of one megabyte
+      this.saveToIpfs(files);
+    } else {
+      // todo: nicer way of alerting
+      alert("Image cannot be greater than 1 MB!");
+    }
   }
 
   saveToIpfs (files: any): void {

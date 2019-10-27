@@ -31,7 +31,8 @@ class ArtworkInfo extends React.Component<ArtworkInfoProps, {}> {
                 className={this.props.classes.inline}
                 color="textPrimary"
               >
-                {this.props.artwork.artist_name}<br/>
+                {/* image will be at https://ipfs.io/ipfs/METAURI */}
+                {this.props.artwork.metaUri} <br/>
               </Typography>
               {this.props.artwork.created}. {this.props.artwork.medium}
             </React.Fragment>
