@@ -10,6 +10,7 @@ const ARTIFACT = {
   created: '10-10-10',
   medium: 'Wood',
   size: '12*20',
+  imageUri: 'QmSkyQHeX9wVRGyQ6R5w4511s3gCb9XigoW9G2S7cjT8a7',
   metaUri: 'SpecialString',
 };
 
@@ -27,7 +28,8 @@ function artifactEquality (actual, expected, offset = 0) {
   expect(actual[offset + 5]).to.be.equal(expected.created);
   expect(actual[offset + 6]).to.be.equal(expected.medium);
   expect(actual[offset + 7]).to.be.equal(expected.size);
-  expect(actual[offset + 8]).to.be.equal(expected.metaUri);
+  expect(actual[offset + 8]).to.be.equal(expected.imageUri);
+  expect(actual[offset + 9]).to.be.equal(expected.metaUri);
 };
 
 module.exports = {
