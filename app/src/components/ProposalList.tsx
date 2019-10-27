@@ -26,7 +26,7 @@ class ProposalList extends React.Component<ProposalListProps, ProposalListState>
     return true;
   }
 
-  async loadProposals (): void {
+  async loadProposals (): Promise<void> {
     const ids = await this.props.drizzle.contracts.Governance.methods.getProposals().call();
     if (!this.state || this.state.ids !== ids) {
       this.setState({ ids: ids });
