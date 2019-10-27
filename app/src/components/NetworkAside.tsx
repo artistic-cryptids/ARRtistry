@@ -27,7 +27,11 @@ class NetworkAside extends React.Component<NetworkAsideProps, NetworkAsideState>
   }
 
   networkName (): string {
-    return this.state.network.replace(/\w\S*/g, function (txt) { return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase(); });
+    return this.state.network.replace(/\w\S*/g,
+      function (txt) {
+        return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
+      },
+    );
   };
 
   render (): React.ReactNode {

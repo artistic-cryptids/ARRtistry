@@ -33,6 +33,14 @@ interface RegisterState {
   validated: boolean;
 }
 
+type InputChangeEvent = React.FormEvent<FormControlProps> &
+  {
+    target: {
+      id: keyof RegisterFormFields;
+      value: RegisterFormFields[keyof RegisterFormFields];
+    };
+  }
+
 class Register extends React.Component<RegisterProps, RegisterState> {
   constructor (props: RegisterProps) {
     super(props);
@@ -52,7 +60,7 @@ class Register extends React.Component<RegisterProps, RegisterState> {
     };
   }
 
-  registerArtifact = (event: React.FormEvent<HTMLFormElement>) => {
+  registerArtifact = (event: React.FormEvent<HTMLFormElement>): void => {
     event.stopPropagation();
     event.preventDefault();
 
@@ -96,7 +104,7 @@ class Register extends React.Component<RegisterProps, RegisterState> {
     });
   }
 
-  getRegisterTransactionStatus = () => {
+  getRegisterTransactionStatus = (): string | null => {
     const { transactions, transactionStack } = this.props.drizzleState;
 
     const registerTransactionHash = transactionStack[this.state.registerTransactionStackId];
@@ -127,7 +135,7 @@ class Register extends React.Component<RegisterProps, RegisterState> {
   }
 
   // This needs to be an arrow constructor to bind `this`, which is bonkers.
-  inputChangeHandler = (event: React.FormEvent<FormControlProps> & {target: {id: keyof RegisterFormFields; value: RegisterFormFields[keyof RegisterFormFields]}}) => {
+  inputChangeHandler = (event: InputChangeEvent): void => {
     const key = event.target.id;
     const val = event.target.value;
     const stateUpdate = { fields: this.state.fields as Pick<RegisterFormFields, keyof RegisterFormFields> };
