@@ -19,10 +19,10 @@ class ArtworkInfo extends React.Component<ArtworkInfoProps, {}> {
       <Grid container direction="row">
         <ListItemAvatar>
           {/* TODO: replace with thumbnail image?? */}
-          <Avatar alt={this.props.artwork.title}>{this.props.artwork.createdDate}</Avatar>
+          <Avatar alt="alt">createdDate</Avatar>
         </ListItemAvatar>
         <ListItemText
-          primary={this.props.artwork.title}
+          primary="title"
           secondary={
             <React.Fragment>
               <Typography
@@ -32,10 +32,9 @@ class ArtworkInfo extends React.Component<ArtworkInfoProps, {}> {
                 color="textPrimary"
               >
                 {/* image will be at https://ipfs.io/ipfs/METAURI */}
-                {this.props.artwork.metaUri} +
-                {this.props.artwork.artistName}<br/>
+                {this.props.artwork.metaUri} <br/>
               </Typography>
-              {this.props.artwork.createdDate}. {this.props.artwork.medium}
+              "createdDate. medium."
             </React.Fragment>
           }
         />

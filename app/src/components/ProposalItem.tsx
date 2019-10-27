@@ -38,14 +38,7 @@ class ProposalItem extends React.Component<ProposalItemProps, ProposalItemState>
       .call()
       .then((proposalData: any): void => {
         const proposal = {
-          title: proposalData[2],
-          artistName: proposalData[3],
-          artistNationality: proposalData[4],
-          artistBirthYear: proposalData[5],
-          createdDate: proposalData[6],
-          medium: proposalData[7],
-          size: proposalData[8],
-          metaUri: proposalData[9],
+          metaUri: proposalData[1],
         };
         this.setState({ proposal: proposal });
       })

@@ -32,6 +32,7 @@ type RegisterState = {
   edition: string;
   artworkCreationDate: string;
   imageIpfsHash: string;
+  jsonIpfsHash: string;
   size: string;
 }
 
@@ -49,6 +50,7 @@ class Register extends React.Component<RegisterProps, RegisterState> {
       edition: '',
       artworkCreationDate: '',
       imageIpfsHash: '',
+      jsonIpfsHash: '',
       size: '',
     };
 
@@ -58,27 +60,37 @@ class Register extends React.Component<RegisterProps, RegisterState> {
     this.captureFile = this.captureFile.bind(this);
   }
 
-  registerArtifact (event: any): void {
+  async registerArtifact (event: any): Promise<void> {
     event.preventDefault();
+
+    const artworkJson = {
+      'title': this.state.title,
+      'artistName': this.state.artistName,
+      'artistNationality': this.state.artistNationality, 
+      'artistBirthYear': this.state.artistBirthYear, 
+      'createdDate': this.state.createdDate,
+      'medium': this.state.medium,
+      'edition': this.state.edition,
+      'artworkCreationDate': this.state.artworkCreationDate,
+      'size': this.state.size, 
+      'imageIpfsHash': this.state.imageIpfsHash,
+    }
+
+    const artworkJsonBuffer = new Array(Buffer.from(JSON.stringify(artworkJson))); 
+
+    this.saveToIpfs(artworkJsonBuffer); 
+
+    console.log('lolll')
 
     const { drizzle, drizzleState } = this.props;
 
     const currentAccount = drizzleState.accounts[0];
     const artist = drizzleState.accounts[0]; // TODO: Update this to real artist's account
 
-    const stackId = drizzle.contracts.ArtifactApplication.methods.applyFor.cacheSend(
+    /*const stackId = drizzle.contracts.ArtifactApplication.methods.applyFor.cacheSend(
       currentAccount,
       artist,
-      this.state.title,
-      this.state.artistName,
-      this.state.artistNationality,
-      this.state.artistBirthYear,
-      this.state.createdDate,
-      this.state.medium,
-      this.state.edition,
-      this.state.artworkCreationDate,
-      this.state.imageIpfsHash,
-      this.state.size,
+      this.state.jsonIpfsHash,
       {
         from: drizzleState.accounts[0],
         gasLimit: 6000000,
@@ -87,7 +99,7 @@ class Register extends React.Component<RegisterProps, RegisterState> {
 
     this.setState({
       registerTransactionStackId: stackId,
-    });
+    });*/
   }
 
   getRegisterTransactionStatus (): any {
@@ -122,12 +134,13 @@ class Register extends React.Component<RegisterProps, RegisterState> {
     }
   }
 
-  saveToIpfs (files: any): void {
+  async saveToIpfs (files: any): Promise<void> {
     let ipfsId: string;
-    ipfs.add([...files], { progress: (prog: any) => console.log(`received: ${prog}`) })
+    await ipfs.add([...files], { progress: (prog: any) => console.log(`received: ${prog}`) })
       .then((response: any) => {
         ipfsId = response[0].hash;
         this.setState({ imageIpfsHash: ipfsId });
+        console.log(ipfsId)
       }).catch((err: any) => {
         console.log(err);
       });
