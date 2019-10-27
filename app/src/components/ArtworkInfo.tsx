@@ -6,6 +6,7 @@ interface Artwork {
   artistName: string;
   createdDate: string;
   medium: string;
+  imageIpfsHash: string;
 }
 
 interface ArtworkInfoProps {
@@ -19,7 +20,7 @@ class ArtworkInfo extends React.Component<ArtworkInfoProps, {}> {
     return (
       <Card className="shadow">
         <Card.Body>
-          <Card.Img variant="top" src={this.props.artwork.imageUri} />
+          <Card.Img variant="top" src={'https://ipfs.io/ipfs/' + this.props.artwork.imageIpfsHash} />
           <Card.Title><span className="text-muted text-capitalize">#{this.props.id} </span>{artwork.title}</Card.Title>
           <Card.Subtitle className="mb-2 text-muted">{artwork.artistName}</Card.Subtitle>
           <Card.Text>

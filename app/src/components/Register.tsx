@@ -19,10 +19,9 @@ interface RegisterFormFields {
   artistName: string;
   artistNationality: string;
   artistBirthYear: string;
-  createdDate: string;
+  artifactCreationDate: string;
   medium: string;
   edition: string;
-  artworkCreationDate: string;
   imageIpfsHash: string;
   size: string;
 }
@@ -54,7 +53,8 @@ class Register extends React.Component<RegisterProps, RegisterState> {
         artistName: '',
         artistNationality: '',
         artistBirthYear: '',
-        createdDate: '',
+        edition: '',
+        artifactCreationDate: '',
         medium: '',
         size: '',
         imageIpfsHash: '',
@@ -89,7 +89,7 @@ class Register extends React.Component<RegisterProps, RegisterState> {
       fields.artistName,
       fields.artistNationality,
       fields.artistBirthYear,
-      fields.createdDate,
+      fields.artifactCreationDate,
       fields.medium,
       fields.size,
       fields.imageIpfsHash,
@@ -160,7 +160,7 @@ class Register extends React.Component<RegisterProps, RegisterState> {
         </Form.Row>
 
         <Form.Row>
-          <Form.Group as={Col} controlId="createdDate">
+          <Form.Group as={Col} controlId="artifactCreationDate">
             <Form.Label>Date of creation</Form.Label>
             <Form.Control
               required
@@ -234,9 +234,9 @@ class Register extends React.Component<RegisterProps, RegisterState> {
 
     let imgDisplay;
     if (this.state.fields.imageIpfsHash === '') {
-      imgDisplay = (<h3>No image given.</h3>);
+      imgDisplay = (<h5>No image given.</h5>);
     } else {
-      imgDisplay = (<img alt="artwork on ipfs" src={'https://ipfs.io/ipfs/' + this.state.fields.imageIpfsHash} />);
+      imgDisplay = (<Card.Img src={'https://ipfs.io/ipfs/' + this.state.fields.imageIpfsHash} />);
     }
     return (
       <Container>
@@ -247,13 +247,25 @@ class Register extends React.Component<RegisterProps, RegisterState> {
         <Row>
           <Col sm={4}>
             <Card>
+              {imgDisplay}
               <Card.Body>
+                <div style={{
+                  position: 'relative',
+                  overflow: 'hidden',
+                  display: 'inline-block',
+                }}>
                 <input
+                  className="btn"
                   accept="image/*"
-                  style={{ display: 'none' }}
                   id="image-upload-button"
                   multiple
                   type="file"
+                  style={{
+                   position: 'absolute',
+                   top: '0',
+                   left: '0',
+                   opacity: '0',
+                  }}
                   onChange={(e): void => {
                     e.stopPropagation();
                     e.preventDefault();
@@ -267,12 +279,10 @@ class Register extends React.Component<RegisterProps, RegisterState> {
                     }
                   }}
                 />
-                <label htmlFor="image-upload-button">
-                  <Button>
-                    Upload Image
-                  </Button>
-                </label>
-              {imgDisplay}
+                <Button>
+                  Upload Image
+                </Button>
+                </div>
               </Card.Body>
             </Card>
           </Col>

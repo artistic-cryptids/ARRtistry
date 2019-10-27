@@ -20,6 +20,7 @@ class ArtworkItem extends React.Component<ArtworkItemProps, ArtworkItemState> {
       .call()
       .then((tokenId: any) => registry.methods.getArtifactForToken(tokenId).call())
       .then((artworkData: any) => {
+        console.log(artworkData);
         const artwork = {
           title: artworkData[1],
           artistName: artworkData[2],
@@ -28,7 +29,7 @@ class ArtworkItem extends React.Component<ArtworkItemProps, ArtworkItemState> {
           createdDate: artworkData[5],
           medium: artworkData[6],
           size: artworkData[7],
-          imageUri: artworkData[8],
+          imageIpfsHash: artworkData[8],
           metaUri: artworkData[9],
         };
         this.setState({ artwork: artwork });
