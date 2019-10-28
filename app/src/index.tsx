@@ -4,14 +4,14 @@ import './index.css';
 import App from './components/App';
 import * as serviceWorker from './serviceWorker';
 
-import { Drizzle, generateStore } from 'drizzle';
+import { Drizzle, DrizzleOptions, generateStore } from 'drizzle';
 import { DrizzleContext } from 'drizzle-react';
 
 import Governance from './contracts/Governance.json';
 import ArtifactApplication from './contracts/ArtifactApplication.json';
 import ArtifactRegistry from './contracts/ArtifactRegistry.json';
 
-const options = {
+const options: DrizzleOptions = {
   contracts: [ArtifactApplication, Governance, ArtifactRegistry],
   web3: {
     fallback: {
@@ -21,7 +21,7 @@ const options = {
   },
 };
 
-const drizzleStore = generateStore(options);
+const drizzleStore = generateStore({ drizzleOptions: options });
 const drizzle = new Drizzle(options, drizzleStore);
 
 ReactDOM.render(
