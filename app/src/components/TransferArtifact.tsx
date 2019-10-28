@@ -5,34 +5,34 @@ import Form from 'react-bootstrap/Form';
 import { FormControlProps } from 'react-bootstrap/FormControl';
 import Modal from 'react-bootstrap/Modal';
 
-interface TransferArtworkProps {
+interface TransferArtifactProps {
   drizzle: any;
   drizzleState: any;
   id: any;
 }
 
-interface TransferArtworkFormFields {
+interface TransferArtifactFormFields {
   recipientAddress: string;
   price: string;
 }
 
-interface TransferArtworkState {
-  fields: TransferArtworkFormFields;
+interface TransferArtifactState {
+  fields: TransferArtifactFormFields;
   showTransferForm: boolean;
 }
 
 type InputChangeEvent = React.FormEvent<FormControlProps> &
   {
     target: {
-      id: keyof TransferArtworkFormFields;
-      value: TransferArtworkFormFields[keyof TransferArtworkFormFields];
+      id: keyof TransferArtifactFormFields;
+      value: TransferArtifactFormFields[keyof TransferArtifactFormFields];
     };
   }
 
 const GENERIC_FEEDBACK = <Form.Control.Feedback>Looks good!</Form.Control.Feedback>;
 
-class TransferArtwork extends React.Component<TransferArtworkProps, TransferArtworkState> {
-  constructor (props: TransferArtworkProps) {
+class TransferArtifact extends React.Component<TransferArtifactProps, TransferArtifactState> {
+  constructor (props: TransferArtifactProps) {
     super(props);
     this.state = {
       fields: {
@@ -47,7 +47,6 @@ class TransferArtwork extends React.Component<TransferArtworkProps, TransferArtw
     const artifactRegistry = this.props.drizzle.contracts.ArtifactRegistry;
     const currentAccount = this.props.drizzleState.accounts[0];
 
-    console.log("adsasd" + this.props.id);
     artifactRegistry.methods.tokenOfOwnerByIndex(
       currentAccount, this.props.id)
       .call()
@@ -65,7 +64,7 @@ class TransferArtwork extends React.Component<TransferArtworkProps, TransferArtw
     const key = event.target.id;
     const val = event.target.value;
     const stateUpdate = {
-      fields: this.state.fields as Pick<TransferArtworkFormFields, keyof TransferArtworkFormFields>,
+      fields: this.state.fields as Pick<TransferArtifactFormFields, keyof TransferArtifactFormFields>,
     };
     stateUpdate.fields[key] = val;
     this.setState(stateUpdate);
@@ -130,4 +129,4 @@ class TransferArtwork extends React.Component<TransferArtworkProps, TransferArtw
   }
 }
 
-export default TransferArtwork;
+export default TransferArtifact;

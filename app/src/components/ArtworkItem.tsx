@@ -1,7 +1,7 @@
 import * as React from 'react';
 import ArtworkInfo from './ArtworkInfo';
 import ListGroup from 'react-bootstrap/ListGroup';
-import TransferArtwork from './TransferArtwork';
+import TransferArtifact from './TransferArtifact';
 
 interface ArtworkItemProps {
   drizzle: any;
@@ -48,7 +48,7 @@ class ArtworkItem extends React.Component<ArtworkItemProps, ArtworkItemState> {
     return (
       <ListGroup.Item>
         <ArtworkInfo artwork={this.state.artwork} id={this.props.id}>
-          <TransferArtwork
+          <TransferArtifact
             drizzle={this.props.drizzle}
             drizzleState={this.props.drizzleState}
             id={this.props.id}
