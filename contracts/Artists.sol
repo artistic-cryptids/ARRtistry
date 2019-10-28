@@ -25,26 +25,26 @@ contract Artists is Ownable {
     _transferOwnership(owner);
 
     // Pre populate with some artists
-    addArtist("Vincent Van Gogh", address(keccak256(abi.encodePacked("Vincent Van Gogh"))));
-    addArtist("Pablo Picasso", address(keccak256(abi.encodePacked("Pablo Picasso"))));
-    addArtist("Leonardo da Vinci", address(keccak256(abi.encodePacked("Leonardo da Vinci"))));
-    addArtist("Claude Monet", address(keccak256(abi.encodePacked("Claude Monet"))));
-    addArtist("Andy Warhol", address(keccak256(abi.encodePacked("Andy Warhol"))));
-    addArtist("Salvador Dali", address(keccak256(abi.encodePacked("Salvador Dali"))));
-    addArtist("Michelangelo", address(keccak256(abi.encodePacked("Michelangelo"))));
-    
+    addArtist("Vincent Van Gogh", address(uint(keccak256(abi.encodePacked("Vincent Van Gogh")))));
+    addArtist("Pablo Picasso", address(uint(keccak256(abi.encodePacked("Pablo Picasso")))));
+    addArtist("Leonardo da Vinci", address(uint(keccak256(abi.encodePacked("Leonardo da Vinci")))));
+    addArtist("Claude Monet", address(uint(keccak256(abi.encodePacked("Claude Monet")))));
+    addArtist("Andy Warhol", address(uint(keccak256(abi.encodePacked("Andy Warhol")))));
+    addArtist("Salvador Dali", address(uint(keccak256(abi.encodePacked("Salvador Dali")))));
+    addArtist("Michelangelo", address(uint(keccak256(abi.encodePacked("Michelangelo")))));
+
   }
 
-  function addArtist(string memory name, address wallet) public only_owner returns (uint256) {
+  function addArtist(string memory name, address wallet) public onlyOwner returns (uint256) {
     _artistIds.increment();
     uint256 id = _artistIds.current();
 
-    artists[id] = new Artist(name, wallet);
+    artists[id] = Artist(name, wallet);
 
     return id;
   }
 
-  function getArtistsTotal() returns (uint256){
+  function getArtistsTotal() public returns (uint256){
     return _artistIds.current();
   }
 }
