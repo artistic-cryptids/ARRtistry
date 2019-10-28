@@ -1,56 +1,42 @@
-const { constants } = require('@openzeppelin/test-helpers');
-const { ZERO_ADDRESS } = constants;
-const namehash = require('eth-ens-namehash');
+const { expectRevert } = require('@openzeppelin/test-helpers');
 
-const Contract = artifacts.require('ENSResolver');
+const Contract = artifacts.require('Artists');
 
-contract('ENSResolver', async accounts => {
-  let instance;
+contract('Artists', async accounts => {
+  const creator = accounts[0];
 
-  beforeEach(async () => {
-    instance = await Contract.deployed();
-  });
+  describe('addArtists', async () => {
+    let instance;
 
-  describe('supportInterface', async () => {
-    it('Should support interface supportInterface', async () => {
-      const result = await instance.supportsInterface('0x01ffc9a7');
-
-      assert.equal(result, true);
+    beforeEach(async () => {
+      instance = await Contract.new(creator, { from: creator });
     });
 
-    it('Should support interface addr', async () => {
-      const result = await instance.supportsInterface('0x3b3b57de');
+    it('Should be able to add and retrieve artists', async () => {
+      await instance.addArtist("Artist Name", accounts[5]);
 
-      assert.equal(result, true);
+      const total = await instance.getArtistsTotal();
+
+      const artist = await instance.getArtist(total);
+      assert.equal(artist[0], "Artist Name");
+      assert.equal(artist[1], accounts[5]);
     });
 
-    it('Should not support unknown interface', async () => {
-      const result = await instance.supportsInterface('0x21ffc9a7');
-
-      assert.equal(result, false);
-    });
-  });
-
-  describe('addr', async () => {
-    it('Should resolve to 0 addr on unknown node', async () => {
-      const resolvedAddr = await instance.addr(namehash.hash('Unknown'));
-
-      assert.equal(resolvedAddr, ZERO_ADDRESS);
+    it('Should reject for invalid artist id', async () => {
+      await expectRevert(
+        instance.getArtist(1000),
+        'Artists::getArtist: invalid artist id',
+      );
     });
 
-    it('Should resolve to correct addr once set', async () => {
-      await instance.setAddr(namehash.hash('test'), accounts[4]);
+    it('Should correctly return number of artists registered on system', async () => {
+      const totalBefore = await instance.getArtistsTotal();
 
-      const resolvedAddr = await instance.addr(namehash.hash('test'));
-      assert.equal(resolvedAddr, accounts[4]);
-    });
+      await instance.addArtist("Artist Name", accounts[5]);
 
-    it('Should be able to reset addr on', async () => {
-      await instance.setAddr(namehash.hash('test'), accounts[4]);
-      await instance.setAddr(namehash.hash('test'), accounts[6]);
+      const totalAfter = await instance.getArtistsTotal();
 
-      const resolvedAddr = await instance.addr(namehash.hash('test'));
-      assert.equal(resolvedAddr, accounts[6]);
+      assert.equal(totalAfter.toNumber(), totalBefore.toNumber() + 1);
     });
   });
 });
