@@ -1,16 +1,13 @@
 import * as React from 'react';
-import ListItem from '@material-ui/core/ListItem';
-import Grid from '@material-ui/core/Grid';
-import Button from '@material-ui/core/Button';
-import { withStyles } from '@material-ui/core/styles';
-import Styles from '../theme';
 import ArtworkInfo from './ArtworkInfo';
+import Row from 'react-bootstrap/Row';
+import Button from 'react-bootstrap/Button';
+import ButtonGroup from 'react-bootstrap/ButtonGroup';
 
 interface ProposalItemProps {
   drizzle: any;
   drizzleState: any;
   id: number;
-  classes: any;
 }
 
 type ProposalItemState = {
@@ -18,14 +15,14 @@ type ProposalItemState = {
 }
 
 class ProposalItem extends React.Component<ProposalItemProps, ProposalItemState> {
-  rejectProposal = (): void => {
+  rejectProposal = (_: React.MouseEvent): void => {
     console.log('Rejecting proposal ' + this.props.id);
     this.props.drizzle.contracts.Governance.methods.reject(this.props.id).send({
       from: this.props.drizzleState.accounts[0],
     });
   }
 
-  approveProposal = (): void => {
+  approveProposal = (_: React.MouseEvent): void => {
     console.log('Approving proposal ' + this.props.id);
     this.props.drizzle.contracts.Governance.methods.approve(this.props.id)
       .send({
@@ -55,31 +52,22 @@ class ProposalItem extends React.Component<ProposalItemProps, ProposalItemState>
 
   render (): React.ReactNode {
     if (!this.state) {
-      return 'Loading...';
+      return null;
     }
 
     return (
-      <ListItem alignItems="flex-start" key={this.props.id}>
-        <Grid container direction="row">
-          <ArtworkInfo artwork={this.state.proposal} id={this.props.id}/>
-          <Button
-            variant="contained"
-            color="primary"
-            className={this.props.classes.approve}
-            onClick={(_): void => { this.approveProposal(); }}>
-            Approve
-          </Button>
-          <Button
-            variant="contained"
-            color="secondary"
-            className={this.props.classes.reject}
-            onClick={(_): void => { this.rejectProposal(); }}>
-            Reject
-          </Button>
-        </Grid>
-      </ListItem>
+      <ArtworkInfo
+        artwork={this.state.proposal}
+        id={this.props.id}>
+        <Row>
+          <ButtonGroup aria-label="Actionbar" className="mx-auto">
+            <Button variant="outline-success" onClick={this.approveProposal}>Approve</Button>
+            <Button variant="outline-danger" onClick={this.rejectProposal}>Deny</Button>
+          </ButtonGroup>
+        </Row>
+      </ArtworkInfo>
     );
   }
 }
 
-export default withStyles(Styles)(ProposalItem);
+export default ProposalItem;

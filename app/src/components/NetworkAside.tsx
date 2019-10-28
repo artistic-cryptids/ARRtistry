@@ -1,7 +1,5 @@
 import * as React from 'react';
-import CloseIcon from '@material-ui/icons/Info';
-import IconButton from '@material-ui/core/IconButton';
-import Snackbar from '@material-ui/core/Snackbar';
+import Toast from 'react-bootstrap/Toast';
 
 interface NetworkAsideProps {
   drizzle: any;
@@ -13,11 +11,7 @@ type NetworkAsideState = {
 }
 
 class NetworkAside extends React.Component<NetworkAsideProps, NetworkAsideState> {
-  handleClose = (_: React.SyntheticEvent | React.MouseEvent, reason?: string): void => {
-    if (reason === 'clickaway') {
-      return;
-    }
-
+  handleClose = (): void => {
     this.setState({ open: false });
   }
 
@@ -32,35 +26,44 @@ class NetworkAside extends React.Component<NetworkAsideProps, NetworkAsideState>
     this.setState({ open: true, network: networkType });
   }
 
+  networkName (): string {
+    return this.state.network.replace(/\w\S*/g,
+      function (txt) {
+        return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
+      },
+    );
+  };
+
   render (): React.ReactNode {
     if (!this.state) {
       return '';
     }
 
     return (
-      <Snackbar
-        anchorOrigin={{
-          vertical: 'bottom',
-          horizontal: 'left',
+      <div
+        aria-live="polite"
+        aria-atomic="true"
+        style={{
+          position: 'relative',
+          minHeight: '100px',
         }}
-        open={this.state.open}
-        onClose={this.handleClose}
-        ContentProps={{
-          'aria-describedby': 'message-id',
-        }}
-        message={<span id="message-id">
-        You&apos;re currently on the <b>{this.state.network} Network</b>. This is for testing purposes only.</span>}
-        action={[
-          <IconButton
-            key="close"
-            aria-label="close"
-            color="inherit"
-            onClick={this.handleClose}
-          >
-            <CloseIcon />
-          </IconButton>,
-        ]}
-      />
+      >
+        <Toast
+          show={this.state.open}
+          onClose={this.handleClose}
+          style={{
+            position: 'fixed',
+            bottom: 0,
+            left: 0,
+          }}
+          className="m-4"
+        >
+          <Toast.Header>
+            <strong className="mr-auto">{this.networkName()} Network</strong>
+          </Toast.Header>
+          <Toast.Body>This is for testing purposes only.</Toast.Body>
+        </Toast>
+      </div>
     );
   }
 }
