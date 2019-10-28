@@ -192,6 +192,20 @@ class Register extends React.Component<RegisterProps, RegisterState> {
     this.setState(stateUpdate);
   };
 
+  getOptions = (): any => {
+    if (!this.state.artists) {
+      return [];
+    }
+
+    const options = [];
+
+    for (let artist of this.state.artists) {
+      options.push(<option>{artist.name}</option>);
+    }
+
+    return options;
+  };
+
   renderArtifactInformation = (): React.ReactNode => {
     return (
       <Container>
@@ -248,8 +262,10 @@ class Register extends React.Component<RegisterProps, RegisterState> {
             <Form.Label>Artist Name</Form.Label>
             <Form.Control
               required
-              type="text"
-              onChange={this.inputChangeHandler}/>
+              as="select"
+              onChange={this.inputChangeHandler}>
+                {this.getOptions()}
+              </Form.Control>
             {GENERIC_FEEDBACK}
           </Form.Group>
         </Form.Row>
