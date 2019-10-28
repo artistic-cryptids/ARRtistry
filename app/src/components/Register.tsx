@@ -26,10 +26,16 @@ interface RegisterFormFields {
   size: string;
 }
 
+interface Artist {
+  name: string;
+  wallet: string;
+}
+
 interface RegisterState {
   fields: RegisterFormFields;
   registerTransactionStackId: any;
   validated: boolean;
+  artists?: Artist[];
 }
 
 type InputChangeEvent = React.FormEvent<FormControlProps> &
@@ -60,6 +66,47 @@ class Register extends React.Component<RegisterProps, RegisterState> {
         imageIpfsHash: '',
       },
     };
+  }
+
+  componentDidMount (): void {
+    this.shouldComponentUpdate();
+  }
+
+  shouldComponentUpdate (): boolean {
+    if (this.state.artists) {
+      return false;
+    }
+
+    const Artists = this.props.drizzle.contracts.Artists;
+
+    Artists.methods.getArtistsTotal()
+      .call()
+      .then((total: number) => {
+        const artists = [];
+
+        let id = 0;
+
+        while(id < total) {
+          id++;
+
+          artists.push(Artists.methods.getArtist(id)
+            .call()
+            .then((info: string[]) => {
+                return {
+                  name: info[0],
+                  wallet: info[1],
+                }
+              }
+            )
+          );
+        }
+
+        return Promise.all(artists);
+      })
+      .then((artists: Artist[]) => this.setState({ artists: artists }))
+      .catch((err: any) => console.log(err));
+
+    return true;
   }
 
   registerArtifact = (event: React.FormEvent<HTMLFormElement>): void => {
