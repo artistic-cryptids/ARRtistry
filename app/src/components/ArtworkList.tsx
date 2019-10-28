@@ -5,7 +5,6 @@ import ListGroup from 'react-bootstrap/ListGroup';
 interface ArtworkListProps {
   drizzle: any;
   drizzleState: any;
-  classes: any;
 }
 
 interface ArtworkListState {
