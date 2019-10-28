@@ -61,17 +61,7 @@ class ArtworkInfo extends React.Component<ArtworkInfoProps, ArtworkInfoState> {
 
     this.setState({
       retrievedData: true,
-      fields: {
-        title: infoJson.title,
-        artistName: infoJson.artistName,
-        artistNationality: infoJson.artistNationality,
-        artistBirthYear: infoJson.artistBirthYear,
-        edition: infoJson.edition,
-        artifactCreationDate: infoJson.artifactCreationDate,
-        medium: infoJson.medium,
-        size: infoJson.size,
-        imageIpfsHash: infoJson.imageIpfsHash,
-      },
+      fields: infoJson,
     });
   }
 
@@ -101,7 +91,7 @@ class ArtworkInfo extends React.Component<ArtworkInfoProps, ArtworkInfoState> {
         <Card className="shadow">
           <Card.Body>
             <Card.Title><span className="text-muted text-capitalize">#{this.props.id} </span>Loading...</Card.Title>
-            <Card.Subtitle className="mb-2 text-muted">Loading...</Card.Subtitle>
+            <Card.Subtitle className="mb-2 text-muted"></Card.Subtitle>
             <Card.Text>
               The piece&apos;s info has yet to be retrieved. If it was only just registered,
               it&apos;ll take thirty seconds or so. Otherwise, it should be near instant.
