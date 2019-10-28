@@ -22,7 +22,7 @@ class ArtworkItem extends React.Component<ArtworkItemProps, ArtworkItemState> {
       .then((artworkData: any) => {
         console.log(artworkData);
         const artwork = {
-          metaUri: artworkData[1]
+          metaUri: artworkData[1],
         };
         this.setState({ artwork: artwork });
       })
