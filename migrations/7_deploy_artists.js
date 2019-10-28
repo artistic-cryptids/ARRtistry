@@ -1,19 +1,17 @@
-const ArtifactRegistry = artifacts.require('ArtifactRegistry');
-const Governance = artifacts.require('Governance');
+const Artists = artifacts.require('Artists');
 const ENSResolver = artifacts.require('ENSResolver');
 const FIFSRegistrar = artifacts.require('FIFSRegistrar');
 
 const newLabel = require('./helper/LoggedRegistration');
 
 module.exports = async (deployer, network, accounts) => {
-  const governance = await Governance.deployed();
-  await deployer.deploy(ArtifactRegistry, governance.address);
+  await deployer.deploy(Artists, accounts[0], { from: accounts[0] });
 
   await newLabel(
-    'registry',
+    'artists',
     accounts[0],
     await ENSResolver.deployed(),
     await FIFSRegistrar.deployed(),
-    await ArtifactRegistry.deployed(),
+    await Artists.deployed(),
   );
 };
