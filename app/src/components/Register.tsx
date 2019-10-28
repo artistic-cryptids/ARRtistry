@@ -86,17 +86,17 @@ class Register extends React.Component<RegisterProps, RegisterState> {
 
         let id = 0;
 
-        while(id < total) {
+        while (id < total) {
           id++;
 
           artists.push(Artists.methods.getArtist(id)
             .call()
             .then((info: string[]) => {
-                return {
-                  name: info[0],
-                  wallet: info[1],
-                }
-              }
+              return {
+                name: info[0],
+                wallet: info[1],
+              };
+            }
             )
           );
         }
