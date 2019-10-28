@@ -80,21 +80,29 @@
     "semi": ["error", "always"],
     "space-before-function-paren": ["error", "always"],
 
-    "@typescript-eslint/no-explicit-any": "off",
-    "@typescript-eslint/no-unused-vars": ["error", { "argsIgnorePattern": "^_" }],
-    "@typescript-eslint/explicit-function-return-type": [
-      "warn",
-      {
-        allowExpressions: true,
-        allowTypedFunctionExpressions: true,
-      }
-    ],
-
     "mocha-no-only/mocha-no-only": ["error"],
 
     "promise/always-return": "off",
     "promise/avoid-new": "off",
   },
+  "overrides": [
+    {
+      "files": "**/*.{ts,tsx}",
+      "rules": {
+        "no-useless-constructor": "off",
+        "@typescript-eslint/no-useless-constructor": "error",
+        "@typescript-eslint/no-explicit-any": "off",
+        "@typescript-eslint/no-unused-vars": ["error", { "argsIgnorePattern": "^_" }],
+        "@typescript-eslint/explicit-function-return-type": [
+          "warn",
+          {
+            allowExpressions: true,
+            allowTypedFunctionExpressions: true,
+          }
+        ],
+      }
+    }
+  ],
   "parser": "@typescript-eslint/parser",
   "parserOptions": {
     "ecmaFeatures": {
