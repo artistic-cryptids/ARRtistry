@@ -202,7 +202,7 @@ class Register extends React.Component<RegisterProps, RegisterState> {
       return [];
     }
 
-    return this.state.artists.map((artist: Artist) => <option>{artist.name}</option>);
+    return this.state.artists.map((artist: Artist) => <option key={artist.wallet}>{artist.name}</option>);
   };
 
   renderArtifactInformation = (): React.ReactNode => {
