@@ -96,8 +96,7 @@ class Register extends React.Component<RegisterProps, RegisterState> {
                 name: info[0],
                 wallet: info[1],
               };
-            })
-          );
+            }));
         }
 
         return Promise.all(artists);
