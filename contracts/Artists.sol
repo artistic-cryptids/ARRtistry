@@ -43,6 +43,14 @@ contract Artists is Ownable {
 
     return id;
   }
+  
+  function getArtist(uint256 _id) public returns (string memory, address) {
+    require(_id < _artistIds.current());
+
+    Artist memory artist = artists[_id];
+
+    return (artist.name, artist.wallet);
+  }
 
   function getArtistsTotal() public returns (uint256){
     return _artistIds.current();
