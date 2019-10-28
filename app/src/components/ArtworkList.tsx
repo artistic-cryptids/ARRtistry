@@ -1,13 +1,10 @@
 import * as React from 'react';
-import List from '@material-ui/core/List';
 import ArtworkItem from './ArtworkItem';
-import { withStyles } from '@material-ui/core/styles';
-import Styles from '../theme';
+import ListGroup from 'react-bootstrap/ListGroup';
 
 interface ArtworkListProps {
   drizzle: any;
   drizzleState: any;
-  classes: any;
 }
 
 interface ArtworkListState {
@@ -64,9 +61,9 @@ class ArtworkList extends React.Component<ArtworkListProps, ArtworkListState> {
     );
 
     return (
-      <List className={this.props.classes.root}>{listItems}</List>
+      <ListGroup>{listItems}</ListGroup>
     );
   }
 }
 
-export default withStyles(Styles)(ArtworkList);
+export default ArtworkList;

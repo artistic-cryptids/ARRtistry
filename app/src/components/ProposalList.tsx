@@ -1,37 +1,39 @@
 import * as React from 'react';
-import List from '@material-ui/core/List';
 import ProposalItem from './ProposalItem';
-import { withStyles } from '@material-ui/core/styles';
-import Styles from '../theme';
+import CardColumns from 'react-bootstrap/CardColumns';
 
 interface ProposalListProps {
   drizzle: any;
   drizzleState: any;
-  classes: any;
 }
 
-type ProposalListState = {
-  ids: any;
+interface ProposalListState {
+  ids: string[];
 }
 
 class ProposalList extends React.Component<ProposalListProps, ProposalListState> {
-  componentDidMount (): void {
-    this.componentDidUpdate();
+  constructor (props: ProposalListProps) {
+    super(props);
+    this.state = { ids: [] };
   }
 
-  componentDidUpdate (): void {
-    this.props.drizzle.contracts.Governance.methods.getProposals().call()
-      .then((ids: any) => this.setState({ ids: ids }))
-      .catch((err: any) => { console.log(err); });
+  componentDidMount (): void {
+    this.loadProposals();
+  }
+
+  shouldComponentUpdate (): boolean {
+    this.loadProposals();
+    return true;
+  }
+
+  async loadProposals (): Promise<void> {
+    const ids = await this.props.drizzle.contracts.Governance.methods.getProposals().call();
+    if (!this.state || this.state.ids !== ids) {
+      this.setState({ ids: ids });
+    }
   }
 
   render (): React.ReactNode {
-    if (!this.state) {
-      return (
-        <span>Loading proposals...</span>
-      );
-    }
-
     const listItems = this.state.ids.map((id: any) =>
       <ProposalItem
         drizzle={this.props.drizzle}
@@ -42,9 +44,9 @@ class ProposalList extends React.Component<ProposalListProps, ProposalListState>
     );
 
     return (
-      <List className={this.props.classes.root}>{listItems}</List>
+      <CardColumns>{listItems}</CardColumns>
     );
   }
 }
 
-export default withStyles(Styles)(ProposalList);
+export default ProposalList;

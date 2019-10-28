@@ -1,63 +1,77 @@
 import * as React from 'react';
-import Avatar from '@material-ui/core/Avatar';
-import Button from '@material-ui/core/Button';
-import CssBaseline from '@material-ui/core/CssBaseline';
-import TextField from '@material-ui/core/TextField';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Checkbox from '@material-ui/core/Checkbox';
-import Grid from '@material-ui/core/Grid';
-import Typography from '@material-ui/core/Typography';
-import { withStyles } from '@material-ui/core/styles';
-import Container from '@material-ui/core/Container';
-import CardContent from '@material-ui/core/CardContent';
-import Card from '@material-ui/core/Card';
-import Divider from '@material-ui/core/Divider';
-import styles from '../theme';
+import Card from 'react-bootstrap/Card';
+import Button from 'react-bootstrap/Button';
+import Row from 'react-bootstrap/Row';
+import Col from 'react-bootstrap/Col';
+import Container from 'react-bootstrap/Container';
+import Form from 'react-bootstrap/Form';
+import Accordion from 'react-bootstrap/Accordion';
+import { FormControlProps } from 'react-bootstrap/FormControl';
 import ipfs from '../ipfs';
 
 interface RegisterProps {
   drizzle: any;
   drizzleState: any;
-  classes: any;
 }
 
-type RegisterState = {
+interface RegisterFormFields {
   title: string;
-  registerTransactionStackId: any;
   artistName: string;
   artistNationality: string;
   artistBirthYear: string;
-  createdDate: string;
+  artifactCreationDate: string;
   medium: string;
   edition: string;
-  artworkCreationDate: string;
   imageIpfsHash: string;
   size: string;
 }
+
+interface RegisterState {
+  fields: RegisterFormFields;
+  registerTransactionStackId: any;
+  validated: boolean;
+}
+
+type InputChangeEvent = React.FormEvent<FormControlProps> &
+  {
+    target: {
+      id: keyof RegisterFormFields;
+      value: RegisterFormFields[keyof RegisterFormFields];
+    };
+  }
+
+const GENERIC_FEEDBACK = <Form.Control.Feedback>Looks good!</Form.Control.Feedback>;
 
 class Register extends React.Component<RegisterProps, RegisterState> {
   constructor (props: RegisterProps) {
     super(props);
     this.state = {
       registerTransactionStackId: null,
-      title: '',
-      artistName: '',
-      artistNationality: '',
-      artistBirthYear: '',
-      createdDate: '',
-      medium: '',
-      edition: '',
-      artworkCreationDate: '',
-      imageIpfsHash: '',
-      size: '',
+      validated: false,
+      fields: {
+        title: '',
+        artistName: '',
+        artistNationality: '',
+        artistBirthYear: '',
+        edition: '',
+        artifactCreationDate: '',
+        medium: '',
+        size: '',
+        imageIpfsHash: '',
+      },
     };
-
-    this.registerArtifact = this.registerArtifact.bind(this);
-    this.getRegisterTransactionStatus = this.getRegisterTransactionStatus.bind(this);
   }
 
-  registerArtifact (event: any): void {
+  registerArtifact = (event: React.FormEvent<HTMLFormElement>): void => {
+    event.stopPropagation();
     event.preventDefault();
+
+    const form = event.currentTarget;
+    if (!form.checkValidity()) {
+      return;
+    }
+
+    this.setState({ validated: true });
 
     const { drizzle, drizzleState } = this.props;
 
@@ -66,30 +80,33 @@ class Register extends React.Component<RegisterProps, RegisterState> {
 
     const metaUri = '';
 
+    const fields = this.state.fields;
+    console.log(fields);
     const stackId = drizzle.contracts.ArtifactApplication.methods.applyFor.cacheSend(
       currentAccount,
       artist,
-      this.state.title,
-      this.state.artistName,
-      this.state.artistNationality,
-      this.state.artistBirthYear,
-      this.state.createdDate,
-      this.state.medium,
-      this.state.size,
-      this.state.imageIpfsHash,
+      fields.title,
+      fields.artistName,
+      fields.artistNationality,
+      fields.artistBirthYear,
+      fields.artifactCreationDate,
+      fields.medium,
+      fields.size,
+      fields.imageIpfsHash,
       metaUri,
       {
         from: drizzleState.accounts[0],
         gasLimit: 6000000,
       },
     ); // TODO: Catch error when this function fails and display error to user
+    console.log(stackId);
 
     this.setState({
       registerTransactionStackId: stackId,
     });
-  }
+  };
 
-  getRegisterTransactionStatus (): any {
+  getRegisterTransactionStatus = (): string | null => {
     const { transactions, transactionStack } = this.props.drizzleState;
 
     const registerTransactionHash = transactionStack[this.state.registerTransactionStackId];
@@ -113,193 +130,199 @@ class Register extends React.Component<RegisterProps, RegisterState> {
     await ipfs.add([...files], { progress: (prog: any) => console.log(`received: ${prog}`) })
       .then((response: any) => {
         ipfsId = response[0].hash;
-        this.setState({ imageIpfsHash: ipfsId });
+        this.setState({ fields: { ...this.state.fields, imageIpfsHash: ipfsId } });
       }).catch((err: any) => {
         console.log(err);
       });
   }
 
+  // This needs to be an arrow constructor to bind `this`, which is bonkers.
+  inputChangeHandler = (event: InputChangeEvent): void => {
+    const key = event.target.id;
+    const val = event.target.value;
+    const stateUpdate = { fields: this.state.fields as Pick<RegisterFormFields, keyof RegisterFormFields> };
+    stateUpdate.fields[key] = val;
+    this.setState(stateUpdate);
+  };
+
+  renderArtifactInformation = (): React.ReactNode => {
+    return (
+      <Container>
+        <Form.Row>
+          <Form.Group as={Col} controlId="title">
+            <Form.Label>Title</Form.Label>
+            <Form.Control
+              required
+              type="text"
+              onChange={this.inputChangeHandler}/>
+            {GENERIC_FEEDBACK}
+          </Form.Group>
+        </Form.Row>
+
+        <Form.Row>
+          <Form.Group as={Col} controlId="artifactCreationDate">
+            <Form.Label>Date of creation</Form.Label>
+            <Form.Control
+              required
+              type="text"
+              onChange={this.inputChangeHandler}/>
+            {GENERIC_FEEDBACK}
+          </Form.Group>
+        </Form.Row>
+
+        <Form.Row>
+          <Form.Group as={Col} controlId="medium">
+            <Form.Label>Medium of Artwork</Form.Label>
+            <Form.Control
+              required
+              type="text"
+              onChange={this.inputChangeHandler}/>
+            {GENERIC_FEEDBACK}
+          </Form.Group>
+
+          <Form.Group as={Col} controlId="size">
+            <Form.Label>Size of Creation</Form.Label>
+            <Form.Control
+              required
+              type="text"
+              onChange={this.inputChangeHandler}/>
+            {GENERIC_FEEDBACK}
+          </Form.Group>
+        </Form.Row>
+      </Container>
+    );
+  };
+
+  renderArtistInformation = (): React.ReactNode => {
+    return (
+      <Container>
+        <Form.Row>
+          <Form.Group as={Col} controlId="artistName">
+            <Form.Label>Artist Name</Form.Label>
+            <Form.Control
+              required
+              type="text"
+              onChange={this.inputChangeHandler}/>
+            {GENERIC_FEEDBACK}
+          </Form.Group>
+        </Form.Row>
+        <Form.Row>
+          <Form.Group as={Col} controlId="artistNationality">
+            <Form.Label>Artist Nationality</Form.Label>
+            <Form.Control
+              required
+              type="text"
+              onChange={this.inputChangeHandler}/>
+            {GENERIC_FEEDBACK}
+          </Form.Group>
+          <Form.Group as={Col} controlId="artistBirthYear">
+            <Form.Label>Artist Birth Year</Form.Label>
+            <Form.Control
+              required
+              type="text"
+              onChange={this.inputChangeHandler}/>
+            {GENERIC_FEEDBACK}
+          </Form.Group>
+        </Form.Row>
+      </Container>
+    );
+  };
+
   // TODO: Split these into more manageable components
   // TODO: Make required fields actually required
   render (): React.ReactNode {
-    const { classes } = this.props;
-
     let imgDisplay;
-    if (this.state.imageIpfsHash === '') {
-      imgDisplay = (<Typography>No image given.</Typography>);
+    if (this.state.fields.imageIpfsHash === '') {
+      imgDisplay = (<h5>No image given.</h5>);
     } else {
-      imgDisplay = (<img alt="artwork on ipfs" src={'https://ipfs.io/ipfs/' + this.state.imageIpfsHash} />);
+      imgDisplay = (<Card.Img src={'https://ipfs.io/ipfs/' + this.state.fields.imageIpfsHash}/>);
     }
     return (
-      <Container component="main" maxWidth="md">
-        <CssBaseline />
-        <div className={classes.paper}>
-          <Avatar className={classes.avatar}>
-            R
-          </Avatar>
-          <Typography component="h1" variant="h5">
-            Register a Piece
-          </Typography>
-          <Divider />
-          <Grid container direction="row" spacing={5} align-items="flex-start">
-            <Card className={classes.card}>
-              <CardContent>
-                <input
-                  accept="image/*"
-                  className={classes.input}
-                  style={{ display: 'none' }}
-                  id="image-upload-button"
-                  multiple
-                  type="file"
-                  onChange={(e): void => {
-                    e.stopPropagation();
-                    e.preventDefault();
-                    const files = e.target.files;
-                    if (files != null && files[0].size < 1000000) {
-                      // max file size of one megabyte
-                      this.saveToIpfs(files);
-                    } else {
-                      // TODO: nicer way of alerting
-                      alert('Image cannot be greater than 1 MB!');
-                    }
-                  }}
-                />
-                <label htmlFor="image-upload-button">
-                  <Button
-                    component="span"
-                    fullWidth
-                    variant="contained"
-                    className={classes.button}
-                  >
+      <Container>
+        <h5>
+          Register a Piece
+        </h5>
+        <hr/>
+        <Row>
+          <Col sm={4}>
+            <Card>
+              {imgDisplay}
+              <Card.Body>
+                <div style={{
+                  position: 'relative',
+                  overflow: 'hidden',
+                  display: 'inline-block',
+                }}>
+                  <input
+                    className="btn"
+                    accept="image/*"
+                    id="image-upload-button"
+                    multiple
+                    type="file"
+                    style={{
+                      position: 'absolute',
+                      top: '0',
+                      left: '0',
+                      opacity: '0',
+                    }}
+                    onChange={(e): void => {
+                      e.stopPropagation();
+                      e.preventDefault();
+                      const files = e.target.files;
+                      if (files != null && files[0].size < 1000000) {
+                        // max file size of one megabyte
+                        this.saveToIpfs(files);
+                      } else {
+                        // TODO: nicer way of alerting
+                        alert('Image cannot be greater than 1 MB!');
+                      }
+                    }}
+                  />
+                  <Button>
                     Upload Image
                   </Button>
-                </label>
-                {imgDisplay}
-              </CardContent>
+                </div>
+              </Card.Body>
             </Card>
-            <Grid item xs={12} sm={6}>
-              <form
-                className={classes.form}
-                noValidate
-                onSubmit={this.registerArtifact}
-              >
-                <Grid container spacing={2}>
-                  <Grid item xs={12} sm={6}>
-                    <TextField
-                      autoComplete="on"
-                      name="title"
-                      variant="outlined"
-                      required
-                      fullWidth
-                      id="title"
-                      label="Title"
-                      autoFocus
-                      onChange={(e): void => this.setState({ title: e.target.value })}
-                    />
-                  </Grid>
-                  <Grid item xs={12} sm={6}>
-                    <TextField
-                      autoComplete="on"
-                      variant="outlined"
-                      required
-                      fullWidth
-                      id="artistName"
-                      label="Artist Name"
-                      name="artistName"
-                      onChange={(e): void => this.setState({ artistName: e.target.value })}
-                    />
-                  </Grid>
-                  <Grid item xs={12} sm={6}>
-                    <TextField
-                      autoComplete="on"
-                      variant="outlined"
-                      required
-                      fullWidth
-                      id="artistNationality"
-                      label="Artist's Nationality"
-                      name="artistNationality"
-                      onChange={(e): void => this.setState({ artistNationality: e.target.value })}
-                    />
-                  </Grid>
-                  <Grid item xs={12} sm={6}>
-                    <TextField
-                      autoComplete="on"
-                      name="createdDate"
-                      variant="outlined"
-                      required
-                      fullWidth
-                      id="createdDate"
-                      label="Artwork Creation Date"
-                      autoFocus
-                      onChange={(e): void => this.setState({ createdDate: e.target.value })}
-                    />
-                  </Grid>
-                  <Grid item xs={12} sm={4}>
-                    <TextField
-                      autoComplete="on"
-                      name="artistBirthYear"
-                      variant="outlined"
-                      required
-                      fullWidth
-                      id="artistBirthYear"
-                      label="Artisit Year of Birth"
-                      autoFocus
-                      onChange={(e): void => this.setState({ artistBirthYear: e.target.value })}
-                    />
-                  </Grid>
-                  <Grid item xs={12} sm={4}>
-                    <TextField
-                      autoComplete="on"
-                      name="size"
-                      variant="outlined"
-                      required
-                      fullWidth
-                      id="size"
-                      label="Size"
-                      autoFocus
-                      onChange={(e): void => this.setState({ size: e.target.value })}
-                    />
-                  </Grid>
-                  <Grid item xs={12} sm={4}>
-                    <TextField
-                      autoComplete="on"
-                      name="medium"
-                      variant="outlined"
-                      required
-                      fullWidth
-                      id="medium"
-                      label="Medium"
-                      autoFocus
-                      onChange={(e): void => this.setState({ medium: e.target.value })}
-                    />
-                  </Grid>
-                  <Grid item xs={12}>
-                    <Typography>(* indicates that a field is required)</Typography>
-                  </Grid>
-                  <Grid item xs={12}>
-                    <FormControlLabel
-                      control={<Checkbox value="shareRecordPublicly" color="primary" />}
-                      label="Share record publicly (you can change this later)"
-                    />
-                  </Grid>
-                </Grid>
-                <Button
-                  fullWidth
-                  variant="contained"
-                  color="primary"
-                  className={classes.submit}
-                  type="submit"
-                >
-                  + Register
-                </Button>
-              </form>
-            </Grid>
-          </Grid>
-          <div>{this.getRegisterTransactionStatus()}</div>
-        </div>
-      </Container >
+          </Col>
+          <Col sm={8}>
+            <Form
+              noValidate
+              validated={this.state.validated}
+              onSubmit={this.registerArtifact}
+            >
+              <Accordion defaultActiveKey="0">
+                <Card>
+                  <Accordion.Toggle as={Card.Header} eventKey="0">
+                    Artifact Information
+                  </Accordion.Toggle>
+                  <Accordion.Collapse eventKey="0">
+                    <Card.Body>
+                      {this.renderArtifactInformation()}
+                    </Card.Body>
+                  </Accordion.Collapse>
+                </Card>
+                <Card>
+                  <Accordion.Toggle as={Card.Header} eventKey="1">
+                    Artist Information
+                  </Accordion.Toggle>
+                  <Accordion.Collapse eventKey="1">
+                    <Card.Body>
+                      {this.renderArtistInformation()}
+                    </Card.Body>
+                  </Accordion.Collapse>
+                </Card>
+              </Accordion>
+              <Button type="submit" className="my-2">
+                Register
+              </Button>
+            </Form>
+          </Col>
+        </Row>
+        <p className='lead'>{this.getRegisterTransactionStatus()}</p>
+      </Container>
     );
   }
 }
 
-export default withStyles(styles)(Register);
+export default Register;
