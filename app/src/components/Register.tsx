@@ -66,46 +66,53 @@ class Register extends React.Component<RegisterProps, RegisterState> {
         imageIpfsHash: '',
       },
     };
-  }
+  };
 
   componentDidMount (): void {
     this.shouldComponentUpdate();
-  }
+  };
 
   shouldComponentUpdate (): boolean {
     if (this.state.artists) {
       return false;
     }
 
+    this.getArtistInfo()
+      .then((artists: Artist[]) => this.setState({ artists: artists }))
+      .catch((err: any) => console.log(err));
+
+    return true;
+  };
+
+  infoToArtist = (info: string[]): Artist => {
+    return {
+      name: info[0],
+      wallet: info[1],
+    };
+  };
+
+  getArtistInfo = (): Promise<Artist[]> => {
     const Artists = this.props.drizzle.contracts.Artists;
 
-    Artists.methods.getArtistsTotal()
+    return Artists.methods.getArtistsTotal()
       .call()
       .then((total: number) => {
         const artists = [];
 
         let id = 0;
-
         while (id < total) {
           id++;
 
-          artists.push(Artists.methods.getArtist(id)
-            .call()
-            .then((info: string[]) => {
-              return {
-                name: info[0],
-                wallet: info[1],
-              };
-            }));
+          artists.push(
+            Artists.methods.getArtist(id)
+              .call()
+              .then((info: string[]) => this.infoToArtist(info))
+          );
         }
 
         return Promise.all(artists);
-      })
-      .then((artists: Artist[]) => this.setState({ artists: artists }))
-      .catch((err: any) => console.log(err));
-
-    return true;
-  }
+      });
+  };
 
   registerArtifact = (event: React.FormEvent<HTMLFormElement>): void => {
     event.stopPropagation();
@@ -195,13 +202,7 @@ class Register extends React.Component<RegisterProps, RegisterState> {
       return [];
     }
 
-    const options = [];
-
-    for (const artist of this.state.artists) {
-      options.push(<option>{artist.name}</option>);
-    }
-
-    return options;
+    return this.state.artists.map((artist: Artist) => <option>{artist.name}</option>);
   };
 
   renderArtifactInformation = (): React.ReactNode => {
