@@ -22,7 +22,7 @@ it('renders without crashing', () => {
     <DrizzleContext.Provider drizzle={ drizzle }>,
       <App/>
     </DrizzleContext.Provider>,
-    div
+    div,
   );
   ReactDOM.unmountComponentAtNode(div);
 });
