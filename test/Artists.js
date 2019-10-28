@@ -1,6 +1,6 @@
 const { expectRevert } = require('@openzeppelin/test-helpers');
 
-const Contract = artifacts.require('Artists');
+const Artists = artifacts.require('Artists');
 
 contract('Artists', async accounts => {
   const creator = accounts[0];
@@ -9,7 +9,7 @@ contract('Artists', async accounts => {
     let instance;
 
     beforeEach(async () => {
-      instance = await Contract.new(creator, { from: creator });
+      instance = await Artists.new(creator, { from: creator });
     });
 
     it('Should be able to add and retrieve artists', async () => {
