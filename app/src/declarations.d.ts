@@ -1,4 +1,3 @@
-
 declare module 'drizzle' {
   import { Store } from 'redux';
 
@@ -27,23 +26,23 @@ declare module 'drizzle' {
     };
     id: number;
     nodeType: string;
-    nodes: INode[];
+    nodes: Node[];
     src: string;
   }
 
-  export interface INetwork {
+  export interface Network {
     events: any;
     links: any;
     address: string;
     transactionHash: string;
   }
 
-  export interface INetworks {
-    [key: number]: INetwork;
-    [key: string]: INetwork;
+  export interface Networks {
+    [key: number]: Network;
+    [key: string]: Network;
   }
-  
-  export interface INode {
+
+  export interface Node {
     id: number;
     literals: string[];
     nodeType: string;
@@ -59,7 +58,7 @@ declare module 'drizzle' {
     scope?: number;
   }
 
-  export interface IContract {
+  export interface Contract {
     contractName: string;
     abi: ABI[];
     metadata: string;
@@ -75,7 +74,7 @@ declare module 'drizzle' {
       name: string;
       version: string;
     };
-    networks: INetworks;
+    networks: Networks;
     schemaVersion: string;
     updatedAt: Date;
     devdoc: {
@@ -86,8 +85,8 @@ declare module 'drizzle' {
     };
   }
 
-  export interface IDrizzleOptions {
-    contracts: IContract[];
+  export interface DrizzleOptions {
+    contracts: Contract[];
     events?: {
       [contractName: string]: any;
     };
@@ -101,56 +100,56 @@ declare module 'drizzle' {
       fallback?: {
         type: string;
         url: string;
-      }
-    },
+      };
+    };
     networkWhitelist?: number[];
   }
 
-  export interface IStoreConfig {
+  export interface StoreConfig {
     [key: string]: any;
-    drizzleOptions: IDrizzleOptions;
+    drizzleOptions: DrizzleOptions;
     reducers?: any;
     appSagas?: any[];
     appMiddlewares?: any[];
     disableReduxDevTools?: boolean;
   }
 
-  export function generateStore(config: IStoreConfig): Store;
+  export function generateStore(config: StoreConfig): Store;
 
-  export interface IContractConfig {
+  export interface ContractConfig {
     contractName: string;
     web3Contract?: {
       options: {
         jsonInterface: ABI;
-      }
+      };
     };
     abi?: ABI;
   }
 
-  export interface IContractInitialState {
+  export interface ContractInitialState {
     [key: string]: {};
     initialized: boolean;
     synced: boolean;
   }
 
-  export interface IContractOptions {
-    contracts?: IContractConfig[];
+  export interface ContractOptions {
+    contracts?: ContractConfig[];
   }
 
-  export function generateContractInitialState(contractConfig: IContractConfig): IContractInitialState;
+  export function generateContractInitialState(contractConfig: ContractConfig): ContractInitialState;
 
-  export function generateContractsInitialState(options: IContractOptions): IContractInitialState[];
+  export function generateContractsInitialState(options: ContractOptions): ContractInitialState[];
 
   export class Drizzle {
-    constructor(options?: IDrizzleOptions, store?: Store);
+    constructor(options?: DrizzleOptions, store?: Store);
 
-    addContract(contractConfig: IContractConfig, events: any[]): void;
+    addContract(contractConfig: ContractConfig, events: any[]): void;
 
     deleteContract(contractName: string): void;
 
-    findContractByAddress(address: string): IContract;
+    findContractByAddress(address: string): Contract;
 
-    generateStore(options: IStoreConfig): Store;
+    generateStore(options: StoreConfig): Store;
   }
 
   export interface Drizzled {
