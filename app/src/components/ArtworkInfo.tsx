@@ -2,11 +2,7 @@ import * as React from 'react';
 import Card from 'react-bootstrap/Card';
 
 interface Artwork {
-  title: string;
-  artistName: string;
-  createdDate: string;
-  medium: string;
-  imageIpfsHash: string;
+  metaUri: string; 
 }
 
 interface ArtworkInfoProps {
@@ -20,13 +16,14 @@ class ArtworkInfo extends React.Component<ArtworkInfoProps, {}> {
     return (
       <Card className="shadow">
         <Card.Body>
-          <Card.Img variant="top" src={'https://ipfs.io/ipfs/' + this.props.artwork.imageIpfsHash} />
-          <Card.Title><span className="text-muted text-capitalize">#{this.props.id} </span>{artwork.title}</Card.Title>
-          <Card.Subtitle className="mb-2 text-muted">{artwork.artistName}</Card.Subtitle>
+          <Card.Img variant="top" src={'https://ipfs.io/ipfs/QmaypJyKu157bEE4b9eMLxpskfdykeHRC1iMMy8n1w2mDt'} />
+          <Card.Title><span className="text-muted text-capitalize">#{this.props.id} </span>title</Card.Title>
+          <Card.Subtitle className="mb-2 text-muted">artistName</Card.Subtitle>
           <Card.Text>
+            {this.props.artwork.metaUri}
             Some quick example text to build on the card title and make up the bulk of
             the card&apos;s content.
-            {this.props.artwork.createdDate}. {this.props.artwork.medium}
+            createdDate. medium
           </Card.Text>
           {this.props.children}
         </Card.Body>

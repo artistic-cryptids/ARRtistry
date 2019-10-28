@@ -24,6 +24,7 @@ interface RegisterFormFields {
   edition: string;
   imageIpfsHash: string;
   size: string;
+  metaIpfsHash: string; 
 }
 
 interface RegisterState {
@@ -58,12 +59,13 @@ class Register extends React.Component<RegisterProps, RegisterState> {
         medium: '',
         size: '',
         imageIpfsHash: '',
+        metaIpfsHash: '',
       },
     };
   }
 
-  registerArtifact = (event: React.FormEvent<HTMLFormElement>): void => {
-    event.stopPropagation();
+  registerArtifact = async (event: React.FormEvent<HTMLFormElement>): Promise<void> => {
+    event.stopPropagation(); 
     event.preventDefault();
 
     const form = event.currentTarget;
@@ -78,22 +80,36 @@ class Register extends React.Component<RegisterProps, RegisterState> {
     const currentAccount = drizzleState.accounts[0];
     const artist = drizzleState.accounts[0]; // TODO: Update this to real artist's account
 
-    const metaUri = '';
+    const jsonData = {
+      "title": this.state.fields.title,
+      "artistName": this.state.fields.artistName,
+      "artistNationality": this.state.fields.artistNationality,
+      "artistBirthYear": this.state.fields.artistBirthYear,
+      "edition": this.state.fields.edition,
+      "createdDate": this.state.fields.artifactCreationDate,
+      "medium": this.state.fields.medium,
+      "size": this.state.fields.size,
+      "imageIpfsHash": this.state.fields.imageIpfsHash,
+    }
+
+    const jsonDataBuffer = Buffer.from(JSON.stringify(jsonData));
+    const files = Array(jsonDataBuffer); 
+
+    let ipfsId: string;
+    await ipfs.add([...files], { progress: (prog: any) => console.log(`received: ${prog}`) })
+      .then((response: any) => {
+        ipfsId = response[0].hash;
+        this.setState({ fields: { ...this.state.fields, metaIpfsHash: ipfsId } });
+      }).catch((err: any) => {
+        console.log(err);
+      });
 
     const fields = this.state.fields;
     console.log(fields);
     const stackId = drizzle.contracts.ArtifactApplication.methods.applyFor.cacheSend(
       currentAccount,
       artist,
-      fields.title,
-      fields.artistName,
-      fields.artistNationality,
-      fields.artistBirthYear,
-      fields.artifactCreationDate,
-      fields.medium,
-      fields.size,
-      fields.imageIpfsHash,
-      metaUri,
+      'https://ipfs.io/ipfs/' + this.state.fields.metaIpfsHash,
       {
         from: drizzleState.accounts[0],
         gasLimit: 6000000,
