@@ -67,7 +67,7 @@ class Register extends React.Component<RegisterProps, RegisterState> {
     event.preventDefault();
 
     const form = event.currentTarget;
-    if (form.checkValidity() === false) {
+    if (!form.checkValidity()) {
       return;
     }
 
@@ -104,7 +104,7 @@ class Register extends React.Component<RegisterProps, RegisterState> {
     this.setState({
       registerTransactionStackId: stackId,
     });
-  }
+  };
 
   getRegisterTransactionStatus = (): string | null => {
     const { transactions, transactionStack } = this.props.drizzleState;
@@ -130,7 +130,7 @@ class Register extends React.Component<RegisterProps, RegisterState> {
     await ipfs.add([...files], { progress: (prog: any) => console.log(`received: ${prog}`) })
       .then((response: any) => {
         ipfsId = response[0].hash;
-        this.setState({ fields: {...this.state.fields, imageIpfsHash: ipfsId } });
+        this.setState({ fields: { ...this.state.fields, imageIpfsHash: ipfsId } });
       }).catch((err: any) => {
         console.log(err);
       });
@@ -143,7 +143,7 @@ class Register extends React.Component<RegisterProps, RegisterState> {
     const stateUpdate = { fields: this.state.fields as Pick<RegisterFormFields, keyof RegisterFormFields> };
     stateUpdate.fields[key] = val;
     this.setState(stateUpdate);
-  }
+  };
 
   renderArtifactInformation = (): React.ReactNode => {
     return (
@@ -191,7 +191,7 @@ class Register extends React.Component<RegisterProps, RegisterState> {
         </Form.Row>
       </Container>
     );
-  }
+  };
 
   renderArtistInformation = (): React.ReactNode => {
     return (
@@ -226,17 +226,16 @@ class Register extends React.Component<RegisterProps, RegisterState> {
         </Form.Row>
       </Container>
     );
-  }
+  };
 
   // TODO: Split these into more manageable components
   // TODO: Make required fields actually required
   render (): React.ReactNode {
-
     let imgDisplay;
     if (this.state.fields.imageIpfsHash === '') {
       imgDisplay = (<h5>No image given.</h5>);
     } else {
-      imgDisplay = (<Card.Img src={'https://ipfs.io/ipfs/' + this.state.fields.imageIpfsHash} />);
+      imgDisplay = (<Card.Img src={'https://ipfs.io/ipfs/' + this.state.fields.imageIpfsHash}/>);
     }
     return (
       <Container>
@@ -254,34 +253,34 @@ class Register extends React.Component<RegisterProps, RegisterState> {
                   overflow: 'hidden',
                   display: 'inline-block',
                 }}>
-                <input
-                  className="btn"
-                  accept="image/*"
-                  id="image-upload-button"
-                  multiple
-                  type="file"
-                  style={{
-                   position: 'absolute',
-                   top: '0',
-                   left: '0',
-                   opacity: '0',
-                  }}
-                  onChange={(e): void => {
-                    e.stopPropagation();
-                    e.preventDefault();
-                    const files = e.target.files;
-                    if (files != null && files[0].size < 1000000) {
-                      // max file size of one megabyte
-                      this.saveToIpfs(files);
-                    } else {
-                      // TODO: nicer way of alerting
-                      alert('Image cannot be greater than 1 MB!');
-                    }
-                  }}
-                />
-                <Button>
-                  Upload Image
-                </Button>
+                  <input
+                    className="btn"
+                    accept="image/*"
+                    id="image-upload-button"
+                    multiple
+                    type="file"
+                    style={{
+                      position: 'absolute',
+                      top: '0',
+                      left: '0',
+                      opacity: '0',
+                    }}
+                    onChange={(e): void => {
+                      e.stopPropagation();
+                      e.preventDefault();
+                      const files = e.target.files;
+                      if (files != null && files[0].size < 1000000) {
+                        // max file size of one megabyte
+                        this.saveToIpfs(files);
+                      } else {
+                        // TODO: nicer way of alerting
+                        alert('Image cannot be greater than 1 MB!');
+                      }
+                    }}
+                  />
+                  <Button>
+                    Upload Image
+                  </Button>
                 </div>
               </Card.Body>
             </Card>
