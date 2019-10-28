@@ -30,7 +30,7 @@ class ArtworkList extends React.Component<ArtworkListProps, ArtworkListState> {
     const currentAccount = this.props.drizzleState.accounts[0];
 
     // TODO: Replace with a contract function that returns an array of
-    //			 owned token ids to avoid nested promises.
+    //       owned token ids to avoid nested promises.
     artifactRegistry.methods.balanceOf(currentAccount).call()
       .then((balance: number) => {
         console.log('balance is', balance);
