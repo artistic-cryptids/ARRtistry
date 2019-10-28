@@ -29,21 +29,24 @@ class ArtworkList extends React.Component<ArtworkListProps, ArtworkListState> {
     const artifactRegistry = this.props.drizzle.contracts.ArtifactRegistry;
     const currentAccount = this.props.drizzleState.accounts[0];
 
+    // TODO: Replace with a contract function that returns an array of
+    //			 owned token ids to avoid nested promises.
     artifactRegistry.methods.balanceOf(currentAccount).call()
       .then((balance: number) => {
         console.log('balance is', balance);
         if (!this.state || this.state.balance !== balance) {
           this.setState({ balance: balance });
-          const tokenIds: Array<number> = []
+          const tokenIds: Array<number> = [];
           for (let i = 0; i < balance; i++) {
             artifactRegistry.methods.tokenOfOwnerByIndex(currentAccount, i)
-            .call()
-            .then((tokenId: any) => {
-              tokenIds.push(tokenId);
-              this.setState({
-                tokenIds: tokenIds,
-              });
-            });
+              .call()
+              .then((tokenId: any) => {
+                tokenIds.push(tokenId);
+                this.setState({
+                  tokenIds: tokenIds,
+                });
+              })
+              .catch((err: any) => { console.log(err); });
           }
         }
       })

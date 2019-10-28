@@ -17,22 +17,22 @@ class ArtworkItem extends React.Component<ArtworkItemProps, ArtworkItemState> {
   componentDidMount (): void {
     const registry = this.props.drizzle.contracts.ArtifactRegistry;
     registry.methods.getArtifactForToken(this.props.tokenId).call()
-    .then((artworkData: any) => {
-      console.log(artworkData);
-      const artwork = {
-        title: artworkData[1],
-        artistName: artworkData[2],
-        artistNationality: artworkData[3],
-        artistBirthYear: artworkData[4],
-        createdDate: artworkData[5],
-        medium: artworkData[6],
-        size: artworkData[7],
-        imageIpfsHash: artworkData[8],
-        metaUri: artworkData[9],
-      };
-      this.setState({ artwork: artwork });
-    })
-    .catch((err: any) => { console.log(err); });
+      .then((artworkData: any) => {
+        console.log(artworkData);
+        const artwork = {
+          title: artworkData[1],
+          artistName: artworkData[2],
+          artistNationality: artworkData[3],
+          artistBirthYear: artworkData[4],
+          createdDate: artworkData[5],
+          medium: artworkData[6],
+          size: artworkData[7],
+          imageIpfsHash: artworkData[8],
+          metaUri: artworkData[9],
+        };
+        this.setState({ artwork: artwork });
+      })
+      .catch((err: any) => { console.log(err); });
   }
 
   render (): React.ReactNode {
