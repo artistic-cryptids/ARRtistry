@@ -92,12 +92,11 @@ class Register extends React.Component<RegisterProps, RegisterState> {
           artists.push(Artists.methods.getArtist(id)
             .call()
             .then((info: string[]) => {
-                return {
-                  name: info[0],
-                  wallet: info[1]
-                };
-              }
-            )
+              return {
+                name: info[0],
+                wallet: info[1],
+              };
+            })
           );
         }
 
