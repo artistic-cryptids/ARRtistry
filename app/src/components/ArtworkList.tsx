@@ -1,16 +1,13 @@
 import * as React from 'react';
-import List from '@material-ui/core/List';
 import ArtworkItem from './ArtworkItem';
-import { withStyles } from '@material-ui/core/styles';
-import Styles from '../theme';
+import ListGroup from 'react-bootstrap/ListGroup';
 
 interface ArtworkListProps {
   drizzle: any;
   drizzleState: any;
-  classes: any;
 }
 
-type ArtworkListState = {
+interface ArtworkListState {
   balance: number;
 }
 
@@ -54,7 +51,7 @@ class ArtworkList extends React.Component<ArtworkListProps, ArtworkListState> {
       index++;
     }
 
-    const listItems = indices.map((id: any) =>
+    const listItems = indices.map((id: number) =>
       <ArtworkItem
         drizzle={this.props.drizzle}
         drizzleState={this.props.drizzleState}
@@ -64,9 +61,9 @@ class ArtworkList extends React.Component<ArtworkListProps, ArtworkListState> {
     );
 
     return (
-      <List className={this.props.classes.root}>{listItems}</List>
+      <ListGroup>{listItems}</ListGroup>
     );
   }
 }
 
-export default withStyles(Styles)(ArtworkList);
+export default ArtworkList;

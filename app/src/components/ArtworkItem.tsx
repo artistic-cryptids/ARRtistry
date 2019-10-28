@@ -1,6 +1,6 @@
 import * as React from 'react';
-import ListItem from '@material-ui/core/ListItem';
 import ArtworkInfo from './ArtworkInfo';
+import ListGroup from 'react-bootstrap/ListGroup';
 
 interface ArtworkItemProps {
   drizzle: any;
@@ -14,11 +14,13 @@ type ArtworkItemState = {
 
 class ArtworkItem extends React.Component<ArtworkItemProps, ArtworkItemState> {
   componentDidMount (): void {
-    this.props.drizzle.contracts.ArtifactRegistry.methods.tokenOfOwnerByIndex(
+    const registry = this.props.drizzle.contracts.ArtifactRegistry;
+    registry.methods.tokenOfOwnerByIndex(
       this.props.drizzleState.accounts[0], this.props.id)
       .call()
-      .then((tokenId: any) => this.props.drizzle.contracts.ArtifactRegistry.methods.getArtifactForToken(tokenId).call())
+      .then((tokenId: any) => registry.methods.getArtifactForToken(tokenId).call())
       .then((artworkData: any) => {
+        console.log(artworkData);
         const artwork = {
           title: artworkData[1],
           artistName: artworkData[2],
@@ -27,7 +29,7 @@ class ArtworkItem extends React.Component<ArtworkItemProps, ArtworkItemState> {
           createdDate: artworkData[5],
           medium: artworkData[6],
           size: artworkData[7],
-          imageUri: artworkData[8],
+          imageIpfsHash: artworkData[8],
           metaUri: artworkData[9],
         };
         this.setState({ artwork: artwork });
@@ -42,9 +44,11 @@ class ArtworkItem extends React.Component<ArtworkItemProps, ArtworkItemState> {
 
     console.log('Artwork ' + JSON.stringify(this.state.artwork));
 
-    return <ListItem alignItems="flex-start" key={this.props.id}>
-      <ArtworkInfo artwork={this.state.artwork} id={this.props.id}/>
-    </ListItem>;
+    return (
+      <ListGroup.Item>
+        <ArtworkInfo artwork={this.state.artwork} id={this.props.id}/>
+      </ListGroup.Item>
+    );
   }
 }
 
