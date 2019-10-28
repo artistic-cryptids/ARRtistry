@@ -1,7 +1,6 @@
 import * as React from 'react';
-import Grid from '@material-ui/core/Grid';
 import ProposalList from './ProposalList';
-import Typography from '@material-ui/core/Typography';
+import Container from 'react-bootstrap/Container';
 
 interface GovernanceProps {
   drizzle: any;
@@ -22,10 +21,10 @@ class Governance extends React.Component<GovernanceProps, GovernanceState> {
   render (): React.ReactNode {
     if (!this.state || this.state.isGovernor) {
       return (
-        <Grid container alignItems="center" spacing={5} direction="column">
-          <Grid item><Typography>You are an approved moderator.</Typography></Grid>
-          <Grid item><ProposalList drizzle={this.props.drizzle} drizzleState={this.props.drizzleState}/></Grid>
-        </Grid>
+        <Container>
+          <h2> You are an approved moderator. </h2>
+          <ProposalList drizzle={this.props.drizzle} drizzleState={this.props.drizzleState}/>
+        </Container>
       );
     }
 

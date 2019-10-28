@@ -1,47 +1,41 @@
 import * as React from 'react';
-import ListItemText from '@material-ui/core/ListItemText';
-import ListItemAvatar from '@material-ui/core/ListItemAvatar';
-import Avatar from '@material-ui/core/Avatar';
-import Typography from '@material-ui/core/Typography';
-import Grid from '@material-ui/core/Grid';
-import { withStyles } from '@material-ui/core/styles';
-import Styles from '../theme';
+import Card from 'react-bootstrap/Card';
+
+interface Artwork {
+  title: string;
+  artistName: string;
+  createdDate: string;
+  medium: string;
+  imageIpfsHash: string;
+}
 
 interface ArtworkInfoProps {
-  artwork: any;
+  artwork: Artwork;
   id: any;
-  classes: any;
 }
 
 class ArtworkInfo extends React.Component<ArtworkInfoProps, {}> {
   render (): React.ReactNode {
+    const artwork = this.props.artwork;
     return (
-      <Grid container direction="row">
-        <ListItemAvatar>
-          {/* TODO: replace with thumbnail image?? */}
-          <Avatar alt={this.props.artwork.title}>{this.props.artwork.createdDate}</Avatar>
-        </ListItemAvatar>
-        <ListItemText
-          primary={this.props.artwork.title}
-          secondary={
-            <React.Fragment>
-              <Typography
-                component="span"
-                variant="body2"
-                className={this.props.classes.inline}
-                color="textPrimary"
-              >
-                {/* image will be at https://ipfs.io/ipfs/METAURI */}
-                {this.props.artwork.imageUri} +
-                {this.props.artwork.artistName}<br/>
-              </Typography>
-              {this.props.artwork.createdDate}. {this.props.artwork.medium}
-            </React.Fragment>
-          }
-        />
-      </Grid>
+      <Card className="shadow">
+        <Card.Body>
+          <Card.Img variant="top" src={'https://ipfs.io/ipfs/' + this.props.artwork.imageIpfsHash} />
+          <Card.Title><span className="text-muted text-capitalize">#{this.props.id} </span>{artwork.title}</Card.Title>
+          <Card.Subtitle className="mb-2 text-muted">{artwork.artistName}</Card.Subtitle>
+          <Card.Text>
+            Some quick example text to build on the card title and make up the bulk of
+            the card&apos;s content.
+            {this.props.artwork.createdDate}. {this.props.artwork.medium}
+          </Card.Text>
+          {this.props.children}
+        </Card.Body>
+        <Card.Footer>
+          <small className="text-muted">Last updated 3 mins ago</small>
+        </Card.Footer>
+      </Card>
     );
   }
 }
 
-export default withStyles(Styles)(ArtworkInfo);
+export default ArtworkInfo;
