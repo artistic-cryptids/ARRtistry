@@ -13,12 +13,12 @@ contract('Artists', async accounts => {
     });
 
     it('Should be able to add and retrieve artists', async () => {
-      await instance.addArtist("Artist Name", accounts[5]);
+      await instance.addArtist('Artist Name', accounts[5]);
 
       const total = await instance.getArtistsTotal();
 
       const artist = await instance.getArtist(total);
-      assert.equal(artist[0], "Artist Name");
+      assert.equal(artist[0], 'Artist Name');
       assert.equal(artist[1], accounts[5]);
     });
 
@@ -32,7 +32,7 @@ contract('Artists', async accounts => {
     it('Should correctly return number of artists registered on system', async () => {
       const totalBefore = await instance.getArtistsTotal();
 
-      await instance.addArtist("Artist Name", accounts[5]);
+      await instance.addArtist('Artist Name', accounts[5]);
 
       const totalAfter = await instance.getArtistsTotal();
 
