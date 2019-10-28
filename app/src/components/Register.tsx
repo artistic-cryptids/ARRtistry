@@ -199,7 +199,7 @@ class Register extends React.Component<RegisterProps, RegisterState> {
 
     const options = [];
 
-    for (let artist of this.state.artists) {
+    for (const artist of this.state.artists) {
       options.push(<option>{artist.name}</option>);
     }
 
@@ -264,8 +264,8 @@ class Register extends React.Component<RegisterProps, RegisterState> {
               required
               as="select"
               onChange={this.inputChangeHandler}>
-                {this.getOptions()}
-              </Form.Control>
+              {this.getOptions()}
+            </Form.Control>
             {GENERIC_FEEDBACK}
           </Form.Group>
         </Form.Row>
