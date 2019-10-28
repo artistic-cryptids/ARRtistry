@@ -23,16 +23,6 @@ contract Artists is Ownable {
 
   constructor(address owner) public {
     _transferOwnership(owner);
-
-    // Pre populate with some artists
-    addArtist("Vincent Van Gogh", address(uint(keccak256(abi.encodePacked("Vincent Van Gogh")))));
-    addArtist("Pablo Picasso", address(uint(keccak256(abi.encodePacked("Pablo Picasso")))));
-    addArtist("Leonardo da Vinci", address(uint(keccak256(abi.encodePacked("Leonardo da Vinci")))));
-    addArtist("Claude Monet", address(uint(keccak256(abi.encodePacked("Claude Monet")))));
-    addArtist("Andy Warhol", address(uint(keccak256(abi.encodePacked("Andy Warhol")))));
-    addArtist("Salvador Dali", address(uint(keccak256(abi.encodePacked("Salvador Dali")))));
-    addArtist("Michelangelo", address(uint(keccak256(abi.encodePacked("Michelangelo")))));
-
   }
 
   function addArtist(string memory name, address wallet) public onlyOwner {
