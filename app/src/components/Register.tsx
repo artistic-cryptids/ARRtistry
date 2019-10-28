@@ -103,11 +103,11 @@ class Register extends React.Component<RegisterProps, RegisterState> {
         while (id < total) {
           id++;
 
-          artists.push(
-            Artists.methods.getArtist(id)
-              .call()
-              .then((info: string[]) => this.infoToArtist(info))
-          );
+          const artist = Artists.methods.getArtist(id)
+            .call()
+            .then((info: string[]) => this.infoToArtist(info));
+
+          artists.push(artist);
         }
 
         return Promise.all(artists);
