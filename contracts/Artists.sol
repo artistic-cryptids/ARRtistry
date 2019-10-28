@@ -35,24 +35,22 @@ contract Artists is Ownable {
 
   }
 
-  function addArtist(string memory name, address wallet) public onlyOwner returns (uint256) {
+  function addArtist(string memory name, address wallet) public onlyOwner {
     _artistIds.increment();
     uint256 id = _artistIds.current();
 
     artists[id] = Artist(name, wallet);
-
-    return id;
   }
-  
-  function getArtist(uint256 _id) public returns (string memory, address) {
-    require(_id < _artistIds.current());
+
+  function getArtist(uint256 _id) public view returns (string memory, address) {
+    require(_id <= _artistIds.current(), "Artists::getArtist: invalid artist id");
 
     Artist memory artist = artists[_id];
 
     return (artist.name, artist.wallet);
   }
 
-  function getArtistsTotal() public returns (uint256){
+  function getArtistsTotal() public view returns (uint256){
     return _artistIds.current();
   }
 }
