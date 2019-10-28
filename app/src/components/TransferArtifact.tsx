@@ -8,7 +8,7 @@ import Modal from 'react-bootstrap/Modal';
 interface TransferArtifactProps {
   drizzle: any;
   drizzleState: any;
-  id: any;
+  tokenId: any;
 }
 
 interface TransferArtifactFormFields {
@@ -47,17 +47,11 @@ class TransferArtifact extends React.Component<TransferArtifactProps, TransferAr
     const artifactRegistry = this.props.drizzle.contracts.ArtifactRegistry;
     const currentAccount = this.props.drizzleState.accounts[0];
 
-    artifactRegistry.methods.tokenOfOwnerByIndex(
-      currentAccount, this.props.id)
-      .call()
-      .then((tokenId: any) => {
-        artifactRegistry.methods.safeTransferFrom.cacheSend(
-          currentAccount,
-          this.state.fields.recipientAddress,
-          tokenId,
-        );
-      })
-      .catch((err: any) => { console.log(err); });
+    artifactRegistry.methods.safeTransferFrom.cacheSend(
+      currentAccount,
+      this.state.fields.recipientAddress,
+      this.props.tokenId,
+    );
   }
 
   inputChangeHandler = (event: InputChangeEvent): void => {

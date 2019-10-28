@@ -6,7 +6,7 @@ import TransferArtifact from './TransferArtifact';
 interface ArtworkItemProps {
   drizzle: any;
   drizzleState: any;
-  id: any;
+  tokenId: any;
 }
 
 type ArtworkItemState = {
@@ -16,26 +16,23 @@ type ArtworkItemState = {
 class ArtworkItem extends React.Component<ArtworkItemProps, ArtworkItemState> {
   componentDidMount (): void {
     const registry = this.props.drizzle.contracts.ArtifactRegistry;
-    registry.methods.tokenOfOwnerByIndex(
-      this.props.drizzleState.accounts[0], this.props.id)
-      .call()
-      .then((tokenId: any) => registry.methods.getArtifactForToken(tokenId).call())
-      .then((artworkData: any) => {
-        console.log(artworkData);
-        const artwork = {
-          title: artworkData[1],
-          artistName: artworkData[2],
-          artistNationality: artworkData[3],
-          artistBirthYear: artworkData[4],
-          createdDate: artworkData[5],
-          medium: artworkData[6],
-          size: artworkData[7],
-          imageIpfsHash: artworkData[8],
-          metaUri: artworkData[9],
-        };
-        this.setState({ artwork: artwork });
-      })
-      .catch((err: any) => { console.log(err); });
+    registry.methods.getArtifactForToken(this.props.tokenId).call()
+    .then((artworkData: any) => {
+      console.log(artworkData);
+      const artwork = {
+        title: artworkData[1],
+        artistName: artworkData[2],
+        artistNationality: artworkData[3],
+        artistBirthYear: artworkData[4],
+        createdDate: artworkData[5],
+        medium: artworkData[6],
+        size: artworkData[7],
+        imageIpfsHash: artworkData[8],
+        metaUri: artworkData[9],
+      };
+      this.setState({ artwork: artwork });
+    })
+    .catch((err: any) => { console.log(err); });
   }
 
   render (): React.ReactNode {
@@ -47,11 +44,11 @@ class ArtworkItem extends React.Component<ArtworkItemProps, ArtworkItemState> {
 
     return (
       <ListGroup.Item>
-        <ArtworkInfo artwork={this.state.artwork} id={this.props.id}>
+        <ArtworkInfo artwork={this.state.artwork} id={this.props.tokenId}>
           <TransferArtifact
             drizzle={this.props.drizzle}
             drizzleState={this.props.drizzleState}
-            id={this.props.id}
+            tokenId={this.props.tokenId}
           />
         </ArtworkInfo>
       </ListGroup.Item>
