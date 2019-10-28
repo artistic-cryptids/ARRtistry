@@ -18,14 +18,14 @@ type ProposalItemState = {
 }
 
 class ProposalItem extends React.Component<ProposalItemProps, ProposalItemState> {
-  rejectProposal = () => {
+  rejectProposal = (): void => {
     console.log('Rejecting proposal ' + this.props.id);
     this.props.drizzle.contracts.Governance.methods.reject(this.props.id).send({
       from: this.props.drizzleState.accounts[0],
     });
   }
 
-  approveProposal = () => {
+  approveProposal = (): void => {
     console.log('Approving proposal ' + this.props.id);
     this.props.drizzle.contracts.Governance.methods.approve(this.props.id)
       .send({
@@ -33,20 +33,24 @@ class ProposalItem extends React.Component<ProposalItemProps, ProposalItemState>
       });
   }
 
-  componentDidMount () {
+  componentDidMount (): void {
     this.props.drizzle.contracts.ArtifactApplication.methods.getProposal(this.props.id)
       .call()
-      .then((proposalData: any) => {
+      .then((proposalData: any): void => {
         const proposal = {
           title: proposalData[2],
-          medium: proposalData[3],
-          edition: proposalData[4],
-          created: proposalData[5],
-          metaUri: proposalData[6],
+          artistName: proposalData[3],
+          artistNationality: proposalData[4],
+          artistBirthYear: proposalData[5],
+          createdDate: proposalData[6],
+          medium: proposalData[7],
+          size: proposalData[8],
+          imageUri: proposalData[9],
+          metaUri: proposalData[10],
         };
         this.setState({ proposal: proposal });
       })
-      .catch((err: any) => { console.log(err); });
+      .catch((err: any): void => { console.log(err); });
   }
 
   render (): React.ReactNode {
@@ -62,14 +66,14 @@ class ProposalItem extends React.Component<ProposalItemProps, ProposalItemState>
             variant="contained"
             color="primary"
             className={this.props.classes.approve}
-            onClick={(e) => { this.approveProposal(); }}>
+            onClick={(_): void => { this.approveProposal(); }}>
             Approve
           </Button>
           <Button
             variant="contained"
             color="secondary"
             className={this.props.classes.reject}
-            onClick={(e) => { this.rejectProposal(); }}>
+            onClick={(_): void => { this.rejectProposal(); }}>
             Reject
           </Button>
         </Grid>

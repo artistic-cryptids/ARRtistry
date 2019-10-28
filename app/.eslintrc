@@ -80,6 +80,9 @@
     "semi": ["error", "always"],
     "space-before-function-paren": ["error", "always"],
 
+    "@typescript-eslint/no-explicit-any": "off",
+    "@typescript-eslint/no-unused-vars": ["error", { "argsIgnorePattern": "^_" }],
+
     "mocha-no-only/mocha-no-only": ["error"],
 
     "promise/always-return": "off",

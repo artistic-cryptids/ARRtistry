@@ -1,5 +1,5 @@
-const { constants, expectRevert } = require('@openzeppelin/test-helpers');
-const { ZERO_ADDRESS } = constants;
+const { expectRevert } = require('@openzeppelin/test-helpers');
+const { ARTIFACT, artifactEquality } = require('./constants/artifact');
 const { expect } = require('chai');
 
 const { shouldBehaveLikeERC721 } = require('./behaviours/ERC721.behavior.js');
@@ -10,14 +10,6 @@ const ArtifactRegistryMock = artifacts.require('./ArtifactRegistryMock.sol');
 contract('ArtifactRegistry', async accounts => {
   const creator = accounts[0];
   const tokenOwner = accounts[1];
-  const ARTIFACT = {
-    artist: ZERO_ADDRESS,
-    title: 'Sunshine in Gold',
-    medium: 'Wood',
-    edition: '12',
-    created: '10-10-10',
-    metaUri: 'SpecialString',
-  };
   const TOKEN_ID = 1;
 
   beforeEach(async function () {
@@ -36,11 +28,12 @@ contract('ArtifactRegistry', async accounts => {
     it('should not allow anyone but owner to mint tokens', async () => {
       await expectRevert(
         registry.mint(tokenOwner, ARTIFACT, { from: tokenOwner }),
-        'ArtifactRegistry::mint: Not minted by the owner'
+        'ArtifactRegistry::mint: Not minted by the owner',
       );
     });
 
     before(async () => {
+      console.log(ARTIFACT);
       await registry.mint(tokenOwner, ARTIFACT, { from: creator });
     });
 
@@ -69,12 +62,7 @@ contract('ArtifactRegistry', async accounts => {
 
     it('should retrieve the artifact for the token', async () => {
       const artifact = await registry.getArtifactForToken(TOKEN_ID);
-      expect(artifact[0]).to.be.equal(ARTIFACT.artist);
-      expect(artifact[1]).to.be.equal(ARTIFACT.title);
-      expect(artifact[2]).to.be.equal(ARTIFACT.medium);
-      expect(artifact[3]).to.be.equal(ARTIFACT.edition);
-      expect(artifact[4]).to.be.equal(ARTIFACT.created);
-      expect(artifact[5]).to.be.equal(ARTIFACT.metaUri);
+      artifactEquality(artifact, ARTIFACT);
     });
   });
 }); // end Registry contract

@@ -1,8 +1,6 @@
 import * as React from 'react';
-import List from '@material-ui/core/List';
 import ArtworkItem from './ArtworkItem';
-import { withStyles } from '@material-ui/core/styles';
-import Styles from '../theme';
+import ListGroup from 'react-bootstrap/ListGroup';
 
 interface ArtworkListProps {
   drizzle: any;
@@ -16,9 +14,20 @@ interface ArtworkListState {
 
 class ArtworkList extends React.Component<ArtworkListProps, ArtworkListState> {
   componentDidMount (): void {
+    this.shouldComponentUpdate();
+  }
+
+  shouldComponentUpdate (): boolean {
     this.props.drizzle.contracts.ArtifactRegistry.methods.balanceOf(this.props.drizzleState.accounts[0]).call()
-      .then((balance: number) => this.setState({ balance: balance }))
-      .catch((err: number) => { console.log(err); });
+      .then((balance: number) => {
+        console.log('balance is', balance);
+        if (!this.state || this.state.balance !== balance) {
+          this.setState({ balance: balance });
+        }
+      })
+      .catch((err: any) => { console.log(err); });
+
+    return true;
   }
 
   render (): React.ReactNode {
@@ -49,13 +58,13 @@ class ArtworkList extends React.Component<ArtworkListProps, ArtworkListState> {
         drizzleState={this.props.drizzleState}
         id={id}
         key={id}
-      />
+      />,
     );
 
     return (
-      <List className={this.props.classes.root}>{listItems}</List>
+      <ListGroup>{listItems}</ListGroup>
     );
   }
 }
 
-export default withStyles(Styles)(ArtworkList);
+export default ArtworkList;
