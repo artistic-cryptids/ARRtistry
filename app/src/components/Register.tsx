@@ -78,7 +78,8 @@ class Register extends React.Component<RegisterProps, RegisterState> {
     const { drizzle, drizzleState } = this.props;
 
     const currentAccount = drizzleState.accounts[0];
-    const artist = drizzleState.accounts[0]; // TODO: Update this to real artist's account
+    // TODO: Update this to real artist's account
+    const artist = drizzleState.accounts[0];
 
     // eslint-disable-next-line
     const { metaIpfsHash, ...restOfTheFields } = this.state.fields;
