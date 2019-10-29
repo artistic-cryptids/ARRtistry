@@ -351,12 +351,8 @@ function shouldBehaveLikeERC721ApprovalEnumerable (
             await this.token.approve(approved, secondTokenId, { from: owner });
           });
 
-          it('adds token to operator approved token list', async function () {
+          it('adds tokens to operator approved token list', async function () {
             expect(await this.token.getOperatorTokenIds(approved)).to.eql([tokenId, secondTokenId]);
-          });
-
-          it('ensures token is still in owner\'s approved token list', async function () {
-            expect(await this.token.getOperatorTokenIds(owner)).to.eql([tokenId, secondTokenId]);
           });
         });
 
@@ -368,10 +364,6 @@ function shouldBehaveLikeERC721ApprovalEnumerable (
           it('adds token to operator approved token list', async function () {
             expect(await this.token.getOperatorTokenIds(approved)).to.eql([tokenId]);
           });
-
-          it('ensures token is still in owner\'s approved token list', async function () {
-            expect(await this.token.getOperatorTokenIds(owner)).to.eql([tokenId, secondTokenId]);
-          });
         });
 
         context('when there was a prior approval to the same address', function () {
@@ -382,10 +374,6 @@ function shouldBehaveLikeERC721ApprovalEnumerable (
 
           it('operator approved token list remains the same', async function () {
             expect(await this.token.getOperatorTokenIds(approved)).to.eql([tokenId]);
-          });
-
-          it('ensures token is still in owner\'s approved token list', async function () {
-            expect(await this.token.getOperatorTokenIds(owner)).to.eql([tokenId, secondTokenId]);
           });
         });
 
@@ -401,10 +389,6 @@ function shouldBehaveLikeERC721ApprovalEnumerable (
 
           it('operator approved token list remains empty', async function () {
             expect(await this.token.getOperatorTokenIds(approved)).to.eql([]);
-          });
-
-          it('ensures token is still in owner\'s approved token list', async function () {
-            expect(await this.token.getOperatorTokenIds(owner)).to.eql([tokenId, secondTokenId]);
           });
         });
       });

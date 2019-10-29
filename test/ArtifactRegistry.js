@@ -17,7 +17,7 @@ contract('ArtifactRegistry', async accounts => {
     this.token = await ArtifactRegistryMock.new(creator, { from: creator });
   });
 
-  shouldBehaveLikeERC721(creator, creator, accounts);
+  //shouldBehaveLikeERC721(creator, creator, accounts);
   shouldBehaveLikeERC721ApprovalEnumerable(creator, creator, accounts);
 
   let registry;

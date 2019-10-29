@@ -104,17 +104,13 @@ contract ERC721ApprovalEnumerable is IERC721ApprovalEnumerable, ERC721Full {
     require(operator != address(0), "ERC721ApprovalEnumerable: balance query for the zero address");
 
     uint256 numApprovedTokens = _operatorApprovedTokensCount[operator].current();
-    uint256 numOwnedTokens = balanceOf(operator);
 
-    uint256[] memory tokenIds = new uint256[](numApprovedTokens + numOwnedTokens);
+    uint256[] memory tokenIds = new uint256[](numApprovedTokens);
     for (uint i = 0; i < numApprovedTokens; i++) {
       tokenIds[i] = _operatorApprovedTokens[operator][i];
     }
 
     //emit Test3(_operatorApprovedTokens[operator]);
-    for (uint i = 0; i < numOwnedTokens; i++) {
-      tokenIds[numApprovedTokens + i] = tokenOfOwnerByIndex(operator, i);
-    }
 
     return tokenIds;
   }
