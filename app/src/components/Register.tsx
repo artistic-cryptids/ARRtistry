@@ -229,6 +229,8 @@ class Register extends React.Component<RegisterProps, RegisterState> {
     stateUpdate.fields.artistBirthYear = artist.birthYear;
     // Will store death year when that info is stored on an artifact
     // stateUpdate.fields['artistDeathYear'] = artist.deathYear
+
+    this.setState(stateUpdate);
   }
 
   getOptions = (): JSX.Element[] => {
