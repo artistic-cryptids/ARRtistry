@@ -9,19 +9,48 @@ interface ArtworkListProps {
 
 interface ArtworkListState {
   balance: number;
+  tokenIds: Array<number>;
 }
 
 class ArtworkList extends React.Component<ArtworkListProps, ArtworkListState> {
+  constructor (props: ArtworkListProps) {
+    super(props);
+    this.state = {
+      balance: 0,
+      tokenIds: [],
+    };
+  }
+
   componentDidMount (): void {
     this.shouldComponentUpdate();
   }
 
   shouldComponentUpdate (): boolean {
-    this.props.drizzle.contracts.ArtifactRegistry.methods.balanceOf(this.props.drizzleState.accounts[0]).call()
+    const artifactRegistry = this.props.drizzle.contracts.ArtifactRegistry;
+    const currentAccount = this.props.drizzleState.accounts[0];
+
+    // TODO: Replace with a contract function that returns an array of
+    //       owned token ids to avoid nested promises.
+    artifactRegistry.methods.balanceOf(currentAccount).call()
       .then((balance: number) => {
         console.log('balance is', balance);
         if (!this.state || this.state.balance !== balance) {
           this.setState({ balance: balance });
+          const tokenIds: Array<number> = [];
+          this.setState({
+            tokenIds: tokenIds,
+          });
+          for (let i = 0; i < balance; i++) {
+            artifactRegistry.methods.tokenOfOwnerByIndex(currentAccount, i)
+              .call()
+              .then((tokenId: any) => {
+                tokenIds.push(tokenId);
+                this.setState({
+                  tokenIds: tokenIds,
+                });
+              })
+              .catch((err: any) => { console.log(err); });
+          }
         }
       })
       .catch((err: any) => { console.log(err); });
@@ -42,21 +71,12 @@ class ArtworkList extends React.Component<ArtworkListProps, ArtworkListState> {
       );
     }
 
-    const indices = [];
-
-    let index = 0;
-
-    while (index < this.state.balance) {
-      indices.push(index);
-      index++;
-    }
-
-    const listItems = indices.map((id: number) =>
+    const listItems = this.state.tokenIds.map((tokenId: number) =>
       <ArtworkItem
         drizzle={this.props.drizzle}
         drizzleState={this.props.drizzleState}
-        id={id}
-        key={id}
+        tokenId={tokenId}
+        key={tokenId}
       />,
     );
 

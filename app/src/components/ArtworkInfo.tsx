@@ -11,7 +11,7 @@ interface Artwork {
 
 interface ArtworkInfoProps {
   artwork: Artwork;
-  id: any;
+  id: number;
 }
 
 class ArtworkInfo extends React.Component<ArtworkInfoProps, {}> {
