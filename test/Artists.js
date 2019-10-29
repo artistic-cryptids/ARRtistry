@@ -22,7 +22,7 @@ contract('Artists', async accounts => {
       assert.equal(artist[1], accounts[5]);
       assert.equal(artist[2], 'Nationality');
       assert.equal(artist[3], 'Birth');
-      assert.equal(artist[4], 'Death')
+      assert.equal(artist[4], 'Death');
     });
 
     it('Should reject for invalid artist id', async () => {
