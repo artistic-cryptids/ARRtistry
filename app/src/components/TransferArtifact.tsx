@@ -8,7 +8,7 @@ import Modal from 'react-bootstrap/Modal';
 interface TransferArtifactProps {
   drizzle: any;
   drizzleState: any;
-  tokenId: any;
+  tokenId: number;
 }
 
 interface TransferArtifactFormFields {

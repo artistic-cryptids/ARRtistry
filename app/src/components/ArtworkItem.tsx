@@ -6,7 +6,7 @@ import TransferArtifact from './TransferArtifact';
 interface ArtworkItemProps {
   drizzle: any;
   drizzleState: any;
-  tokenId: any;
+  tokenId: number;
 }
 
 type ArtworkItemState = {
