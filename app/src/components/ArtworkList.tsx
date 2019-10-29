@@ -37,6 +37,9 @@ class ArtworkList extends React.Component<ArtworkListProps, ArtworkListState> {
         if (!this.state || this.state.balance !== balance) {
           this.setState({ balance: balance });
           const tokenIds: Array<number> = [];
+          this.setState({
+            tokenIds: tokenIds,
+          });
           for (let i = 0; i < balance; i++) {
             artifactRegistry.methods.tokenOfOwnerByIndex(currentAccount, i)
               .call()
