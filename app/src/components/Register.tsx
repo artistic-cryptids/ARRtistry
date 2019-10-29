@@ -24,6 +24,7 @@ interface RegisterFormFields {
   edition: string;
   imageIpfsHash: string;
   size: string;
+  metaIpfsHash: string;
 }
 
 interface Artist {
@@ -64,6 +65,7 @@ class Register extends React.Component<RegisterProps, RegisterState> {
         medium: '',
         size: '',
         imageIpfsHash: '',
+        metaIpfsHash: '',
       },
     };
   };
@@ -114,7 +116,7 @@ class Register extends React.Component<RegisterProps, RegisterState> {
       });
   };
 
-  registerArtifact = (event: React.FormEvent<HTMLFormElement>): void => {
+  registerArtifact = async (event: React.FormEvent<HTMLFormElement>): Promise<void> => {
     event.stopPropagation();
     event.preventDefault();
 
@@ -128,24 +130,24 @@ class Register extends React.Component<RegisterProps, RegisterState> {
     const { drizzle, drizzleState } = this.props;
 
     const currentAccount = drizzleState.accounts[0];
-    const artist = drizzleState.accounts[0]; // TODO: Update this to real artist's account
+    // TODO: Update this to real artist's account
+    const artist = drizzleState.accounts[0];
 
-    const metaUri = '';
+    // eslint-disable-next-line
+    const { metaIpfsHash, ...restOfTheFields } = this.state.fields;
+    const jsonData = restOfTheFields;
 
-    const fields = this.state.fields;
-    console.log(fields);
+    const jsonDataBuffer = Buffer.from(JSON.stringify(jsonData));
+    const files = Array(jsonDataBuffer);
+
+    // TODO: this upload takes like 5 seconds. Some kind of loading notification should display
+    await this.saveToIpfs(files, this.setMetaHash);
+
+    const ipfsUrlStart = 'https://ipfs.io/ipfs/';
     const stackId = drizzle.contracts.ArtifactApplication.methods.applyFor.cacheSend(
       currentAccount,
       artist,
-      fields.title,
-      fields.artistName,
-      fields.artistNationality,
-      fields.artistBirthYear,
-      fields.artifactCreationDate,
-      fields.medium,
-      fields.size,
-      fields.imageIpfsHash,
-      metaUri,
+      ipfsUrlStart + this.state.fields.metaIpfsHash,
       {
         from: drizzleState.accounts[0],
         gasLimit: 6000000,
@@ -177,12 +179,21 @@ class Register extends React.Component<RegisterProps, RegisterState> {
     }
   };
 
-  async saveToIpfs (files: any): Promise<void> {
+  setImgHash = (ipfsId: string): void => {
+    this.setState({ fields: { ...this.state.fields, imageIpfsHash: ipfsId } });
+  };
+
+  setMetaHash = (ipfsId: string): void => {
+    this.setState({ fields: { ...this.state.fields, metaIpfsHash: ipfsId } });
+    console.log(ipfsId);
+  };
+
+  async saveToIpfs (files: any, afterwardsFunction: (arg0: string) => void): Promise<void> {
     let ipfsId: string;
     await ipfs.add([...files], { progress: (prog: any) => console.log(`received: ${prog}`) })
       .then((response: any) => {
         ipfsId = response[0].hash;
-        this.setState({ fields: { ...this.state.fields, imageIpfsHash: ipfsId } });
+        afterwardsFunction(ipfsId);
       }).catch((err: any) => {
         console.log(err);
       });
@@ -333,7 +344,7 @@ class Register extends React.Component<RegisterProps, RegisterState> {
                       const files = e.target.files;
                       if (files != null && files[0].size < 1000000) {
                         // max file size of one megabyte
-                        this.saveToIpfs(files);
+                        this.saveToIpfs(files, this.setImgHash);
                       } else {
                         // TODO: nicer way of alerting
                         alert('Image cannot be greater than 1 MB!');
