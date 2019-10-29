@@ -197,7 +197,7 @@ class Register extends React.Component<RegisterProps, RegisterState> {
     this.setState(stateUpdate);
   };
 
-  getOptions = (): any => {
+  getOptions = (): JSX.Element[] => {
     if (!this.state.artists) {
       return [];
     }
