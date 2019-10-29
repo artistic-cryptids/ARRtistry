@@ -24,14 +24,6 @@ contract('ArtifactApplication', async accounts => {
       await artifactApplication.applyFor(
         accounts[0],
         ARTIFACT.artist,
-        ARTIFACT.title,
-        ARTIFACT.artistName,
-        ARTIFACT.artistNationality,
-        ARTIFACT.artistBirthYear,
-        ARTIFACT.created,
-        ARTIFACT.medium,
-        ARTIFACT.size,
-        ARTIFACT.imageUri,
         ARTIFACT.metaUri,
       );
 
@@ -55,14 +47,6 @@ contract('ArtifactApplication', async accounts => {
       await artifactApplication.applyFor(
         accounts[0],
         ARTIFACT.artist,
-        ARTIFACT.title,
-        ARTIFACT.artistName,
-        ARTIFACT.artistNationality,
-        ARTIFACT.artistBirthYear,
-        ARTIFACT.created,
-        ARTIFACT.medium,
-        ARTIFACT.size,
-        ARTIFACT.imageUri,
         ARTIFACT.metaUri,
       );
 
@@ -74,14 +58,6 @@ contract('ArtifactApplication', async accounts => {
       await artifactApplication.applyFor(
         accounts[0],
         ARTIFACT.artist,
-        ARTIFACT.title,
-        ARTIFACT.artistName,
-        ARTIFACT.artistNationality,
-        ARTIFACT.artistBirthYear,
-        ARTIFACT.created,
-        ARTIFACT.medium,
-        ARTIFACT.size,
-        ARTIFACT.imageUri,
         ARTIFACT.metaUri,
       );
 
@@ -94,16 +70,9 @@ contract('ArtifactApplication', async accounts => {
     });
 
     it('should not be able to retrieve a proposal thats rejected', async () => {
-      await artifactApplication.applyFor(accounts[0],
+      await artifactApplication.applyFor(
+        accounts[0],
         ARTIFACT.artist,
-        ARTIFACT.title,
-        ARTIFACT.artistName,
-        ARTIFACT.artistNationality,
-        ARTIFACT.artistBirthYear,
-        ARTIFACT.created,
-        ARTIFACT.medium,
-        ARTIFACT.size,
-        ARTIFACT.imageUri,
         ARTIFACT.metaUri,
       );
 

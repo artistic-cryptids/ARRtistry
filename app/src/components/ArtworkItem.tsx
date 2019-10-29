@@ -20,15 +20,7 @@ class ArtworkItem extends React.Component<ArtworkItemProps, ArtworkItemState> {
       .then((artworkData: any) => {
         console.log(artworkData);
         const artwork = {
-          title: artworkData[1],
-          artistName: artworkData[2],
-          artistNationality: artworkData[3],
-          artistBirthYear: artworkData[4],
-          createdDate: artworkData[5],
-          medium: artworkData[6],
-          size: artworkData[7],
-          imageIpfsHash: artworkData[8],
-          metaUri: artworkData[9],
+          metaUri: artworkData[1],
         };
         this.setState({ artwork: artwork });
       })
