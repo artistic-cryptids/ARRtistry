@@ -10,9 +10,10 @@ import { DrizzleContext } from 'drizzle-react';
 import Governance from './contracts/Governance.json';
 import ArtifactApplication from './contracts/ArtifactApplication.json';
 import ArtifactRegistry from './contracts/ArtifactRegistry.json';
+import Artists from './contracts/Artists.json';
 
 const options: DrizzleOptions = {
-  contracts: [ArtifactApplication, Governance, ArtifactRegistry],
+  contracts: [ArtifactApplication, Governance, ArtifactRegistry, Artists],
   web3: {
     fallback: {
       type: 'ws',
