@@ -26,10 +26,16 @@ interface RegisterFormFields {
   size: string;
 }
 
+interface Artist {
+  name: string;
+  wallet: string;
+}
+
 interface RegisterState {
   fields: RegisterFormFields;
   registerTransactionStackId: any;
   validated: boolean;
+  artists?: Artist[];
 }
 
 type InputChangeEvent = React.FormEvent<FormControlProps> &
@@ -60,7 +66,53 @@ class Register extends React.Component<RegisterProps, RegisterState> {
         imageIpfsHash: '',
       },
     };
-  }
+  };
+
+  componentDidMount (): void {
+    this.shouldComponentUpdate();
+  };
+
+  shouldComponentUpdate (): boolean {
+    if (this.state.artists) {
+      return false;
+    }
+
+    this.getArtistInfo()
+      .then((artists: Artist[]) => this.setState({ artists: artists }))
+      .catch((err: any) => console.log(err));
+
+    return true;
+  };
+
+  infoToArtist = (info: string[]): Artist => {
+    return {
+      name: info[0],
+      wallet: info[1],
+    };
+  };
+
+  getArtistInfo = (): Promise<Artist[]> => {
+    const Artists = this.props.drizzle.contracts.Artists;
+
+    return Artists.methods.getArtistsTotal()
+      .call()
+      .then((total: number) => {
+        const artists = [];
+
+        let id = 0;
+        while (id < total) {
+          id++;
+
+          const artist = Artists.methods.getArtist(id)
+            .call()
+            .then((info: string[]) => this.infoToArtist(info));
+
+          artists.push(artist);
+        }
+
+        return Promise.all(artists);
+      });
+  };
 
   registerArtifact = (event: React.FormEvent<HTMLFormElement>): void => {
     event.stopPropagation();
@@ -145,6 +197,14 @@ class Register extends React.Component<RegisterProps, RegisterState> {
     this.setState(stateUpdate);
   };
 
+  getOptions = (): JSX.Element[] => {
+    if (!this.state.artists) {
+      return [];
+    }
+
+    return this.state.artists.map((artist: Artist) => <option key={artist.wallet}>{artist.name}</option>);
+  };
+
   renderArtifactInformation = (): React.ReactNode => {
     return (
       <Container>
@@ -201,8 +261,10 @@ class Register extends React.Component<RegisterProps, RegisterState> {
             <Form.Label>Artist Name</Form.Label>
             <Form.Control
               required
-              type="text"
-              onChange={this.inputChangeHandler}/>
+              as="select"
+              onChange={this.inputChangeHandler}>
+              {this.getOptions()}
+            </Form.Control>
             {GENERIC_FEEDBACK}
           </Form.Group>
         </Form.Row>
