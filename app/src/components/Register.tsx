@@ -24,11 +24,15 @@ interface RegisterFormFields {
   edition: string;
   imageIpfsHash: string;
   size: string;
+  metaIpfsHash: string;
 }
 
 interface Artist {
   name: string;
   wallet: string;
+  nationality: string;
+  birthYear: string;
+  deathYear: string;
 }
 
 interface RegisterState {
@@ -64,6 +68,7 @@ class Register extends React.Component<RegisterProps, RegisterState> {
         medium: '',
         size: '',
         imageIpfsHash: '',
+        metaIpfsHash: '',
       },
     };
   };
@@ -88,6 +93,9 @@ class Register extends React.Component<RegisterProps, RegisterState> {
     return {
       name: info[0],
       wallet: info[1],
+      nationality: info[2],
+      birthYear: info[3],
+      deathYear: info[4],
     };
   };
 
@@ -114,7 +122,7 @@ class Register extends React.Component<RegisterProps, RegisterState> {
       });
   };
 
-  registerArtifact = (event: React.FormEvent<HTMLFormElement>): void => {
+  registerArtifact = async (event: React.FormEvent<HTMLFormElement>): Promise<void> => {
     event.stopPropagation();
     event.preventDefault();
 
@@ -128,24 +136,24 @@ class Register extends React.Component<RegisterProps, RegisterState> {
     const { drizzle, drizzleState } = this.props;
 
     const currentAccount = drizzleState.accounts[0];
-    const artist = drizzleState.accounts[0]; // TODO: Update this to real artist's account
+    // TODO: Update this to real artist's account
+    const artist = drizzleState.accounts[0];
 
-    const metaUri = '';
+    // eslint-disable-next-line
+    const { metaIpfsHash, ...restOfTheFields } = this.state.fields;
+    const jsonData = restOfTheFields;
 
-    const fields = this.state.fields;
-    console.log(fields);
+    const jsonDataBuffer = Buffer.from(JSON.stringify(jsonData));
+    const files = Array(jsonDataBuffer);
+
+    // TODO: this upload takes like 5 seconds. Some kind of loading notification should display
+    await this.saveToIpfs(files, this.setMetaHash);
+
+    const ipfsUrlStart = 'https://ipfs.io/ipfs/';
     const stackId = drizzle.contracts.ArtifactApplication.methods.applyFor.cacheSend(
       currentAccount,
       artist,
-      fields.title,
-      fields.artistName,
-      fields.artistNationality,
-      fields.artistBirthYear,
-      fields.artifactCreationDate,
-      fields.medium,
-      fields.size,
-      fields.imageIpfsHash,
-      metaUri,
+      ipfsUrlStart + this.state.fields.metaIpfsHash,
       {
         from: drizzleState.accounts[0],
         gasLimit: 6000000,
@@ -177,12 +185,21 @@ class Register extends React.Component<RegisterProps, RegisterState> {
     }
   };
 
-  async saveToIpfs (files: any): Promise<void> {
+  setImgHash = (ipfsId: string): void => {
+    this.setState({ fields: { ...this.state.fields, imageIpfsHash: ipfsId } });
+  };
+
+  setMetaHash = (ipfsId: string): void => {
+    this.setState({ fields: { ...this.state.fields, metaIpfsHash: ipfsId } });
+    console.log(ipfsId);
+  };
+
+  async saveToIpfs (files: any, afterwardsFunction: (arg0: string) => void): Promise<void> {
     let ipfsId: string;
     await ipfs.add([...files], { progress: (prog: any) => console.log(`received: ${prog}`) })
       .then((response: any) => {
         ipfsId = response[0].hash;
-        this.setState({ fields: { ...this.state.fields, imageIpfsHash: ipfsId } });
+        afterwardsFunction(ipfsId);
       }).catch((err: any) => {
         console.log(err);
       });
@@ -197,12 +214,44 @@ class Register extends React.Component<RegisterProps, RegisterState> {
     this.setState(stateUpdate);
   };
 
+  artistChangeHandler = (event: InputChangeEvent): void => {
+    if (!this.state.artists) {
+      return;
+    }
+
+    const value = event.target.value;
+
+    let artist;
+
+    for (const a of this.state.artists) {
+      if (a.name === value) {
+        artist = a;
+        break;
+      }
+    }
+
+    if (!artist) {
+      return;
+    }
+
+    const stateUpdate = { fields: this.state.fields as Pick<RegisterFormFields, keyof RegisterFormFields> };
+    stateUpdate.fields.artistName = artist.name;
+    stateUpdate.fields.artistNationality = artist.nationality;
+    stateUpdate.fields.artistBirthYear = artist.birthYear;
+    // Will store death year when that info is stored on an artifact
+    // stateUpdate.fields['artistDeathYear'] = artist.deathYear
+
+    this.setState(stateUpdate);
+  }
+
   getOptions = (): JSX.Element[] => {
     if (!this.state.artists) {
       return [];
     }
 
-    return this.state.artists.map((artist: Artist) => <option key={artist.wallet}>{artist.name}</option>);
+    return this.state.artists.map((artist: Artist) => {
+      return <option key={artist.wallet}>{artist.name}</option>;
+    });
   };
 
   renderArtifactInformation = (): React.ReactNode => {
@@ -249,40 +298,15 @@ class Register extends React.Component<RegisterProps, RegisterState> {
             {GENERIC_FEEDBACK}
           </Form.Group>
         </Form.Row>
-      </Container>
-    );
-  };
-
-  renderArtistInformation = (): React.ReactNode => {
-    return (
-      <Container>
         <Form.Row>
           <Form.Group as={Col} controlId="artistName">
             <Form.Label>Artist Name</Form.Label>
             <Form.Control
               required
               as="select"
-              onChange={this.inputChangeHandler}>
+              onChange={this.artistChangeHandler}>
               {this.getOptions()}
             </Form.Control>
-            {GENERIC_FEEDBACK}
-          </Form.Group>
-        </Form.Row>
-        <Form.Row>
-          <Form.Group as={Col} controlId="artistNationality">
-            <Form.Label>Artist Nationality</Form.Label>
-            <Form.Control
-              required
-              type="text"
-              onChange={this.inputChangeHandler}/>
-            {GENERIC_FEEDBACK}
-          </Form.Group>
-          <Form.Group as={Col} controlId="artistBirthYear">
-            <Form.Label>Artist Birth Year</Form.Label>
-            <Form.Control
-              required
-              type="text"
-              onChange={this.inputChangeHandler}/>
             {GENERIC_FEEDBACK}
           </Form.Group>
         </Form.Row>
@@ -333,7 +357,7 @@ class Register extends React.Component<RegisterProps, RegisterState> {
                       const files = e.target.files;
                       if (files != null && files[0].size < 1000000) {
                         // max file size of one megabyte
-                        this.saveToIpfs(files);
+                        this.saveToIpfs(files, this.setImgHash);
                       } else {
                         // TODO: nicer way of alerting
                         alert('Image cannot be greater than 1 MB!');
@@ -361,16 +385,6 @@ class Register extends React.Component<RegisterProps, RegisterState> {
                   <Accordion.Collapse eventKey="0">
                     <Card.Body>
                       {this.renderArtifactInformation()}
-                    </Card.Body>
-                  </Accordion.Collapse>
-                </Card>
-                <Card>
-                  <Accordion.Toggle as={Card.Header} eventKey="1">
-                    Artist Information
-                  </Accordion.Toggle>
-                  <Accordion.Collapse eventKey="1">
-                    <Card.Body>
-                      {this.renderArtistInformation()}
                     </Card.Body>
                   </Accordion.Collapse>
                 </Card>
