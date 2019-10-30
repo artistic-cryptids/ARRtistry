@@ -105,7 +105,7 @@ class ArtworkInfo extends React.Component<ArtworkInfoProps, ArtworkInfoState> {
         retrievedData: true,
         artist: artist,
       }))
-      .catch((err) => console.log(err));
+      .catch((err: any) => console.log(err));
   };
 
   render (): React.ReactNode {
