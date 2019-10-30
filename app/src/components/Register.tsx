@@ -30,6 +30,9 @@ interface RegisterFormFields {
 interface Artist {
   name: string;
   wallet: string;
+  nationality: string;
+  birthYear: string;
+  deathYear: string;
 }
 
 interface RegisterState {
@@ -90,6 +93,9 @@ class Register extends React.Component<RegisterProps, RegisterState> {
     return {
       name: info[0],
       wallet: info[1],
+      nationality: info[2],
+      birthYear: info[3],
+      deathYear: info[4],
     };
   };
 
@@ -208,12 +214,44 @@ class Register extends React.Component<RegisterProps, RegisterState> {
     this.setState(stateUpdate);
   };
 
+  artistChangeHandler = (event: InputChangeEvent): void => {
+    if (!this.state.artists) {
+      return;
+    }
+
+    const value = event.target.value;
+
+    let artist;
+
+    for (const a of this.state.artists) {
+      if (a.name === value) {
+        artist = a;
+        break;
+      }
+    }
+
+    if (!artist) {
+      return;
+    }
+
+    const stateUpdate = { fields: this.state.fields as Pick<RegisterFormFields, keyof RegisterFormFields> };
+    stateUpdate.fields.artistName = artist.name;
+    stateUpdate.fields.artistNationality = artist.nationality;
+    stateUpdate.fields.artistBirthYear = artist.birthYear;
+    // Will store death year when that info is stored on an artifact
+    // stateUpdate.fields['artistDeathYear'] = artist.deathYear
+
+    this.setState(stateUpdate);
+  }
+
   getOptions = (): JSX.Element[] => {
     if (!this.state.artists) {
       return [];
     }
 
-    return this.state.artists.map((artist: Artist) => <option key={artist.wallet}>{artist.name}</option>);
+    return this.state.artists.map((artist: Artist) => {
+      return <option key={artist.wallet}>{artist.name}</option>;
+    });
   };
 
   renderArtifactInformation = (): React.ReactNode => {
@@ -260,40 +298,15 @@ class Register extends React.Component<RegisterProps, RegisterState> {
             {GENERIC_FEEDBACK}
           </Form.Group>
         </Form.Row>
-      </Container>
-    );
-  };
-
-  renderArtistInformation = (): React.ReactNode => {
-    return (
-      <Container>
         <Form.Row>
           <Form.Group as={Col} controlId="artistName">
             <Form.Label>Artist Name</Form.Label>
             <Form.Control
               required
               as="select"
-              onChange={this.inputChangeHandler}>
+              onChange={this.artistChangeHandler}>
               {this.getOptions()}
             </Form.Control>
-            {GENERIC_FEEDBACK}
-          </Form.Group>
-        </Form.Row>
-        <Form.Row>
-          <Form.Group as={Col} controlId="artistNationality">
-            <Form.Label>Artist Nationality</Form.Label>
-            <Form.Control
-              required
-              type="text"
-              onChange={this.inputChangeHandler}/>
-            {GENERIC_FEEDBACK}
-          </Form.Group>
-          <Form.Group as={Col} controlId="artistBirthYear">
-            <Form.Label>Artist Birth Year</Form.Label>
-            <Form.Control
-              required
-              type="text"
-              onChange={this.inputChangeHandler}/>
             {GENERIC_FEEDBACK}
           </Form.Group>
         </Form.Row>
@@ -372,16 +385,6 @@ class Register extends React.Component<RegisterProps, RegisterState> {
                   <Accordion.Collapse eventKey="0">
                     <Card.Body>
                       {this.renderArtifactInformation()}
-                    </Card.Body>
-                  </Accordion.Collapse>
-                </Card>
-                <Card>
-                  <Accordion.Toggle as={Card.Header} eventKey="1">
-                    Artist Information
-                  </Accordion.Toggle>
-                  <Accordion.Collapse eventKey="1">
-                    <Card.Body>
-                      {this.renderArtistInformation()}
                     </Card.Body>
                   </Accordion.Collapse>
                 </Card>
