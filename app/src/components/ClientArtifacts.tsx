@@ -40,7 +40,7 @@ class ClientArtifacts extends
           });
         }
       })
-    .catch((err: any) => { console.log(err); });
+      .catch((err: any) => { console.log(err); });
 
     return true;
   }
