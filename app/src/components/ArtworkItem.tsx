@@ -2,6 +2,7 @@ import * as React from 'react';
 import ArtworkInfo from './ArtworkInfo';
 import ListGroup from 'react-bootstrap/ListGroup';
 import TransferArtifact from './TransferArtifact';
+import ApproveEntityForArtifact from './ApproveEntityForArtifact';
 
 interface ArtworkItemProps {
   drizzle: any;
@@ -38,6 +39,11 @@ class ArtworkItem extends React.Component<ArtworkItemProps, ArtworkItemState> {
       <ListGroup.Item>
         <ArtworkInfo artwork={this.state.artwork} id={this.props.tokenId}>
           <TransferArtifact
+            drizzle={this.props.drizzle}
+            drizzleState={this.props.drizzleState}
+            tokenId={this.props.tokenId}
+          />
+          <ApproveEntityForArtifact
             drizzle={this.props.drizzle}
             drizzleState={this.props.drizzleState}
             tokenId={this.props.tokenId}
