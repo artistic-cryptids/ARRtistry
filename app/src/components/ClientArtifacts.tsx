@@ -64,6 +64,7 @@ class ClientArtifacts extends
         drizzleState={this.props.drizzleState}
         tokenId={tokenId}
         key={tokenId}
+        isOwnedArtifact={false}
       />,
     );
 

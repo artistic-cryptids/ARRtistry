@@ -8,6 +8,7 @@ interface ArtworkItemProps {
   drizzle: any;
   drizzleState: any;
   tokenId: number;
+  isOwnedArtifact: boolean;
 }
 
 type ArtworkItemState = {
@@ -43,11 +44,13 @@ class ArtworkItem extends React.Component<ArtworkItemProps, ArtworkItemState> {
             drizzleState={this.props.drizzleState}
             tokenId={this.props.tokenId}
           />
-          <ApproveEntityForArtifact
-            drizzle={this.props.drizzle}
-            drizzleState={this.props.drizzleState}
-            tokenId={this.props.tokenId}
-          />
+          {this.props.isOwnedArtifact
+            ? <ApproveEntityForArtifact
+              drizzle={this.props.drizzle}
+              drizzleState={this.props.drizzleState}
+              tokenId={this.props.tokenId}
+            />
+            : null}
         </ArtworkInfo>
       </ListGroup.Item>
     );

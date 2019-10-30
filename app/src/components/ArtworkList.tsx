@@ -77,6 +77,7 @@ class ArtworkList extends React.Component<ArtworkListProps, ArtworkListState> {
         drizzleState={this.props.drizzleState}
         tokenId={tokenId}
         key={tokenId}
+        isOwnedArtifact={true}
       />,
     );
 
