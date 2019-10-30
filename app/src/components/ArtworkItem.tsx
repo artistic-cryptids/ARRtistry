@@ -3,6 +3,8 @@ import ArtworkInfo from './ArtworkInfo';
 import ListGroup from 'react-bootstrap/ListGroup';
 import TransferArtifact from './TransferArtifact';
 import ApproveEntityForArtifact from './ApproveEntityForArtifact';
+import Col from 'react-bootstrap/Col';
+import Row from 'react-bootstrap/Row';
 
 interface ArtworkItemProps {
   drizzle: any;
@@ -39,18 +41,24 @@ class ArtworkItem extends React.Component<ArtworkItemProps, ArtworkItemState> {
     return (
       <ListGroup.Item>
         <ArtworkInfo artwork={this.state.artwork} id={this.props.tokenId}>
-          <TransferArtifact
-            drizzle={this.props.drizzle}
-            drizzleState={this.props.drizzleState}
-            tokenId={this.props.tokenId}
-          />
-          {this.props.isOwnedArtifact
-            ? <ApproveEntityForArtifact
-              drizzle={this.props.drizzle}
-              drizzleState={this.props.drizzleState}
-              tokenId={this.props.tokenId}
-            />
-            : null}
+          <Row>
+            <Col>
+              <TransferArtifact
+                drizzle={this.props.drizzle}
+                drizzleState={this.props.drizzleState}
+                tokenId={this.props.tokenId}
+              />
+            </Col>
+            {this.props.isOwnedArtifact
+              ? <Col>
+                <ApproveEntityForArtifact
+                  drizzle={this.props.drizzle}
+                  drizzleState={this.props.drizzleState}
+                  tokenId={this.props.tokenId}
+                />
+              </Col>
+              : null}
+          </Row>
         </ArtworkInfo>
       </ListGroup.Item>
     );
