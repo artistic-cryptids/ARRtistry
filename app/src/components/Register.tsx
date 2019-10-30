@@ -236,7 +236,7 @@ class Register extends React.Component<RegisterProps, RegisterState> {
 
     console.log(artist);
 
-    stateUpdate.fields['artistId'] = artist.id.toString();
+    stateUpdate.fields.artistId = artist.id.toString();
 
     this.setState(stateUpdate);
   }

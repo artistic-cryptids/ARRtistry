@@ -13,7 +13,7 @@ interface ArtworkInfoProps {
 }
 
 interface Artist {
-  id: number
+  id: number;
   name: string;
   wallet: string;
   nationality: string;
@@ -32,7 +32,7 @@ interface ArtworkInfoFields {
 }
 
 interface ArtworkInfoState {
-  artist: Artist
+  artist: Artist;
   metaUri: string;
   retrievedData: boolean;
   fields: ArtworkInfoFields;
@@ -104,7 +104,8 @@ class ArtworkInfo extends React.Component<ArtworkInfoProps, ArtworkInfoState> {
       .then((artist: Artist) => this.setState({
         retrievedData: true,
         artist: artist,
-      }));
+      }))
+      .catch((err) => console.log(err));
   };
 
   render (): React.ReactNode {

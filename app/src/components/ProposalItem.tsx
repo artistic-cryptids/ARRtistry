@@ -53,7 +53,7 @@ class ProposalItem extends React.Component<ProposalItemProps, ProposalItemState>
         id={this.props.id}
         drizzle={this.props.drizzle}
         drizzleState={this.props.drizzleState}
-       >
+      >
         <Row>
           <ButtonGroup aria-label="Actionbar" className="mx-auto">
             <Button variant="outline-success" onClick={this.approveProposal}>Approve</Button>
