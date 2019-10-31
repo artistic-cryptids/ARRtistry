@@ -105,7 +105,7 @@ class Register extends React.Component<RegisterProps, RegisterState> {
       .then((total: number) => {
         const artists = [];
 
-        for (let i = 1; i < total; i++)
+        for (let i = 1; i < total; i++) {
           // Have to extract to new variable for async issues
           const id = i;
           const artist = Artists.methods.getArtist(id)
