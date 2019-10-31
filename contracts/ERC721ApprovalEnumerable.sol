@@ -9,7 +9,7 @@ import { IERC721ApprovalEnumerable } from "./interfaces/IERC721ApprovalEnumerabl
 /**
  * @title ERC721ApprovalEnumerable
  * @dev A extension the ERC721 protocol which provides support for querying
- *			the tokens an account has been approved to transfer. Currently
+ *      the tokens an account has been approved to transfer. Currently
  *      this contract does not support the ERC721Burnable extension.
  */
 contract ERC721ApprovalEnumerable is IERC721ApprovalEnumerable, ERC721Full {
