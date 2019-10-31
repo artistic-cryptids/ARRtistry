@@ -6,15 +6,24 @@ interface Artwork {
 }
 
 interface ArtworkInfoProps {
+  drizzle: any;
+  drizzleState: any;
   artwork: Artwork;
   id: number;
 }
 
+interface Artist {
+  id: number;
+  name: string;
+  wallet: string;
+  nationality: string;
+  birthYear: string;
+  deathYear: string;
+}
+
 interface ArtworkInfoFields {
   title: string;
-  artistName: string;
-  artistNationality: string;
-  artistBirthYear: string;
+  artistId: number;
   edition: string;
   artifactCreationDate: string;
   medium: string;
@@ -23,6 +32,7 @@ interface ArtworkInfoFields {
 }
 
 interface ArtworkInfoState {
+  artist: Artist;
   metaUri: string;
   retrievedData: boolean;
   fields: ArtworkInfoFields;
@@ -33,13 +43,19 @@ class ArtworkInfo extends React.Component<ArtworkInfoProps, ArtworkInfoState> {
     super(props);
 
     this.state = {
+      artist: {
+        id: 0,
+        name: '',
+        wallet: '',
+        nationality: '',
+        birthYear: '',
+        deathYear: '',
+      },
       metaUri: this.props.artwork.metaUri,
       retrievedData: false,
       fields: {
         title: '',
-        artistName: '',
-        artistNationality: '',
-        artistBirthYear: '',
+        artistId: 0,
         edition: '',
         artifactCreationDate: '',
         medium: '',
@@ -60,20 +76,48 @@ class ArtworkInfo extends React.Component<ArtworkInfoProps, ArtworkInfoState> {
     const infoJson = await response.json();
 
     this.setState({
-      retrievedData: true,
       fields: infoJson,
     });
+
+    this.getArtistInfo();
   }
+
+  infoToArtist = (id: number, info: string[]): Artist => {
+    return {
+      id: id,
+      name: info[0],
+      wallet: info[1],
+      nationality: info[2],
+      birthYear: info[3],
+      deathYear: info[4],
+    };
+  };
+
+  getArtistInfo = (): void => {
+    if (!this.state.fields.artistId && this.state.retrievedData) {
+      return;
+    }
+
+    this.props.drizzle.contracts.Artists.methods.getArtist(this.state.fields.artistId)
+      .call()
+      .then((info: string[]) => this.infoToArtist(this.state.fields.artistId, info))
+      .then((artist: Artist) => this.setState({
+        retrievedData: true,
+        artist: artist,
+      }))
+      .catch((err: any) => console.log(err));
+  };
 
   render (): React.ReactNode {
     const fields = this.state.fields;
+    const artist = this.state.artist;
     if (this.state.retrievedData) {
       return (
         <Card className="shadow">
           <Card.Body>
             <Card.Img variant="top" src={'https://ipfs.io/ipfs/' + fields.imageIpfsHash} />
             <Card.Title><span className="text-muted text-capitalize">#{this.props.id} </span>{fields.title}</Card.Title>
-            <Card.Subtitle className="mb-2 text-muted">{fields.artistName}</Card.Subtitle>
+            <Card.Subtitle className="mb-2 text-muted">{artist.name}</Card.Subtitle>
             <Card.Text>
             Some quick example text to build on the card title and make up the bulk of
             the card&apos;s content.
