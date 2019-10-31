@@ -24,6 +24,6 @@ module.exports = async (deployer, network, accounts) => {
     accounts[0],
     await ENSResolver.deployed(),
     await FIFSRegistrar.deployed(),
-    artists
+    artists,
   );
 };
