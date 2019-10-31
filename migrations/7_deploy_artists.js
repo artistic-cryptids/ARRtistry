@@ -10,14 +10,14 @@ module.exports = async (deployer, network, accounts) => {
   const artists = await Artists.deployed();
 
   // Some prefiled in files with artist infos
-  await artists.addArtist('https://ipfs.io/ipfs/QmRxjTL7f3FRWfZEgWjdohSwWxcr8efFAUcv1EfhbuNxau');
-  await artists.addArtist('https://ipfs.io/ipfs/QmTMsaqXgmBzbYjLbCqJ1eXe9FcDdJHn9BuM7wtxWtJja4');
-  await artists.addArtist('https://ipfs.io/ipfs/QmPpbPxQr8cnojqCyozs9vKtNQpDFzvNhiCuy84uzQ7vHf');
-  await artists.addArtist('https://ipfs.io/ipfs/QmbwLbeyn9xdLRmthXjR66mcZ9XUP9RgFyHspnQJikFm72');
-  await artists.addArtist('https://ipfs.io/ipfs/QmNxAHADBx5mfcAwMUffCqYeg5FjAbbvyz14TCk2wpgni9');
-  await artists.addArtist('https://ipfs.io/ipfs/QmUrH3TCEj2X5apfDiUDswGoidEByJveggYJin5qDAyjBW');
-  await artists.addArtist('https://ipfs.io/ipfs/QmPiVHQeFbLo5Qq6QEsRMhK4k3M4cHFPjToesR4WN1aDnL');
-  await artists.addArtist('https://ipfs.io/ipfs/QmYabbr9PZBpGiKXom2mP4pbo5yYw7LQkdYAVW12B3xe8m');
+  await artists.addArtist('https://ipfs.globalupload.io/Qmdgp81Wd8NhMgzHSYzWyN4FAP4CPTwtiKopznoNzyfyy8');
+  await artists.addArtist('https://ipfs.globalupload.io/QmdBkQ31t6MBKZAFAq56mbQf3bb1qdjdssqjVVNXZK5SJv');
+  await artists.addArtist('https://ipfs.globalupload.io/QmeribWDZU9rBJJesgAZowP2GmvQ4NSTPCjuqM6rtrRb8e');
+  await artists.addArtist('https://ipfs.globalupload.io/QmeYjgK9LpijLWTGki3J9VZNj6R5c93m5enHXH4Ezqg1JN');
+  await artists.addArtist('https://ipfs.globalupload.io/Qmd5Hd5G4tM28ErZr1VvdgV7oYebyavZ5jCn593JwWhuud');
+  await artists.addArtist('https://ipfs.globalupload.io/Qmb2vvBVvGaXoqYEECYmyKbxpCgSbFVAPy6kCPrRCdLRPK');
+  await artists.addArtist('https://ipfs.globalupload.io/QmXJ5tg8ob5XQgZvK5uTZ5pEieKhF9JpFSYdQJpNsmb7dU');
+  await artists.addArtist('https://ipfs.globalupload.io/QmfSLSJoxqktyEKN4useBRPAPaJ9ENFFXmiYX5BQtm4Qu7');
 
   await newLabel(
     'artists',
