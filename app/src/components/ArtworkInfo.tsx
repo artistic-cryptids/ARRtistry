@@ -82,15 +82,10 @@ class ArtworkInfo extends React.Component<ArtworkInfoProps, ArtworkInfoState> {
     this.getArtistInfo();
   }
 
-  infoToArtist = (id: number, info: string[]): Artist => {
-    return {
-      id: id,
-      name: info[0],
-      wallet: info[1],
-      nationality: info[2],
-      birthYear: info[3],
-      deathYear: info[4],
-    };
+  hashToArtist = (hash: string): Promise<Artist> => {
+    console.log(hash);
+    return fetch(hash)
+      .then((response: any) => response.json());
   };
 
   getArtistInfo = (): void => {
@@ -100,7 +95,7 @@ class ArtworkInfo extends React.Component<ArtworkInfoProps, ArtworkInfoState> {
 
     this.props.drizzle.contracts.Artists.methods.getArtist(this.state.fields.artistId)
       .call()
-      .then((info: string[]) => this.infoToArtist(this.state.fields.artistId, info))
+      .then((hash: string) => this.hashToArtist(hash))
       .then((artist: Artist) => this.setState({
         retrievedData: true,
         artist: artist,
