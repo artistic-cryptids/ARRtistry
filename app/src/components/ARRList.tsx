@@ -28,12 +28,9 @@ class ARRList extends React.Component<ARRListProps, ARRListState> {
 
   async loadARRs (): Promise<void> {
     const len = await this.props.drizzle.contracts.Governance.methods.getARRLength().call();
-    // const len = "0";
-    // console.log('len: ')
-    // console.log(len)
-    // ids = [1,2,3,...,len]
+
     const ids = [];
-    for (let i = 1; i <= len; i++) {
+    for (let i = 0; i < len; i++) {
       ids.push(i.toString());
     }
     if (!this.state || this.state.ids !== ids) {

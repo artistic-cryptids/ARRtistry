@@ -18,28 +18,18 @@ class ARRItem extends React.Component<ARRItemProps, ARRItemState> {
   }
 
   async loadARR (): Promise<void> {
-    // const ARRData = await this.props.drizzle.contracts.Governance.methods.getARR.cacheCall("1");
-    /* const ARRData = await this.props.drizzle.contracts.ArtifactApplication.methods.getARR.cacheCall("1");
-    console.log(ARRData)
-    const ARR = {
-      from: ARRData[0],
-      to: ARRData[1],
-      tokenId: ARRData[2],
-      price: ARRData[3],
-    };
-    console.log(ARR);
-    this.setState({ ARR: ARR }); */
     this.props.drizzle.contracts.ArtifactApplication.methods.getARR(this.props.id)
+    // this.props.drizzle.contracts.Governance.methods.getARR(0)
       .call()
       .then((ARRData: any): void => {
-      /* const ARR = {
-        //from: ARRData[0],
-        //to: ARRData[1],
-        //tokenId: ARRData[2],
-        price: ARRData[0],
-      };
-      this.setState({ ARR: ARR }); */
-        console.log(ARRData);
+        const ARR = {
+          from: ARRData[0],
+          to: ARRData[1],
+          tokenId: ARRData[2],
+          price: ARRData[3],
+        };
+        this.setState({ ARR: ARR });
+        console.log(ARR);
       })
       .catch((err: any): void => { console.log(err); });
   }
@@ -49,15 +39,17 @@ class ARRItem extends React.Component<ARRItemProps, ARRItemState> {
       return null;
     }
 
+    const arr = this.state.ARR;
     return (
       <Card>
         <Card.Body>
-          <Card.Title><span className="text-muted text-capitalize">#{this.props.id}
-          </span>{this.state.ARR.price}</Card.Title>
+          <Card.Title><span className="text-muted text-capitalize">#{this.props.id}</span></Card.Title>
           <Card.Subtitle className="mb-2 text-muted">jdjkd</Card.Subtitle>
           <Card.Text>
-        Some quick example text to build on the card title and make up the bulk of
-        the card&apos;s content.
+        Piece: {arr.tokenId} <br />
+        From: <i>{arr.from}</i> <br />
+        To: <i>{arr.to}</i> <br />
+        Price: &euro;{arr.price}
           </Card.Text>
         </Card.Body>
         <Card.Footer>
