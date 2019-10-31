@@ -1,10 +1,5 @@
 import * as React from 'react';
-import ArtworkInfo from './ArtworkInfo';
-import Row from 'react-bootstrap/Row';
-import Button from 'react-bootstrap/Button';
-import ButtonGroup from 'react-bootstrap/ButtonGroup'; 
 import Card from 'react-bootstrap/Card';
-
 
 interface ARRItemProps {
   drizzle: any;
@@ -17,38 +12,36 @@ type ARRItemState = {
 }
 
 class ARRItem extends React.Component<ARRItemProps, ARRItemState> {
-  /*rejectARR = (_: React.MouseEvent): void => {
-    console.log('Rejecting ARR ' + this.props.id);
-    this.props.drizzle.contracts.Governance.methods.reject(this.props.id).send({
-      from: this.props.drizzleState.accounts[0],
-    });
-  }
-
-  approveARR = (_: React.MouseEvent): void => {
-    console.log('Approving ARR ' + this.props.id);
-    this.props.drizzle.contracts.Governance.methods.approve(this.props.id)
-      .send({
-        from: this.props.drizzleState.accounts[0],
-      });
-  }*/
-
   componentDidMount (): void {
-    //console.log(this.props.id);
-    this.loadARR(); 
+    // console.log(this.props.id);
+    this.loadARR();
   }
 
-  async loadARR(): Promise<void> {
-    const ARRData = await this.props.drizzle.contracts.Governance.methods.getARR.cacheCall("1");
-    //const ARRData = await this.props.drizzle.contracts.ArtifactApplication.methods.getARR.cacheCall("1");
+  async loadARR (): Promise<void> {
+    // const ARRData = await this.props.drizzle.contracts.Governance.methods.getARR.cacheCall("1");
+    /* const ARRData = await this.props.drizzle.contracts.ArtifactApplication.methods.getARR.cacheCall("1");
     console.log(ARRData)
     const ARR = {
       from: ARRData[0],
-      to: ARRData[1], 
+      to: ARRData[1],
       tokenId: ARRData[2],
       price: ARRData[3],
     };
     console.log(ARR);
-    this.setState({ ARR: ARR });
+    this.setState({ ARR: ARR }); */
+    this.props.drizzle.contracts.ArtifactApplication.methods.getARR(this.props.id)
+      .call()
+      .then((ARRData: any): void => {
+      /* const ARR = {
+        //from: ARRData[0],
+        //to: ARRData[1],
+        //tokenId: ARRData[2],
+        price: ARRData[0],
+      };
+      this.setState({ ARR: ARR }); */
+        console.log(ARRData);
+      })
+      .catch((err: any): void => { console.log(err); });
   }
 
   render (): React.ReactNode {
@@ -57,19 +50,20 @@ class ARRItem extends React.Component<ARRItemProps, ARRItemState> {
     }
 
     return (
-        <Card>
+      <Card>
         <Card.Body>
-        <Card.Title><span className="text-muted text-capitalize">#{this.props.id} </span>{this.state.ARR.price}</Card.Title>
-        <Card.Subtitle className="mb-2 text-muted">jdjkd</Card.Subtitle>
-        <Card.Text>
+          <Card.Title><span className="text-muted text-capitalize">#{this.props.id}
+          </span>{this.state.ARR.price}</Card.Title>
+          <Card.Subtitle className="mb-2 text-muted">jdjkd</Card.Subtitle>
+          <Card.Text>
         Some quick example text to build on the card title and make up the bulk of
         the card&apos;s content.
-        </Card.Text>
-      </Card.Body>
-      <Card.Footer>
-        <small className="text-muted">Last updated 3 mins ago</small>
-      </Card.Footer>
-    </Card>
+          </Card.Text>
+        </Card.Body>
+        <Card.Footer>
+          <small className="text-muted">Last updated 3 mins ago</small>
+        </Card.Footer>
+      </Card>
     );
   }
 }

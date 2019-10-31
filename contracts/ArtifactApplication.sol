@@ -54,9 +54,12 @@ contract ArtifactApplication {
   }
 
   function getARR(uint arrId) public view returns (address, address, uint256, uint) {
-    //IGovernance.ARR memory arr = governance.getARR(arrId);
+  //function getARR(uint arrId) public view returns (uint) {
+    // this call gives an error
+    IGovernance.ARR memory arr = governance.getARR(arrId);
 
     //return (arr.from, arr.to, arr.tokenId, arr.price);
-    return (0xE0f5206BBD039e7b0592d8918820024e2a7437b9, 0xE0f5206BBD039e7b0592d8918820024e2a7437b9, 3, 55);
+    return (0xE0f5206BBD039e7b0592d8918820024e2a7437b9, 0xE0f5206BBD039e7b0592d8918820024e2a7437b9, 3, arr.price);
+    //return 5;
   }
 }
