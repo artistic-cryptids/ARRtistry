@@ -24,9 +24,14 @@ contract ERC721ApprovalEnumerable is IERC721ApprovalEnumerable, ERC721Full {
     super.approve(to, tokenId);
 
     if (oldOperator != to) {
-      _addTokenToApprovedTokensEnumeration(to, tokenId);
       if (oldOperator != address(0)) {
         _removeTokenToApprovedTokensEnumeration(oldOperator, tokenId);
+      }
+
+      if (to != address(0)) {
+        // Tokens are added after removal as adding modifies
+        // _operatorApprovedTokensIndex but removing depends on it
+        _addTokenToApprovedTokensEnumeration(to, tokenId);
       }
     }
   }

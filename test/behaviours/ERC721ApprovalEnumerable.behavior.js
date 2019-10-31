@@ -47,6 +47,11 @@ function shouldBehaveLikeERC721ApprovalEnumerable (
             expect(await this.token.getOperatorTokenIds(approved)).to.eql([secondTokenId]);
           });
           otherAccountsApprovedTokenListRemainsEmpty([owner, anotherApproved, other]);
+
+          it('can remove the last token id from approved token list', async function () {
+            await this.token.approve(ZERO_ADDRESS, secondTokenId, { from: owner });
+            expect(await this.token.getOperatorTokenIds(approved)).to.eql([]);
+          });
         });
       });
 
