@@ -86,15 +86,10 @@ class Register extends React.Component<RegisterProps, RegisterState> {
     return true;
   };
 
-  infoToArtist = (id: number, info: string[]): Artist => {
-    return {
-      id: id,
-      name: info[0],
-      wallet: info[1],
-      nationality: info[2],
-      birthYear: info[3],
-      deathYear: info[4],
-    };
+  hashToArtist = (hash: string): Promise<Artist> => {
+    console.log(hash);
+    return fetch(hash)
+      .then((response: any) => response.json());
   };
 
   getArtistInfo = (): Promise<Artist[]> => {
@@ -110,7 +105,11 @@ class Register extends React.Component<RegisterProps, RegisterState> {
           const id = i;
           const artist = Artists.methods.getArtist(id)
             .call()
-            .then((info: string[]) => this.infoToArtist(id, info));
+            .then((hash: string) => this.hashToArtist(hash))
+            .then((artist: Artist) => {
+              console.log(artist);
+              return artist;
+            });
 
           artists.push(artist);
         }

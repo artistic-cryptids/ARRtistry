@@ -4,6 +4,7 @@ const Artists = artifacts.require('Artists');
 
 contract('Artists', async accounts => {
   const creator = accounts[0];
+  const metaUri = 'https://ipfs.io/ipfs/QmT6zwWGhfEFmGfmPigwcmEXEJFJBZsHmMnNPdpiM5GH3i';
 
   describe('addArtists', async () => {
     let instance;
@@ -13,16 +14,12 @@ contract('Artists', async accounts => {
     });
 
     it('Should be able to add and retrieve artists', async () => {
-      await instance.addArtist('Artist Name', accounts[5], 'Nationality', 'Birth', 'Death');
+      await instance.addArtist(metaUri);
 
       const total = await instance.getArtistsTotal();
 
-      const artist = await instance.getArtist(total);
-      assert.equal(artist[0], 'Artist Name');
-      assert.equal(artist[1], accounts[5]);
-      assert.equal(artist[2], 'Nationality');
-      assert.equal(artist[3], 'Birth');
-      assert.equal(artist[4], 'Death');
+      const result = await instance.getArtist(total);
+      assert.equal(result, metaUri);
     });
 
     it('Should reject for invalid artist id', async () => {
@@ -35,7 +32,7 @@ contract('Artists', async accounts => {
     it('Should correctly return number of artists registered on system', async () => {
       const totalBefore = await instance.getArtistsTotal();
 
-      await instance.addArtist('Artist Name', accounts[5], 'Nationality', 'Birth', 'Death');
+      await instance.addArtist(metaUri);
 
       const totalAfter = await instance.getArtistsTotal();
 
