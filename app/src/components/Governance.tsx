@@ -1,5 +1,6 @@
 import * as React from 'react';
 import ProposalList from './ProposalList';
+import ARRList from './ARRList';
 import Container from 'react-bootstrap/Container';
 
 interface GovernanceProps {
@@ -24,6 +25,7 @@ class Governance extends React.Component<GovernanceProps, GovernanceState> {
         <Container>
           <h2> You are an approved moderator. </h2>
           <ProposalList drizzle={this.props.drizzle} drizzleState={this.props.drizzleState}/>
+          <ARRList drizzle={this.props.drizzle} drizzleState={this.props.drizzleState}/>
         </Container>
       );
     }

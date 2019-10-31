@@ -49,6 +49,5 @@ contract ArtifactRegistry is IArtifactRegistry, Ownable, ERC721Full {
   function logARR(address from, address to, uint256 tokenId, uint price) public {
     safeTransferFrom(from, to, tokenId);
     governance.recordARR(from, to, tokenId, price);
-    //return 5;
   }
 }
