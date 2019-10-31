@@ -12,6 +12,7 @@ import "@openzeppelin/contracts/ownership/Ownable.sol";
 contract Artists is Ownable {
 
   struct Artist {
+    uint256 id;
     string name;
     address wallet;
     string nationality;
@@ -38,7 +39,7 @@ contract Artists is Ownable {
     _artistIds.increment();
     uint256 id = _artistIds.current();
 
-    artists[id] = Artist(name, wallet, nationality, birthYear, deathYear);
+    artists[id] = Artist(id, name, wallet, nationality, birthYear, deathYear);
   }
 
   function getArtist(uint256 _id) public view returns (
