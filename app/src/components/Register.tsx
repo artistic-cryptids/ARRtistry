@@ -189,7 +189,6 @@ class Register extends React.Component<RegisterProps, RegisterState> {
 
   setMetaHash = (ipfsId: string): void => {
     this.setState({ fields: { ...this.state.fields, metaIpfsHash: ipfsId } });
-    console.log(ipfsId);
   };
 
   async saveToIpfs (files: any, afterwardsFunction: (arg0: string) => void): Promise<void> {
@@ -233,8 +232,6 @@ class Register extends React.Component<RegisterProps, RegisterState> {
     }
 
     const stateUpdate = { fields: this.state.fields as Pick<RegisterFormFields, keyof RegisterFormFields> };
-
-    console.log(artist);
 
     stateUpdate.fields.artistId = artist.id.toString();
 
