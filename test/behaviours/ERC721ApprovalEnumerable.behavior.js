@@ -1,5 +1,5 @@
 const { toBN } = web3.utils;
-const { constants } = require('@openzeppelin/test-helpers');
+const { constants, expectRevert } = require('@openzeppelin/test-helpers');
 const { ZERO_ADDRESS } = constants;
 
 const { expect } = require('chai');
@@ -16,6 +16,17 @@ function shouldBehaveLikeERC721ApprovalEnumerable (
       await this.token.mockMint(owner, firstTokenId, { from: minter });
       await this.token.mockMint(owner, secondTokenId, { from: minter });
       this.toWhom = other; // default to anyone for toWhom in context-dependent tests
+    });
+
+    describe('getOperatorTokenIds', function () {
+      context('when attempting to get operator token ids for zero address', function () {
+        it ('reverts', async function () {
+          await expectRevert(
+            this.token.getOperatorTokenIds(ZERO_ADDRESS, { from: owner }),
+            'ERC721ApprovalEnumerable: operator token ids query for the zero address'
+          );
+        });
+      });
     });
 
     describe('approve', function () {

@@ -74,7 +74,7 @@ contract ERC721ApprovalEnumerable is IERC721ApprovalEnumerable, ERC721Full {
   }
 
   function getOperatorTokenIds(address operator) public view returns (uint256[] memory) {
-    require(operator != address(0), "ERC721ApprovalEnumerable: balance query for the zero address");
+    require(operator != address(0), "ERC721ApprovalEnumerable: operator token ids query for the zero address");
 
     uint256 numApprovedTokens = _operatorApprovedTokens[operator].length;
 
