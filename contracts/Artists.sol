@@ -12,12 +12,7 @@ import "@openzeppelin/contracts/ownership/Ownable.sol";
 contract Artists is Ownable {
 
   struct Artist {
-    uint256 id;
-    string name;
-    address wallet;
-    string nationality;
-    string birthYear;
-    string deathYear;
+    string metaUri;
   }
 
   using Counters for Counters.Counter;
@@ -29,34 +24,22 @@ contract Artists is Ownable {
     _transferOwnership(owner);
   }
 
-  function addArtist(
-    string memory name,
-    address wallet,
-    string memory nationality,
-    string memory birthYear,
-    string memory deathYear
-  ) public onlyOwner {
+  function addArtist(string memory metaUri) public onlyOwner {
     _artistIds.increment();
     uint256 id = _artistIds.current();
 
-    artists[id] = Artist(id, name, wallet, nationality, birthYear, deathYear);
+    artists[id] = Artist(metaUri);
   }
 
-  function getArtist(uint256 _id) public view returns (
-    string memory,
-    address,
-    string memory,
-    string memory,
-    string memory
-  ) {
+  function getArtist(uint256 _id) public view returns (string memory metaUri) {
     require(_id <= _artistIds.current(), "Artists::getArtist: invalid artist id");
 
     Artist memory artist = artists[_id];
 
-    return (artist.name, artist.wallet, artist.nationality, artist.birthYear, artist.deathYear);
+    return (artist.metaUri);
   }
 
-  function getArtistsTotal() public view returns (uint256){
+  function getArtistsTotal() public view returns (uint256) {
     return _artistIds.current();
   }
 }
