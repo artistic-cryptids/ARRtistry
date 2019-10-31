@@ -20,10 +20,10 @@ function shouldBehaveLikeERC721ApprovalEnumerable (
 
     describe('getOperatorTokenIds', function () {
       context('when attempting to get operator token ids for zero address', function () {
-        it ('reverts', async function () {
+        it('reverts', async function () {
           await expectRevert(
             this.token.getOperatorTokenIds(ZERO_ADDRESS, { from: owner }),
-            'ERC721ApprovalEnumerable: operator token ids query for the zero address'
+            'ERC721ApprovalEnumerable: operator token ids query for the zero address',
           );
         });
       });
