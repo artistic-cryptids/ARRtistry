@@ -9,14 +9,15 @@ module.exports = async (deployer, network, accounts) => {
 
   const artists = await Artists.deployed();
 
-  await artists.addArtist('Vincent Van Gogh', accounts[2], 'Dutch', '1853', '1890');
-  await artists.addArtist('Pablo Picasso', accounts[2], 'Spanish', '1881', '1973');
-  await artists.addArtist('Leonardo da Vinci', accounts[2], 'Italian', '1452', '1519');
-  await artists.addArtist('Claude Monet', accounts[2], 'French', '1840', '1926');
-  await artists.addArtist('Andy Warhol', accounts[2], 'American', '1928', '1987');
-  await artists.addArtist('Salvador Dali', accounts[2], 'Spanish', '1904', '1989');
-  await artists.addArtist('Michelangelo', accounts[2], 'Italian', '1475', '1564');
-  await artists.addArtist('Édouard Manet', accounts[2], 'French', '1832', '1883');
+  // Some prefiled in files with artist infos
+  await artists.addArtist('https://ipfs.globalupload.io/Qmdgp81Wd8NhMgzHSYzWyN4FAP4CPTwtiKopznoNzyfyy8');
+  await artists.addArtist('https://ipfs.globalupload.io/QmdBkQ31t6MBKZAFAq56mbQf3bb1qdjdssqjVVNXZK5SJv');
+  await artists.addArtist('https://ipfs.globalupload.io/QmeribWDZU9rBJJesgAZowP2GmvQ4NSTPCjuqM6rtrRb8e');
+  await artists.addArtist('https://ipfs.globalupload.io/QmeYjgK9LpijLWTGki3J9VZNj6R5c93m5enHXH4Ezqg1JN');
+  await artists.addArtist('https://ipfs.globalupload.io/Qmd5Hd5G4tM28ErZr1VvdgV7oYebyavZ5jCn593JwWhuud');
+  await artists.addArtist('https://ipfs.globalupload.io/Qmb2vvBVvGaXoqYEECYmyKbxpCgSbFVAPy6kCPrRCdLRPK');
+  await artists.addArtist('https://ipfs.globalupload.io/QmXJ5tg8ob5XQgZvK5uTZ5pEieKhF9JpFSYdQJpNsmb7dU');
+  await artists.addArtist('https://ipfs.globalupload.io/QmfSLSJoxqktyEKN4useBRPAPaJ9ENFFXmiYX5BQtm4Qu7');
 
   await newLabel(
     'artists',
