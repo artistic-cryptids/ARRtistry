@@ -27,7 +27,7 @@ contract Artists is Ownable {
   function addArtist(string memory metaUri) public onlyOwner {
     _artistIds.increment();
     uint256 id = _artistIds.current();
-    
+
     artists[id] = Artist(metaUri);
   }
 
