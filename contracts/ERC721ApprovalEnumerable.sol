@@ -8,7 +8,9 @@ import { IERC721ApprovalEnumerable } from "./interfaces/IERC721ApprovalEnumerabl
 
 /**
  * @title ERC721ApprovalEnumerable
- * @dev The core registry of the artifact
+ * @dev A extension the ERC721 protocol which provides support for querying
+ *			the tokens an account has been approved to transfer. Currently
+ *      this contract does not support the ERC721Burnable extension.
  */
 contract ERC721ApprovalEnumerable is IERC721ApprovalEnumerable, ERC721Full {
 
@@ -33,16 +35,6 @@ contract ERC721ApprovalEnumerable is IERC721ApprovalEnumerable, ERC721Full {
   function _transferFrom(address from, address to, uint256 tokenId) internal {
     address operator = getApproved(tokenId);
     super._transferFrom(from, to, tokenId);
-
-    if (operator != address(0)) {
-      _removeTokenToApprovedTokensEnumeration(operator, tokenId);
-    }
-  }
-
-  /* We override _burn as we cannot override _clearApproval */
-  function _burn(address owner, uint256 tokenId) internal {
-    address operator = getApproved(tokenId);
-    super._burn(owner, tokenId);
 
     if (operator != address(0)) {
       _removeTokenToApprovedTokensEnumeration(operator, tokenId);
