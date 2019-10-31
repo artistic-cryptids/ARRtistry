@@ -5,9 +5,8 @@ const { ZERO_ADDRESS } = constants;
 const { expect } = require('chai');
 
 function shouldBehaveLikeERC721ApprovalEnumerable (
-  creator,
   minter,
-  [owner, approved, anotherApproved, operator, other]
+  [owner, approved, anotherApproved, other],
 ) {
   const firstTokenId = toBN(1);
   const secondTokenId = toBN(2);
@@ -19,142 +18,120 @@ function shouldBehaveLikeERC721ApprovalEnumerable (
       this.toWhom = other; // default to anyone for toWhom in context-dependent tests
     });
 
-    describe('transferFrom', function () {
-      const tokenId = firstTokenId;
-      context('when approved is transferring', function () {
-        beforeEach(async function () {
-          await this.token.approve(approved, tokenId, { from: owner });
-          await this.token.approve(approved, secondTokenId, { from: owner });
-        });
-
-        it('removes tokenId from operator approved token list', async function () {
-          await this.token.transferFrom(owner, other, tokenId, { from: approved });
-          expect(await this.token.getOperatorTokenIds(approved)).to.eql([secondTokenId]);
-        });
-
-        it('removes tokenId from operator approved token list', async function () {
-          await this.token.transferFrom(owner, other, secondTokenId, { from: owner });
-          expect(await this.token.getOperatorTokenIds(approved)).to.eql([firstTokenId]);
-        });
-      })
-
-      context('when owner is transferring', function () {
-        beforeEach(async function () {
-          await this.token.approve(approved, tokenId, { from: owner });
-          await this.token.approve(approved, secondTokenId, { from: owner });
-        });
-
-        it('removes tokenId from operator approved token list', async function () {
-          await this.token.transferFrom(owner, other, tokenId, { from: owner });
-          expect(await this.token.getOperatorTokenIds(approved)).to.eql([secondTokenId]);
-        });
-
-        it('removes tokenId from operator approved token list', async function () {
-          await this.token.transferFrom(owner, other, secondTokenId, { from: owner });
-          expect(await this.token.getOperatorTokenIds(approved)).to.eql([firstTokenId]);
-        });
-      })
-    });
-
-    describe('safeTransferFrom', function () {
-      const tokenId = firstTokenId;
-      context('when approved is transferring', function () {
-        beforeEach(async function () {
-          await this.token.approve(approved, tokenId, { from: owner });
-          await this.token.approve(approved, secondTokenId, { from: owner });
-        });
-
-        it('removes tokenId from operator approved token list', async function () {
-          await this.token.safeTransferFrom(owner, other, tokenId, { from: approved });
-          expect(await this.token.getOperatorTokenIds(approved)).to.eql([secondTokenId]);
-        });
-
-        it('removes tokenId from operator approved token list', async function () {
-          await this.token.safeTransferFrom(owner, other, secondTokenId, { from: owner });
-          expect(await this.token.getOperatorTokenIds(approved)).to.eql([firstTokenId]);
-        });
-      })
-
-      context('when owner is transferring', function () {
-        beforeEach(async function () {
-          await this.token.approve(approved, tokenId, { from: owner });
-          await this.token.approve(approved, secondTokenId, { from: owner });
-        });
-
-        it('removes tokenId from operator approved token list', async function () {
-          await this.token.safeTransferFrom(owner, other, tokenId, { from: owner });
-          expect(await this.token.getOperatorTokenIds(approved)).to.eql([secondTokenId]);
-        });
-
-        it('removes tokenId from operator approved token list', async function () {
-          await this.token.safeTransferFrom(owner, other, secondTokenId, { from: owner });
-          expect(await this.token.getOperatorTokenIds(approved)).to.eql([firstTokenId]);
-        });
-      })
-    });
-
     describe('approve', function () {
-      const tokenId = firstTokenId;
+      const otherAccountsApprovedTokenListRemainsEmpty = function (otherUsers) {
+        it('other accounts\' approved token list remain empty', async function () {
+          for (const otherUser of otherUsers) {
+            expect(await this.token.getOperatorTokenIds(otherUser)).to.eql([]);
+          }
+        });
+      };
 
-      context('when clearing approval', function () {
-        context('when there was a prior approval', function () {
+      context('when clearing approval (approving a zero address)', function () {
+        context('when there was no prior approval', function () {
           beforeEach(async function () {
-            await this.token.approve(approved, tokenId, { from: owner });
-            await this.token.approve(approved, secondTokenId, { from: owner });
-            await this.token.approve(ZERO_ADDRESS, tokenId, { from: owner });
+            await this.token.approve(ZERO_ADDRESS, firstTokenId, { from: owner });
           });
 
-          it('removes tokenId from operator approved token list', async function () {
+          otherAccountsApprovedTokenListRemainsEmpty([owner, approved, anotherApproved, other]);
+        });
+
+        context('when there were prior approvals', function () {
+          beforeEach(async function () {
+            await this.token.approve(approved, firstTokenId, { from: owner });
+            await this.token.approve(approved, secondTokenId, { from: owner });
+            await this.token.approve(ZERO_ADDRESS, firstTokenId, { from: owner });
+          });
+
+          it('removes specified token id from approved token list', async function () {
+            expect(await this.token.getOperatorTokenIds(approved)).to.eql([secondTokenId]);
+          });
+          otherAccountsApprovedTokenListRemainsEmpty([owner, anotherApproved, other]);
+        });
+      });
+
+      context('when approving a non-zero address', function () {
+        beforeEach(async function () {
+          await this.token.approve(approved, firstTokenId, { from: owner });
+        });
+
+        it('adds token to operator approved token list', async function () {
+          expect(await this.token.getOperatorTokenIds(approved)).to.eql([firstTokenId]);
+        });
+        otherAccountsApprovedTokenListRemainsEmpty([owner, anotherApproved, other]);
+      });
+
+      context('when approving multiple tokens to the same non-zero address', function () {
+        beforeEach(async function () {
+          await this.token.approve(approved, firstTokenId, { from: owner });
+          await this.token.approve(approved, secondTokenId, { from: owner });
+        });
+
+        it('adds tokens to operator approved token list', async function () {
+          expect(await this.token.getOperatorTokenIds(approved)).to.eql([firstTokenId, secondTokenId]);
+        });
+        otherAccountsApprovedTokenListRemainsEmpty([owner, anotherApproved, other]);
+      });
+
+      context('when approving the same token multiple times to the same non-zero address', function () {
+        beforeEach(async function () {
+          await this.token.approve(approved, firstTokenId, { from: owner });
+          await this.token.approve(approved, firstTokenId, { from: owner });
+        });
+
+        it('duplicate tokens are not added to operator approved token list', async function () {
+          expect(await this.token.getOperatorTokenIds(approved)).to.eql([firstTokenId]);
+        });
+        otherAccountsApprovedTokenListRemainsEmpty([owner, anotherApproved, other]);
+      });
+
+      context('when approving the same token to different addresses', function () {
+        beforeEach(async function () {
+          await this.token.approve(anotherApproved, firstTokenId, { from: owner });
+          await this.token.approve(anotherApproved, firstTokenId, { from: owner });
+        });
+
+        it('most recently approved operator\'s approved token list contains the specified token', async function () {
+          expect(await this.token.getOperatorTokenIds(anotherApproved)).to.eql([firstTokenId]);
+        });
+        otherAccountsApprovedTokenListRemainsEmpty([owner, approved, other]);
+      });
+    });
+
+    describe('transfers', function () {
+      beforeEach(async function () {
+        await this.token.approve(approved, firstTokenId, { from: owner });
+        await this.token.approve(approved, secondTokenId, { from: owner });
+      });
+
+      context('transferFrom', function () {
+        context('when approved is transferring', function () {
+          it('removes token id from operator approved token list', async function () {
+            await this.token.transferFrom(owner, other, firstTokenId, { from: approved });
+            expect(await this.token.getOperatorTokenIds(approved)).to.eql([secondTokenId]);
+          });
+        });
+
+        context('when owner is transferring', function () {
+          it('removes token id from operator approved token list', async function () {
+            await this.token.transferFrom(owner, other, firstTokenId, { from: owner });
             expect(await this.token.getOperatorTokenIds(approved)).to.eql([secondTokenId]);
           });
         });
       });
 
-      context('when approving a non-zero address', function () {
-        context('multiple times when there was no prior approval', function () {
-          beforeEach(async function () {
-            await this.token.approve(approved, tokenId, { from: owner });
-            await this.token.approve(approved, secondTokenId, { from: owner });
-          });
-
-          it('adds tokens to operator approved token list', async function () {
-            expect(await this.token.getOperatorTokenIds(approved)).to.eql([tokenId, secondTokenId]);
+      context('safeTransferFrom', function () {
+        context('when approved is transferring', function () {
+          it('removes token id from operator approved token list', async function () {
+            await this.token.safeTransferFrom(owner, other, firstTokenId, { from: approved });
+            expect(await this.token.getOperatorTokenIds(approved)).to.eql([secondTokenId]);
           });
         });
 
-        context('when there was no prior approval', function () {
-          beforeEach(async function () {
-            await this.token.approve(approved, tokenId, { from: owner });
-          });
-
-          it('adds token to operator approved token list', async function () {
-            expect(await this.token.getOperatorTokenIds(approved)).to.eql([tokenId]);
-          });
-        });
-
-        context('when there was a prior approval to the same address', function () {
-          beforeEach(async function () {
-            await this.token.approve(approved, tokenId, { from: owner });
-            await this.token.approve(approved, tokenId, { from: owner });
-          });
-
-          it('operator approved token list remains the same', async function () {
-            expect(await this.token.getOperatorTokenIds(approved)).to.eql([tokenId]);
-          });
-        });
-
-        context('when there was a prior approval to a different address', function () {
-          beforeEach(async function () {
-            await this.token.approve(anotherApproved, tokenId, { from: owner });
-            await this.token.approve(anotherApproved, tokenId, { from: owner });
-          });
-
-          it('adds token to other operator approved token list', async function () {
-            expect(await this.token.getOperatorTokenIds(anotherApproved)).to.eql([tokenId]);
-          });
-
-          it('operator approved token list remains empty', async function () {
-            expect(await this.token.getOperatorTokenIds(approved)).to.eql([]);
+        context('when owner is transferring', function () {
+          it('removes token id from operator approved token list', async function () {
+            await this.token.safeTransferFrom(owner, other, firstTokenId, { from: owner });
+            expect(await this.token.getOperatorTokenIds(approved)).to.eql([secondTokenId]);
           });
         });
       });
