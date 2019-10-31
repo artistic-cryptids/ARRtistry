@@ -87,7 +87,7 @@ function shouldBehaveLikeERC721ApprovalEnumerable (
 
       context('when approving the same token to different addresses', function () {
         beforeEach(async function () {
-          await this.token.approve(anotherApproved, firstTokenId, { from: owner });
+          await this.token.approve(approved, firstTokenId, { from: owner });
           await this.token.approve(anotherApproved, firstTokenId, { from: owner });
         });
 

@@ -21,14 +21,15 @@ contract ERC721ApprovalEnumerable is IERC721ApprovalEnumerable, ERC721Full {
     address oldOperator = getApproved(tokenId);
     super.approve(to, tokenId);
 
-    if (oldOperator != address(0) && to == address(0)) {
-      _removeTokenToApprovedTokensEnumeration(oldOperator, tokenId);
-    } else if (oldOperator != to) {
+    if (oldOperator != to) {
       _addTokenToApprovedTokensEnumeration(to, tokenId);
+      if (oldOperator != address(0)) {
+        _removeTokenToApprovedTokensEnumeration(oldOperator, tokenId);
+      }
     }
   }
 
-  /* Overriding _transferFrom as we cannot override _clearApproval */
+  /* We override _transferFrom as we cannot override _clearApproval */
   function _transferFrom(address from, address to, uint256 tokenId) internal {
     address operator = getApproved(tokenId);
     super._transferFrom(from, to, tokenId);
@@ -38,7 +39,7 @@ contract ERC721ApprovalEnumerable is IERC721ApprovalEnumerable, ERC721Full {
     }
   }
 
-  /* Overriding _burn as we cannot override _clearApproval */
+  /* We override _burn as we cannot override _clearApproval */
   function _burn(address owner, uint256 tokenId) internal {
     address operator = getApproved(tokenId);
     super._burn(owner, tokenId);
