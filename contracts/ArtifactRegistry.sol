@@ -6,6 +6,7 @@ import "@openzeppelin/contracts/token/ERC721/ERC721Full.sol";
 import "@openzeppelin/contracts/drafts/Counters.sol";
 
 import { IArtifactRegistry } from "./interfaces/IArtifactRegistry.sol";
+import { IGovernance } from "./interfaces/IGovernance.sol";
 
 /**
  * @title ArtifactRegistry
@@ -15,11 +16,14 @@ contract ArtifactRegistry is IArtifactRegistry, Ownable, ERC721Full {
 
   using Counters for Counters.Counter;
 
+  IGovernance public governance;
+
   Counters.Counter public _tokenIds;
   mapping (uint256 => Artifact) public artifacts;
 
-  constructor(address owner) public ERC721Full("Artifact", "ART") {
+  constructor(address owner, IGovernance _governance) public ERC721Full("Artifact", "ART") {
     _transferOwnership(owner);
+    governance = _governance;
   }
 
   function mint(address who, Artifact memory _artifact) public returns (uint256) {
@@ -40,5 +44,11 @@ contract ArtifactRegistry is IArtifactRegistry, Ownable, ERC721Full {
     Artifact memory artwork = artifacts[tokenId];
 
     return (artwork.artist, artwork.metaUri);
+  }
+
+  function logARR(address from, address to, uint256 tokenId, uint price) public {
+    safeTransferFrom(from, to, tokenId);
+    governance.recordARR(from, to, tokenId, price);
+    //return 5;
   }
 }

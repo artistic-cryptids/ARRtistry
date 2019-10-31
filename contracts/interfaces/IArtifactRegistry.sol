@@ -10,4 +10,5 @@ contract IArtifactRegistry is IERC721 {
   }
 
   function mint(address who, Artifact memory _artifact) public returns (uint256);
+  function logARR(address from, address to, uint256 tokenId, uint price) public;
 }
