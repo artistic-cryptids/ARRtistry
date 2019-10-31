@@ -40,7 +40,12 @@ class ArtworkItem extends React.Component<ArtworkItemProps, ArtworkItemState> {
 
     return (
       <ListGroup.Item>
-        <ArtworkInfo artwork={this.state.artwork} id={this.props.tokenId}>
+        <ArtworkInfo
+          artwork={this.state.artwork}
+          id={this.props.tokenId}
+          drizzle={this.props.drizzle}
+          drizzleState={this.props.drizzleState}
+        >
           <Row>
             <Col>
               <TransferArtifact
