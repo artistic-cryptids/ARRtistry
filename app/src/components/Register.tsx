@@ -16,9 +16,7 @@ interface RegisterProps {
 
 interface RegisterFormFields {
   title: string;
-  artistName: string;
-  artistNationality: string;
-  artistBirthYear: string;
+  artistId: string;
   artifactCreationDate: string;
   medium: string;
   edition: string;
@@ -28,6 +26,7 @@ interface RegisterFormFields {
 }
 
 interface Artist {
+  id: number;
   name: string;
   wallet: string;
   nationality: string;
@@ -60,9 +59,7 @@ class Register extends React.Component<RegisterProps, RegisterState> {
       validated: false,
       fields: {
         title: '',
-        artistName: '',
-        artistNationality: '',
-        artistBirthYear: '',
+        artistId: '',
         edition: '',
         artifactCreationDate: '',
         medium: '',
@@ -89,8 +86,9 @@ class Register extends React.Component<RegisterProps, RegisterState> {
     return true;
   };
 
-  infoToArtist = (info: string[]): Artist => {
+  infoToArtist = (id: number, info: string[]): Artist => {
     return {
+      id: id,
       name: info[0],
       wallet: info[1],
       nationality: info[2],
@@ -107,13 +105,12 @@ class Register extends React.Component<RegisterProps, RegisterState> {
       .then((total: number) => {
         const artists = [];
 
-        let id = 0;
-        while (id < total) {
-          id++;
-
+        for (let i = 1; i < total; i++) {
+          // Have to extract to new variable for async issues
+          const id = i;
           const artist = Artists.methods.getArtist(id)
             .call()
-            .then((info: string[]) => this.infoToArtist(info));
+            .then((info: string[]) => this.infoToArtist(id, info));
 
           artists.push(artist);
         }
@@ -191,7 +188,6 @@ class Register extends React.Component<RegisterProps, RegisterState> {
 
   setMetaHash = (ipfsId: string): void => {
     this.setState({ fields: { ...this.state.fields, metaIpfsHash: ipfsId } });
-    console.log(ipfsId);
   };
 
   async saveToIpfs (files: any, afterwardsFunction: (arg0: string) => void): Promise<void> {
@@ -235,11 +231,8 @@ class Register extends React.Component<RegisterProps, RegisterState> {
     }
 
     const stateUpdate = { fields: this.state.fields as Pick<RegisterFormFields, keyof RegisterFormFields> };
-    stateUpdate.fields.artistName = artist.name;
-    stateUpdate.fields.artistNationality = artist.nationality;
-    stateUpdate.fields.artistBirthYear = artist.birthYear;
-    // Will store death year when that info is stored on an artifact
-    // stateUpdate.fields['artistDeathYear'] = artist.deathYear
+
+    stateUpdate.fields.artistId = artist.id.toString();
 
     this.setState(stateUpdate);
   }
@@ -249,8 +242,8 @@ class Register extends React.Component<RegisterProps, RegisterState> {
       return [];
     }
 
-    return this.state.artists.map((artist: Artist) => {
-      return <option key={artist.wallet}>{artist.name}</option>;
+    return this.state.artists.map((artist: Artist, id: number) => {
+      return <option key={id}>{artist.name}</option>;
     });
   };
 
@@ -299,7 +292,7 @@ class Register extends React.Component<RegisterProps, RegisterState> {
           </Form.Group>
         </Form.Row>
         <Form.Row>
-          <Form.Group as={Col} controlId="artistName">
+          <Form.Group as={Col}>
             <Form.Label>Artist Name</Form.Label>
             <Form.Control
               required
