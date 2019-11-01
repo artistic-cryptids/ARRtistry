@@ -33,7 +33,6 @@ contract('ArtifactRegistry', async accounts => {
     });
 
     before(async () => {
-      console.log(ARTIFACT);
       await registry.mint(tokenOwner, ARTIFACT, { from: creator });
     });
 
@@ -63,6 +62,19 @@ contract('ArtifactRegistry', async accounts => {
     it('should retrieve the artifact for the token', async () => {
       const artifact = await registry.getArtifactForToken(TOKEN_ID);
       artifactEquality(artifact, ARTIFACT);
+    });
+  });
+
+  describe('transfer', async () => {
+    before(async () => {
+      await registry.mint(tokenOwner, ARTIFACT, { from: creator });
+    });
+
+    it('should reset setUri', async () => {
+      await registry.transfer(creator, accounts[3], TOKEN_ID, "new metaUri");
+
+      const result = await registry.getArtifactForToken(TOKEN_ID);
+      expect(result.metaUri).to.be.equal("new metaUri");
     });
   });
 }); // end Registry contract
