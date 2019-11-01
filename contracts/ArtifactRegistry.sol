@@ -6,12 +6,13 @@ import "@openzeppelin/contracts/token/ERC721/ERC721Full.sol";
 import "@openzeppelin/contracts/drafts/Counters.sol";
 
 import { IArtifactRegistry } from "./interfaces/IArtifactRegistry.sol";
+import { ERC721ApprovalEnumerable } from "./ERC721ApprovalEnumerable.sol";
 
 /**
  * @title ArtifactRegistry
  * @dev The core registry of the artifact
  */
-contract ArtifactRegistry is IArtifactRegistry, Ownable, ERC721Full {
+contract ArtifactRegistry is IArtifactRegistry, Ownable, ERC721Full, ERC721ApprovalEnumerable {
 
   using Counters for Counters.Counter;
 
