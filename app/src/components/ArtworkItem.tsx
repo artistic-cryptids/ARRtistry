@@ -52,6 +52,7 @@ class ArtworkItem extends React.Component<ArtworkItemProps, ArtworkItemState> {
                 drizzle={this.props.drizzle}
                 drizzleState={this.props.drizzleState}
                 tokenId={this.props.tokenId}
+                metaUri={this.state.artwork.metaUri}
               />
             </Col>
             {this.props.isOwnedArtifact
