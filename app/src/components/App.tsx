@@ -1,60 +1,23 @@
 import * as React from 'react';
 import { DrizzleContext } from 'drizzle-react';
 import NetworkAside from './NetworkAside';
+import HomePageNoAccount from './HomePageNoAccount';
 import Container from 'react-bootstrap/Container';
-import {
-  ArtifactView,
-  RegisterView,
-  GovernanceView,
-  ClientArtifactsView,
-} from './Views';
+import { ArtifactView, GovernanceView, RegisterView, ClientArtifactsView } from './Views';
 
-import {
-  BrowserRouter as Router,
-  Switch,
-  Route,
-  Link,
-  Redirect,
-} from 'react-router-dom';
+import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+import LeftSidebar from './LeftSidebar';
 
 const App: React.FC = () => {
   return (
     <Router>
       <Container>
-        <Navigation/>
-        <Switch>
-          <Route exact path="/">
-            <Redirect to={{ pathname: '/artifacts' }} />
-          </Route>
-          <Route path="*">
-            <DrizzledApp />
-          </Route>
-        </Switch>
+        <LeftSidebar>
+          <DrizzledApp/>
+        </LeftSidebar>
       </Container>
     </Router>
   );
-};
-
-const Navigation: React.FC = () => {
-  return <nav>
-    <ul>
-      <li>
-        <Link to="/">Home</Link>
-      </li>
-      <li>
-        <Link to="/artifacts">Artifacts</Link>
-      </li>
-      <li>
-        <Link to="/new">New</Link>
-      </li>
-      <li>
-        <Link to="/governance">Governance</Link>
-      </li>
-      <li>
-        <Link to="/clientArtifacts">Client Artifacts</Link>
-      </li>
-    </ul>
-  </nav>;
 };
 
 const DrizzledApp: React.FC = () => {
@@ -65,6 +28,9 @@ const DrizzledApp: React.FC = () => {
         <>
           <NetworkAside drizzle={drizzle}/>
           <Switch>
+            <Route exact path="/">
+              <HomePageNoAccount/>
+            </Route>
             <Route path="/artifacts">
               <ArtifactView drizzle={drizzle} drizzleState={drizzleState}/>
             </Route>
