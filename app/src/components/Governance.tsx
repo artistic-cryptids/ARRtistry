@@ -1,6 +1,8 @@
 import * as React from 'react';
 import ProposalList from './ProposalList';
+import ARRList from './ARRList';
 import Container from 'react-bootstrap/Container';
+import { Alert } from 'react-bootstrap';
 
 interface GovernanceProps {
   drizzle: any;
@@ -23,7 +25,10 @@ class Governance extends React.Component<GovernanceProps, GovernanceState> {
       return (
         <Container>
           <h2> You are an approved moderator. </h2>
+          <Alert variant = 'info'>Proposals List:</Alert>
           <ProposalList drizzle={this.props.drizzle} drizzleState={this.props.drizzleState}/>
+          <Alert variant = 'info'>ARR List:</Alert>
+          <ARRList drizzle={this.props.drizzle} drizzleState={this.props.drizzleState}/>
         </Container>
       );
     }

@@ -5,6 +5,7 @@ const { expect } = require('chai');
 const { shouldBehaveLikeERC721 } = require('./behaviours/ERC721.behavior.js');
 const { shouldBehaveLikeERC721ApprovalEnumerable } = require('./behaviours/ERC721ApprovalEnumerable.behavior.js');
 
+const Governance = artifacts.require('./Governance.sol');
 const ArtifactRegistry = artifacts.require('./ArtifactRegistry.sol');
 const ArtifactRegistryMock = artifacts.require('./ArtifactRegistryMock.sol');
 
@@ -13,8 +14,11 @@ contract('ArtifactRegistry', async accounts => {
   const tokenOwner = accounts[1];
   const TOKEN_ID = 1;
 
+  let governance;
+
   beforeEach(async function () {
-    this.token = await ArtifactRegistryMock.new(creator, { from: creator });
+    governance = await Governance.new({ from: creator });
+    this.token = await ArtifactRegistryMock.new(creator, governance.address, { from: creator });
   });
 
   shouldBehaveLikeERC721(creator, creator, accounts);
@@ -23,7 +27,8 @@ contract('ArtifactRegistry', async accounts => {
   let registry;
 
   before(async () => {
-    registry = await ArtifactRegistry.new(creator, { from: creator });
+    governance = await Governance.new({ from: creator });
+    registry = await ArtifactRegistry.new(creator, governance.address, { from: creator });
   });
 
   describe('mint', async () => {
@@ -73,7 +78,8 @@ contract('ArtifactRegistry', async accounts => {
     });
 
     it('should reset setUri', async () => {
-      await registry.transfer(tokenOwner, accounts[3], TOKEN_ID, 'new metaUri', { from: tokenOwner });
+      const price = 9999;
+      await registry.transfer(tokenOwner, accounts[3], TOKEN_ID, 'new metaUri', price, { from: tokenOwner });
 
       const result = await registry.getArtifactForToken(TOKEN_ID);
 

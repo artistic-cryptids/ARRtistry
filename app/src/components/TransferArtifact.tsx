@@ -85,6 +85,7 @@ class TransferArtifact extends React.Component<TransferArtifactProps, TransferAr
           this.state.fields.recipientAddress,
           this.props.tokenId,
           hash,
+          this.state.fields.price,
         );
       })
       .catch((err: any) => console.log(err));

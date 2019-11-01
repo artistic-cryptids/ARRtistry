@@ -1,6 +1,7 @@
+const { toBN } = web3.utils;
 const { expectRevert } = require('@openzeppelin/test-helpers');
 
-const { ARTIFACT, proposalEquality } = require('./constants/artifact');
+const { ARTIFACT, proposalEquality, ARREquality } = require('./constants/artifact');
 
 const Governance = artifacts.require('./Governance.sol');
 const ArtifactRegistry = artifacts.require('./ArtifactRegistry.sol');
@@ -16,7 +17,7 @@ contract('ArtifactApplication', async accounts => {
 
     beforeEach(async () => {
       governance = await Governance.new({ from: creator });
-      registry = await ArtifactRegistry.new(governance.address, { from: creator });
+      registry = await ArtifactRegistry.new(governance.address, governance.address, { from: creator });
       artifactApplication = await ArtifactApplication.new(governance.address, registry.address, { from: creator });
     });
 
@@ -39,7 +40,7 @@ contract('ArtifactApplication', async accounts => {
 
     beforeEach(async () => {
       governance = await Governance.new({ from: creator });
-      registry = await ArtifactRegistry.new(governance.address, { from: creator });
+      registry = await ArtifactRegistry.new(governance.address, governance.address, { from: creator });
       artifactApplication = await ArtifactApplication.new(governance.address, registry.address, { from: creator });
     });
 
@@ -82,6 +83,52 @@ contract('ArtifactApplication', async accounts => {
         artifactApplication.getProposal(0),
         'ArtifactApplication::getProposal: proposal is not pending',
       );
+    });
+
+    describe('ARR retrieval', async () => {
+      let artifactApplication;
+      let governance;
+      let registry;
+
+      let from;
+      let to;
+      let tokenId;
+      let price;
+
+      let ARR;
+
+      beforeEach(async () => {
+        from = accounts[0];
+        to = accounts[1];
+        tokenId = toBN(1);
+        price = toBN(1001);
+
+        ARR = {
+          from: from,
+          to: to,
+          tokenId: tokenId,
+          price: price,
+        };
+
+        governance = await Governance.new({ from: creator });
+        registry = await ArtifactRegistry.new(governance.address, governance.address, { from: creator });
+        artifactApplication = await ArtifactApplication.new(governance.address, registry.address, { from: creator });
+      });
+
+      it('can retrieve a logged ARR', async () => {
+        await artifactApplication.applyFor(
+          accounts[0],
+          ARTIFACT.artist,
+          ARTIFACT.metaUri,
+        );
+
+        await governance.approve(0);
+
+        await registry.transfer(from, to, tokenId, 'dud metaUri', price);
+
+        const result = await artifactApplication.getARR(0);
+        ARREquality(result, ARR);
+      });
     });
   });
 }); // end Registry contract
