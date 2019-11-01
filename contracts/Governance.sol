@@ -14,7 +14,10 @@ contract Governance is IGovernance, Moderated {
   event Reject(uint indexed proposalId);
   event Execute(uint indexed proposalId);
 
+  event RecordARR(uint indexed arrID, address indexed from, address indexed to, uint256 tokenId, uint price);
+
   Proposal[] public proposals;
+  ARR[] public arrs;
 
   // Maps the proposal id to the proposer of the artifact.
   mapping (uint => address) public proposalToProposer;
@@ -105,5 +108,30 @@ contract Governance is IGovernance, Moderated {
     }
 
     return pending;
+  }
+
+  function recordARR(address from, address to, uint256 tokenId, uint price) public returns (uint) {
+    uint arrId = arrs.length;
+
+    // Create a new ARR
+    ARR memory arr;
+    arr.from = from;
+    arr.to = to;
+    arr.tokenId = tokenId;
+    arr.price = price;
+
+    arrs.push(arr);
+
+    emit RecordARR(arrId, from, to, tokenId, price);
+
+    return arrId;
+  }
+
+  function getARRLength() public view returns (uint) {
+    return arrs.length;
+  }
+
+  function getARR(uint arrId) public view returns (ARR memory) {
+    return arrs[arrId];
   }
 }
