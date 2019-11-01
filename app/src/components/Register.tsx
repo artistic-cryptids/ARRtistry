@@ -54,6 +54,7 @@ type InputChangeEvent = React.FormEvent<FormControlProps> &
 const GENERIC_FEEDBACK = <Form.Control.Feedback>Looks good!</Form.Control.Feedback>;
 
 class Register extends React.Component<Drizzled, RegisterState> {
+  SUBMISSION_STARTED: number = 10;
   TRANSACTION_REGISTERED: number = 30;
   TRANSACTION_APPROVED: number = 60;
   SUBMISSION_FINISHED: number = 100;
@@ -163,7 +164,7 @@ class Register extends React.Component<Drizzled, RegisterState> {
     const { transactions, transactionStack } = this.props.drizzleState;
 
     if (this.state.registerTransactionStackId == null && !!this.state.submitted) {
-      return 0;
+      return this.SUBMISSION_STARTED;
     }
 
     const registerTransactionHash = transactionStack[this.state.registerTransactionStackId];
