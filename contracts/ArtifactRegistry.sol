@@ -42,4 +42,11 @@ contract ArtifactRegistry is IArtifactRegistry, Ownable, ERC721Full, ERC721Appro
 
     return (artwork.artist, artwork.metaUri);
   }
+
+  function transfer(address who, address recipient, uint256 tokenId, string memory metaUri) public {
+    safeTransferFrom(who, recipient, tokenId);
+
+    Artifact storage artwork = artifacts[tokenId];
+    artwork.metaUri = metaUri;
+  }
 }
