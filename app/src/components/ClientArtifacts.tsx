@@ -2,21 +2,22 @@ import * as React from 'react';
 import ArtworkItem from './ArtworkItem';
 import ListGroup from 'react-bootstrap/ListGroup';
 
-interface ArtworkListProps {
+interface ClientArtifactsProps {
   drizzle: any;
   drizzleState: any;
 }
 
-interface ArtworkListState {
-  balance: number;
+interface ClientArtifactsState {
+  numClientArtifacts: number;
   tokenIds: Array<number>;
 }
 
-class ArtworkList extends React.Component<ArtworkListProps, ArtworkListState> {
-  constructor (props: ArtworkListProps) {
+class ClientArtifacts extends
+  React.Component<ClientArtifactsProps, ClientArtifactsState> {
+  constructor (props: ClientArtifactsProps) {
     super(props);
     this.state = {
-      balance: 0,
+      numClientArtifacts: 0,
       tokenIds: [],
     };
   }
@@ -29,28 +30,14 @@ class ArtworkList extends React.Component<ArtworkListProps, ArtworkListState> {
     const artifactRegistry = this.props.drizzle.contracts.ArtifactRegistry;
     const currentAccount = this.props.drizzleState.accounts[0];
 
-    // TODO: Replace with a contract function that returns an array of
-    //       owned token ids to avoid nested promises.
-    artifactRegistry.methods.balanceOf(currentAccount).call()
-      .then((balance: number) => {
-        console.log('balance is', balance);
-        if (!this.state || this.state.balance !== balance) {
-          this.setState({ balance: balance });
-          const tokenIds: Array<number> = [];
+    artifactRegistry.methods.getOperatorTokenIds(currentAccount)
+      .call()
+      .then((tokenIds: any) => {
+        if (tokenIds.length !== this.state.numClientArtifacts) {
           this.setState({
+            numClientArtifacts: tokenIds.length,
             tokenIds: tokenIds,
           });
-          for (let i = 0; i < balance; i++) {
-            artifactRegistry.methods.tokenOfOwnerByIndex(currentAccount, i)
-              .call()
-              .then((tokenId: any) => {
-                tokenIds.push(tokenId);
-                this.setState({
-                  tokenIds: tokenIds,
-                });
-              })
-              .catch((err: any) => { console.log(err); });
-          }
         }
       })
       .catch((err: any) => { console.log(err); });
@@ -65,7 +52,7 @@ class ArtworkList extends React.Component<ArtworkListProps, ArtworkListState> {
       );
     }
 
-    if (!this.state.balance) {
+    if (!this.state.numClientArtifacts) {
       return (
         <span>No artworks to show, please register one below</span>
       );
@@ -77,7 +64,7 @@ class ArtworkList extends React.Component<ArtworkListProps, ArtworkListState> {
         drizzleState={this.props.drizzleState}
         tokenId={tokenId}
         key={tokenId}
-        isOwnedArtifact={true}
+        isOwnedArtifact={false}
       />,
     );
 
@@ -87,4 +74,4 @@ class ArtworkList extends React.Component<ArtworkListProps, ArtworkListState> {
   }
 }
 
-export default ArtworkList;
+export default ClientArtifacts;

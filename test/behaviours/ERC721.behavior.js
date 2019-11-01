@@ -444,7 +444,7 @@ function shouldBehaveLikeERC721 (
       context('when the given token ID does not exist', function () {
         it('reverts', async function () {
           await expectRevert(this.token.approve(approved, unknownTokenId, { from: operator }),
-            'ERC721: owner query for nonexistent token');
+            'ERC721: approved query for nonexistent token');
         });
       });
     });
