@@ -4,6 +4,7 @@ const { expect } = require('chai');
 
 const { shouldBehaveLikeERC721 } = require('./behaviours/ERC721.behavior.js');
 
+const Governance = artifacts.require('./Governance.sol');
 const ArtifactRegistry = artifacts.require('./ArtifactRegistry.sol');
 const ArtifactRegistryMock = artifacts.require('./ArtifactRegistryMock.sol');
 
@@ -12,8 +13,11 @@ contract('ArtifactRegistry', async accounts => {
   const tokenOwner = accounts[1];
   const TOKEN_ID = 1;
 
+  let governance;
+
   beforeEach(async function () {
-    this.token = await ArtifactRegistryMock.new(creator, { from: creator });
+    governance = await Governance.new({ from: creator });
+    this.token = await ArtifactRegistryMock.new(creator, governance.address, { from: creator });
   });
 
   shouldBehaveLikeERC721(creator, creator, accounts);
@@ -21,7 +25,8 @@ contract('ArtifactRegistry', async accounts => {
   let registry;
 
   before(async () => {
-    registry = await ArtifactRegistry.new(creator, { from: creator });
+    governance = await Governance.new({ from: creator });
+    registry = await ArtifactRegistry.new(creator, governance.address, { from: creator });
   });
 
   describe('mint', async () => {
