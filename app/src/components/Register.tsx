@@ -54,10 +54,10 @@ type InputChangeEvent = React.FormEvent<FormControlProps> &
 const GENERIC_FEEDBACK = <Form.Control.Feedback>Looks good!</Form.Control.Feedback>;
 
 class Register extends React.Component<Drizzled, RegisterState> {
-  SUBMISSION_STARTED: number = 10;
-  TRANSACTION_REGISTERED: number = 30;
-  TRANSACTION_APPROVED: number = 60;
-  SUBMISSION_FINISHED: number = 100;
+  SUBMISSION_STARTED = 10;
+  TRANSACTION_REGISTERED = 30;
+  TRANSACTION_APPROVED = 60;
+  SUBMISSION_FINISHED = 100;
 
   constructor (props: Drizzled) {
     super(props);
@@ -125,7 +125,7 @@ class Register extends React.Component<Drizzled, RegisterState> {
       return;
     }
 
-    this.setState({ validated: true, submitted: true});
+    this.setState({ validated: true, submitted: true });
 
     const { drizzle, drizzleState } = this.props;
 
@@ -191,8 +191,7 @@ class Register extends React.Component<Drizzled, RegisterState> {
     const registerTransactionHash = transactionStack[this.state.registerTransactionStackId];
     if (!this.state.validated && !this.state.submitted) {
       return <Button type="submit" className="my-2 btn-block" variant="primary">Submit</Button>;
-    }
-    else if (this.state.submitted) {
+    } else if (this.state.submitted) {
       return <Button type="submit" className="my-2 btn-block" variant="primary" disabled>
         <Spinner
           as="span"
@@ -202,7 +201,7 @@ class Register extends React.Component<Drizzled, RegisterState> {
           aria-hidden="true"
         />
         Submitting...
-      </Button>
+      </Button>;
     }
   }
 
@@ -346,7 +345,9 @@ class Register extends React.Component<Drizzled, RegisterState> {
         <Row>
           <Col sm={4}>
             <Card>
-              {this.state.fields.imageIpfsHash !== '' ? <Card.Img src={'https://ipfs.io/ipfs/' + this.state.fields.imageIpfsHash}/> : <></>}
+              {this.state.fields.imageIpfsHash !== ''
+                ? <Card.Img src={'https://ipfs.io/ipfs/' + this.state.fields.imageIpfsHash}/>
+                : <></>}
               <Card.Body>
                 <div style={{
                   position: 'relative',
@@ -419,7 +420,7 @@ class Register extends React.Component<Drizzled, RegisterState> {
   }
 }
 
-const SubmissionModal = (props: {show: boolean; onHide: () => void, progress: number}) => {
+const SubmissionModal = (props: {show: boolean; onHide: () => void; progress: number}): React.ReactNode => {
   return (
     <Modal
       {...props }
@@ -440,6 +441,6 @@ const SubmissionModal = (props: {show: boolean; onHide: () => void, progress: nu
       </Modal.Footer>
     </Modal>
   );
-}
+};
 
 export default Register;
