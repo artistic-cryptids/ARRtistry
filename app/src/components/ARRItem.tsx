@@ -49,7 +49,7 @@ class ARRItem extends React.Component<ARRItemProps, ARRItemState> {
       <Card>
         <Card.Body>
           <Card.Title><span className="text-muted text-capitalize">#{this.props.id}</span></Card.Title>
-          <Card.Subtitle className="mb-2 text-muted">jdjkd</Card.Subtitle>
+          <Card.Subtitle className="mb-2 text-muted"></Card.Subtitle>
           <Card.Text>
             Piece: {arr.tokenId} <br />
             From: <i>{arr.from}</i> <br />
