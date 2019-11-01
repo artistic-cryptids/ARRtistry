@@ -54,6 +54,10 @@ type InputChangeEvent = React.FormEvent<FormControlProps> &
 const GENERIC_FEEDBACK = <Form.Control.Feedback>Looks good!</Form.Control.Feedback>;
 
 class Register extends React.Component<Drizzled, RegisterState> {
+  TRANSACTION_REGISTERED: number = 30;
+  TRANSACTION_APPROVED: number = 60;
+  SUBMISSION_FINISHED: number = 100;
+
   constructor (props: Drizzled) {
     super(props);
     this.state = {
@@ -120,8 +124,7 @@ class Register extends React.Component<Drizzled, RegisterState> {
       return;
     }
 
-    this.setState({ validated: true});
-    this.setState({ submitted: true});
+    this.setState({ validated: true, submitted: true});
 
     const { drizzle, drizzleState } = this.props;
 
@@ -165,15 +168,15 @@ class Register extends React.Component<Drizzled, RegisterState> {
 
     const registerTransactionHash = transactionStack[this.state.registerTransactionStackId];
     if (!registerTransactionHash) {
-      return 20;
+      return this.TRANSACTION_REGISTERED;
     }
 
     if (!transactions[registerTransactionHash]) {
-      return 40;
+      return this.TRANSACTION_APPROVED;
     }
 
     if (transactions[registerTransactionHash].status === 'success') {
-      return 100;
+      return this.SUBMISSION_FINISHED;
     } else {
       return -1;
     }
