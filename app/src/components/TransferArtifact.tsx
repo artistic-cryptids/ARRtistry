@@ -45,13 +45,16 @@ class TransferArtifact extends React.Component<TransferArtifactProps, TransferAr
 
   transferArtwork = (_: React.FormEvent): void => {
     const artifactRegistry = this.props.drizzle.contracts.ArtifactRegistry;
-    const currentAccount = this.props.drizzleState.accounts[0];
 
-    artifactRegistry.methods.safeTransferFrom.cacheSend(
-      currentAccount,
-      this.state.fields.recipientAddress,
-      this.props.tokenId,
-    );
+    artifactRegistry.methods.ownerOf(this.props.tokenId).call()
+      .then((owner: string) => {
+        artifactRegistry.methods.safeTransferFrom.cacheSend(
+          owner,
+          this.state.fields.recipientAddress,
+          this.props.tokenId,
+        );
+      })
+      .catch((err: any) => console.log(err));
   }
 
   inputChangeHandler = (event: InputChangeEvent): void => {
