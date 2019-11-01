@@ -6,6 +6,7 @@ import {
   ArtifactView,
   RegisterView,
   GovernanceView,
+  ClientArtifactsView,
 } from './Views';
 
 import {
@@ -49,6 +50,9 @@ const Navigation: React.FC = () => {
       <li>
         <Link to="/governance">Governance</Link>
       </li>
+      <li>
+        <Link to="/clientArtifacts">Client Artifacts</Link>
+      </li>
     </ul>
   </nav>;
 };
@@ -69,6 +73,9 @@ const DrizzledApp: React.FC = () => {
             </Route>
             <Route path="/governance">
               <GovernanceView drizzle={drizzle} drizzleState={drizzleState}/>
+            </Route>
+            <Route path="/clientArtifacts">
+              <ClientArtifactsView drizzle={drizzle} drizzleState={drizzleState}/>
             </Route>
           </Switch>
         </>

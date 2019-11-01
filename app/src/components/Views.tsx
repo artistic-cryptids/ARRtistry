@@ -3,6 +3,7 @@ import * as React from 'react';
 import ArtworkList from './ArtworkList';
 import Register from './Register';
 import Governance from './Governance';
+import ClientArtifacts from './ClientArtifacts';
 import { Drizzled } from 'drizzle';
 
 const ArtifactView: React.FC<Drizzled> = (props) => {
@@ -20,8 +21,14 @@ const GovernanceView: React.FC<Drizzled> = (props) => {
   return <Governance drizzle={drizzle} drizzleState={drizzleState}/>;
 };
 
+const ClientArtifactsView: React.FC<Drizzled> = (props) => {
+  const { drizzle, drizzleState } = props;
+  return <ClientArtifacts drizzle={drizzle} drizzleState={drizzleState}/>;
+};
+
 export {
   ArtifactView,
   RegisterView,
   GovernanceView,
+  ClientArtifactsView,
 };

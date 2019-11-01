@@ -71,7 +71,6 @@ class TransferArtifact extends React.Component<TransferArtifactProps, TransferAr
 
   transferArtwork = (_: React.FormEvent): void => {
     const artifactRegistry = this.props.drizzle.contracts.ArtifactRegistry;
-
     let owner = '';
 
     artifactRegistry.methods.ownerOf(this.props.tokenId).call()

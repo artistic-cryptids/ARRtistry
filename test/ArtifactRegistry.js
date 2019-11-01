@@ -3,6 +3,7 @@ const { ARTIFACT, artifactEquality } = require('./constants/artifact');
 const { expect } = require('chai');
 
 const { shouldBehaveLikeERC721 } = require('./behaviours/ERC721.behavior.js');
+const { shouldBehaveLikeERC721ApprovalEnumerable } = require('./behaviours/ERC721ApprovalEnumerable.behavior.js');
 
 const ArtifactRegistry = artifacts.require('./ArtifactRegistry.sol');
 const ArtifactRegistryMock = artifacts.require('./ArtifactRegistryMock.sol');
@@ -17,6 +18,7 @@ contract('ArtifactRegistry', async accounts => {
   });
 
   shouldBehaveLikeERC721(creator, creator, accounts);
+  shouldBehaveLikeERC721ApprovalEnumerable(creator, accounts);
 
   let registry;
 
