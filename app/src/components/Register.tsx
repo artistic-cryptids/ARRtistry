@@ -14,14 +14,23 @@ interface RegisterProps {
   drizzleState: any;
 }
 
+interface SaleProvenance {
+  price: string;
+  location: string;
+  seller: string;
+  buyers: string[];
+}
+
 interface RegisterFormFields {
   title: string;
   artistId: string;
   artifactCreationDate: string;
   medium: string;
   edition: string;
-  imageIpfsHash: string;
   size: string;
+  previousSalePrice: string;
+  saleProvenance: SaleProvenance[];
+  imageIpfsHash: string;
   metaIpfsHash: string;
 }
 
@@ -64,6 +73,8 @@ class Register extends React.Component<RegisterProps, RegisterState> {
         artifactCreationDate: '',
         medium: '',
         size: '',
+        previousSalePrice: 0,
+        saleProvenance: [],
         imageIpfsHash: '',
         metaIpfsHash: '',
       },
@@ -87,7 +98,6 @@ class Register extends React.Component<RegisterProps, RegisterState> {
   };
 
   hashToArtist = (hash: string): Promise<Artist> => {
-    console.log(hash);
     return fetch(hash)
       .then((response: any) => response.json());
   };

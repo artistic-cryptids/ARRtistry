@@ -4,11 +4,13 @@ import Col from 'react-bootstrap/Col';
 import Form from 'react-bootstrap/Form';
 import { FormControlProps } from 'react-bootstrap/FormControl';
 import Modal from 'react-bootstrap/Modal';
+import ipfs from '../ipfs';
 
 interface TransferArtifactProps {
   drizzle: any;
   drizzleState: any;
   tokenId: number;
+  metaUri: string;
 }
 
 interface TransferArtifactFormFields {
@@ -43,6 +45,38 @@ class TransferArtifact extends React.Component<TransferArtifactProps, TransferAr
     };
   }
 
+  saveMetaData = (jsonData: string): void => {
+    const jsonDataBuffer = Buffer.from(JSON.stringify(jsonData));
+    const files = Array(jsonDataBuffer);
+
+    ipfs.add([...files], { progress: (prog: any) => console.log(`received: ${prog}`) })
+      .then((response: any) => {
+        ipfsId = response[0].hash;
+        return ipfsId;
+      })
+      .then((hash: string) => this.props.drizzle.contracts.ArtifactRegistry.methods.setUri(this.props.tokenId, hash));
+      .catch((err: any) => {
+        console.log(err);
+      });
+  }
+
+  addProvenance = (price: string, buyers: string[], seller: string, location: string): void => {
+    fetch(this.props.metaUri)
+      .then((response: any) => response.json())
+      .then((jsonData: any) => {
+        jsonData.previousSalePrice = price;
+        jsonData.saleProvenance.push({
+          price: price;
+          location: location;
+          buyers: buyers;
+          seller: seller;
+        })
+
+        return saveMetaData;
+        .catch((err: any) => console.log(err));
+      });
+  };
+
   transferArtwork = (_: React.FormEvent): void => {
     const artifactRegistry = this.props.drizzle.contracts.ArtifactRegistry;
     const currentAccount = this.props.drizzleState.accounts[0];
@@ -52,7 +86,11 @@ class TransferArtifact extends React.Component<TransferArtifactProps, TransferAr
       this.state.fields.recipientAddress,
       this.props.tokenId,
     );
-  }
+
+    // I'm not sure using currentAccount as seller is correct in this instance in the case of someone selling
+    // on someone elses behalf
+    addProvenance(this.state.fields.price, [this.state.fields.recipientAddress], currentAccount, "London");
+  };
 
   inputChangeHandler = (event: InputChangeEvent): void => {
     const key = event.target.id;

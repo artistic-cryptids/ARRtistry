@@ -47,6 +47,7 @@ class ArtworkItem extends React.Component<ArtworkItemProps, ArtworkItemState> {
             drizzle={this.props.drizzle}
             drizzleState={this.props.drizzleState}
             tokenId={this.props.tokenId}
+            metaUri={this.state.artworkData.metaUri}
           />
           <ApproveEntityForArtifact
             drizzle={this.props.drizzle}
