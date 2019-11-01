@@ -28,8 +28,6 @@ interface RegisterFormFields {
   medium: string;
   edition: string;
   size: string;
-  previousSalePrice: string;
-  saleProvenance: SaleProvenance[];
   imageIpfsHash: string;
   metaIpfsHash: string;
 }
@@ -73,11 +71,9 @@ class Register extends React.Component<RegisterProps, RegisterState> {
         artifactCreationDate: '',
         medium: '',
         size: '',
-        previousSalePrice: 0,
-        saleProvenance: [],
         imageIpfsHash: '',
         metaIpfsHash: '',
-      },
+      }
     };
   };
 
@@ -147,8 +143,9 @@ class Register extends React.Component<RegisterProps, RegisterState> {
 
     // eslint-disable-next-line
     const { metaIpfsHash, ...restOfTheFields } = this.state.fields;
-    const jsonData = restOfTheFields;
-
+    const jsonData: any = restOfTheFields;
+    jsonData.previousSalePrice = 0;
+    jsonData.saleProvenance = [];
     const jsonDataBuffer = Buffer.from(JSON.stringify(jsonData));
     const files = Array(jsonDataBuffer);
 
