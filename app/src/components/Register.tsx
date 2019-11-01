@@ -184,8 +184,10 @@ class Register extends React.Component<Drizzled, RegisterState> {
   };
 
   renderSubmitButton = (): React.ReactNode => {
+    // eslint-disable-next-line
     const { transactions, transactionStack } = this.props.drizzleState;
 
+    // eslint-disable-next-line
     const registerTransactionHash = transactionStack[this.state.registerTransactionStackId];
     if (!this.state.validated && !this.state.submitted) {
       return <Button type="submit" className="my-2 btn-block" variant="primary">Submit</Button>;
