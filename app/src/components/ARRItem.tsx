@@ -8,7 +8,12 @@ interface ARRItemProps {
 }
 
 type ARRItemState = {
-  ARR: any;
+  ARR: {
+    from: string;
+    to: string;
+    tokenId: number;
+    price: number;
+  };
 }
 
 class ARRItem extends React.Component<ARRItemProps, ARRItemState> {
@@ -46,10 +51,11 @@ class ARRItem extends React.Component<ARRItemProps, ARRItemState> {
           <Card.Title><span className="text-muted text-capitalize">#{this.props.id}</span></Card.Title>
           <Card.Subtitle className="mb-2 text-muted">jdjkd</Card.Subtitle>
           <Card.Text>
-        Piece: {arr.tokenId} <br />
-        From: <i>{arr.from}</i> <br />
-        To: <i>{arr.to}</i> <br />
-        Price: &euro;{arr.price}
+            Piece: {arr.tokenId} <br />
+            From: <i>{arr.from}</i> <br />
+            To: <i>{arr.to}</i> <br />
+            Price: &euro;{arr.price} <br />
+            ARR: &euro;{arr.price / 10}
           </Card.Text>
         </Card.Body>
         <Card.Footer>

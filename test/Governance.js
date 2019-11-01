@@ -183,5 +183,33 @@ contract('Governance', async accounts => {
         expect(proposalIds).to.eql([toBN(2)]);
       });
     });
+
+    describe('getARRs', async () => {
+      let from;
+      let to;
+      let tokenId;
+      let price;
+      beforeEach(async () => {
+        from = await MockTarget.new();
+        to = await MockTarget.new();
+        tokenId = toBN(1);
+        price = toBN(1001);
+        governance = await Governance.new({ from: moderator });
+      });
+
+      it('should return zero length for no ARRs', async () => {
+        const arrLen = await governance.getARRLength();
+        expect(arrLen).to.eql(toBN(0));
+      });
+
+      it('should be able to record ARRs', async () => {
+        await governance.recordARR(from.address, to.address, tokenId, price);
+        await governance.recordARR(from.address, to.address, tokenId, price);
+        await governance.recordARR(from.address, to.address, tokenId, price);
+
+        const arrLen = await governance.getARRLength();
+        expect(arrLen).to.eql(toBN(3));
+      });
+    });
   });
 }); // end Registry contract
