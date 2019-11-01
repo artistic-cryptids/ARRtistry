@@ -7,7 +7,7 @@ const newLabel = require('./helper/LoggedRegistration');
 
 module.exports = async (deployer, network, accounts) => {
   const governance = await Governance.deployed();
-  await deployer.deploy(ArtifactRegistry, governance.address);
+  await deployer.deploy(ArtifactRegistry, governance.address, governance.address);
 
   await newLabel(
     'registry',
