@@ -124,7 +124,7 @@ contract('ArtifactApplication', async accounts => {
 
         await governance.approve(0);
 
-        await registry.logARR(from, to, tokenId, price);
+        await registry.transfer(from, to, tokenId, 'dud metaUri', price);
 
         const result = await artifactApplication.getARR(0);
         ARREquality(result, ARR);

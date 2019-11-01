@@ -7,12 +7,13 @@ import "@openzeppelin/contracts/drafts/Counters.sol";
 
 import { IArtifactRegistry } from "./interfaces/IArtifactRegistry.sol";
 import { IGovernance } from "./interfaces/IGovernance.sol";
+import { ERC721ApprovalEnumerable } from "./ERC721ApprovalEnumerable.sol";
 
 /**
  * @title ArtifactRegistry
  * @dev The core registry of the artifact
  */
-contract ArtifactRegistry is IArtifactRegistry, Ownable, ERC721Full {
+contract ArtifactRegistry is IArtifactRegistry, Ownable, ERC721Full, ERC721ApprovalEnumerable {
 
   using Counters for Counters.Counter;
 
@@ -46,8 +47,12 @@ contract ArtifactRegistry is IArtifactRegistry, Ownable, ERC721Full {
     return (artwork.artist, artwork.metaUri);
   }
 
-  function logARR(address from, address to, uint256 tokenId, uint price) public {
-    safeTransferFrom(from, to, tokenId);
-    governance.recordARR(from, to, tokenId, price);
+  function transfer(address who, address recipient, uint256 tokenId, string memory metaUri, uint price) public {
+    safeTransferFrom(who, recipient, tokenId);
+
+    Artifact storage artwork = artifacts[tokenId];
+    artwork.metaUri = metaUri;
+
+    governance.recordARR(who, recipient, tokenId, price);
   }
 }
