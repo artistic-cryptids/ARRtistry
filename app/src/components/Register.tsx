@@ -14,14 +14,21 @@ interface RegisterProps {
   drizzleState: any;
 }
 
+interface SaleProvenance {
+  price: string;
+  location: string;
+  seller: string;
+  buyers: string[];
+}
+
 interface RegisterFormFields {
   title: string;
   artistId: string;
   artifactCreationDate: string;
   medium: string;
   edition: string;
-  imageIpfsHash: string;
   size: string;
+  imageIpfsHash: string;
   metaIpfsHash: string;
 }
 
@@ -87,7 +94,6 @@ class Register extends React.Component<RegisterProps, RegisterState> {
   };
 
   hashToArtist = (hash: string): Promise<Artist> => {
-    console.log(hash);
     return fetch(hash)
       .then((response: any) => response.json());
   };
@@ -137,8 +143,9 @@ class Register extends React.Component<RegisterProps, RegisterState> {
 
     // eslint-disable-next-line
     const { metaIpfsHash, ...restOfTheFields } = this.state.fields;
-    const jsonData = restOfTheFields;
-
+    const jsonData: any = restOfTheFields;
+    jsonData.previousSalePrice = 0;
+    jsonData.saleProvenance = [];
     const jsonDataBuffer = Buffer.from(JSON.stringify(jsonData));
     const files = Array(jsonDataBuffer);
 
