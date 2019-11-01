@@ -73,7 +73,7 @@ class Register extends React.Component<RegisterProps, RegisterState> {
         size: '',
         imageIpfsHash: '',
         metaIpfsHash: '',
-      }
+      },
     };
   };
 

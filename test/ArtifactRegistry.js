@@ -71,10 +71,10 @@ contract('ArtifactRegistry', async accounts => {
     });
 
     it('should reset setUri', async () => {
-      await registry.transfer(creator, accounts[3], TOKEN_ID, "new metaUri");
+      await registry.transfer(creator, accounts[3], TOKEN_ID, 'new metaUri');
 
       const result = await registry.getArtifactForToken(TOKEN_ID);
-      expect(result.metaUri).to.be.equal("new metaUri");
+      expect(result.metaUri).to.be.equal('new metaUri');
     });
   });
 }); // end Registry contract

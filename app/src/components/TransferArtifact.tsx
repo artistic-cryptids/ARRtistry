@@ -63,7 +63,7 @@ class TransferArtifact extends React.Component<TransferArtifactProps, TransferAr
           location: location,
           buyers: buyers,
           seller: seller,
-        })
+        });
 
         return this.saveMetaData(jsonData);
       });
@@ -72,13 +72,13 @@ class TransferArtifact extends React.Component<TransferArtifactProps, TransferAr
   transferArtwork = (_: React.FormEvent): void => {
     const artifactRegistry = this.props.drizzle.contracts.ArtifactRegistry;
 
-    let owner: string = "";
+    let owner = '';
 
     artifactRegistry.methods.ownerOf(this.props.tokenId).call()
       .then((address: string) => {
         owner = address;
 
-        return this.addProvenance(this.state.fields.price, [this.state.fields.recipientAddress],  owner, "London")
+        return this.addProvenance(this.state.fields.price, [this.state.fields.recipientAddress], owner, 'London');
       })
       .then((hash: string) => {
         artifactRegistry.methods.transfer.cacheSend(
