@@ -153,7 +153,7 @@ declare module 'drizzle' {
   }
 
   export interface Drizzled {
-    drizzle: Drizzle;
+    drizzle: any;
     drizzleState: any;
   }
 }
