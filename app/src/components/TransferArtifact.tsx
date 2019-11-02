@@ -121,7 +121,7 @@ class TransferArtifact extends React.Component<TransferArtifactProps, TransferAr
     return (
       <div>
         <Button variant="primary" onClick={this.handleShow}>
-          Transfer
+          Register Sale
         </Button>
         <Modal show={this.state.showTransferForm} onHide={this.handleCancel}>
           <Modal.Header closeButton>
