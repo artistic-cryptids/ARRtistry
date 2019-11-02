@@ -5,43 +5,43 @@ import Form from 'react-bootstrap/Form';
 import { FormControlProps } from 'react-bootstrap/FormControl';
 import Modal from 'react-bootstrap/Modal';
 
-interface ConsignProps {
+interface ConsignArtifactProps {
   drizzle: any;
   drizzleState: any;
   tokenId: number;
 }
 
-interface ConsignFormFields {
+interface ConsignArtifactFormFields {
   recipientAddress: string;
 }
 
-interface ConsignState {
-  fields: ConsignFormFields;
-  showConsignForm: boolean;
+interface ConsignArtifactState {
+  fields: ConsignArtifactFormFields;
+  showConsignArtifactForm: boolean;
 }
 
 type InputChangeEvent = React.FormEvent<FormControlProps> &
   {
     target: {
-      id: keyof ConsignFormFields;
-      value: ConsignFormFields[keyof ConsignFormFields];
+      id: keyof ConsignArtifactFormFields;
+      value: ConsignArtifactFormFields[keyof ConsignArtifactFormFields];
     };
   }
 
 const GENERIC_FEEDBACK = <Form.Control.Feedback>Looks good!</Form.Control.Feedback>;
 
-class Consign extends React.Component<ConsignProps, ConsignState> {
-  constructor (props: ConsignProps) {
+class ConsignArtifact extends React.Component<ConsignArtifactProps, ConsignArtifactState> {
+  constructor (props: ConsignArtifactProps) {
     super(props);
     this.state = {
       fields: {
         recipientAddress: '',
       },
-      showConsignForm: false,
+      showConsignArtifactForm: false,
     };
   }
 
-  ConsignForArtwork = (_: React.FormEvent): void => {
+  ConsignArtifactForArtwork = (_: React.FormEvent): void => {
     const artifactRegistry = this.props.drizzle.contracts.ArtifactRegistry;
 
     artifactRegistry.methods.approve.cacheSend(
@@ -54,7 +54,7 @@ class Consign extends React.Component<ConsignProps, ConsignState> {
     const key = event.target.id;
     const val = event.target.value;
     const stateUpdate = {
-      fields: this.state.fields as Pick<ConsignFormFields, keyof ConsignFormFields>,
+      fields: this.state.fields as Pick<ConsignArtifactFormFields, keyof ConsignArtifactFormFields>,
     };
     stateUpdate.fields[key] = val;
     this.setState(stateUpdate);
@@ -62,7 +62,7 @@ class Consign extends React.Component<ConsignProps, ConsignState> {
 
   handleShow = (): void => {
     this.setState({
-      showConsignForm: true,
+      showConsignArtifactForm: true,
     });
   }
 
@@ -71,7 +71,7 @@ class Consign extends React.Component<ConsignProps, ConsignState> {
       fields: {
         recipientAddress: '',
       },
-      showConsignForm: false,
+      showConsignArtifactForm: false,
     });
   }
 
@@ -81,7 +81,7 @@ class Consign extends React.Component<ConsignProps, ConsignState> {
         <Button variant="primary" onClick={this.handleShow}>
           Consign for Sale
         </Button>
-        <Modal show={this.state.showConsignForm} onHide={this.handleCancel}>
+        <Modal show={this.state.showConsignArtifactForm} onHide={this.handleCancel}>
           <Modal.Header closeButton>
             <Modal.Title>Approve Entity For Artifact </Modal.Title>
           </Modal.Header>
@@ -99,7 +99,7 @@ class Consign extends React.Component<ConsignProps, ConsignState> {
             <Button variant="secondary" onClick={this.handleCancel}>
               Cancel
             </Button>
-            <Button variant="primary" onClick={this.ConsignForArtwork}>
+            <Button variant="primary" onClick={this.ConsignArtifactForArtwork}>
               Approve
             </Button>
           </Modal.Footer>
@@ -110,4 +110,4 @@ class Consign extends React.Component<ConsignProps, ConsignState> {
   }
 }
 
-export default Consign;
+export default ConsignArtifact;
