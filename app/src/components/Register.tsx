@@ -7,12 +7,13 @@ import Container from 'react-bootstrap/Container';
 import Form from 'react-bootstrap/Form';
 import Accordion from 'react-bootstrap/Accordion';
 import { FormControlProps } from 'react-bootstrap/FormControl';
+import InputGroup from 'react-bootstrap/InputGroup';
+import Modal from 'react-bootstrap/Modal';
+import Spinner from 'react-bootstrap/Spinner';
+import Fade from 'react-bootstrap/Fade';
+import ProgressBar from 'react-bootstrap/ProgressBar';
 import ipfs from '../ipfs';
-
-interface RegisterProps {
-  drizzle: any;
-  drizzleState: any;
-}
+import { Drizzled } from 'drizzle';
 
 interface SaleProvenance {
   price: string;
@@ -45,6 +46,7 @@ interface RegisterState {
   fields: RegisterFormFields;
   registerTransactionStackId: any;
   validated: boolean;
+  submitted: boolean;
   artists?: Artist[];
 }
 
@@ -58,12 +60,18 @@ type InputChangeEvent = React.FormEvent<FormControlProps> &
 
 const GENERIC_FEEDBACK = <Form.Control.Feedback>Looks good!</Form.Control.Feedback>;
 
-class Register extends React.Component<RegisterProps, RegisterState> {
-  constructor (props: RegisterProps) {
+class Register extends React.Component<Drizzled, RegisterState> {
+  SUBMISSION_STARTED = 10;
+  TRANSACTION_REGISTERED = 30;
+  TRANSACTION_APPROVED = 60;
+  SUBMISSION_FINISHED = 100;
+
+  constructor (props: Drizzled) {
     super(props);
     this.state = {
       registerTransactionStackId: null,
       validated: false,
+      submitted: false,
       fields: {
         title: '',
         artistId: '',
@@ -78,19 +86,9 @@ class Register extends React.Component<RegisterProps, RegisterState> {
   };
 
   componentDidMount (): void {
-    this.shouldComponentUpdate();
-  };
-
-  shouldComponentUpdate (): boolean {
-    if (this.state.artists) {
-      return false;
-    }
-
     this.getArtistInfo()
       .then((artists: Artist[]) => this.setState({ artists: artists }))
       .catch((err: any) => console.log(err));
-
-    return true;
   };
 
   hashToArtist = (hash: string): Promise<Artist> => {
@@ -133,7 +131,7 @@ class Register extends React.Component<RegisterProps, RegisterState> {
       return;
     }
 
-    this.setState({ validated: true });
+    this.setState({ validated: true, submitted: true });
 
     const { drizzle, drizzleState } = this.props;
 
@@ -169,24 +167,50 @@ class Register extends React.Component<RegisterProps, RegisterState> {
     });
   };
 
-  getRegisterTransactionStatus = (): string | null => {
+  progress = (): number => {
     const { transactions, transactionStack } = this.props.drizzleState;
+
+    if (this.state.registerTransactionStackId == null && !!this.state.submitted) {
+      return this.SUBMISSION_STARTED;
+    }
 
     const registerTransactionHash = transactionStack[this.state.registerTransactionStackId];
     if (!registerTransactionHash) {
-      return null;
+      return this.TRANSACTION_REGISTERED;
     }
 
     if (!transactions[registerTransactionHash]) {
-      return null;
+      return this.TRANSACTION_APPROVED;
     }
 
     if (transactions[registerTransactionHash].status === 'success') {
-      return 'Successfully registered artwork for approval';
+      return this.SUBMISSION_FINISHED;
     } else {
-      return 'Error occured while registering artwork for approval';
+      return -1;
     }
   };
+
+  renderSubmitButton = (): React.ReactNode => {
+    // eslint-disable-next-line
+    const { transactions, transactionStack } = this.props.drizzleState;
+
+    // eslint-disable-next-line
+    const registerTransactionHash = transactionStack[this.state.registerTransactionStackId];
+    if (!this.state.validated && !this.state.submitted) {
+      return <Button type="submit" className="my-2 btn-block" variant="primary">Submit</Button>;
+    } else if (this.state.submitted) {
+      return <Button type="submit" className="my-2 btn-block" variant="primary" disabled>
+        <Spinner
+          as="span"
+          animation="grow"
+          size="sm"
+          role="status"
+          aria-hidden="true"
+        />
+        Submitting...
+      </Button>;
+    }
+  }
 
   setImgHash = (ipfsId: string): void => {
     this.setState({ fields: { ...this.state.fields, imageIpfsHash: ipfsId } });
@@ -289,11 +313,14 @@ class Register extends React.Component<RegisterProps, RegisterState> {
           </Form.Group>
 
           <Form.Group as={Col} controlId="size">
-            <Form.Label>Size of Creation</Form.Label>
-            <Form.Control
-              required
-              type="text"
-              onChange={this.inputChangeHandler}/>
+            <Form.Label>Size (cm)</Form.Label>
+            <InputGroup>
+              <InputGroup.Prepend>
+                <InputGroup.Text>Height x Width</InputGroup.Text>
+              </InputGroup.Prepend>
+              <Form.Control required type="text" onChange={this.inputChangeHandler}/>
+              <Form.Control required type="text" onChange={this.inputChangeHandler}/>
+            </InputGroup>
             {GENERIC_FEEDBACK}
           </Form.Group>
         </Form.Row>
@@ -316,12 +343,6 @@ class Register extends React.Component<RegisterProps, RegisterState> {
   // TODO: Split these into more manageable components
   // TODO: Make required fields actually required
   render (): React.ReactNode {
-    let imgDisplay;
-    if (this.state.fields.imageIpfsHash === '') {
-      imgDisplay = (<h5>No image given.</h5>);
-    } else {
-      imgDisplay = (<Card.Img src={'https://ipfs.io/ipfs/' + this.state.fields.imageIpfsHash}/>);
-    }
     return (
       <Container>
         <h5>
@@ -331,7 +352,9 @@ class Register extends React.Component<RegisterProps, RegisterState> {
         <Row>
           <Col sm={4}>
             <Card>
-              {imgDisplay}
+              {this.state.fields.imageIpfsHash !== ''
+                ? <Card.Img src={'https://ipfs.io/ipfs/' + this.state.fields.imageIpfsHash}/>
+                : <></>}
               <Card.Body>
                 <div style={{
                   position: 'relative',
@@ -388,16 +411,43 @@ class Register extends React.Component<RegisterProps, RegisterState> {
                   </Accordion.Collapse>
                 </Card>
               </Accordion>
-              <Button type="submit" className="my-2">
-                Register
-              </Button>
+              {this.renderSubmitButton()}
             </Form>
           </Col>
         </Row>
-        <p className='lead'>{this.getRegisterTransactionStatus()}</p>
+        <Fade in={this.state.submitted}>
+          <SubmissionModal
+            show={this.state.submitted}
+            onHide={() => this.setState({ submitted: false })}
+            progress={this.progress()}
+          />
+        </Fade>
       </Container>
     );
   }
 }
+
+const SubmissionModal = (props: {show: boolean; onHide: () => void; progress: number}): JSX.Element => {
+  return (
+    <Modal
+      {...props }
+      size="lg"
+      aria-labelledby="contained-modal-title-vcenter"
+      centered
+    >
+      <Modal.Header closeButton>
+        <Modal.Title id="contained-modal-title-vcenter">
+          Submitting your Artifact...
+        </Modal.Title>
+      </Modal.Header>
+      <Modal.Body>
+        <ProgressBar now={props.progress} />
+      </Modal.Body>
+      <Modal.Footer>
+        <Button onClick={props.onHide}>Close</Button>
+      </Modal.Footer>
+    </Modal>
+  );
+};
 
 export default Register;
