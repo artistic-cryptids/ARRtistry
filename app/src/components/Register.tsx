@@ -420,7 +420,7 @@ class Register extends React.Component<Drizzled, RegisterState> {
   }
 }
 
-const SubmissionModal = (props: {show: boolean; onHide: () => void; progress: number}): React.ReactNode => {
+const SubmissionModal = (props: {show: boolean; onHide: () => void; progress: number}): JSX.Element => {
   return (
     <Modal
       {...props }
