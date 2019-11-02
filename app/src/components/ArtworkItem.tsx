@@ -2,7 +2,7 @@ import * as React from 'react';
 import ArtworkInfo from './ArtworkInfo';
 import ListGroup from 'react-bootstrap/ListGroup';
 import TransferArtifact from './TransferArtifact';
-import ApproveEntityForArtifact from './ApproveEntityForArtifact';
+import ConsignArtifact from './ConsignArtifact';
 import Col from 'react-bootstrap/Col';
 import Row from 'react-bootstrap/Row';
 
@@ -57,7 +57,7 @@ class ArtworkItem extends React.Component<ArtworkItemProps, ArtworkItemState> {
             </Col>
             {this.props.isOwnedArtifact
               ? <Col>
-                <ApproveEntityForArtifact
+                <ConsignArtifact
                   drizzle={this.props.drizzle}
                   drizzleState={this.props.drizzleState}
                   tokenId={this.props.tokenId}

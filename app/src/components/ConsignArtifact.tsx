@@ -5,43 +5,43 @@ import Form from 'react-bootstrap/Form';
 import { FormControlProps } from 'react-bootstrap/FormControl';
 import Modal from 'react-bootstrap/Modal';
 
-interface ApproveEntityForArtifactProps {
+interface ConsignArtifactProps {
   drizzle: any;
   drizzleState: any;
   tokenId: number;
 }
 
-interface ApproveEntityForArtifactFormFields {
+interface ConsignArtifactFormFields {
   recipientAddress: string;
 }
 
-interface ApproveEntityForArtifactState {
-  fields: ApproveEntityForArtifactFormFields;
-  showApproveEntityForm: boolean;
+interface ConsignArtifactState {
+  fields: ConsignArtifactFormFields;
+  showConsignArtifactForm: boolean;
 }
 
 type InputChangeEvent = React.FormEvent<FormControlProps> &
   {
     target: {
-      id: keyof ApproveEntityForArtifactFormFields;
-      value: ApproveEntityForArtifactFormFields[keyof ApproveEntityForArtifactFormFields];
+      id: keyof ConsignArtifactFormFields;
+      value: ConsignArtifactFormFields[keyof ConsignArtifactFormFields];
     };
   }
 
 const GENERIC_FEEDBACK = <Form.Control.Feedback>Looks good!</Form.Control.Feedback>;
 
-class ApproveEntityForArtifact extends React.Component<ApproveEntityForArtifactProps, ApproveEntityForArtifactState> {
-  constructor (props: ApproveEntityForArtifactProps) {
+class ConsignArtifact extends React.Component<ConsignArtifactProps, ConsignArtifactState> {
+  constructor (props: ConsignArtifactProps) {
     super(props);
     this.state = {
       fields: {
         recipientAddress: '',
       },
-      showApproveEntityForm: false,
+      showConsignArtifactForm: false,
     };
   }
 
-  approveEntityForArtwork = (_: React.FormEvent): void => {
+  ConsignArtifactForArtwork = (_: React.FormEvent): void => {
     const artifactRegistry = this.props.drizzle.contracts.ArtifactRegistry;
 
     artifactRegistry.methods.approve.cacheSend(
@@ -54,7 +54,7 @@ class ApproveEntityForArtifact extends React.Component<ApproveEntityForArtifactP
     const key = event.target.id;
     const val = event.target.value;
     const stateUpdate = {
-      fields: this.state.fields as Pick<ApproveEntityForArtifactFormFields, keyof ApproveEntityForArtifactFormFields>,
+      fields: this.state.fields as Pick<ConsignArtifactFormFields, keyof ConsignArtifactFormFields>,
     };
     stateUpdate.fields[key] = val;
     this.setState(stateUpdate);
@@ -62,7 +62,7 @@ class ApproveEntityForArtifact extends React.Component<ApproveEntityForArtifactP
 
   handleShow = (): void => {
     this.setState({
-      showApproveEntityForm: true,
+      showConsignArtifactForm: true,
     });
   }
 
@@ -71,7 +71,7 @@ class ApproveEntityForArtifact extends React.Component<ApproveEntityForArtifactP
       fields: {
         recipientAddress: '',
       },
-      showApproveEntityForm: false,
+      showConsignArtifactForm: false,
     });
   }
 
@@ -79,9 +79,9 @@ class ApproveEntityForArtifact extends React.Component<ApproveEntityForArtifactP
     return (
       <div>
         <Button variant="primary" onClick={this.handleShow}>
-          Approve
+          Consign for Sale
         </Button>
-        <Modal show={this.state.showApproveEntityForm} onHide={this.handleCancel}>
+        <Modal show={this.state.showConsignArtifactForm} onHide={this.handleCancel}>
           <Modal.Header closeButton>
             <Modal.Title>Approve Entity For Artifact </Modal.Title>
           </Modal.Header>
@@ -99,7 +99,7 @@ class ApproveEntityForArtifact extends React.Component<ApproveEntityForArtifactP
             <Button variant="secondary" onClick={this.handleCancel}>
               Cancel
             </Button>
-            <Button variant="primary" onClick={this.approveEntityForArtwork}>
+            <Button variant="primary" onClick={this.ConsignArtifactForArtwork}>
               Approve
             </Button>
           </Modal.Footer>
@@ -110,4 +110,4 @@ class ApproveEntityForArtifact extends React.Component<ApproveEntityForArtifactP
   }
 }
 
-export default ApproveEntityForArtifact;
+export default ConsignArtifact;
