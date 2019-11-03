@@ -90,7 +90,7 @@ class Register extends React.Component<Drizzled, RegisterState> {
       .then((artists: Artist[]) => {
         const fields = this.state.fields as Pick<RegisterFormFields, keyof RegisterFormFields>;
         // set the default artistId to the first artist, assuming the list of artists is not empty
-        fields.artistId = '1';
+        fields.artistId = artists[0].id.toString();
         this.setState({
           artists: artists,
           fields: fields,
