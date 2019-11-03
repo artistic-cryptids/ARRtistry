@@ -326,12 +326,12 @@ class Register extends React.Component<Drizzled, RegisterState> {
               <Form.Control
                 required
                 type="text"
-                id="width"
+                id="height"
                 onChange={this.inputChangeHandler}/>
               <Form.Control
                 required
                 type="text"
-                id="height"
+                id="width"
                 onChange={this.inputChangeHandler}/>
             </InputGroup>
             {GENERIC_FEEDBACK}
