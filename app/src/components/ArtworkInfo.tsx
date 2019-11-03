@@ -107,9 +107,9 @@ class ArtworkInfo extends React.Component<ArtworkInfoProps, ArtworkInfoState> {
     const fields = this.state.fields;
     const artist = this.state.artist;
 
-    const imgSrc = fields.imageIpfsHash === '' ?
-      'https://file.globalupload.io/HO8sN3I2nJ.png' :
-      'https://ipfs.io/ipfs/' + fields.imageIpfsHash;
+    const imgSrc = fields.imageIpfsHash === ''
+      ? 'https://file.globalupload.io/HO8sN3I2nJ.png'
+      : 'https://ipfs.io/ipfs/' + fields.imageIpfsHash;
 
     if (this.state.retrievedData) {
       return (
