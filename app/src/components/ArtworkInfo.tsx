@@ -130,13 +130,11 @@ class ArtworkInfo extends React.Component<ArtworkInfoProps, ArtworkInfoState> {
             <hr/>
             <Card.Text>
               <span className="text-muted text-capitalize">Creation Date:</span> {fields.artifactCreationDate}
-            </Card.Text>
-            <Card.Text>
+              <br/>
               <span className="text-muted text-capitalize">Medium:</span> {fields.medium}
-            </Card.Text>
-            <Card.Text>
-              <span className="text-muted text-capitalize">Width:</span> {fields.width}
-              <span className="text-muted text-capitalize"> Height:</span> {fields.height}
+              <br/>
+              <span className="text-muted text-capitalize">Height:</span> {fields.height}
+              <span className="text-muted text-capitalize"> Width:</span> {fields.width}
             </Card.Text>
           </Card.Body>
           <Card.Footer>
