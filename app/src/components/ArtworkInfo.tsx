@@ -106,11 +106,16 @@ class ArtworkInfo extends React.Component<ArtworkInfoProps, ArtworkInfoState> {
   render (): React.ReactNode {
     const fields = this.state.fields;
     const artist = this.state.artist;
+
+    const imgSrc = fields.imageIpfsHash === ''
+      ? 'https://file.globalupload.io/HO8sN3I2nJ.png'
+      : 'https://ipfs.io/ipfs/' + fields.imageIpfsHash;
+
     if (this.state.retrievedData) {
       return (
         <Card className="shadow">
           <Card.Body>
-            <Card.Img variant="top" src={'https://ipfs.io/ipfs/' + fields.imageIpfsHash} />
+            <Card.Img variant="top" src={imgSrc} />
             <Card.Title><span className="text-muted text-capitalize">#{this.props.id} </span>{fields.title}</Card.Title>
             <Card.Subtitle className="mb-2 text-muted">{artist.name}</Card.Subtitle>
             <Card.Text>
