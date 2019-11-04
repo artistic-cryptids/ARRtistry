@@ -13,7 +13,9 @@ const App: React.FC = () => {
     <Router>
       <Container>
         <LeftSidebar>
-          <DrizzledApp/>
+          <div className="content h-100">
+            <DrizzledApp/>
+          </div>
         </LeftSidebar>
       </Container>
     </Router>

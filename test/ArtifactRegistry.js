@@ -48,7 +48,7 @@ contract('ArtifactRegistry', async accounts => {
     });
 
     it('should increment the token ids', async () => {
-      const tokenId = await registry._tokenIds.call();
+      const tokenId = await registry._tokenId.call();
       expect(tokenId.toString()).to.be.equal('1');
     });
 
