@@ -19,7 +19,7 @@ contract ArtifactRegistry is IArtifactRegistry, Ownable, ERC721Full, ERC721Appro
 
   IGovernance public governance;
 
-  Counters.Counter public _tokenIds;
+  Counters.Counter public _tokenId;
   mapping (uint256 => Artifact) public artifacts;
 
   constructor(address owner, IGovernance _governance) public ERC721Full("Artifact", "ART") {
@@ -30,8 +30,8 @@ contract ArtifactRegistry is IArtifactRegistry, Ownable, ERC721Full, ERC721Appro
   function mint(address who, Artifact memory _artifact) public returns (uint256) {
     require(msg.sender == owner(), "ArtifactRegistry::mint: Not minted by the owner");
 
-    _tokenIds.increment();
-    uint256 newTokenId = _tokenIds.current();
+    _tokenId.increment();
+    uint256 newTokenId = _tokenId.current();
 
     artifacts[newTokenId] = _artifact;
 
