@@ -1,6 +1,6 @@
 import * as React from 'react';
 import ArtworkItem from './ArtworkItem';
-import ListGroup from 'react-bootstrap/ListGroup';
+import CardColumns from 'react-bootstrap/CardColumns';
 
 interface ArtworkListProps {
   drizzle: any;
@@ -82,7 +82,7 @@ class ArtworkList extends React.Component<ArtworkListProps, ArtworkListState> {
     );
 
     return (
-      <ListGroup>{listItems}</ListGroup>
+      <CardColumns>{listItems}</CardColumns>
     );
   }
 }
