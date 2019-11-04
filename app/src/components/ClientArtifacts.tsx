@@ -1,6 +1,6 @@
 import * as React from 'react';
 import ArtworkItem from './ArtworkItem';
-import ListGroup from 'react-bootstrap/ListGroup';
+import CardColumns from 'react-bootstrap/CardColumns';
 
 interface ClientArtifactsProps {
   drizzle: any;
@@ -69,7 +69,7 @@ class ClientArtifacts extends
     );
 
     return (
-      <ListGroup>{listItems}</ListGroup>
+      <CardColumns>{listItems}</CardColumns>
     );
   }
 }
