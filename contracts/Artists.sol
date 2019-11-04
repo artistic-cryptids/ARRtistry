@@ -17,7 +17,7 @@ contract Artists is Ownable {
 
   using Counters for Counters.Counter;
 
-  Counters.Counter public _artistIds;
+  Counters.Counter public _artistId;
   mapping (uint256 => Artist) public artists;
 
   constructor(address owner) public {
@@ -25,14 +25,14 @@ contract Artists is Ownable {
   }
 
   function addArtist(string memory metaUri) public onlyOwner {
-    _artistIds.increment();
-    uint256 id = _artistIds.current();
+    _artistId.increment();
+    uint256 id = _artistId.current();
 
     artists[id] = Artist(metaUri);
   }
 
   function getArtist(uint256 _id) public view returns (string memory metaUri) {
-    require(_id <= _artistIds.current(), "Artists::getArtist: invalid artist id");
+    require(_id <= _artistId.current(), "Artists::getArtist: invalid artist id");
 
     Artist memory artist = artists[_id];
 
@@ -40,6 +40,6 @@ contract Artists is Ownable {
   }
 
   function getArtistsTotal() public view returns (uint256) {
-    return _artistIds.current();
+    return _artistId.current();
   }
 }

@@ -22,9 +22,8 @@ contract Governance is IGovernance, Moderated {
   // Maps the proposal id to the proposer of the artifact.
   mapping (uint => address) public proposalToProposer;
 
-  // TODO(mm5917): should submitting cost ether?
   function propose(address target, bytes memory data) public returns (uint) {
-    require(msg.sender != address(this), "Governance::propose: Invalid proposal");
+    require(msg.sender != address(this), "Governance::propose: Governance cannot submit proposal");
     // require(token.transferFrom(msg.sender, address(this), proposalFee), "Governance::propose: Transfer failed");
 
     uint proposalId = proposals.length;
@@ -56,10 +55,11 @@ contract Governance is IGovernance, Moderated {
 
     proposals[proposalId].status = Status.Approved;
 
-    emit Approve(proposalId);
     // solhint-disable-next-line avoid-low-level-calls
     (bool success, ) = proposal.target.call(proposal.data);
     require(success, "Governance::approve: Proposal target call was unsuccessful");
+
+    emit Approve(proposalId);
   }
 
   function reject(uint proposalId) public {
@@ -81,6 +81,7 @@ contract Governance is IGovernance, Moderated {
     return moderators[account];
   }
 
+  // TODO(mm): maybe we could store number of active proposals and keep this updated to avoid 1st loop here
   // As far as I can work out you can't have a memory array be dynamic
   // Have to iterate twice to work out size of array then populate
   function getProposals() public view returns (uint[] memory) {
