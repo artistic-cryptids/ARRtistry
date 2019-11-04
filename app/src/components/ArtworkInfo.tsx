@@ -27,7 +27,8 @@ interface ArtworkInfoFields {
   edition: string;
   artifactCreationDate: string;
   medium: string;
-  size: string;
+  width: string;
+  height: string;
   imageIpfsHash: string;
 }
 
@@ -59,7 +60,8 @@ class ArtworkInfo extends React.Component<ArtworkInfoProps, ArtworkInfoState> {
         edition: '',
         artifactCreationDate: '',
         medium: '',
-        size: '',
+        width: '',
+        height: '',
         imageIpfsHash: '',
       },
     };
@@ -118,12 +120,22 @@ class ArtworkInfo extends React.Component<ArtworkInfoProps, ArtworkInfoState> {
             <Card.Img variant="top" src={imgSrc} />
             <Card.Title><span className="text-muted text-capitalize">#{this.props.id} </span>{fields.title}</Card.Title>
             <Card.Subtitle className="mb-2 text-muted">{artist.name}</Card.Subtitle>
+            <hr/>
             <Card.Text>
             Some quick example text to build on the card title and make up the bulk of
             the card&apos;s content.
-              {fields.artifactCreationDate}. {fields.medium}
             </Card.Text>
+            <hr/>
             {this.props.children}
+            <hr/>
+            <Card.Text>
+              <span className="text-muted text-capitalize">Creation Date:</span> {fields.artifactCreationDate}
+              <br/>
+              <span className="text-muted text-capitalize">Medium:</span> {fields.medium}
+              <br/>
+              <span className="text-muted text-capitalize">Height:</span> {fields.height}
+              <span className="text-muted text-capitalize"> Width:</span> {fields.width}
+            </Card.Text>
           </Card.Body>
           <Card.Footer>
             <small className="text-muted">Last updated 3 mins ago</small>
