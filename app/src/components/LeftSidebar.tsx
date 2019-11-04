@@ -10,16 +10,13 @@ interface LeftSidebarProps {
 class LeftSidebar extends React.Component<LeftSidebarProps, {}> {
   private renderNavMenu (): React.ReactNode {
     return (
-      <div>
-        <b className='p-4 m-4'>ARRtistry</b>
-        <Nav defaultActiveKey="/" className="flex-column">
-          <Link to="/">Home</Link>
-          <Link to="/artifacts">Artifacts</Link>
-          <Link to="/new">New</Link>
-          <Link to="/governance">Governance</Link>
-          <Link to="/clientArtifacts">Client Artifacts</Link>
-        </Nav>
-      </div>
+      <Nav defaultActiveKey="/" className="flex-column">
+        <Link className="page-link" to="/">Home</Link>
+        <Link className="page-link" to="/new">New</Link>
+        <Link className="page-link" to="/artifacts">Artifacts</Link>
+        <Link className="page-link" to="/governance">Governance</Link>
+        <Link className="page-link" to="/clientArtifacts">Client Artifacts</Link>
+      </Nav>
     );
   }
 
@@ -29,8 +26,8 @@ class LeftSidebar extends React.Component<LeftSidebarProps, {}> {
         sidebar={this.renderNavMenu()}
         docked={true}
         transitions={false}
-        shadow={true}
-        styles={{ sidebar: { background: 'white' } }}
+        shadow={false}
+        styles={{ sidebar: { background: '#242424' } }}
       >
         {this.props.children}
       </Sidebar>
