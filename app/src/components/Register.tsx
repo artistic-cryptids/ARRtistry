@@ -28,7 +28,8 @@ interface RegisterFormFields {
   artifactCreationDate: string;
   medium: string;
   edition: string;
-  size: string;
+  width: string;
+  height: string;
   imageIpfsHash: string;
   metaIpfsHash: string;
 }
@@ -78,7 +79,8 @@ class Register extends React.Component<Drizzled, RegisterState> {
         edition: '',
         artifactCreationDate: '',
         medium: '',
-        size: '',
+        width: '',
+        height: '',
         imageIpfsHash: '',
         metaIpfsHash: '',
       },
@@ -150,8 +152,10 @@ class Register extends React.Component<Drizzled, RegisterState> {
     // eslint-disable-next-line
     const { metaIpfsHash, ...restOfTheFields } = this.state.fields;
     const jsonData: any = restOfTheFields;
+
     jsonData.previousSalePrice = 0;
     jsonData.saleProvenance = [];
+
     const jsonDataBuffer = Buffer.from(JSON.stringify(jsonData));
     const files = Array(jsonDataBuffer);
 
@@ -243,6 +247,7 @@ class Register extends React.Component<Drizzled, RegisterState> {
   inputChangeHandler = (event: InputChangeEvent): void => {
     const key = event.target.id;
     const val = event.target.value;
+
     const stateUpdate = { fields: this.state.fields as Pick<RegisterFormFields, keyof RegisterFormFields> };
     stateUpdate.fields[key] = val;
     this.setState(stateUpdate);
@@ -320,14 +325,22 @@ class Register extends React.Component<Drizzled, RegisterState> {
             {GENERIC_FEEDBACK}
           </Form.Group>
 
-          <Form.Group as={Col} controlId="size">
+          <Form.Group as={Col}>
             <Form.Label>Size (cm)</Form.Label>
             <InputGroup>
               <InputGroup.Prepend>
                 <InputGroup.Text>Height x Width</InputGroup.Text>
               </InputGroup.Prepend>
-              <Form.Control required type="text" onChange={this.inputChangeHandler}/>
-              <Form.Control required type="text" onChange={this.inputChangeHandler}/>
+              <Form.Control
+                required
+                type="text"
+                id="height"
+                onChange={this.inputChangeHandler}/>
+              <Form.Control
+                required
+                type="text"
+                id="width"
+                onChange={this.inputChangeHandler}/>
             </InputGroup>
             {GENERIC_FEEDBACK}
           </Form.Group>
