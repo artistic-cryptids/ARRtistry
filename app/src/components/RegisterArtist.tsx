@@ -7,12 +7,11 @@ import Container from 'react-bootstrap/Container';
 import Form from 'react-bootstrap/Form';
 import Accordion from 'react-bootstrap/Accordion';
 import { FormControlProps } from 'react-bootstrap/FormControl';
-import Modal from 'react-bootstrap/Modal';
 import Spinner from 'react-bootstrap/Spinner';
 import Fade from 'react-bootstrap/Fade';
-import ProgressBar from 'react-bootstrap/ProgressBar';
 import ipfs from '../ipfs';
 import { Drizzled } from 'drizzle';
+import SubmissionModal from './common/SubmissionModal';
 
 interface RegisterFormFields {
   name: string;
@@ -267,6 +266,7 @@ class RegisterArtist extends React.Component<Drizzled, RegisterArtistState> {
               show={this.state.submitted}
               onHide={() => this.setState({ submitted: false })}
               progress={this.progress()}
+              title="Submitting this new artist..."
             />
           </Fade>
         </Container>
@@ -278,28 +278,5 @@ class RegisterArtist extends React.Component<Drizzled, RegisterArtistState> {
     );
   }
 }
-
-const SubmissionModal = (props: {show: boolean; onHide: () => void; progress: number}): JSX.Element => {
-  return (
-    <Modal
-      {...props }
-      size="lg"
-      aria-labelledby="contained-modal-title-vcenter"
-      centered
-    >
-      <Modal.Header closeButton>
-        <Modal.Title id="contained-modal-title-vcenter">
-          Submitting this new artist...
-        </Modal.Title>
-      </Modal.Header>
-      <Modal.Body>
-        <ProgressBar now={props.progress} />
-      </Modal.Body>
-      <Modal.Footer>
-        <Button onClick={props.onHide}>Close</Button>
-      </Modal.Footer>
-    </Modal>
-  );
-};
 
 export default RegisterArtist;
