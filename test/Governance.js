@@ -189,6 +189,8 @@ contract('Governance', async accounts => {
       let to;
       let tokenId;
       let price;
+      let location = "location";
+
       beforeEach(async () => {
         from = await MockTarget.new();
         to = await MockTarget.new();
@@ -203,9 +205,9 @@ contract('Governance', async accounts => {
       });
 
       it('should be able to record ARRs', async () => {
-        await governance.recordARR(from.address, to.address, tokenId, price);
-        await governance.recordARR(from.address, to.address, tokenId, price);
-        await governance.recordARR(from.address, to.address, tokenId, price);
+        await governance.recordARR(from.address, to.address, tokenId, price, location);
+        await governance.recordARR(from.address, to.address, tokenId, price, location);
+        await governance.recordARR(from.address, to.address, tokenId, price, location);
 
         const arrLen = await governance.getARRLength();
         expect(arrLen).to.eql(toBN(3));
