@@ -1,7 +1,14 @@
 import * as React from 'react';
 import Sidebar from 'react-sidebar';
-import { Nav } from 'react-bootstrap';
+import { Nav, Button } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
+import Row from 'react-bootstrap/Row';
+import Col from 'react-bootstrap/Col';
+import Container from 'react-bootstrap/Container';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faStamp, faFingerprint, faColumns, faIdBadge, faClone } from '@fortawesome/free-solid-svg-icons'
+import * as styles from './LeftSidebar.module.scss';
+
 
 interface LeftSidebarProps {
   children: React.ReactNode;
@@ -10,27 +17,62 @@ interface LeftSidebarProps {
 class LeftSidebar extends React.Component<LeftSidebarProps, {}> {
   private renderNavMenu (): React.ReactNode {
     return (
-      <Nav defaultActiveKey="/" className="flex-column">
-        <Link className="page-link" to="/">Home</Link>
-        <Link className="page-link" to="/new">New</Link>
-        <Link className="page-link" to="/artifacts">Artifacts</Link>
-        <Link className="page-link" to="/governance">Governance</Link>
-        <Link className="page-link" to="/clientArtifacts">Client Artifacts</Link>
-      </Nav>
+      <Container className={"col-md-2 d-none d-md-block " + styles.sidebar}>
+        <Row className={styles.brand}>
+          <div className={styles.brandLogo}>
+            <Link to="/">
+              ARRtistry
+            </Link>
+          </div>
+          <div className={styles.brandTools}>
+            <Button className={styles.brandToggle}><span></span></Button>
+          </div>
+        </Row>
+        <hr/>
+        <Nav className={'flex-column ' + styles.sidebarSticky} as={Col}>
+          <h4 className={styles.section}>Dashboards</h4>
+          <Nav.Item className={styles.navItem}>
+              <Nav.Link active={true} to="/" as={Link} bsPrefix={'nav-link ' + styles.navLink}>
+                <FontAwesomeIcon icon={faColumns} /> Home
+              </Nav.Link>
+          </Nav.Item>
+          <h4 className={styles.section}>Artifacts</h4>
+          <Nav.Item className={styles.navItem}>
+              <Nav.Link to="/new" as={Link} bsPrefix={'nav-link ' + styles.navLink}>
+                <FontAwesomeIcon icon={faFingerprint} /> New
+              </Nav.Link>
+          </Nav.Item>
+          <Nav.Item className={styles.navItem}>
+              <Nav.Link to="/artifacts" as={Link} bsPrefix={'nav-link ' + styles.navLink}>
+                <FontAwesomeIcon icon={faClone} /> Owned
+              </Nav.Link>
+          </Nav.Item>
+          <h4 className={styles.section}>Management</h4>
+          <Nav.Item className={styles.navItem}>
+              <Nav.Link to="/governance" as={Link} bsPrefix={'nav-link ' + styles.navLink}>
+                <FontAwesomeIcon icon={faStamp} /> Requests
+              </Nav.Link>
+          </Nav.Item>
+          <Nav.Item className={styles.navItem}>
+              <Nav.Link to="/clientArtifacts" as={Link} bsPrefix={'nav-link ' + styles.navLink}>
+                <FontAwesomeIcon icon={faIdBadge} /> Clients
+              </Nav.Link>
+          </Nav.Item>
+        </Nav>
+      </Container>
     );
   }
 
   render (): React.ReactNode {
     return (
-      <Sidebar
-        sidebar={this.renderNavMenu()}
-        docked={true}
-        transitions={false}
-        shadow={false}
-        styles={{ sidebar: { background: '#242424' } }}
-      >
-        {this.props.children}
-      </Sidebar>
+      <Container fluid>
+        <Row>
+          {this.renderNavMenu()}
+          <main role="main" className="col-md-9 ml-sm-auto col-lg-10 px-4">
+            {this.props.children}
+          </main>
+        </Row>
+      </Container>
     );
   }
 }
