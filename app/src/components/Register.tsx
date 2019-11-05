@@ -8,12 +8,11 @@ import Form from 'react-bootstrap/Form';
 import Accordion from 'react-bootstrap/Accordion';
 import { FormControlProps } from 'react-bootstrap/FormControl';
 import InputGroup from 'react-bootstrap/InputGroup';
-import Modal from 'react-bootstrap/Modal';
 import Spinner from 'react-bootstrap/Spinner';
 import Fade from 'react-bootstrap/Fade';
-import ProgressBar from 'react-bootstrap/ProgressBar';
 import ipfs from '../ipfs';
 import { Drizzled } from 'drizzle';
+import SubmissionModal from './common/SubmissionModal';
 
 interface SaleProvenance {
   price: string;
@@ -441,34 +440,12 @@ class Register extends React.Component<Drizzled, RegisterState> {
             show={this.state.submitted}
             onHide={() => this.setState({ submitted: false })}
             progress={this.progress()}
+            title="Submitting your Artifact..."
           />
         </Fade>
       </Container>
     );
   }
 }
-
-const SubmissionModal = (props: {show: boolean; onHide: () => void; progress: number}): JSX.Element => {
-  return (
-    <Modal
-      {...props }
-      size="lg"
-      aria-labelledby="contained-modal-title-vcenter"
-      centered
-    >
-      <Modal.Header closeButton>
-        <Modal.Title id="contained-modal-title-vcenter">
-          Submitting your Artifact...
-        </Modal.Title>
-      </Modal.Header>
-      <Modal.Body>
-        <ProgressBar now={props.progress} />
-      </Modal.Body>
-      <Modal.Footer>
-        <Button onClick={props.onHide}>Close</Button>
-      </Modal.Footer>
-    </Modal>
-  );
-};
 
 export default Register;
