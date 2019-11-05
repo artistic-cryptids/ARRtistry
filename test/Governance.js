@@ -189,7 +189,7 @@ contract('Governance', async accounts => {
       let to;
       let tokenId;
       let price;
-      let location = "location";
+      const location = 'location';
 
       beforeEach(async () => {
         from = await MockTarget.new();

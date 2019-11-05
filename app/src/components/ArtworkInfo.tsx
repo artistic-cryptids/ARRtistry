@@ -24,6 +24,7 @@ interface Artist {
 interface ArtworkInfoFields {
   title: string;
   artistId: number;
+  description: string;
   edition: string;
   artifactCreationDate: string;
   medium: string;
@@ -57,6 +58,7 @@ class ArtworkInfo extends React.Component<ArtworkInfoProps, ArtworkInfoState> {
       fields: {
         title: '',
         artistId: 0,
+        description: '',
         edition: '',
         artifactCreationDate: '',
         medium: '',
@@ -121,11 +123,9 @@ class ArtworkInfo extends React.Component<ArtworkInfoProps, ArtworkInfoState> {
             <Card.Title><span className="text-muted text-capitalize">#{this.props.id} </span>{fields.title}</Card.Title>
             <Card.Subtitle className="mb-2 text-muted">{artist.name}</Card.Subtitle>
             <hr/>
-            <Card.Text>
-            Some quick example text to build on the card title and make up the bulk of
-            the card&apos;s content.
-            </Card.Text>
-            <hr/>
+            {fields.description !== ''
+              ? <React.Fragment><Card.Text>{fields.description}</Card.Text><hr/></React.Fragment>
+              : null}
             {this.props.children}
             <hr/>
             <Card.Text>
