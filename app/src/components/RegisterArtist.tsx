@@ -58,7 +58,7 @@ class RegisterArtist extends React.Component<Drizzled, RegisterArtistState> {
         nationality: '',
         birthYear: '',
         deathYear: '',
-        metaIpfsHash:'',
+        metaIpfsHash: '',
       },
     };
   };
@@ -68,7 +68,7 @@ class RegisterArtist extends React.Component<Drizzled, RegisterArtistState> {
       .then((isGovernor: any) => {
         const fields = this.state.fields as Pick<RegisterFormFields, keyof RegisterFormFields>;
         this.setState({
-          isGovernor: isGovernor ,
+          isGovernor: isGovernor,
           fields: fields,
         });
       })
