@@ -83,7 +83,7 @@ class TransferArtifact extends React.Component<TransferArtifactProps, TransferAr
           this.state.fields.price,
           [this.state.fields.recipientAddress],
           owner,
-          this.state.fields.location
+          this.state.fields.location,
         );
       })
       .then((hash: string) =>
