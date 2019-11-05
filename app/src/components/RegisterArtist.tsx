@@ -188,7 +188,7 @@ class RegisterArtist extends React.Component<Drizzled, RegisterArtistState> {
       <Container>
         <Form.Row>
           <Form.Group as={Col} controlId="name">
-            <Form.Label>Artist's Name</Form.Label>
+            <Form.Label>Artist Name</Form.Label>
             <Form.Control
               required
               type="text"
@@ -199,7 +199,7 @@ class RegisterArtist extends React.Component<Drizzled, RegisterArtistState> {
 
         <Form.Row>
           <Form.Group as={Col} controlId="nationality">
-            <Form.Label>Artist's Nationality</Form.Label>
+            <Form.Label>Artist Nationality</Form.Label>
             <Form.Control
               required
               type="text"
@@ -210,7 +210,7 @@ class RegisterArtist extends React.Component<Drizzled, RegisterArtistState> {
 
         <Form.Row>
           <Form.Group as={Col} controlId="birthYear">
-            <Form.Label>Artist's Year of Birth</Form.Label>
+            <Form.Label>Year of Artist Birth</Form.Label>
             <Form.Control
               required
               type="text"
@@ -219,7 +219,7 @@ class RegisterArtist extends React.Component<Drizzled, RegisterArtistState> {
           </Form.Group>
 
           <Form.Group as={Col} controlId="deathYear">
-            <Form.Label>Artist's Year of Death (optional)</Form.Label>
+            <Form.Label>Year of Artist Death (optional)</Form.Label>
             <Form.Control
               type="text"
               onChange={this.inputChangeHandler}/>
