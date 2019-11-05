@@ -8,8 +8,6 @@ import { ArtifactView, GovernanceView, RegisterView, RegisterArtistView, ClientA
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import LeftSidebar from './LeftSidebar';
 
-import * as styles from './App.module.scss';
-
 const App: React.FC = () => {
   return (
     <Router>

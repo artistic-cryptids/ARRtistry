@@ -50,7 +50,7 @@ class ClientArtifacts extends
     if (!this.state) {
       return (
         <Container>
-        <span>Loading artworks...</span>
+          <span>Loading artworks...</span>
         </Container>
       );
     }
@@ -58,7 +58,7 @@ class ClientArtifacts extends
     if (!this.state.numClientArtifacts) {
       return (
         <Container>
-        <span>No artworks to show, please register one below</span>
+          <span>No artworks to show, please register one below</span>
         </Container>
       );
     }
