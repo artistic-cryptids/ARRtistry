@@ -103,14 +103,14 @@ contract('ArtifactApplication', async accounts => {
         to = accounts[1];
         tokenId = toBN(1);
         price = toBN(1001);
-        location = "location";
+        location = 'location';
 
         ARR = {
           from: from,
           to: to,
           tokenId: tokenId,
           price: price,
-          location: location
+          location: location,
         };
 
         governance = await Governance.new({ from: creator });
@@ -126,7 +126,7 @@ contract('ArtifactApplication', async accounts => {
         );
 
         await governance.approve(0);
-        
+
         await registry.transfer(from, to, tokenId, 'dud metaUri', price, location);
 
         const result = await artifactApplication.getARR(0);

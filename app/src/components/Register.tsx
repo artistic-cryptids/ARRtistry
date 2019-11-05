@@ -25,6 +25,7 @@ interface SaleProvenance {
 interface RegisterFormFields {
   title: string;
   artistId: string;
+  description: string;
   artifactCreationDate: string;
   medium: string;
   edition: string;
@@ -76,6 +77,7 @@ class Register extends React.Component<Drizzled, RegisterState> {
       fields: {
         title: '',
         artistId: '',
+        description: '',
         edition: '',
         artifactCreationDate: '',
         medium: '',
@@ -299,6 +301,18 @@ class Register extends React.Component<Drizzled, RegisterState> {
             <Form.Control
               required
               type="text"
+              onChange={this.inputChangeHandler}/>
+            {GENERIC_FEEDBACK}
+          </Form.Group>
+        </Form.Row>
+
+        <Form.Row>
+          <Form.Group as={Col} controlId="description">
+            <Form.Label>Description</Form.Label>
+            <Form.Label className="mb-2 text-muted"> (optional)</Form.Label>
+            <Form.Control
+              as="textarea"
+              rows="3"
               onChange={this.inputChangeHandler}/>
             {GENERIC_FEEDBACK}
           </Form.Group>
