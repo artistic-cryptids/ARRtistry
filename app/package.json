@@ -22,7 +22,8 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "build": "react-scripts build",
+    "watch": "npx tsm src --watch",
+    "build": "npx tsm src && react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "lint": "npx eslint './src/**/*.{ts,tsx}'",
