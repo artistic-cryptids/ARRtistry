@@ -3,7 +3,7 @@ import { DrizzleContext } from 'drizzle-react';
 import NetworkAside from './NetworkAside';
 import HomePageNoAccount from './HomePageNoAccount';
 import Container from 'react-bootstrap/Container';
-import { ArtifactView, GovernanceView, RegisterView, ClientArtifactsView } from './Views';
+import { ArtifactView, GovernanceView, RegisterView, RegisterArtistView, ClientArtifactsView } from './Views';
 
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import LeftSidebar from './LeftSidebar';
@@ -41,6 +41,9 @@ const DrizzledApp: React.FC = () => {
             </Route>
             <Route path="/governance">
               <GovernanceView drizzle={drizzle} drizzleState={drizzleState}/>
+            </Route>
+            <Route path ="/new_artist">
+              <RegisterArtistView drizzle={drizzle} drizzleState={drizzleState}/>
             </Route>
             <Route path="/clientArtifacts">
               <ClientArtifactsView drizzle={drizzle} drizzleState={drizzleState}/>
