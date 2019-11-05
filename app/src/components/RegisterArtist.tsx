@@ -7,7 +7,6 @@ import Container from 'react-bootstrap/Container';
 import Form from 'react-bootstrap/Form';
 import Accordion from 'react-bootstrap/Accordion';
 import { FormControlProps } from 'react-bootstrap/FormControl';
-import InputGroup from 'react-bootstrap/InputGroup';
 import Modal from 'react-bootstrap/Modal';
 import Spinner from 'react-bootstrap/Spinner';
 import Fade from 'react-bootstrap/Fade';
@@ -89,8 +88,6 @@ class RegisterArtist extends React.Component<Drizzled, RegisterArtistState> {
 
     const { drizzle, drizzleState } = this.props;
 
-    const currentAccount = drizzleState.accounts[0];
-
     // eslint-disable-next-line
     const { metaIpfsHash, ...restOfTheFields } = this.state.fields;
     const jsonData: any = restOfTheFields;
@@ -109,7 +106,7 @@ class RegisterArtist extends React.Component<Drizzled, RegisterArtistState> {
         gasLimit: 6000000,
       },
     ); // TODO: Catch error when this function fails and display error to user
-    console.log(stackId);
+    console.log(this.state.fields.metaIpfsHash);
 
     this.setState({
       registerTransactionStackId: stackId,
