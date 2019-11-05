@@ -23,20 +23,12 @@ interface RegisterFormFields {
   metaIpfsHash: string;
 }
 
-interface Artist {
-  id: number;
-  name: string;
-  wallet: string;
-  nationality: string;
-  birthYear: string;
-  deathYear: string;
-}
-
 interface RegisterArtistState {
   fields: RegisterFormFields;
   registerTransactionStackId: any;
   validated: boolean;
   submitted: boolean;
+  isGovernor: false;
 }
 
 type InputChangeEvent = React.FormEvent<FormControlProps> &
@@ -61,6 +53,7 @@ class RegisterArtist extends React.Component<Drizzled, RegisterArtistState> {
       registerTransactionStackId: null,
       validated: false,
       submitted: false,
+      isGovernor: false,
       fields: {
         name: '',
         nationality: '',
@@ -72,10 +65,15 @@ class RegisterArtist extends React.Component<Drizzled, RegisterArtistState> {
   };
 
   componentDidMount (): void {
-      const fields = this.state.fields as Pick<RegisterFormFields, keyof RegisterFormFields>;
-      this.setState({
-        fields: fields,
-      });
+    this.props.drizzle.contracts.Governance.methods.isGovernor(this.props.drizzleState.accounts[0]).call()
+      .then((isGovernor: any) => {
+        const fields = this.state.fields as Pick<RegisterFormFields, keyof RegisterFormFields>;
+        this.setState({
+          isGovernor: isGovernor ,
+          fields: fields,
+        });
+      })
+      .catch((err: any) => { console.log(err); });
   };
 
   registerArtist = async (event: React.FormEvent<HTMLFormElement>): Promise<void> => {
@@ -237,43 +235,49 @@ class RegisterArtist extends React.Component<Drizzled, RegisterArtistState> {
 
   // TODO: Make required fields actually required
   render (): React.ReactNode {
+    if (!this.state || this.state.isGovernor) {
+      return (
+        <Container>
+          <h5>
+            Register a new Artist
+          </h5>
+          <hr/>
+          <Row>
+            <Col sm={8}>
+              <Form
+                noValidate
+                validated={this.state.validated}
+                onSubmit={this.registerArtist}
+              >
+                <Accordion defaultActiveKey="0">
+                  <Card>
+                    <Accordion.Toggle as={Card.Header} eventKey="0">
+                      Artist Information
+                    </Accordion.Toggle>
+                    <Accordion.Collapse eventKey="0">
+                      <Card.Body>
+                        {this.renderArtistInformation()}
+                      </Card.Body>
+                    </Accordion.Collapse>
+                  </Card>
+                </Accordion>
+                {this.renderSubmitButton()}
+              </Form>
+            </Col>
+          </Row>
+          <Fade in={this.state.submitted}>
+            <SubmissionModal
+              show={this.state.submitted}
+              onHide={() => this.setState({ submitted: false })}
+              progress={this.progress()}
+            />
+          </Fade>
+        </Container>
+      );
+    }
+
     return (
-      <Container>
-        <h5>
-          Register a new Artist
-        </h5>
-        <hr/>
-        <Row>
-          <Col sm={8}>
-            <Form
-              noValidate
-              validated={this.state.validated}
-              onSubmit={this.registerArtist}
-            >
-              <Accordion defaultActiveKey="0">
-                <Card>
-                  <Accordion.Toggle as={Card.Header} eventKey="0">
-                    Artist Information
-                  </Accordion.Toggle>
-                  <Accordion.Collapse eventKey="0">
-                    <Card.Body>
-                      {this.renderArtistInformation()}
-                    </Card.Body>
-                  </Accordion.Collapse>
-                </Card>
-              </Accordion>
-              {this.renderSubmitButton()}
-            </Form>
-          </Col>
-        </Row>
-        <Fade in={this.state.submitted}>
-          <SubmissionModal
-            show={this.state.submitted}
-            onHide={() => this.setState({ submitted: false })}
-            progress={this.progress()}
-          />
-        </Fade>
-      </Container>
+      <span>You are not an approved moderator</span>
     );
   }
 }
