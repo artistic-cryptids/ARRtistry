@@ -20,6 +20,7 @@ interface RegisterFormFields {
   nationality: string;
   birthYear: string;
   deathYear: string;
+  metaIpfsHash: string;
 }
 
 interface Artist {
@@ -65,6 +66,7 @@ class RegisterArtist extends React.Component<Drizzled, RegisterArtistState> {
         nationality: '',
         birthYear: '',
         deathYear: '',
+        metaIpfsHash:'',
       },
     };
   };
@@ -77,52 +79,45 @@ class RegisterArtist extends React.Component<Drizzled, RegisterArtistState> {
   };
 
   registerArtist = async (event: React.FormEvent<HTMLFormElement>): Promise<void> => {
-  //   event.stopPropagation();
-  //   event.preventDefault();
-  //
-  //   const form = event.currentTarget;
-  //   if (!form.checkValidity()) {
-  //     return;
-  //   }
-  //
-  //   this.setState({ validated: true, submitted: true });
-  //
-  //   const { drizzle, drizzleState } = this.props;
-  //
-  //   const currentAccount = drizzleState.accounts[0];
-  //   // TODO: Update this to real artist's account
-  //   const artist = drizzleState.accounts[0];
-  //
-  //   // eslint-disable-next-line
-  //   const {...restOfTheFields } = this.state.fields;
-  //   const jsonData: any = restOfTheFields;
-  //
-  //   jsonData.previousSalePrice = 0;
-  //   jsonData.saleProvenance = [];
-  //
-  //   const jsonDataBuffer = Buffer.from(JSON.stringify(jsonData));
-  //   const files = Array(jsonDataBuffer);
-  //
-  //   // TODO: this upload takes like 5 seconds. Some kind of loading notification should display
-  //   await this.saveToIpfs(files, this.setMetaHash);
-  //
-  //   const ipfsUrlStart = 'https://ipfs.io/ipfs/';
-  //   const stackId = drizzle.contracts.ArtifactApplication.methods.applyFor.cacheSend(
-  //     currentAccount,
-  //     artist,
-  //     ipfsUrlStart + this.state.fields.metaIpfsHash,
-  //     {
-  //       from: drizzleState.accounts[0],
-  //       gasLimit: 6000000,
-  //     },
-  //   ); // TODO: Catch error when this function fails and display error to user
-  //   console.log(stackId);
-  //
-  //   this.setState({
-  //     registerTransactionStackId: stackId,
-  //   });
+    event.stopPropagation();
+    event.preventDefault();
+
+    const form = event.currentTarget;
+    if (!form.checkValidity()) {
+      return;
+    }
+
+    this.setState({ validated: true, submitted: true });
+
+    const { drizzle, drizzleState } = this.props;
+
+    const currentAccount = drizzleState.accounts[0];
+
+    // eslint-disable-next-line
+    const { metaIpfsHash, ...restOfTheFields } = this.state.fields;
+    const jsonData: any = restOfTheFields;
+
+    const jsonDataBuffer = Buffer.from(JSON.stringify(jsonData));
+    const files = Array(jsonDataBuffer);
+
+    // TODO: this upload takes like 5 seconds. Some kind of loading notification should display
+    await this.saveToIpfs(files, this.setMetaHash);
+
+    const ipfsUrlStart = 'https://ipfs.io/ipfs/';
+    const stackId = drizzle.contracts.Artists.methods.addArtist.cacheSend(
+      ipfsUrlStart + this.state.fields.metaIpfsHash,
+      {
+        from: drizzleState.accounts[0],
+        gasLimit: 6000000,
+      },
+    ); // TODO: Catch error when this function fails and display error to user
+    console.log(stackId);
+
+    this.setState({
+      registerTransactionStackId: stackId,
+    });
   };
-  //
+
   progress = (): number => {
     const { transactions, transactionStack } = this.props.drizzleState;
 
@@ -167,6 +162,10 @@ class RegisterArtist extends React.Component<Drizzled, RegisterArtistState> {
       </Button>;
     }
   }
+
+  setMetaHash = (ipfsId: string): void => {
+    this.setState({ fields: { ...this.state.fields, metaIpfsHash: ipfsId } });
+  };
 
   async saveToIpfs (files: any, afterwardsFunction: (arg0: string) => void): Promise<void> {
     let ipfsId: string;
@@ -235,7 +234,7 @@ class RegisterArtist extends React.Component<Drizzled, RegisterArtistState> {
       </Container>
     );
   };
-  
+
   // TODO: Make required fields actually required
   render (): React.ReactNode {
     return (
