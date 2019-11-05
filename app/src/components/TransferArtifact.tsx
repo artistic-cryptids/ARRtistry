@@ -16,6 +16,7 @@ interface TransferArtifactProps {
 interface TransferArtifactFormFields {
   recipientAddress: string;
   price: string;
+  location: string;
 }
 
 interface TransferArtifactState {
@@ -40,6 +41,7 @@ class TransferArtifact extends React.Component<TransferArtifactProps, TransferAr
       fields: {
         recipientAddress: '',
         price: '',
+        location: '',
       },
       showTransferForm: false,
     };
@@ -76,18 +78,23 @@ class TransferArtifact extends React.Component<TransferArtifactProps, TransferAr
     artifactRegistry.methods.ownerOf(this.props.tokenId).call()
       .then((address: string) => {
         owner = address;
-
-        return this.addProvenance(this.state.fields.price, [this.state.fields.recipientAddress], owner, 'London');
+        console.log(this.state.fields.location);
+        return this.addProvenance(
+          this.state.fields.price,
+          [this.state.fields.recipientAddress],
+          owner,
+          this.state.fields.location
+        );
       })
-      .then((hash: string) => {
+      .then((hash: string) =>
         artifactRegistry.methods.transfer.cacheSend(
           owner,
           this.state.fields.recipientAddress,
           this.props.tokenId,
           hash,
           this.state.fields.price,
-        );
-      })
+          this.state.fields.location,
+        ))
       .catch((err: any) => console.log(err));
   }
 
@@ -112,6 +119,7 @@ class TransferArtifact extends React.Component<TransferArtifactProps, TransferAr
       fields: {
         recipientAddress: '',
         price: '',
+        location: '',
       },
       showTransferForm: false,
     });
@@ -143,6 +151,20 @@ class TransferArtifact extends React.Component<TransferArtifactProps, TransferAr
                 type="text"
                 onChange={this.inputChangeHandler}/>
               {GENERIC_FEEDBACK}
+            </Form.Group>
+            <Form.Group as={Col} controlId="location">
+              <Form.Label>Sale Location</Form.Label>
+              <Form.Label className="mb-2 text-muted">If you do not see your sale location listed below it
+                might be the case the artist is not eligible for ARR</Form.Label>
+              <Form.Control
+                required
+                as="select"
+                onChange={this.inputChangeHandler}>
+                // TODO: Replace with accurate list of applicable sale locations
+                <option>United Kingdom</option>
+                <option>France</option>
+                <option>Germany</option>
+              </Form.Control>
             </Form.Group>
           </Modal.Body>
           <Modal.Footer>

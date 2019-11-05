@@ -13,6 +13,7 @@ type ARRItemState = {
     to: string;
     tokenId: number;
     price: number;
+    location: string;
   };
 }
 
@@ -24,7 +25,6 @@ class ARRItem extends React.Component<ARRItemProps, ARRItemState> {
 
   async loadARR (): Promise<void> {
     this.props.drizzle.contracts.ArtifactApplication.methods.getARR(this.props.id)
-    // this.props.drizzle.contracts.Governance.methods.getARR(0)
       .call()
       .then((ARRData: any): void => {
         const ARR = {
@@ -32,7 +32,9 @@ class ARRItem extends React.Component<ARRItemProps, ARRItemState> {
           to: ARRData[1],
           tokenId: ARRData[2],
           price: ARRData[3],
+          location: ARRData[4],
         };
+        console.log(ARRData);
         this.setState({ ARR: ARR });
         console.log(ARR);
       })
@@ -55,7 +57,8 @@ class ARRItem extends React.Component<ARRItemProps, ARRItemState> {
             From: <i>{arr.from}</i> <br />
             To: <i>{arr.to}</i> <br />
             Price: &euro;{arr.price} <br />
-            ARR: &euro;{arr.price / 10}
+            ARR: &euro;{arr.price / 10} <br />
+            Location: {arr.location} <br />
           </Card.Text>
         </Card.Body>
         <Card.Footer>
