@@ -11,6 +11,7 @@ import {
   faColumns,
   faIdCardAlt,
   faClone,
+  faEuroSign,
   IconDefinition,
 } from '@fortawesome/free-solid-svg-icons';
 import * as styles from './LeftSidebar.module.scss';
@@ -52,7 +53,7 @@ class LeftSidebar extends React.Component<LeftSidebarProps, {}> {
           {this.renderNavItem('Owned', faClone, '/artifacts')}
           <h4 className={styles.section}>Management</h4>
           {this.renderNavItem('Artifact Requests', faStamp, '/proposal')}
-          {this.renderNavItem('ARR', faStamp, '/arr')}
+          {this.renderNavItem('ARR', faEuroSign, '/arr')}
           {this.renderNavItem('Clients', faIdCardAlt, '/clientArtifacts')}
         </Nav>
       </Container>
