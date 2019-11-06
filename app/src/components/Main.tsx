@@ -8,7 +8,7 @@ const BreadCrumb: React.FC<{crumbs: string[]}> = ({ crumbs }) => {
   return <div className={styles.breadcrumb}>
     {crumbs.map((value: string, index: number) => {
       return <>
-        <a href="" className={styles.link}>{value}</a>
+        <a className={styles.link}>{value}</a>
         {index === (crumbs.length - 1) ? null : <span className={styles.separator}></span>}
       </>;
     })}
@@ -26,7 +26,7 @@ const UserCard: React.FC<{user: User}> = ({ user }) => {
     <div className={styles.blueGradient + ' ' + styles.cardUp}>
     </div>
     <div className={'mx-auto white ' + styles.avatar}>
-      <img src={user.img} className="rounded-circle img-fluid"/>
+      <img src={user.img} className="rounded-circle img-fluid" alt='avatar'/>
     </div>
     <Card.Body>
       <h4 className="font-weight-bold mb-4">{user.name} <small>{user.role}</small></h4>
@@ -38,7 +38,7 @@ const UserCard: React.FC<{user: User}> = ({ user }) => {
 const UserDropdown: React.FC<{user: User}> = ({ user }) => {
   return <Dropdown as={NavItem} alignRight>
     <Dropdown.Toggle as={NavLink} id="nav-dropdown">
-      <img src={user.img} className="rounded-circle z-depth-0" style={{ 'width': '3rem' }}/>
+      <img src={user.img} className="rounded-circle z-depth-0" style={{ 'width': '3rem' }} alt='avatar'/>
     </Dropdown.Toggle>
     <Dropdown.Menu className={styles.avatarDropdown}>
       <UserCard user={user}/>
