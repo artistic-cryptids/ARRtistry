@@ -14,4 +14,9 @@ $theme-colors: (
   "primary": $midnight-blue,
 );
 
-$font-family: 'Poppins', sans-serif;
+$font-family-sans-serif: 'Poppins', sans-serif;
+$enable-shadows: true;
+
+@import "node_modules/bootstrap/scss/functions";
+@import "node_modules/bootstrap/scss/variables";
+@import "node_modules/bootstrap/scss/mixins";

@@ -1,0 +1,66 @@
+@import "../config";
+
+.header {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -ms-flex-wrap: wrap;
+  flex-wrap: wrap;
+  padding-left: 1.5rem!important;
+
+  .title {
+    margin: 0;
+    padding: 0 0.65rem 0 0;
+    font-size: 1.3rem;
+    font-weight: 500;
+    color: #595d6e;
+  }
+
+  .breadcrumb {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    list-style-type: none;
+    -ms-flex-wrap: wrap;
+    flex-wrap: wrap;
+    align-self: flex-end;
+    margin: 0;
+    padding: 0;
+
+
+    .link {
+      padding: 0 .35rem 0 0;
+      font-size: .8rem;
+      font-weight: 500;
+      color: #959cb6;
+      -webkit-transition: all .3s;
+      transition: all .3s;
+    }
+
+    .separator {
+      padding: 0 .45rem 0 0;
+
+      &:after {
+        display: block;
+        width: 4px;
+        height: 4px;
+        border-radius: 50%;
+        content: " ";
+        background: rgba(149,156,182,.5);
+      }
+    }
+  }
+}
+
+.breadcrumb, .header {
+  color: inherit;
+}
