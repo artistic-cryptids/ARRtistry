@@ -9,10 +9,9 @@ import Accordion from 'react-bootstrap/Accordion';
 import { FormControlProps } from 'react-bootstrap/FormControl';
 import InputGroup from 'react-bootstrap/InputGroup';
 import Spinner from 'react-bootstrap/Spinner';
-import Fade from 'react-bootstrap/Fade';
 import ipfs from '../ipfs';
 import { Drizzled } from 'drizzle';
-import LoadingModal from './common/LoadingModal';
+import TransactionLoadingModal from './common/TransactionLoadingModal';
 
 interface SaleProvenance {
   price: string;
@@ -62,11 +61,6 @@ type InputChangeEvent = React.FormEvent<FormControlProps> &
 const GENERIC_FEEDBACK = <Form.Control.Feedback>Looks good!</Form.Control.Feedback>;
 
 class Register extends React.Component<Drizzled, RegisterState> {
-  SUBMISSION_STARTED = 10;
-  TRANSACTION_REGISTERED = 30;
-  TRANSACTION_APPROVED = 60;
-  SUBMISSION_FINISHED = 100;
-
   constructor (props: Drizzled) {
     super(props);
     this.state = {
@@ -178,29 +172,6 @@ class Register extends React.Component<Drizzled, RegisterState> {
     this.setState({
       registerTransactionStackId: stackId,
     });
-  };
-
-  progress = (): number => {
-    const { transactions, transactionStack } = this.props.drizzleState;
-
-    if (this.state.registerTransactionStackId == null && !!this.state.submitted) {
-      return this.SUBMISSION_STARTED;
-    }
-
-    const registerTransactionHash = transactionStack[this.state.registerTransactionStackId];
-    if (!registerTransactionHash) {
-      return this.TRANSACTION_REGISTERED;
-    }
-
-    if (!transactions[registerTransactionHash]) {
-      return this.TRANSACTION_APPROVED;
-    }
-
-    if (transactions[registerTransactionHash].status === 'success') {
-      return this.SUBMISSION_FINISHED;
-    } else {
-      return -1;
-    }
   };
 
   renderSubmitButton = (): React.ReactNode => {
@@ -449,14 +420,13 @@ class Register extends React.Component<Drizzled, RegisterState> {
             </Form>
           </Col>
         </Row>
-        <Fade in={this.state.submitted}>
-          <LoadingModal
-            show={this.state.submitted}
-            onHide={() => this.setState({ submitted: false })}
-            progress={this.progress()}
-            title="Submitting your Artifact..."
-          />
-        </Fade>
+        <TransactionLoadingModal
+          drizzleState={this.props.drizzleState}
+          onHide={() => this.setState({ submitted: false })}
+          submitted={this.state.submitted}
+          transactionStackId={this.state.registerTransactionStackId}
+          title="Submitting your Artifact..."
+        />
       </Container>
     );
   }
