@@ -88,9 +88,11 @@ const DocumentDropZone: React.FC = () => {
     });
   });
   return <div style={{
-    position: 'relative',
-    overflow: 'hidden',
-    display: 'inline-block',
+    position: 'absolute',
+    top: '75%',
+    left: '50%',
+    transform: 'translateX(-50%',
+    boxShadow: '0 5px 30px 5px rgba(0, 0, 0, 0.2)'
   }}>
     <input
       className="btn"
@@ -120,6 +122,7 @@ const DocumentDropZone: React.FC = () => {
     <Button>
       Upload Documents
     </Button>
+    <FileList/>
   </div>;
 }
 
@@ -131,7 +134,7 @@ const RegisterArtifact: React.FC<ContractProps> = ({ contracts }) => {
           <Col sm={4}>
             <ImageDropZone/>
             <DocumentDropZone/>
-            <FileList/>
+
           </Col>
           <Col sm={8}>
             <RegisterFieldLayout/>
