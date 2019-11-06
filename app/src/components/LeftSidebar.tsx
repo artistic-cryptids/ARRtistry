@@ -12,6 +12,7 @@ import {
   faIdCardAlt,
   faClone,
   faEuroSign,
+  faPalette,
   IconDefinition,
 } from '@fortawesome/free-solid-svg-icons';
 import * as styles from './LeftSidebar.module.scss';
@@ -49,12 +50,14 @@ class LeftSidebar extends React.Component<LeftSidebarProps, {}> {
           <h4 className={styles.section}>Dashboards</h4>
           {this.renderNavItem('Home', faColumns, '/')}
           <h4 className={styles.section}>Artifacts</h4>
-          {this.renderNavItem('New', faFingerprint, '/new')}
-          {this.renderNavItem('Owned', faClone, '/artifacts')}
+          {this.renderNavItem('New', faFingerprint, '/artifact/new')}
+          {this.renderNavItem('Owned', faClone, '/artifact/list')}
           <h4 className={styles.section}>Management</h4>
-          {this.renderNavItem('Artifact Requests', faStamp, '/proposal')}
-          {this.renderNavItem('ARR', faEuroSign, '/arr')}
-          {this.renderNavItem('Clients', faIdCardAlt, '/clientArtifacts')}
+          {this.renderNavItem('Artifact Requests', faStamp, '/manage/proposal')}
+          {this.renderNavItem('ARR', faEuroSign, '/manage/arr')}
+          {this.renderNavItem('Clients', faIdCardAlt, '/client/all/artifact')}
+          <h4 className={styles.section}>Artists</h4>
+          {this.renderNavItem('New', faPalette, '/artist/new')}
         </Nav>
       </Container>
     );
