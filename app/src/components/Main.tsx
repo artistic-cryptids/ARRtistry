@@ -61,7 +61,7 @@ const Header: React.FC<{page: string; parents: string[]}> = ({ page, parents }) 
           <UserDropdown user={{
             name: 'Anna Doe',
             img: 'https://mdbootstrap.com/img/Photos/Avatars/img%20%2820%29.jpg',
-            role: 'DACS'
+            role: 'DACS',
           }}/>
         </Nav>
       </Navbar.Collapse>
