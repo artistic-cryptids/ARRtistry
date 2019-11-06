@@ -3,8 +3,10 @@ import Button from 'react-bootstrap/Button';
 import Col from 'react-bootstrap/Col';
 import Form from 'react-bootstrap/Form';
 import { FormControlProps } from 'react-bootstrap/FormControl';
+import Fade from 'react-bootstrap/Fade';
 import Modal from 'react-bootstrap/Modal';
 import ipfs from '../ipfs';
+import SubmissionModal from './common/SubmissionModal';
 
 interface TransferArtifactProps {
   drizzle: any;
@@ -22,6 +24,8 @@ interface TransferArtifactFormFields {
 interface TransferArtifactState {
   fields: TransferArtifactFormFields;
   showTransferForm: boolean;
+  submitted: boolean;
+  transactionStackId: any;
 }
 
 type InputChangeEvent = React.FormEvent<FormControlProps> &
@@ -35,6 +39,11 @@ type InputChangeEvent = React.FormEvent<FormControlProps> &
 const GENERIC_FEEDBACK = <Form.Control.Feedback>Looks good!</Form.Control.Feedback>;
 
 class TransferArtifact extends React.Component<TransferArtifactProps, TransferArtifactState> {
+  SUBMISSION_STARTED = 10;
+  TRANSACTION_REGISTERED = 30;
+  TRANSACTION_APPROVED = 60;
+  SUBMISSION_FINISHED = 100;
+
   constructor (props: TransferArtifactProps) {
     super(props);
     this.state = {
@@ -44,6 +53,8 @@ class TransferArtifact extends React.Component<TransferArtifactProps, TransferAr
         location: '',
       },
       showTransferForm: false,
+      submitted: false,
+      transactionStackId: null,
     };
   }
 
@@ -74,6 +85,9 @@ class TransferArtifact extends React.Component<TransferArtifactProps, TransferAr
   transferArtwork = (_: React.FormEvent): void => {
     const artifactRegistry = this.props.drizzle.contracts.ArtifactRegistry;
     let owner = '';
+    this.setState({
+      submitted: true,
+    });
 
     artifactRegistry.methods.ownerOf(this.props.tokenId).call()
       .then((address: string) => {
@@ -86,15 +100,20 @@ class TransferArtifact extends React.Component<TransferArtifactProps, TransferAr
           this.state.fields.location,
         );
       })
-      .then((hash: string) =>
-        artifactRegistry.methods.transfer.cacheSend(
+      .then((hash: string) => {
+        const stackId = artifactRegistry.methods.transfer.cacheSend(
           owner,
           this.state.fields.recipientAddress,
           this.props.tokenId,
           hash,
           this.state.fields.price,
           this.state.fields.location,
-        ))
+        );
+
+        this.setState({
+          transactionStackId: stackId,
+        });
+      })
       .catch((err: any) => console.log(err));
   }
 
@@ -124,6 +143,29 @@ class TransferArtifact extends React.Component<TransferArtifactProps, TransferAr
       showTransferForm: false,
     });
   }
+
+  progress = (): number => {
+    const { transactions, transactionStack } = this.props.drizzleState;
+
+    if (this.state.transactionStackId == null && this.state.submitted) {
+      return this.SUBMISSION_STARTED;
+    }
+
+    const transactionHash = transactionStack[this.state.transactionStackId];
+    if (!transactionHash) {
+      return this.TRANSACTION_REGISTERED;
+    }
+
+    if (!transactions[transactionHash]) {
+      return this.TRANSACTION_APPROVED;
+    }
+
+    if (transactions[transactionHash].status === 'success') {
+      return this.SUBMISSION_FINISHED;
+    } else {
+      return -1;
+    }
+  };
 
   render (): React.ReactNode {
     return (
@@ -176,7 +218,14 @@ class TransferArtifact extends React.Component<TransferArtifactProps, TransferAr
             </Button>
           </Modal.Footer>
         </Modal>
-
+        <Fade in={this.state.submitted}>
+          <SubmissionModal
+            show={this.state.submitted}
+            onHide={() => this.setState({ submitted: false })}
+            progress={this.progress()}
+            title="Registering sale..."
+          />
+        </Fade>
       </div>
     );
   }
