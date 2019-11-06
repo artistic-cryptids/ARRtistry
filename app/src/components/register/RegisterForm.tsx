@@ -76,7 +76,7 @@ export const DEFAULT_FILE_STATE = {
 };
 
 export const TextFieldContext = React.createContext<TextFields>(DEFAULT_TEXT_FIELDS);
-export const SetValueContext = React.createContext<(name: string, value: string) => void>(_n, _v) => {};
+export const SetValueContext = React.createContext<(name: string, value: string) => void>((_n, _v) => {});
 export const ErrorsContext = React.createContext<ErrorMessages>(DEFAULT_ERRORS);
 export const FormStatusContext = React.createContext<FormStatus>(DEFAULT_FORM_STATUS);
 export const FilesContext = React.createContext<FileState>(DEFAULT_FILE_STATE);
