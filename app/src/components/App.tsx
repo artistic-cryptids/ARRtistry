@@ -31,11 +31,11 @@ const DrizzledApp: React.FC = () => {
             <Route exact path="/">
               <HomePageNoAccount/>
             </Route>
-            <Route path="/artifact/all">
-              <ArtifactView drizzle={drizzle} drizzleState={drizzleState}/>
-            </Route>
             <Route path="/artifact/new">
               <RegisterView drizzle={drizzle} drizzleState={drizzleState}/>
+            </Route>
+            <Route path="/artifact">
+              <ArtifactView drizzle={drizzle} drizzleState={drizzleState}/>
             </Route>
             <Route path="/manage/proposal">
               <ProposalView drizzle={drizzle} drizzleState={drizzleState}/>
