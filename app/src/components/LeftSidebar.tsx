@@ -11,7 +11,7 @@ import {
   faColumns,
   faIdCardAlt,
   faClone,
-  IconDefinition
+  IconDefinition,
 } from '@fortawesome/free-solid-svg-icons';
 import * as styles from './LeftSidebar.module.scss';
 
@@ -20,7 +20,7 @@ interface LeftSidebarProps {
 }
 
 class LeftSidebar extends React.Component<LeftSidebarProps, {}> {
-  private renderNavItem(name: string, icon: IconDefinition, path: string) {
+  private renderNavItem (name: string, icon: IconDefinition, path: string): React.ReactNode {
     return (
       <Nav.Item className={styles.navItem}>
         <Nav.Link to={path} as={Link} bsPrefix={'nav-link ' + styles.navLink}>
@@ -46,14 +46,14 @@ class LeftSidebar extends React.Component<LeftSidebarProps, {}> {
         <hr/>
         <Nav className={'flex-column ' + styles.sidebarSticky} as={Col}>
           <h4 className={styles.section}>Dashboards</h4>
-          {this.renderNavItem("Home", faColumns, "/")}
+          {this.renderNavItem('Home', faColumns, '/')}
           <h4 className={styles.section}>Artifacts</h4>
-          {this.renderNavItem("New", faFingerprint, "/new")}
-          {this.renderNavItem("Owned", faClone, "/artifacts")}
+          {this.renderNavItem('New', faFingerprint, '/new')}
+          {this.renderNavItem('Owned', faClone, '/artifacts')}
           <h4 className={styles.section}>Management</h4>
-          {this.renderNavItem("Artifact Requests", faStamp, "/proposal")}
-          {this.renderNavItem("ARR", faStamp, "/arr")}
-          {this.renderNavItem("Clients", faIdCardAlt, "/clientArtifacts")}
+          {this.renderNavItem('Artifact Requests', faStamp, '/proposal')}
+          {this.renderNavItem('ARR', faStamp, '/arr')}
+          {this.renderNavItem('Clients', faIdCardAlt, '/clientArtifacts')}
         </Nav>
       </Container>
     );
