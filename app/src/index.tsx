@@ -12,6 +12,8 @@ import ArtifactRegistry from './contracts/ArtifactRegistry.json';
 import Artists from './contracts/Artists.json';
 
 import './theme.scss';
+import Web3 from 'web3'; 
+const contract = require("@truffle/contract");
 
 const options: DrizzleOptions = {
   contracts: [ArtifactApplication, Governance, ArtifactRegistry, Artists],
@@ -23,8 +25,40 @@ const options: DrizzleOptions = {
   },
 };
 
+const doApp = async (): Promise<void> => {
+  const provider = new Web3.providers.HttpProvider("http://localhost:8545");
+  const governanceNonDeployed = contract(Governance);
+  const artifactApplicationNonDeployed = contract(ArtifactApplication);
+  const artifactRegistryNonDeployed = contract(ArtifactRegistry);
+  const artistsNonDeployed = contract(Artists);
+  governanceNonDeployed.setProvider(provider);
+  artifactApplicationNonDeployed.setProvider(provider);
+  artifactRegistryNonDeployed.setProvider(provider);
+  artistsNonDeployed.setProvider(provider);
+
+  const gov = await governanceNonDeployed.deployed()
+  const artiApp = await artifactApplicationNonDeployed.deployed()
+  const artiReg = await artifactRegistryNonDeployed.deployed()
+  const artists = await artistsNonDeployed.deployed()
+
+  const contracts = {
+    Governance: gov,
+    ArtifactApplication: artiApp,
+    ArtifactRegistry: artiReg, 
+    Artists: artists
+  }
+
+  /*ReactDOM.render(
+    <App contracts={ contracts }/>,
+    document.getElementById('root'),
+  );*/
+}
+
+
+
 const drizzleStore = generateStore({ drizzleOptions: options });
 const drizzle = new Drizzle(options, drizzleStore);
+
 
 ReactDOM.render(
   <DrizzleContext.Provider drizzle={ drizzle }>
