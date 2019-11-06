@@ -1,8 +1,8 @@
-import * as React from "react";
+import * as React from 'react';
 
-import Button from "react-bootstrap/Button";
-import Spinner from "react-bootstrap/Spinner";
-import { FormStatusContext } from "./RegisterForm";
+import Button from 'react-bootstrap/Button';
+import Spinner from 'react-bootstrap/Spinner';
+import { FormStatusContext } from './RegisterForm';
 
 const FormSubmitButton: React.FC = () => {
   const formStatus = React.useContext(FormStatusContext);
@@ -22,6 +22,6 @@ const FormSubmitButton: React.FC = () => {
     </Button>;
   }
   return <Button type="submit" className="my-2 btn-block" disabled variant="primary">Submit</Button>;
-}
+};
 
 export default FormSubmitButton;

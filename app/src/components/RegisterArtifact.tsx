@@ -1,25 +1,33 @@
-import { RegisterForm, DEFAULT_ERRORS, RegisterOnSubmit, TextFields, ErrorMessages, FilesContext, Document } from "./register/RegisterForm";
-import * as React from "react";
-import Accordion from "react-bootstrap/Accordion";
-import Card from "react-bootstrap/Card";
-import FormSubmitButton from "./register/FormSubmitButton";
-import { ArtistProvider } from "../providers/ArtistProvider";
-import { ContractProps } from "../helper/eth";
-import ArtistSelection from "./register/ArtistSelection";
-import RegisterFields from "./register/RegisterFields";
-import Row from "react-bootstrap/Row";
-import Col from "react-bootstrap/Col";
-import DropZone from "./register/DropZone";
-import ListGroup from "react-bootstrap/ListGroup";
-import Button from "react-bootstrap/Button";
+import {
+  RegisterForm,
+  DEFAULT_ERRORS,
+  RegisterOnSubmit,
+  TextFields,
+  ErrorMessages,
+  FilesContext,
+  Document,
+} from './register/RegisterForm';
+import * as React from 'react';
+import Accordion from 'react-bootstrap/Accordion';
+import Card from 'react-bootstrap/Card';
+import FormSubmitButton from './register/FormSubmitButton';
+import { ArtistProvider } from '../providers/ArtistProvider';
+import { ContractProps } from '../helper/eth';
+import ArtistSelection from './register/ArtistSelection';
+import RegisterFields from './register/RegisterFields';
+import Row from 'react-bootstrap/Row';
+import Col from 'react-bootstrap/Col';
+import DropZone from './register/DropZone';
+import ListGroup from 'react-bootstrap/ListGroup';
+import Button from 'react-bootstrap/Button';
 
-const registerArtifact: RegisterOnSubmit = async ({fields}, _event): Promise<void> => {
+const registerArtifact: RegisterOnSubmit = async ({ fields }, _event): Promise<void> => {
   console.log(fields);
 };
 
 const registerValidator: (textFields: TextFields) => ErrorMessages = (_fields) => {
   return DEFAULT_ERRORS;
-}
+};
 
 const FileList: React.FC = () => {
   const { files } = React.useContext(FilesContext);
@@ -30,7 +38,7 @@ const FileList: React.FC = () => {
       </ListGroup.Item>;
     })}
   </ListGroup>;
-}
+};
 
 const RegisterFieldLayout: React.FC = () => {
   return <>
@@ -49,19 +57,19 @@ const RegisterFieldLayout: React.FC = () => {
     </Accordion>
     <FormSubmitButton/>
   </>;
-}
+};
 
 const ImageDropZone: React.FC = () => {
   const { files, setFiles } = React.useContext(FilesContext);
   return <DropZone popup callback={(hash: string) => {
-    setFiles({...files, image: hash});
+    setFiles({ ...files, image: hash });
   }}/>;
-}
+};
 
 const DocumentDropZone: React.FC = () => {
   const { files, setFiles } = React.useContext(FilesContext);
 
-  const onDrop = ((acceptedFiles: any): void => {
+  const onDrop = (acceptedFiles: any): void => {
     const documents = files.documents;
     for (const file of acceptedFiles) {
       let newDoc = true;
@@ -86,13 +94,13 @@ const DocumentDropZone: React.FC = () => {
       ...files,
       documents: documents,
     });
-  });
+  };
   return <div style={{
     position: 'absolute',
     top: '75%',
     left: '50%',
     transform: 'translateX(-50%',
-    boxShadow: '0 5px 30px 5px rgba(0, 0, 0, 0.2)'
+    boxShadow: '0 5px 30px 5px rgba(0, 0, 0, 0.2)',
   }}>
     <input
       className="btn"
@@ -124,7 +132,7 @@ const DocumentDropZone: React.FC = () => {
     </Button>
     <FileList/>
   </div>;
-}
+};
 
 const RegisterArtifact: React.FC<ContractProps> = ({ contracts }) => {
   return (
@@ -143,6 +151,6 @@ const RegisterArtifact: React.FC<ContractProps> = ({ contracts }) => {
       </RegisterForm>
     </ArtistProvider>
   );
-}
+};
 
 export default RegisterArtifact;

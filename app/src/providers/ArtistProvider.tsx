@@ -1,4 +1,4 @@
-import * as React from "react";
+import * as React from 'react';
 
 export interface Artist {
   id: number;
@@ -18,8 +18,8 @@ export const ArtistContext = React.createContext<Artists>({} as any);
 export const ArtistProvider: React.FC<{artistContract: any}> = ({ artistContract, children }) => {
   const [artists, setArtists] = React.useState<Artist[]>([]);
 
-  React.useEffect( () => {
-    const updateArtists = async () => {
+  React.useEffect(() => {
+    const updateArtists = async (): Promise<void> => {
       const total = await artistContract.getArtistsTotal();
       const artists = [];
 
@@ -38,10 +38,10 @@ export const ArtistProvider: React.FC<{artistContract: any}> = ({ artistContract
   }, [artistContract]);
 
   return (
-    <ArtistContext.Provider value={{artists: artists}}>
+    <ArtistContext.Provider value={{ artists: artists }}>
       { children }
     </ArtistContext.Provider>
   );
-}
+};
 
 export const useArtistContext: () => Artists = () => React.useContext<Artists>(ArtistContext);

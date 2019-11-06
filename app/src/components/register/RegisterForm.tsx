@@ -46,7 +46,7 @@ export const DEFAULT_TEXT_FIELDS = {
   artifactCreationDate: '',
   medium: '',
   width: '',
-  height: ''
+  height: '',
 };
 
 export const DEFAULT_ERRORS: ErrorMessages = {
@@ -57,27 +57,26 @@ export const DEFAULT_ERRORS: ErrorMessages = {
   artifactCreationDate: null,
   medium: null,
   width: null,
-  height: null
+  height: null,
 };
 
 export const DEFAULT_FILES = {
   image: '',
-  documents: []
+  documents: [],
 };
 
 export const DEFAULT_FORM_STATUS = {
   validated: false,
-  submitted: false
-}
+  submitted: false,
+};
 
 export const DEFAULT_FILE_STATE = {
   files: DEFAULT_FILES,
-  setFiles: (files: Files) => {console.warn(files)}
-}
-
+  setFiles: (files: Files) => { console.warn(files); },
+};
 
 export const TextFieldContext = React.createContext<TextFields>(DEFAULT_TEXT_FIELDS);
-export const SetValueContext = React.createContext<(name: string, value: string) => void>((_n, _v) => {});
+export const SetValueContext = React.createContext<(name: string, value: string) => void>(_n, _v) => {};
 export const ErrorsContext = React.createContext<ErrorMessages>(DEFAULT_ERRORS);
 export const FormStatusContext = React.createContext<FormStatus>(DEFAULT_FORM_STATUS);
 export const FilesContext = React.createContext<FileState>(DEFAULT_FILE_STATE);
@@ -102,7 +101,7 @@ export interface RegisterProps {
   validator: (textFields: TextFields) => ErrorMessages;
 }
 
-const removeEmpty = (obj: { [x: string]: any; }) => {
+const removeEmpty = (obj: { [x: string]: any }) => {
   Object.keys(obj).forEach(key => obj[key] == null && delete obj[key]);
 };
 
@@ -115,49 +114,49 @@ const RegisterForm: React.FC<RegisterProps> = ({ onSubmit, validator, children }
   const _setField = (id: string, value: string) => {
     setTextFields({
       ...textFields,
-      [id]: value
+      [id]: value,
     });
-  }
+  };
 
   const clearForm = () => {
     setTextFields(DEFAULT_TEXT_FIELDS);
     setErrors(DEFAULT_ERRORS);
     setFiles(DEFAULT_FILES);
     setFormStatus(DEFAULT_FORM_STATUS);
-  }
+  };
 
   const _onSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    setFormStatus({...formStatus, submitted: true});
+    setFormStatus({ ...formStatus, submitted: true });
     const errors = _validate();
     setErrors(errors);
-    await onSubmit({errors: errors, fields: textFields}, event);
+    await onSubmit({ errors: errors, fields: textFields }, event);
     clearForm();
-  }
+  };
 
   const _validate = () => {
-    let errors = validator(textFields);
+    const errors = validator(textFields);
     removeEmpty(errors);
     const hasErrors = Object.keys(errors).length > 0;
     if (hasErrors) {
       return errors;
     }
-    setFormStatus({...formStatus, validated: true});
+    setFormStatus({ ...formStatus, validated: true });
     return DEFAULT_ERRORS;
-  }
+  };
 
   return (
     <TextFieldContext.Provider value={textFields}>
       <SetValueContext.Provider value={_setField}>
         <ErrorsContext.Provider value={errors}>
           <FormStatusContext.Provider value={formStatus}>
-            <FilesContext.Provider value={{files: files, setFiles: setFiles}}>
+            <FilesContext.Provider value={{ files: files, setFiles: setFiles }}>
               <Form
                 noValidate
                 validated={formStatus.validated}
                 onSubmit={_onSubmit}
               >
-              { children }
+                { children }
               </Form>
             </FilesContext.Provider>
           </FormStatusContext.Provider>
@@ -169,4 +168,4 @@ const RegisterForm: React.FC<RegisterProps> = ({ onSubmit, validator, children }
 
 export {
   RegisterForm,
-}
+};
