@@ -1,0 +1,221 @@
+@import "../variables.scss";
+
+body {
+  font-size: .875rem;
+}
+
+.feather {
+  width: 16px;
+  height: 16px;
+  vertical-align: text-bottom;
+}
+$primary: map-get($theme-colors, 'primary');
+
+$toggle-color: lighten($primary, 20%);
+$hover-color: #fff;
+$navlink-color: lighten($primary, 30%);//#d8e1fe;
+$muted-color: lighten($primary, 20%);
+$background-color: $primary;
+/*
+ * Sidebar
+ */
+
+.sidebar {
+  position: fixed!important;
+  top: 30px;
+  bottom: 30px;
+  left: 30px;
+  z-index: 2; /* Behind the navbar */
+  background-color: $background-color;
+  box-shadow: 0 0 28px 0 rgba(82, 63, 105, .13);
+  border-radius: 0.3rem;
+  overflow: auto;
+
+  .navItem {
+    text-align: left;
+    padding: 8px 0;
+
+    &:hover {
+      .navLink {
+        color: $hover-color;
+
+        svg {
+          color: $hover-color;
+        }
+      }
+    }
+  }
+
+  .navLink {
+    font-weight: 500;
+    color: $navlink-color;
+    padding: 0 .5rem;
+
+    svg {
+      color: $muted-color;
+      margin-right: .5rem;
+
+    }
+  }
+
+  .section {
+    color: $muted-color;
+    font-size: .83rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: .3px;
+    padding: 1rem .5rem 0 .5rem;
+  }
+
+  .brand {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-pack: justify;
+    -ms-flex-pack: justify;
+    justify-content: space-between;
+    -webkit-box-align: flex-end;
+    -ms-flex-align: flex-end;
+    align-items: flex-end;
+    -webkit-box-orient: horizontal;
+    -webkit-box-direction: normal;
+    -ms-flex-direction: row;
+    flex-direction: row;
+    padding: 0 1.5rem;
+    height: 50px;
+    background-color: $background-color;
+    position: relative;
+    border-top-left-radius: 4px;
+    border-top-right-radius: 4px;
+  }
+
+  .brandLogo {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex: 1 1 auto!important;
+    flex: 1 1 auto!important;
+  }
+
+  .brandLogo a {
+    font-size: 1rem;
+    margin: 0;
+    padding: 0 1rem 0 0;
+    font-weight: 500;
+    color: $hover-color;
+
+    &:hover, &:visited {
+      text-decoration: none;
+      color: $hover-color;
+    }
+  }
+
+  .brandToggle {
+    display: inline-block;
+    position: relative;
+    overflow: hidden;
+    margin: 0;
+    padding: 0;
+    font-size: 0;
+    text-indent: -9999px;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    -webkit-box-shadow: none;
+    box-shadow: none;
+    border-radius: none;
+    border: none;
+    cursor: pointer;
+    background: 0 0;
+    outline: 0!important;
+    width: 26px;
+    height: 26px;
+    -webkit-transition: all .4s ease;
+    transition: all .4s ease;
+
+    &:hover span {
+      background: $hover-color;
+
+      &::before {
+        width: 100%;
+      }
+
+      &::after {
+        width: 100%;
+      }
+    }
+
+    span {
+      background: $toggle-color;
+      display: block;
+      position: absolute;
+      top: 12px;
+      height: 2px;
+      min-height: 2px;
+      width: 100%;
+      border-radius: 2px;
+      -webkit-transition: all .4s ease;
+      transition: all .4s ease;
+
+      &::before, &::after {
+        @extend span;
+        left: 0;
+        content: "";
+      }
+
+      &::before {
+        top: -8px;
+        -webkit-transition: all .4s ease;
+        transition: all .4s ease;
+        left: auto;
+        right: 0;
+        width: 50%;
+      }
+
+      &::after {
+        top: 8px;
+        -webkit-transition: all .4s ease;
+        transition: all .4s ease;
+        left: auto;
+        right: 0;
+        width: 75%;
+      }
+    }
+  }
+
+  .brandTools {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-pack: end;
+    -ms-flex-pack: end;
+    justify-content: flex-end;
+  }
+}
+
+hr {
+  border: 0;
+  padding: 0;
+  border-top: 2px solid rgba(255,255,255,.1);
+}
+
+.sidebarSticky {
+  position: relative;
+  top: 0;
+  height: calc(100vh - 48px);
+  padding-top: .5rem;
+  overflow-x: hidden;
+  overflow-y: auto; /* Scrollable contents if viewport is shorter than content. */
+}
+
+@supports ((position: -webkit-sticky) or (position: sticky)) {
+  .sidebarSticky {
+    position: -webkit-sticky;
+    position: sticky;
+  }
+}
+
+.sidebarHeading {
+  font-size: .75rem;
+  text-transform: uppercase;
+}
