@@ -3,7 +3,7 @@ import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import ProgressBar from 'react-bootstrap/ProgressBar';
 
-const SubmissionModal = (props: {show: boolean; onHide: () => void; progress: number; title: string}): JSX.Element => {
+const LoadingModal = (props: {show: boolean; onHide: () => void; progress: number; title: string}): JSX.Element => {
   return (
     <Modal
       {...props }
@@ -26,4 +26,4 @@ const SubmissionModal = (props: {show: boolean; onHide: () => void; progress: nu
   );
 };
 
-export default SubmissionModal;
+export default LoadingModal;

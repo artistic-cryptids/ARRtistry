@@ -11,7 +11,7 @@ import Spinner from 'react-bootstrap/Spinner';
 import Fade from 'react-bootstrap/Fade';
 import ipfs from '../ipfs';
 import { Drizzled } from 'drizzle';
-import SubmissionModal from './common/SubmissionModal';
+import LoadingModal from './common/LoadingModal';
 
 interface RegisterFormFields {
   name: string;
@@ -262,7 +262,7 @@ class RegisterArtist extends React.Component<Drizzled, RegisterArtistState> {
             </Col>
           </Row>
           <Fade in={this.state.submitted}>
-            <SubmissionModal
+            <LoadingModal
               show={this.state.submitted}
               onHide={() => this.setState({ submitted: false })}
               progress={this.progress()}

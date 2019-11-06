@@ -6,7 +6,7 @@ import { FormControlProps } from 'react-bootstrap/FormControl';
 import Fade from 'react-bootstrap/Fade';
 import Modal from 'react-bootstrap/Modal';
 import ipfs from '../ipfs';
-import SubmissionModal from './common/SubmissionModal';
+import LoadingModal from './common/LoadingModal';
 
 interface TransferArtifactProps {
   drizzle: any;
@@ -219,7 +219,7 @@ class TransferArtifact extends React.Component<TransferArtifactProps, TransferAr
           </Modal.Footer>
         </Modal>
         <Fade in={this.state.submitted}>
-          <SubmissionModal
+          <LoadingModal
             show={this.state.submitted}
             onHide={() => this.setState({ submitted: false })}
             progress={this.progress()}
