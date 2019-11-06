@@ -13,9 +13,15 @@ export interface TextFields {
   height: string;
 }
 
+export interface Document {
+  filename: string;
+  data: any;
+  metauri?: string;
+}
+
 export interface Files {
   image: string;
-  documents: string[];
+  documents: Document[];
 }
 
 export interface FormStatus {
@@ -25,6 +31,11 @@ export interface FormStatus {
 
 export type ErrorMessages = {
   [K in keyof TextFields]: React.ReactElement | null;
+}
+
+export interface FileState {
+  files: Files;
+  setFiles: (files: Files) => void;
 }
 
 export const DEFAULT_TEXT_FIELDS = {
@@ -59,12 +70,17 @@ export const DEFAULT_FORM_STATUS = {
   submitted: false
 }
 
+export const DEFAULT_FILE_STATE = {
+  files: DEFAULT_FILES,
+  setFiles: (files: Files) => {console.warn(files)}
+}
+
 
 export const TextFieldContext = React.createContext<TextFields>(DEFAULT_TEXT_FIELDS);
 export const SetValueContext = React.createContext<(name: string, value: string) => void>((_n, _v) => {});
 export const ErrorsContext = React.createContext<ErrorMessages>(DEFAULT_ERRORS);
 export const FormStatusContext = React.createContext<FormStatus>(DEFAULT_FORM_STATUS);
-export const FilesContext = React.createContext<{files: Files, setFiles: (files: Files) => void}>({files: DEFAULT_FILES, setFiles: (_) => {}});
+export const FilesContext = React.createContext<FileState>(DEFAULT_FILE_STATE);
 
 interface Results {
   errors: ErrorMessages;

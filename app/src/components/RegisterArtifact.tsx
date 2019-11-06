@@ -1,4 +1,4 @@
-import { RegisterForm, DEFAULT_ERRORS, RegisterOnSubmit, TextFields, ErrorMessages, FilesContext } from "./register/Form";
+import { RegisterForm, DEFAULT_ERRORS, RegisterOnSubmit, TextFields, ErrorMessages, FilesContext, Document } from "./register/RegisterForm";
 import * as React from "react";
 import Accordion from "react-bootstrap/Accordion";
 import Card from "react-bootstrap/Card";
@@ -10,7 +10,8 @@ import RegisterFields from "./register/RegisterFields";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import DropZone from "./register/DropZone";
-import ipfs from "../helper/ipfs";
+import ListGroup from "react-bootstrap/ListGroup";
+import Button from "react-bootstrap/Button";
 
 const registerArtifact: RegisterOnSubmit = async ({fields}, _event): Promise<void> => {
   console.log(fields);
@@ -18,6 +19,17 @@ const registerArtifact: RegisterOnSubmit = async ({fields}, _event): Promise<voi
 
 const registerValidator: (textFields: TextFields) => ErrorMessages = (_fields) => {
   return DEFAULT_ERRORS;
+}
+
+const FileList: React.FC = () => {
+  const { files } = React.useContext(FilesContext);
+  return <ListGroup>
+    {files.documents.map((document: Document, index: number) => {
+      return <ListGroup.Item key={index}>
+        <p>filename: {document.filename}</p>
+      </ListGroup.Item>;
+    })}
+  </ListGroup>;
 }
 
 const RegisterFieldLayout: React.FC = () => {
@@ -39,26 +51,87 @@ const RegisterFieldLayout: React.FC = () => {
   </>;
 }
 
-const saveToIPFS = async (file: any, callback: (hash: string) => void): Promise<void> => {
-  const hash = await ipfs.add(file, { progress: (prog: any) => console.log(`received: ${prog}`) });
-  callback(hash);
+const ImageDropZone: React.FC = () => {
+  const { files, setFiles } = React.useContext(FilesContext);
+  return <DropZone popup callback={(hash: string) => {
+    setFiles({...files, image: hash});
+  }}/>;
+}
+
+const DocumentDropZone: React.FC = () => {
+  const { files, setFiles } = React.useContext(FilesContext);
+
+  const onDrop = ((acceptedFiles: any): void => {
+    const documents = files.documents;
+    for (const file of acceptedFiles) {
+      let newDoc = true;
+      for (const doc of documents) {
+        if (doc.filename === file.name) {
+          newDoc = false;
+          break;
+        }
+      }
+
+      if (!newDoc) {
+        continue;
+      }
+
+      documents.push({
+        filename: file.name,
+        data: file,
+      });
+    }
+
+    setFiles({
+      ...files,
+      documents: documents,
+    });
+  });
+  return <div style={{
+    position: 'relative',
+    overflow: 'hidden',
+    display: 'inline-block',
+  }}>
+    <input
+      className="btn"
+      accept="image/*"
+      id="image-upload-button"
+      multiple
+      type="file"
+      style={{
+        position: 'absolute',
+        top: '0',
+        left: '0',
+        opacity: '0',
+      }}
+      onChange={(e): void => {
+        e.stopPropagation();
+        e.preventDefault();
+        const files = e.target.files;
+        if (files != null && files[0].size < 1000000) {
+          // max file size of one megabyte
+          onDrop(files);
+        } else {
+          // TODO: nicer way of alerting
+          alert('Image cannot be greater than 1 MB!');
+        }
+      }}
+    />
+    <Button>
+      Upload Documents
+    </Button>
+  </div>;
 }
 
 const RegisterArtifact: React.FC<ContractProps> = ({ contracts }) => {
-  const { files, setFiles } = React.useContext(FilesContext);
-
-  const onDrop = (acceptedFiles: Blob[]) => {
-    acceptedFiles.forEach((file: Blob) => saveToIPFS(file, (hash: string) => {
-      setFiles({...files, image: hash});
-    }));
-  }
-
   return (
     <ArtistProvider artistContract={contracts.Artists}>
       <RegisterForm validator={registerValidator} onSubmit={registerArtifact}>
         <Row>
           <Col sm={4}>
-            <DropZone callback={onDrop}/>
+            <ImageDropZone/>
+            <DocumentDropZone/>
+            <FileList/>
           </Col>
           <Col sm={8}>
             <RegisterFieldLayout/>

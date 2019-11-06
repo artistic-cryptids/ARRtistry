@@ -1,5 +1,5 @@
 import Form from "react-bootstrap/Form";
-import { TextFieldContext, SetValueContext, InputChangeEvent } from "./Form";
+import { TextFieldContext, SetValueContext, InputChangeEvent } from "./RegisterForm";
 import * as React from "react";
 import Col from "react-bootstrap/Col";
 import InputGroup from "react-bootstrap/InputGroup";

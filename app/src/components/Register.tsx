@@ -10,7 +10,7 @@ import { FormControlProps } from 'react-bootstrap/FormControl';
 import InputGroup from 'react-bootstrap/InputGroup';
 import Spinner from 'react-bootstrap/Spinner';
 import ListGroup from 'react-bootstrap/ListGroup';
-import ipfs from '../helper/ipfs';
+import { saveToIPFS } from '../helper/ipfs';
 import TransactionLoadingModal from './common/TransactionLoadingModal';
 import { ContractProps } from '../helper/eth';
 
@@ -161,7 +161,7 @@ class Register extends React.Component<ContractProps, RegisterState> {
       document.data = undefined;
     }
 
-    await this.saveToIpfs(data, (response: any) => {
+    await saveToIPFS(data, (response: any) => {
       for (let i = 0; i < jsonData.documents.length; i++) {
         jsonData.documents[i].metauri = 'https://ipfs.io/ipfs/' + response[i].hash;
       }
@@ -171,7 +171,7 @@ class Register extends React.Component<ContractProps, RegisterState> {
     const files = Array(jsonDataBuffer);
 
     // TODO: this upload takes like 5 seconds. Some kind of loading notification should display
-    await this.saveToIpfs(files, this.setMetaHash);
+    await saveToIPFS(files, this.setMetaHash);
 
     const ipfsUrlStart = 'https://ipfs.io/ipfs/';
     await contracts.ArtifactApplication.applyFor(
@@ -208,21 +208,13 @@ class Register extends React.Component<ContractProps, RegisterState> {
   }
 
   setImgHash = (response: any): void => {
+    console.log(response);
     this.setState({ fields: { ...this.state.fields, imageIpfsHash: response[0].hash } });
   };
 
   setMetaHash = (response: any): void => {
     this.setState({ fields: { ...this.state.fields, metaIpfsHash: response[0].hash } });
   };
-
-  async saveToIpfs (files: any, afterwardsFunction: (arg0: string) => void): Promise<void> {
-    await ipfs.add([...files], { progress: (prog: any) => console.log(`received: ${prog}`) })
-      .then((response: any) => {
-        afterwardsFunction(response);
-      }).catch((err: any) => {
-        console.log(err);
-      });
-  }
 
   // This needs to be an arrow constructor to bind `this`, which is bonkers.
   inputChangeHandler = (event: InputChangeEvent): void => {
@@ -467,9 +459,10 @@ class Register extends React.Component<ContractProps, RegisterState> {
                       e.stopPropagation();
                       e.preventDefault();
                       const files = e.target.files;
+                      console.log(e);
                       if (files != null && files[0].size < 1000000) {
                         // max file size of one megabyte
-                        this.saveToIpfs(files, this.setImgHash);
+                        saveToIPFS(files, this.setImgHash);
                       } else {
                         // TODO: nicer way of alerting
                         alert('Image cannot be greater than 1 MB!');

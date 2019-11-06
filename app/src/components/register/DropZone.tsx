@@ -1,35 +1,46 @@
 import React, {useCallback} from "react";
 import * as styles from './DropZone.module.scss';
-import {useDropzone, DropEvent} from 'react-dropzone'
-import ipfs from "../../helper/ipfs";
+import {useDropzone} from 'react-dropzone'
+import { FilesContext } from "./RegisterForm";
+import { saveToIPFS } from "../../helper/ipfs";
 
-type DropZoneCallback = (acceptedFiles: File[], rejectedFiles: File[], event: DropEvent) => void;
+const DropZone: React.FC<{popup?: true, callback: (hash: string) => void}> = ({popup, callback}) => {
 
-const DropZone: React.FC<{callback: DropZoneCallback}> = ({callback}) => {
+  const { files } = React.useContext(FilesContext);
 
-  const onDrop = useCallback(callback, [])
+  const onDrop = useCallback((acceptedFiles: Blob[]) => {
+    var reader = new FileReader();
+    reader.addEventListener("loadend", function() {
+      saveToIPFS([reader.result], callback);
+    });
+    acceptedFiles.forEach((blob) => reader.readAsArrayBuffer(blob));
+  }, []);
   const {getRootProps, getInputProps, isDragActive} = useDropzone({onDrop})
+
+  const isFileOver = isDragActive || files.image !== '';
+  const isComplete = files.image !== '';
 
   return (
   <>
+    {popup ?
     <div className={styles.popup}>
       <span className={styles.message}>
       Artifact Image<br />
       <small>Drop your image into the space below</small>
     </span>
-    </div>
+    </div> : null}
     <div
-      className={styles.dropzone + (isDragActive ? ' ' + styles.fileOver : '')}
+      className={styles.dropzone + (isFileOver ? ' ' + styles.fileOver : '')}
       {...getRootProps()}
     >
       <div className={styles.box}>
-        <div className={styles.progress}></div>
+        <div className={styles.progress + (isComplete ? ' ' + styles.complete : '')}></div>
       </div>
       <div>
         <div className={styles.arrow}></div>
       </div>
-      <img className={styles.imageHolder}/>
-      <input {...getInputProps()} />
+      <img className={styles.imageHolder + (isComplete ? ' ' + styles.move : '')} src={'https://ipfs.io/ipfs/' + files.image}/>
+      <input accept="image/*" {...getInputProps()} />
     </div>
   </>
   );

@@ -2,7 +2,7 @@ import * as React from "react";
 
 import Button from "react-bootstrap/Button";
 import Spinner from "react-bootstrap/Spinner";
-import { FormStatusContext } from "./Form";
+import { FormStatusContext } from "./RegisterForm";
 
 const FormSubmitButton: React.FC = () => {
   const formStatus = React.useContext(FormStatusContext);
