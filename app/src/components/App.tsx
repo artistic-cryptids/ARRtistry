@@ -43,7 +43,7 @@ const DrizzledApp: React.FC = () => {
             <Route path="/manage/arr">
               <ARRView drizzle={drizzle} drizzleState={drizzleState}/>
             </Route>
-            <Route path ="/artists/new">
+            <Route path ="/artist/new">
               <RegisterArtistView drizzle={drizzle} drizzleState={drizzleState}/>
             </Route>
             <Route path="/client/all/artifact">
