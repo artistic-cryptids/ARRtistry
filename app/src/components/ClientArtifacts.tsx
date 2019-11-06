@@ -1,6 +1,7 @@
 import * as React from 'react';
 import ArtworkItem from './ArtworkItem';
 import CardColumns from 'react-bootstrap/CardColumns';
+import Container from 'react-bootstrap/Container';
 
 interface ClientArtifactsProps {
   drizzle: any;
@@ -48,13 +49,17 @@ class ClientArtifacts extends
   render (): React.ReactNode {
     if (!this.state) {
       return (
-        <span>Loading artworks...</span>
+        <Container>
+          <span>Loading artworks...</span>
+        </Container>
       );
     }
 
     if (!this.state.numClientArtifacts) {
       return (
-        <span>No artworks to show, please register one below</span>
+        <Container>
+          <span>No artworks to show, please register one below</span>
+        </Container>
       );
     }
 
@@ -69,7 +74,11 @@ class ClientArtifacts extends
     );
 
     return (
-      <CardColumns>{listItems}</CardColumns>
+      <Container>
+        <CardColumns>
+          {listItems}
+        </CardColumns>
+      </Container>
     );
   }
 }

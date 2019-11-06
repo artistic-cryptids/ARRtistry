@@ -54,7 +54,7 @@ class NetworkAside extends React.Component<NetworkAsideProps, NetworkAsideState>
           style={{
             position: 'fixed',
             bottom: 0,
-            left: 0,
+            right: 0,
             zIndex: 3,
           }}
           className="m-4"
