@@ -1,6 +1,5 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
-import './index.css';
 import App from './components/App';
 import * as serviceWorker from './serviceWorker';
 
@@ -11,6 +10,8 @@ import Governance from './contracts/Governance.json';
 import ArtifactApplication from './contracts/ArtifactApplication.json';
 import ArtifactRegistry from './contracts/ArtifactRegistry.json';
 import Artists from './contracts/Artists.json';
+
+import './theme.scss';
 
 const options: DrizzleOptions = {
   contracts: [ArtifactApplication, Governance, ArtifactRegistry, Artists],
