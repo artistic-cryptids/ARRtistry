@@ -9,5 +9,4 @@ const ipfs = new IpfsClient({
   protocol: 'https',
 });
 
-// use the ipfs.add method to pin files
 export default ipfs;
