@@ -35,7 +35,7 @@ export const ArtistProvider: React.FC<{artistContract: any}> = ({ artistContract
     };
 
     updateArtists();
-  }, []);
+  }, [artistContract]);
 
   return (
     <ArtistContext.Provider value={{artists: artists}}>

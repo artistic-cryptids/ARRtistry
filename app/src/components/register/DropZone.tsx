@@ -14,7 +14,7 @@ const DropZone: React.FC<{popup?: true, callback: (hash: string) => void}> = ({p
       saveToIPFS([reader.result], callback);
     });
     acceptedFiles.forEach((blob) => reader.readAsArrayBuffer(blob));
-  }, []);
+  }, [callback]);
   const {getRootProps, getInputProps, isDragActive} = useDropzone({onDrop})
 
   const isFileOver = isDragActive || files.image !== '';
@@ -39,7 +39,7 @@ const DropZone: React.FC<{popup?: true, callback: (hash: string) => void}> = ({p
       <div>
         <div className={styles.arrow}></div>
       </div>
-      <img className={styles.imageHolder + (isComplete ? ' ' + styles.move : '')} src={'https://ipfs.io/ipfs/' + files.image}/>
+      <img className={styles.imageHolder + (isComplete ? ' ' + styles.move : '')} src={'https://ipfs.io/ipfs/' + files.image} alt='artifact-img'/>
       <input accept="image/*" {...getInputProps()} />
     </div>
   </>
