@@ -1,12 +1,10 @@
 import * as React from 'react';
-import ProposalList from './ProposalList';
-import ARRList from './ARRList';
 import Container from 'react-bootstrap/Container';
-import { Alert } from 'react-bootstrap';
 
 interface GovernanceProps {
   drizzle: any;
   drizzleState: any;
+  children: React.ReactNode | React.ReactNode[];
 }
 
 type GovernanceState = {
@@ -24,17 +22,15 @@ class Governance extends React.Component<GovernanceProps, GovernanceState> {
     if (!this.state || this.state.isGovernor) {
       return (
         <Container>
-          <h2> You are an approved moderator. </h2>
-          <Alert variant = 'info'>Proposals List:</Alert>
-          <ProposalList drizzle={this.props.drizzle} drizzleState={this.props.drizzleState}/>
-          <Alert variant = 'info'>ARR List:</Alert>
-          <ARRList drizzle={this.props.drizzle} drizzleState={this.props.drizzleState}/>
+          {this.props.children}
         </Container>
       );
     }
 
     return (
-      <span>You are not an approved moderator</span>
+      <Container>
+        <h1>You are not an approved moderator</h1>
+      </Container>
     );
   }
 }
