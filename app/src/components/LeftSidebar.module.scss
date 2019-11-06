@@ -29,6 +29,7 @@ $background-color: $primary;
   background-color: $background-color;
   box-shadow: 0 0 28px 0 rgba(82, 63, 105, .13);
   border-radius: 0.3rem;
+  overflow: auto;
 
   .navItem {
     text-align: left;
