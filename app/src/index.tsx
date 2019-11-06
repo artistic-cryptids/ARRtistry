@@ -25,6 +25,7 @@ const options: DrizzleOptions = {
   },
 };
 
+<<<<<<< HEAD
 const doDapp = async (): Promise<void> => {
   console.log('beabadoobeeeee');
 
@@ -63,6 +64,49 @@ const doDapp = async (): Promise<void> => {
 };
 
 doDapp();
+=======
+const doApp = async (): Promise<void> => {
+  const provider = new Web3.providers.HttpProvider("http://localhost:8545");
+  const governanceNonDeployed = contract(Governance);
+  const artifactApplicationNonDeployed = contract(ArtifactApplication);
+  const artifactRegistryNonDeployed = contract(ArtifactRegistry);
+  const artistsNonDeployed = contract(Artists);
+  governanceNonDeployed.setProvider(provider);
+  artifactApplicationNonDeployed.setProvider(provider);
+  artifactRegistryNonDeployed.setProvider(provider);
+  artistsNonDeployed.setProvider(provider);
+
+  const gov = await governanceNonDeployed.deployed()
+  const artiApp = await artifactApplicationNonDeployed.deployed()
+  const artiReg = await artifactRegistryNonDeployed.deployed()
+  const artists = await artistsNonDeployed.deployed()
+
+  const contracts = {
+    Governance: gov,
+    ArtifactApplication: artiApp,
+    ArtifactRegistry: artiReg, 
+    Artists: artists
+  }
+
+  /*ReactDOM.render(
+    <App contracts={ contracts }/>,
+    document.getElementById('root'),
+  );*/
+}
+
+
+
+const drizzleStore = generateStore({ drizzleOptions: options });
+const drizzle = new Drizzle(options, drizzleStore);
+
+
+ReactDOM.render(
+  <DrizzleContext.Provider drizzle={ drizzle }>
+    <App/>
+  </DrizzleContext.Provider>,
+  document.getElementById('root'),
+);
+>>>>>>> Works out how to access migrated contract methods without use of drizzle
 
 // If you want your app to work offline and load faster, you can change
 // unregister() to register() below. Note this comes with some pitfalls.
