@@ -5,7 +5,14 @@ import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Container from 'react-bootstrap/Container';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faStamp, faFingerprint, faColumns, faIdBadge, faClone } from '@fortawesome/free-solid-svg-icons';
+import {
+  faStamp,
+  faFingerprint,
+  faColumns,
+  faIdCardAlt,
+  faClone,
+  IconDefinition
+} from '@fortawesome/free-solid-svg-icons';
 import * as styles from './LeftSidebar.module.scss';
 
 interface LeftSidebarProps {
@@ -13,6 +20,16 @@ interface LeftSidebarProps {
 }
 
 class LeftSidebar extends React.Component<LeftSidebarProps, {}> {
+  private renderNavItem(name: string, icon: IconDefinition, path: string) {
+    return (
+      <Nav.Item className={styles.navItem}>
+        <Nav.Link to={path} as={Link} bsPrefix={'nav-link ' + styles.navLink}>
+          <FontAwesomeIcon icon={icon} /> {name}
+        </Nav.Link>
+      </Nav.Item>
+    );
+  }
+
   private renderNavMenu (): React.ReactNode {
     return (
       <Container className={'col-md-2 d-none d-md-block ' + styles.sidebar}>
@@ -29,33 +46,14 @@ class LeftSidebar extends React.Component<LeftSidebarProps, {}> {
         <hr/>
         <Nav className={'flex-column ' + styles.sidebarSticky} as={Col}>
           <h4 className={styles.section}>Dashboards</h4>
-          <Nav.Item className={styles.navItem}>
-            <Nav.Link active={true} to="/" as={Link} bsPrefix={'nav-link ' + styles.navLink}>
-              <FontAwesomeIcon icon={faColumns} /> Home
-            </Nav.Link>
-          </Nav.Item>
+          {this.renderNavItem("Home", faColumns, "/")}
           <h4 className={styles.section}>Artifacts</h4>
-          <Nav.Item className={styles.navItem}>
-            <Nav.Link to="/new" as={Link} bsPrefix={'nav-link ' + styles.navLink}>
-              <FontAwesomeIcon icon={faFingerprint} /> New
-            </Nav.Link>
-          </Nav.Item>
-          <Nav.Item className={styles.navItem}>
-            <Nav.Link to="/artifacts" as={Link} bsPrefix={'nav-link ' + styles.navLink}>
-              <FontAwesomeIcon icon={faClone} /> Owned
-            </Nav.Link>
-          </Nav.Item>
+          {this.renderNavItem("New", faFingerprint, "/new")}
+          {this.renderNavItem("Owned", faClone, "/artifacts")}
           <h4 className={styles.section}>Management</h4>
-          <Nav.Item className={styles.navItem}>
-            <Nav.Link to="/governance" as={Link} bsPrefix={'nav-link ' + styles.navLink}>
-              <FontAwesomeIcon icon={faStamp} /> Requests
-            </Nav.Link>
-          </Nav.Item>
-          <Nav.Item className={styles.navItem}>
-            <Nav.Link to="/clientArtifacts" as={Link} bsPrefix={'nav-link ' + styles.navLink}>
-              <FontAwesomeIcon icon={faIdBadge} /> Clients
-            </Nav.Link>
-          </Nav.Item>
+          {this.renderNavItem("Artifact Requests", faStamp, "/proposal")}
+          {this.renderNavItem("ARR", faStamp, "/arr")}
+          {this.renderNavItem("Clients", faIdCardAlt, "/clientArtifacts")}
         </Nav>
       </Container>
     );
