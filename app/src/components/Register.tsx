@@ -102,18 +102,16 @@ class Register extends React.Component<Drizzled, RegisterState> {
   };
 
   getArtistInfo = (): Promise<Artist[]> => {
-    const Artists = this.props.drizzle.contracts.Artists;
+    const Artists = this.props.contracts.Artists;
 
-    return Artists.methods.getArtistsTotal()
-      .call()
+    return Artists.getArtistsTotal()
       .then((total: number) => {
         const artists = [];
 
         for (let i = 1; i < total; i++) {
           // Have to extract to new variable for async issues
           const id = i;
-          const artist = Artists.methods.getArtist(id)
-            .call()
+          const artist = Artists.getArtist(id)
             .then((hash: string) => this.hashToArtist(hash))
             .then((artist: Artist) => {
               console.log(artist);
@@ -138,11 +136,13 @@ class Register extends React.Component<Drizzled, RegisterState> {
 
     this.setState({ validated: true, submitted: true });
 
-    const { drizzle, drizzleState } = this.props;
+    const { drizzle, drizzleState, contracts, accounts } = this.props;
 
-    const currentAccount = drizzleState.accounts[0];
+    //const currentAccount = drizzleState.accounts[0];
     // TODO: Update this to real artist's account
-    const artist = drizzleState.accounts[0];
+    //const artist = drizzleState.accounts[0];
+    const currentAccount = accounts[0];
+    const artist = accounts[0]; 
 
     // eslint-disable-next-line
     const { metaIpfsHash, ...restOfTheFields } = this.state.fields;
@@ -158,12 +158,12 @@ class Register extends React.Component<Drizzled, RegisterState> {
     await this.saveToIpfs(files, this.setMetaHash);
 
     const ipfsUrlStart = 'https://ipfs.io/ipfs/';
-    const stackId = drizzle.contracts.ArtifactApplication.methods.applyFor.cacheSend(
+    const stackId = await contracts.ArtifactApplication.applyFor(
       currentAccount,
       artist,
       ipfsUrlStart + this.state.fields.metaIpfsHash,
       {
-        from: drizzleState.accounts[0],
+        from: accounts[0],
         gasLimit: 6000000,
       },
     ); // TODO: Catch error when this function fails and display error to user

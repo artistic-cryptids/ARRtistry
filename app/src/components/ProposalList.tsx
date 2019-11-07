@@ -29,7 +29,7 @@ class ProposalList extends React.Component<ProposalListProps, ProposalListState>
   }
 
   async loadProposals (): Promise<void> {
-    const idsAsObjects = await this.props.contracts.Governance.getProposals.call();
+    const idsAsObjects = await this.props.contracts.Governance.getProposals();
     const ids: string[] = [];
     idsAsObjects.map((val: any) => ids.push(val.toString()));
     if (!this.state || this.state.ids !== ids) {
@@ -40,6 +40,8 @@ class ProposalList extends React.Component<ProposalListProps, ProposalListState>
   render (): React.ReactNode {
     const listItems = this.state.ids.map((id: any) =>
       <ProposalItem
+        contracts={this.props.contracts}
+        accounts={this.props.accounts}
         drizzle={this.props.drizzle}
         drizzleState={this.props.drizzleState}
         id={id}

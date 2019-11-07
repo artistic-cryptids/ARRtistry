@@ -10,6 +10,8 @@ interface ArtworkInfoProps {
   drizzleState: any;
   artwork: Artwork;
   id: number;
+  contracts: any; 
+  accounts: Array<string>;
 }
 
 interface Artist {
@@ -97,8 +99,8 @@ class ArtworkInfo extends React.Component<ArtworkInfoProps, ArtworkInfoState> {
       return;
     }
 
-    this.props.drizzle.contracts.Artists.methods.getArtist(this.state.fields.artistId)
-      .call()
+    //this.props.drizzle.contracts.Artists.methods.getArtist(this.state.fields.artistId)
+    this.props.contracts.Artists.getArtist(this.state.fields.artistId)
       .then((hash: string) => this.hashToArtist(hash))
       .then((artist: Artist) => this.setState({
         retrievedData: true,

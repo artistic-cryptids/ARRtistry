@@ -29,7 +29,7 @@ class ARRList extends React.Component<ARRListProps, ARRListState> {
   }
 
   async loadARRs (): Promise<void> {
-    const len = await this.props.drizzle.contracts.Governance.methods.getARRLength().call();
+    const len = await this.props.contracts.Governance.getARRLength();
 
     const ids = [];
     for (let i = 0; i < len; i++) {
@@ -43,6 +43,8 @@ class ARRList extends React.Component<ARRListProps, ARRListState> {
   render (): React.ReactNode {
     const listItems = this.state.ids.map((id: any) =>
       <ARRItem
+        contracts={this.props.contracts}
+        accounts={this.props.accounts}
         drizzle={this.props.drizzle}
         drizzleState={this.props.drizzleState}
         id={id}

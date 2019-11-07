@@ -4,12 +4,9 @@ import Container from 'react-bootstrap/Container';
 interface GovernanceProps {
   drizzle: any;
   drizzleState: any;
-<<<<<<< HEAD:app/src/components/ModeratorOnly.tsx
   children: React.ReactNode | React.ReactNode[];
-=======
   contracts: any;
   accounts: Array<string>;
->>>>>>> Passed all contract abstractions and account details through all components. Also replaced Drizzle calls in Governance and ProposalList components:app/src/components/Governance.tsx
 }
 
 type GovernanceState = {
@@ -29,15 +26,7 @@ class Governance extends React.Component<GovernanceProps, GovernanceState> {
     if (!this.state || this.state.isGovernor) {
       return (
         <Container>
-<<<<<<< HEAD:app/src/components/ModeratorOnly.tsx
           {this.props.children}
-=======
-          <h2> You are an approved moderator. </h2>
-          <Alert variant = 'info'>Proposals List:</Alert>
-          <ProposalList accounts={accounts} contracts={contracts} drizzle={this.props.drizzle} drizzleState={this.props.drizzleState}/>
-          <Alert variant = 'info'>ARR List:</Alert>
-          <ARRList accounts={accounts} contracts={contracts} drizzle={this.props.drizzle} drizzleState={this.props.drizzleState}/>
->>>>>>> Passed all contract abstractions and account details through all components. Also replaced Drizzle calls in Governance and ProposalList components:app/src/components/Governance.tsx
         </Container>
       );
     }

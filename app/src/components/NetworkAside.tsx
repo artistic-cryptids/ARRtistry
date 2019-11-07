@@ -21,6 +21,7 @@ class NetworkAside extends React.Component<NetworkAsideProps, NetworkAsideState>
   }
 
   async componentDidMount (): Promise<void> {
+    // TODO: DONT FORGET THIS
     const networkType = await this.props.drizzle.web3.eth.net.getNetworkType();
     console.log(networkType);
     this.setState({ open: true, network: networkType });

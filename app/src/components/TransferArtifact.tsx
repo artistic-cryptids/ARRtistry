@@ -12,6 +12,8 @@ interface TransferArtifactProps {
   drizzleState: any;
   tokenId: number;
   metaUri: string;
+  contracts: any; 
+  accounts: Array<string>;
 }
 
 interface TransferArtifactFormFields {
@@ -77,13 +79,13 @@ class TransferArtifact extends React.Component<TransferArtifactProps, TransferAr
   };
 
   transferArtwork = (_: React.FormEvent): void => {
-    const artifactRegistry = this.props.drizzle.contracts.ArtifactRegistry;
+    const artifactRegistry = this.props.contracts.ArtifactRegistry;
     let owner = '';
     this.setState({
       registerSaleSubmitted: true,
     });
 
-    artifactRegistry.methods.ownerOf(this.props.tokenId).call()
+    artifactRegistry.ownerOf(this.props.tokenId)
       .then((address: string) => {
         owner = address;
         console.log(this.state.fields.location);
@@ -94,20 +96,18 @@ class TransferArtifact extends React.Component<TransferArtifactProps, TransferAr
           this.state.fields.location,
         );
       })
-      .then((hash: string) => {
-        const stackId = artifactRegistry.methods.transfer.cacheSend(
+      .then((hash: string) =>
+        artifactRegistry.transfer(
           owner,
           this.state.fields.recipientAddress,
           this.props.tokenId,
           hash,
           this.state.fields.price,
           this.state.fields.location,
-        );
-
-        this.setState({
-          registerSaleTransactionStackId: stackId,
-        });
-      })
+          {
+            from: this.props.accounts[0], 
+          }
+        ))
       .catch((err: any) => console.log(err));
   }
 

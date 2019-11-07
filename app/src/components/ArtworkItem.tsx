@@ -11,6 +11,8 @@ interface ArtworkItemProps {
   drizzleState: any;
   tokenId: number;
   isOwnedArtifact: boolean;
+  contracts: any;
+  accounts: Array<string>;
 }
 
 type ArtworkItemState = {
@@ -19,8 +21,8 @@ type ArtworkItemState = {
 
 class ArtworkItem extends React.Component<ArtworkItemProps, ArtworkItemState> {
   componentDidMount (): void {
-    const registry = this.props.drizzle.contracts.ArtifactRegistry;
-    registry.methods.getArtifactForToken(this.props.tokenId).call()
+    const registry = this.props.contracts.ArtifactRegistry;
+    registry.getArtifactForToken(this.props.tokenId)
       .then((artworkData: any) => {
         console.log(artworkData);
         const artwork = {
@@ -41,6 +43,8 @@ class ArtworkItem extends React.Component<ArtworkItemProps, ArtworkItemState> {
     return (
       <ListGroup.Item>
         <ArtworkInfo
+          contracts={this.props.contracts}
+          accounts={this.props.accounts}
           artwork={this.state.artwork}
           id={this.props.tokenId}
           drizzle={this.props.drizzle}
@@ -49,6 +53,8 @@ class ArtworkItem extends React.Component<ArtworkItemProps, ArtworkItemState> {
           <Row>
             <Col>
               <TransferArtifact
+                contracts={this.props.contracts}
+                accounts={this.props.accounts}
                 drizzle={this.props.drizzle}
                 drizzleState={this.props.drizzleState}
                 tokenId={this.props.tokenId}
@@ -58,6 +64,8 @@ class ArtworkItem extends React.Component<ArtworkItemProps, ArtworkItemState> {
             {this.props.isOwnedArtifact
               ? <Col>
                 <ConsignArtifact
+                  contracts={this.props.contracts}
+                  accounts={this.props.accounts}
                   drizzle={this.props.drizzle}
                   drizzleState={this.props.drizzleState}
                   tokenId={this.props.tokenId}

@@ -5,33 +5,36 @@ interface ARRItemProps {
   drizzle: any;
   drizzleState: any;
   id: number;
+  contracts: any; 
+  accounts: Array<string>;
+}
+
+type ARRItemType = {
+  from: string;
+  to: string;
+  tokenId: number;
+  price: number;
+  location: string;
 }
 
 type ARRItemState = {
-  ARR: {
-    from: string;
-    to: string;
-    tokenId: number;
-    price: number;
-    location: string;
-  };
+  ARR: ARRItemType
 }
 
 class ARRItem extends React.Component<ARRItemProps, ARRItemState> {
   componentDidMount (): void {
-    // console.log(this.props.id);
     this.loadARR();
   }
 
   async loadARR (): Promise<void> {
-    this.props.drizzle.contracts.ArtifactApplication.methods.getARR(this.props.id)
-      .call()
+    this.props.contracts.ArtifactApplication.getARR(this.props.id)
       .then((ARRData: any): void => {
         const ARR = {
           from: ARRData[0],
           to: ARRData[1],
-          tokenId: ARRData[2],
-          price: ARRData[3],
+          // tokenId and price are ints. They are accessed via 'words'
+          tokenId: ARRData[2].words[0],
+          price: ARRData[3].words[0],
           location: ARRData[4],
         };
         console.log(ARRData);

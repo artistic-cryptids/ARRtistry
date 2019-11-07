@@ -28,6 +28,13 @@ interface RegisterArtistState {
   isGovernor: false;
 }
 
+interface RegisterArtistProps {
+  drizzle: any;
+  drizzleState: any;
+  contracts: any;
+  accounts: Array<string>;
+}
+
 type InputChangeEvent = React.FormEvent<FormControlProps> &
   {
     target: {
@@ -38,7 +45,12 @@ type InputChangeEvent = React.FormEvent<FormControlProps> &
 
 const GENERIC_FEEDBACK = <Form.Control.Feedback>Looks good!</Form.Control.Feedback>;
 
-class RegisterArtist extends React.Component<Drizzled, RegisterArtistState> {
+class RegisterArtist extends React.Component<RegisterArtistProps, RegisterArtistState> {
+  SUBMISSION_STARTED = 10;
+  TRANSACTION_REGISTERED = 30;
+  TRANSACTION_APPROVED = 60;
+  SUBMISSION_FINISHED = 100;
+
   constructor (props: Drizzled) {
     super(props);
     this.state = {
@@ -57,7 +69,7 @@ class RegisterArtist extends React.Component<Drizzled, RegisterArtistState> {
   };
 
   componentDidMount (): void {
-    this.props.drizzle.contracts.Governance.methods.isGovernor(this.props.drizzleState.accounts[0]).call()
+    this.props.contracts.Governance.isGovernor(this.props.accounts[0])      
       .then((isGovernor: any) => {
         const fields = this.state.fields as Pick<RegisterFormFields, keyof RegisterFormFields>;
         this.setState({

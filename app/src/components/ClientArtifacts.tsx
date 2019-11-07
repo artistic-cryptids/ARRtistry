@@ -67,6 +67,8 @@ class ClientArtifacts extends
 
     const listItems = this.state.tokenIds.map((tokenId: number) =>
       <ArtworkItem
+        contracts={this.props.contracts}
+        accounts={this.props.accounts}
         drizzle={this.props.drizzle}
         drizzleState={this.props.drizzleState}
         tokenId={tokenId}

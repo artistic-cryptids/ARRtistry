@@ -9,6 +9,8 @@ interface ConsignArtifactProps {
   drizzle: any;
   drizzleState: any;
   tokenId: number;
+  contracts: any; 
+  accounts: Array<string>;
 }
 
 interface ConsignArtifactFormFields {
@@ -42,11 +44,14 @@ class ConsignArtifact extends React.Component<ConsignArtifactProps, ConsignArtif
   }
 
   ConsignArtifactForArtwork = (_: React.FormEvent): void => {
-    const artifactRegistry = this.props.drizzle.contracts.ArtifactRegistry;
+    const artifactRegistry = this.props.contracts.ArtifactRegistry;
 
-    artifactRegistry.methods.approve.cacheSend(
+    artifactRegistry.approve(
       this.state.fields.recipientAddress,
       this.props.tokenId,
+      {
+        from: this.props.accounts[0], 
+      }
     );
   }
 
