@@ -7,12 +7,10 @@ import Container from 'react-bootstrap/Container';
 import Form from 'react-bootstrap/Form';
 import Accordion from 'react-bootstrap/Accordion';
 import { FormControlProps } from 'react-bootstrap/FormControl';
-import Modal from 'react-bootstrap/Modal';
 import Spinner from 'react-bootstrap/Spinner';
-import Fade from 'react-bootstrap/Fade';
-import ProgressBar from 'react-bootstrap/ProgressBar';
 import ipfs from '../ipfs';
 import { Drizzled } from 'drizzle';
+import TransactionLoadingModal from './common/TransactionLoadingModal';
 
 interface RegisterFormFields {
   name: string;
@@ -41,11 +39,6 @@ type InputChangeEvent = React.FormEvent<FormControlProps> &
 const GENERIC_FEEDBACK = <Form.Control.Feedback>Looks good!</Form.Control.Feedback>;
 
 class RegisterArtist extends React.Component<Drizzled, RegisterArtistState> {
-  SUBMISSION_STARTED = 10;
-  TRANSACTION_REGISTERED = 30;
-  TRANSACTION_APPROVED = 60;
-  SUBMISSION_FINISHED = 100;
-
   constructor (props: Drizzled) {
     super(props);
     this.state = {
@@ -111,29 +104,6 @@ class RegisterArtist extends React.Component<Drizzled, RegisterArtistState> {
     this.setState({
       registerTransactionStackId: stackId,
     });
-  };
-
-  progress = (): number => {
-    const { transactions, transactionStack } = this.props.drizzleState;
-
-    if (this.state.registerTransactionStackId == null && !!this.state.submitted) {
-      return this.SUBMISSION_STARTED;
-    }
-
-    const registerTransactionHash = transactionStack[this.state.registerTransactionStackId];
-    if (!registerTransactionHash) {
-      return this.TRANSACTION_REGISTERED;
-    }
-
-    if (!transactions[registerTransactionHash]) {
-      return this.TRANSACTION_APPROVED;
-    }
-
-    if (transactions[registerTransactionHash].status === 'success') {
-      return this.SUBMISSION_FINISHED;
-    } else {
-      return -1;
-    }
   };
 
   renderSubmitButton = (): React.ReactNode => {
@@ -262,13 +232,13 @@ class RegisterArtist extends React.Component<Drizzled, RegisterArtistState> {
               </Form>
             </Col>
           </Row>
-          <Fade in={this.state.submitted}>
-            <SubmissionModal
-              show={this.state.submitted}
-              onHide={() => this.setState({ submitted: false })}
-              progress={this.progress()}
-            />
-          </Fade>
+          <TransactionLoadingModal
+            drizzleState={this.props.drizzleState}
+            onHide={() => this.setState({ submitted: false })}
+            submitted={this.state.submitted}
+            transactionStackId={this.state.registerTransactionStackId}
+            title="Submitting this new artist..."
+          />
         </Container>
       );
     }
@@ -278,28 +248,5 @@ class RegisterArtist extends React.Component<Drizzled, RegisterArtistState> {
     );
   }
 }
-
-const SubmissionModal = (props: {show: boolean; onHide: () => void; progress: number}): JSX.Element => {
-  return (
-    <Modal
-      {...props }
-      size="lg"
-      aria-labelledby="contained-modal-title-vcenter"
-      centered
-    >
-      <Modal.Header closeButton>
-        <Modal.Title id="contained-modal-title-vcenter">
-          Submitting this new artist...
-        </Modal.Title>
-      </Modal.Header>
-      <Modal.Body>
-        <ProgressBar now={props.progress} />
-      </Modal.Body>
-      <Modal.Footer>
-        <Button onClick={props.onHide}>Close</Button>
-      </Modal.Footer>
-    </Modal>
-  );
-};
 
 export default RegisterArtist;

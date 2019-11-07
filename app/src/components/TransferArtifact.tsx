@@ -5,6 +5,7 @@ import Form from 'react-bootstrap/Form';
 import { FormControlProps } from 'react-bootstrap/FormControl';
 import Modal from 'react-bootstrap/Modal';
 import ipfs from '../ipfs';
+import TransactionLoadingModal from './common/TransactionLoadingModal';
 
 interface TransferArtifactProps {
   drizzle: any;
@@ -22,6 +23,8 @@ interface TransferArtifactFormFields {
 interface TransferArtifactState {
   fields: TransferArtifactFormFields;
   showTransferForm: boolean;
+  registerSaleSubmitted: boolean;
+  registerSaleTransactionStackId: any;
 }
 
 type InputChangeEvent = React.FormEvent<FormControlProps> &
@@ -44,6 +47,8 @@ class TransferArtifact extends React.Component<TransferArtifactProps, TransferAr
         location: '',
       },
       showTransferForm: false,
+      registerSaleSubmitted: false,
+      registerSaleTransactionStackId: null,
     };
   }
 
@@ -74,6 +79,9 @@ class TransferArtifact extends React.Component<TransferArtifactProps, TransferAr
   transferArtwork = (_: React.FormEvent): void => {
     const artifactRegistry = this.props.drizzle.contracts.ArtifactRegistry;
     let owner = '';
+    this.setState({
+      registerSaleSubmitted: true,
+    });
 
     artifactRegistry.methods.ownerOf(this.props.tokenId).call()
       .then((address: string) => {
@@ -86,15 +94,20 @@ class TransferArtifact extends React.Component<TransferArtifactProps, TransferAr
           this.state.fields.location,
         );
       })
-      .then((hash: string) =>
-        artifactRegistry.methods.transfer.cacheSend(
+      .then((hash: string) => {
+        const stackId = artifactRegistry.methods.transfer.cacheSend(
           owner,
           this.state.fields.recipientAddress,
           this.props.tokenId,
           hash,
           this.state.fields.price,
           this.state.fields.location,
-        ))
+        );
+
+        this.setState({
+          registerSaleTransactionStackId: stackId,
+        });
+      })
       .catch((err: any) => console.log(err));
   }
 
@@ -176,7 +189,13 @@ class TransferArtifact extends React.Component<TransferArtifactProps, TransferAr
             </Button>
           </Modal.Footer>
         </Modal>
-
+        <TransactionLoadingModal
+          drizzleState={this.props.drizzleState}
+          onHide={() => this.setState({ registerSaleSubmitted: false })}
+          submitted={this.state.registerSaleSubmitted}
+          transactionStackId={this.state.registerSaleTransactionStackId}
+          title="Registering sale..."
+        />
       </div>
     );
   }
