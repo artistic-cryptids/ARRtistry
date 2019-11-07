@@ -146,7 +146,7 @@ class TransferArtifact extends React.Component<TransferArtifactProps, TransferAr
         </Button>
         <Modal show={this.state.showTransferForm} onHide={this.handleCancel}>
           <Modal.Header closeButton>
-            <Modal.Title>Transfer Artifact</Modal.Title>
+            <Modal.Title>Register Sale of Artifact</Modal.Title>
           </Modal.Header>
           <Modal.Body>
             <Form.Group as={Col} controlId="recipientAddress">
@@ -185,7 +185,7 @@ class TransferArtifact extends React.Component<TransferArtifactProps, TransferAr
               Cancel
             </Button>
             <Button variant="primary" onClick={this.transferArtwork}>
-              Transfer
+              Register Sale
             </Button>
           </Modal.Footer>
         </Modal>
