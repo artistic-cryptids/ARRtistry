@@ -24,7 +24,6 @@ class NetworkAside extends React.Component<NetworkAsideProps, NetworkAsideState>
 
   async componentDidMount (): Promise<void> {
     const networkType = await this.props.web3.eth.net.getNetworkType();
-    console.log('FAGGOT')
     console.log(networkType);
     this.setState({ open: true, network: networkType });
   }
