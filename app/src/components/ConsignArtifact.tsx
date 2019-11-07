@@ -83,7 +83,7 @@ class ConsignArtifact extends React.Component<ConsignArtifactProps, ConsignArtif
         </Button>
         <Modal show={this.state.showConsignArtifactForm} onHide={this.handleCancel}>
           <Modal.Header closeButton>
-            <Modal.Title>Approve Entity For Artifact </Modal.Title>
+            <Modal.Title>Consign Entity to Sell Artifact </Modal.Title>
           </Modal.Header>
           <Modal.Body>
             <Form.Group as={Col} controlId="recipientAddress">
@@ -100,7 +100,7 @@ class ConsignArtifact extends React.Component<ConsignArtifactProps, ConsignArtif
               Cancel
             </Button>
             <Button variant="primary" onClick={this.ConsignArtifactForArtwork}>
-              Approve
+              Consign for Sale
             </Button>
           </Modal.Footer>
         </Modal>
