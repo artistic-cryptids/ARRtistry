@@ -30,12 +30,13 @@ class ClientArtifacts extends
   }
 
   shouldComponentUpdate (): boolean {
-    const artifactRegistry = this.props.drizzle.contracts.ArtifactRegistry;
-    const currentAccount = this.props.drizzleState.accounts[0];
+    const artifactRegistry = this.props.contracts.ArtifactRegistry;
+    const currentAccount = this.props.accounts[0];
 
-    artifactRegistry.methods.getOperatorTokenIds(currentAccount)
-      .call()
-      .then((tokenIds: any) => {
+    artifactRegistry.getOperatorTokenIds(currentAccount)
+      .then((tokenIdObjects: any) => {
+        let tokenIds: number[] = []
+        tokenIdObjects.map((tid: any) => tokenIds.push(Number(tid.words[0])))
         if (tokenIds.length !== this.state.numClientArtifacts) {
           this.setState({
             numClientArtifacts: tokenIds.length,
@@ -45,7 +46,7 @@ class ClientArtifacts extends
       })
       .catch((err: any) => { console.log(err); });
 
-    return true;
+      return true;
   }
 
   render (): React.ReactNode {
