@@ -1,6 +1,5 @@
 import * as React from 'react';
 import Toast from 'react-bootstrap/Toast';
-import Web3 from 'web3';
 
 interface NetworkAsideProps {
   drizzle: any;
