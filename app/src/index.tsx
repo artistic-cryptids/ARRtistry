@@ -56,7 +56,7 @@ const doDapp = async (): Promise<void> => {
 
   ReactDOM.render(
     <DrizzleContext.Provider drizzle={ drizzle }>
-      <App contracts={ contracts } accounts={ accounts }/>
+      <App web3={ web3 } contracts={ contracts } accounts={ accounts }/>
     </DrizzleContext.Provider>,
     document.getElementById('root'),
   );

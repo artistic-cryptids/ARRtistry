@@ -11,10 +11,11 @@ import LeftSidebar from './LeftSidebar';
 interface AppProps {
   contracts: any;
   accounts: Array<string>;
+  web3: any;
 }
 
 const App: React.FC<AppProps> = (props: AppProps) => {
-  const { contracts, accounts } = props;
+  const { contracts, accounts, web3 } = props;
   return (
     <Router>
       <LeftSidebar>
@@ -27,13 +28,13 @@ const App: React.FC<AppProps> = (props: AppProps) => {
 };
 
 const DrizzledApp: React.FC<AppProps> = (props: AppProps) => {
-  const { contracts, accounts } = props;
+  const { contracts, accounts, web3 } = props;
   return <DrizzleContext.Consumer>
     {(drizzleContext: any): React.ReactNode => {
       const { drizzle, drizzleState, initialized } = drizzleContext;
       return initialized ? (
         <>
-          <NetworkAside drizzle={drizzle}/>
+          <NetworkAside web3={web3} drizzle={drizzle}/>
           <Switch>
             <Route exact path="/">
               <HomePageNoAccount/>
