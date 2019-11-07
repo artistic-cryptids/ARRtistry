@@ -90,22 +90,37 @@ contract('ArtifactApplication', async accounts => {
       let governance;
       let registry;
 
-      let from;
-      let to;
-      let tokenId;
-      let price;
-      let location;
-
-      let ARR;
-
       beforeEach(async () => {
-        from = accounts[0];
-        to = accounts[1];
-        tokenId = toBN(1);
-        price = toBN(1001);
-        location = 'location';
+        governance = await Governance.new({ from: creator });
+        registry = await ArtifactRegistry.new(governance.address, governance.address, { from: creator });
+        artifactApplication = await ArtifactApplication.new(governance.address, registry.address, { from: creator });
+      });
 
-        ARR = {
+      it('can retrieve a logged ARR', async () => {
+        const from = accounts[0];
+        const to = accounts[1];
+        const tokenId = toBN(1);
+        const price = toBN(1001);
+        const location = 'location';
+
+        await artifactApplication.applyFor(
+          accounts[0],
+          ARTIFACT.artist,
+          ARTIFACT.metaUri,
+        );
+        await governance.approve(0);
+        await registry.transfer(from, to, tokenId, 'dud metaUri', price, location);
+
+        const result = await artifactApplication.getARR(0);
+        const actualARR = {
+          from: result[0],
+          to: result[1],
+          tokenId: result[2],
+          price: result[3],
+          location: result[5],
+        }
+
+        const expectedARR = {
           from: from,
           to: to,
           tokenId: tokenId,
@@ -113,24 +128,7 @@ contract('ArtifactApplication', async accounts => {
           location: location,
         };
 
-        governance = await Governance.new({ from: creator });
-        registry = await ArtifactRegistry.new(governance.address, governance.address, { from: creator });
-        artifactApplication = await ArtifactApplication.new(governance.address, registry.address, { from: creator });
-      });
-
-      it('can retrieve a logged ARR', async () => {
-        await artifactApplication.applyFor(
-          accounts[0],
-          ARTIFACT.artist,
-          ARTIFACT.metaUri,
-        );
-
-        await governance.approve(0);
-
-        await registry.transfer(from, to, tokenId, 'dud metaUri', price, location);
-
-        const result = await artifactApplication.getARR(0);
-        ARREquality(result, ARR);
+        ARREquality(actualARR, expectedARR);
       });
     });
   });

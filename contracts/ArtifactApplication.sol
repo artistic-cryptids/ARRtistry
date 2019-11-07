@@ -46,9 +46,13 @@ contract ArtifactApplication {
     return (who, artifact.artist, artifact.metaUri);
   }
 
-  function getARR(uint arrId) public view returns (address, address, uint256, uint, string memory) {
+  function getARR(uint arrId) public view returns (address, address, uint256, uint, uint, string memory) {
     IGovernance.ARR memory arr = governance.getARR(arrId);
 
-    return (arr.from, arr.to, arr.tokenId, arr.price, arr.location);
+    return (arr.from, arr.to, arr.tokenId, arr.price, calculateARR(arr.price), arr.location);
+  }
+
+  function calculateARR(uint lastSalePrice) private pure returns (uint) {
+    return lastSalePrice;
   }
 }
