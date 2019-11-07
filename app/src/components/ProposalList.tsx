@@ -5,6 +5,8 @@ import CardColumns from 'react-bootstrap/CardColumns';
 interface ProposalListProps {
   drizzle: any;
   drizzleState: any;
+  contracts: any;
+  accounts: Array<string>;
 }
 
 interface ProposalListState {
@@ -27,7 +29,9 @@ class ProposalList extends React.Component<ProposalListProps, ProposalListState>
   }
 
   async loadProposals (): Promise<void> {
-    const ids = await this.props.drizzle.contracts.Governance.methods.getProposals().call();
+    const idsAsObjects = await this.props.contracts.Governance.getProposals.call();
+    const ids: string[] = [];
+    idsAsObjects.map((val: any) => ids.push(val.toString()));
     if (!this.state || this.state.ids !== ids) {
       this.setState({ ids: ids });
     }

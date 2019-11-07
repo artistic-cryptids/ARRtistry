@@ -6,6 +6,8 @@ import Container from 'react-bootstrap/Container';
 interface ClientArtifactsProps {
   drizzle: any;
   drizzleState: any;
+  contracts: any;
+  accounts: Array<string>;
 }
 
 interface ClientArtifactsState {

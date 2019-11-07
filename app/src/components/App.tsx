@@ -8,19 +8,26 @@ import { ArtifactView, ProposalView, ARRView, RegisterView, RegisterArtistView, 
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import LeftSidebar from './LeftSidebar';
 
-const App: React.FC = () => {
+interface AppProps {
+  contracts: any;
+  accounts: Array<string>;
+}
+
+const App: React.FC<AppProps> = (props: AppProps) => {
+  const { contracts, accounts } = props;
   return (
     <Router>
       <LeftSidebar>
         <div className="content h-100">
-          <DrizzledApp/>
+          <DrizzledApp accounts={ accounts } contracts={ contracts }/>
         </div>
       </LeftSidebar>
     </Router>
   );
 };
 
-const DrizzledApp: React.FC = () => {
+const DrizzledApp: React.FC<AppProps> = (props: AppProps) => {
+  const { contracts, accounts } = props;
   return <DrizzleContext.Consumer>
     {(drizzleContext: any): React.ReactNode => {
       const { drizzle, drizzleState, initialized } = drizzleContext;
@@ -32,22 +39,22 @@ const DrizzledApp: React.FC = () => {
               <HomePageNoAccount/>
             </Route>
             <Route path="/artifact/new">
-              <RegisterView drizzle={drizzle} drizzleState={drizzleState}/>
+              <RegisterView accounts={accounts} contracts={contracts} drizzle={drizzle} drizzleState={drizzleState}/>
             </Route>
             <Route path="/artifact">
-              <ArtifactView drizzle={drizzle} drizzleState={drizzleState}/>
+              <ArtifactView accounts={accounts} contracts={contracts} drizzle={drizzle} drizzleState={drizzleState}/>
             </Route>
             <Route path="/manage/proposal">
-              <ProposalView drizzle={drizzle} drizzleState={drizzleState}/>
+              <ProposalView accounts={accounts} contracts={contracts} drizzle={drizzle} drizzleState={drizzleState}/>
             </Route>
             <Route path="/manage/arr">
-              <ARRView drizzle={drizzle} drizzleState={drizzleState}/>
+              <ARRView accounts={accounts} contracts={contracts} drizzle={drizzle} drizzleState={drizzleState}/>
             </Route>
             <Route path ="/artist/new">
-              <RegisterArtistView drizzle={drizzle} drizzleState={drizzleState}/>
+              <RegisterArtistView accounts={accounts} contracts={contracts} drizzle={drizzle} drizzleState={drizzleState}/>
             </Route>
             <Route path="/client/all/artifact">
-              <ClientArtifactView drizzle={drizzle} drizzleState={drizzleState}/>
+              <ClientArtifactView accounts={accounts} contracts={contracts} drizzle={drizzle} drizzleState={drizzleState}/>
             </Route>
           </Switch>
         </>

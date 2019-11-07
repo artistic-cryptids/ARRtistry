@@ -5,6 +5,8 @@ import CardColumns from 'react-bootstrap/CardColumns';
 interface ARRListProps {
   drizzle: any;
   drizzleState: any;
+  contracts: any;
+  accounts: Array<string>;
 }
 
 interface ARRListState {

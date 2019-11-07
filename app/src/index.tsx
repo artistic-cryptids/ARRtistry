@@ -25,8 +25,11 @@ const options: DrizzleOptions = {
   },
 };
 
-const doApp = async (): Promise<void> => {
-  const provider = new Web3.providers.HttpProvider("http://localhost:8545");
+const doDapp = async (): Promise<void> => {
+  console.log('beabadoobeeeee');
+
+  const web3 = new Web3(Web3.givenProvider || 'ws://127.0.0.1:8545');
+  const provider = web3.currentProvider;
   const governanceNonDeployed = contract(Governance);
   const artifactApplicationNonDeployed = contract(ArtifactApplication);
   const artifactRegistryNonDeployed = contract(ArtifactRegistry);
@@ -35,37 +38,31 @@ const doApp = async (): Promise<void> => {
   artifactApplicationNonDeployed.setProvider(provider);
   artifactRegistryNonDeployed.setProvider(provider);
   artistsNonDeployed.setProvider(provider);
-
-  const gov = await governanceNonDeployed.deployed()
-  const artiApp = await artifactApplicationNonDeployed.deployed()
-  const artiReg = await artifactRegistryNonDeployed.deployed()
-  const artists = await artistsNonDeployed.deployed()
+  const gov = await governanceNonDeployed.deployed();
+  const artiApp = await artifactApplicationNonDeployed.deployed();
+  const artiReg = await artifactRegistryNonDeployed.deployed();
+  const artists = await artistsNonDeployed.deployed();
 
   const contracts = {
     Governance: gov,
     ArtifactApplication: artiApp,
-    ArtifactRegistry: artiReg, 
-    Artists: artists
-  }
+    ArtifactRegistry: artiReg,
+    Artists: artists,
+  };
+  const accounts = await web3.eth.getAccounts();
 
-  /*ReactDOM.render(
-    <App contracts={ contracts }/>,
+  const drizzleStore = generateStore({ drizzleOptions: options });
+  const drizzle = new Drizzle(options, drizzleStore);
+
+  ReactDOM.render(
+    <DrizzleContext.Provider drizzle={ drizzle }>
+      <App contracts={ contracts } accounts={ accounts }/>
+    </DrizzleContext.Provider>,
     document.getElementById('root'),
-  );*/
-}
+  );
+};
 
-
-
-const drizzleStore = generateStore({ drizzleOptions: options });
-const drizzle = new Drizzle(options, drizzleStore);
-
-
-ReactDOM.render(
-  <DrizzleContext.Provider drizzle={ drizzle }>
-    <App/>
-  </DrizzleContext.Provider>,
-  document.getElementById('root'),
-);
+doDapp();
 
 // If you want your app to work offline and load faster, you can change
 // unregister() to register() below. Note this comes with some pitfalls.

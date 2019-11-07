@@ -155,6 +155,8 @@ declare module 'drizzle' {
   export interface Drizzled {
     drizzle: any;
     drizzleState: any;
+    contracts: any;
+    accounts: Array<string>;
   }
 }
 
