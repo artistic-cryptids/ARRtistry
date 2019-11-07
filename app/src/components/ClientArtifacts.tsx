@@ -46,7 +46,7 @@ class ClientArtifacts extends
       })
       .catch((err: any) => { console.log(err); });
 
-    return true;
+      return true;
   }
 
   render (): React.ReactNode {
