@@ -29,11 +29,7 @@ class ProposalList extends React.Component<ProposalListProps, ProposalListState>
   }
 
   async loadProposals (): Promise<void> {
-<<<<<<< HEAD
     const idsAsObjects = await this.props.contracts.Governance.getProposals();
-=======
-    const idsAsObjects = await this.props.contracts.Governance.getProposals.call();
->>>>>>> Passed all contract abstractions and account details through all components. Also replaced Drizzle calls in Governance and ProposalList components
     const ids: string[] = [];
     idsAsObjects.map((val: any) => ids.push(val.toString()));
     if (!this.state || this.state.ids !== ids) {

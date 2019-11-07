@@ -46,11 +46,6 @@ type InputChangeEvent = React.FormEvent<FormControlProps> &
 const GENERIC_FEEDBACK = <Form.Control.Feedback>Looks good!</Form.Control.Feedback>;
 
 class RegisterArtist extends React.Component<RegisterArtistProps, RegisterArtistState> {
-  SUBMISSION_STARTED = 10;
-  TRANSACTION_REGISTERED = 30;
-  TRANSACTION_APPROVED = 60;
-  SUBMISSION_FINISHED = 100;
-
   constructor (props: Drizzled) {
     super(props);
     this.state = {

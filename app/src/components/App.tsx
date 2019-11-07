@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { DrizzleContext } from 'drizzle-react';
 import NetworkAside from './NetworkAside';
 import HomePageNoAccount from './HomePageNoAccount';
 
@@ -8,10 +7,12 @@ import { ArtifactView, ProposalView, ARRView, RegisterView, RegisterArtistView, 
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import LeftSidebar from './LeftSidebar';
 
+import Web3 from 'web3';
+
 interface AppProps {
   contracts: any;
   accounts: Array<string>;
-  web3: any;
+  web3: Web3;
 }
 
 const App: React.FC<AppProps> = (props: AppProps) => {
@@ -20,48 +21,40 @@ const App: React.FC<AppProps> = (props: AppProps) => {
     <Router>
       <LeftSidebar>
         <div className="content h-100">
-          <DrizzledApp accounts={ accounts } contracts={ contracts }/>
+          <OurApp web3={ web3 } accounts={ accounts } contracts={ contracts }/>
         </div>
       </LeftSidebar>
     </Router>
   );
 };
 
-const DrizzledApp: React.FC<AppProps> = (props: AppProps) => {
+const OurApp: React.FC<AppProps> = (props: AppProps) => {
   const { contracts, accounts, web3 } = props;
-  return <DrizzleContext.Consumer>
-    {(drizzleContext: any): React.ReactNode => {
-      const { drizzle, drizzleState, initialized } = drizzleContext;
-      return initialized ? (
-        <>
-          <NetworkAside web3={web3} drizzle={drizzle}/>
-          <Switch>
-            <Route exact path="/">
-              <HomePageNoAccount/>
-            </Route>
-            <Route path="/artifact/new">
-              <RegisterView accounts={accounts} contracts={contracts} drizzle={drizzle} drizzleState={drizzleState}/>
-            </Route>
-            <Route path="/artifact">
-              <ArtifactView accounts={accounts} contracts={contracts} drizzle={drizzle} drizzleState={drizzleState}/>
-            </Route>
-            <Route path="/manage/proposal">
-              <ProposalView accounts={accounts} contracts={contracts} drizzle={drizzle} drizzleState={drizzleState}/>
-            </Route>
-            <Route path="/manage/arr">
-              <ARRView accounts={accounts} contracts={contracts} drizzle={drizzle} drizzleState={drizzleState}/>
-            </Route>
-            <Route path ="/artist/new">
-              <RegisterArtistView accounts={accounts} contracts={contracts} drizzle={drizzle} drizzleState={drizzleState}/>
-            </Route>
-            <Route path="/client/all/artifact">
-              <ClientArtifactView accounts={accounts} contracts={contracts} drizzle={drizzle} drizzleState={drizzleState}/>
-            </Route>
-          </Switch>
-        </>
-      ) : null;
-    }}
-  </DrizzleContext.Consumer>;
+  return (
+    <div><NetworkAside web3={web3}/>
+      <Switch>
+        <Route exact path="/">
+          <HomePageNoAccount/>
+        </Route>
+        <Route path="/artifact/new">
+          <RegisterView accounts={accounts} contracts={contracts}/>
+        </Route>
+        <Route path="/artifact">
+          <ArtifactView accounts={accounts} contracts={contracts}/>
+        </Route>
+        <Route path="/manage/proposal">
+          <ProposalView accounts={accounts} contracts={contracts}/>
+        </Route>
+        <Route path="/manage/arr">
+          <ARRView accounts={accounts} contracts={contracts}/>
+        </Route>
+        <Route path ="/artist/new">
+          <RegisterArtistView accounts={accounts} contracts={contracts}/>
+        </Route>
+        <Route path="/client/all/artifact">
+          <ClientArtifactView accounts={accounts} contracts={contracts}/>
+        </Route>
+      </Switch></div>);
 };
 
 export default App;
