@@ -29,7 +29,9 @@ jobs:
     env:
       WALLET_MNEMONIC: ${{ secrets.WALLET_MNEMONIC }}
       INFURA_API_KEY: ${{ secrets.INFURA_API_KEY }}
+      ACCOUNT_ADDRESS: ${{ secrets.ACCOUNT_ADDRESS }}
+      PRIVATE_KEY: ${{ secrets.PRIVATE_KEY }}
 
     steps:
       - name: deploy
-        run: truffle migrate --network rinkeby
+        run: truffle migrate --network rinkeby --reset
