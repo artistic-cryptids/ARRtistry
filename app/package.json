@@ -7,6 +7,7 @@
     "@fortawesome/free-solid-svg-icons": "^5.11.2",
     "@fortawesome/react-fontawesome": "^0.1.7",
     "@types/react-sidebar": "^3.0.0",
+    "web3": "^1.2.1",
     "browserslist": "^4.7.2",
     "ipfs-http-client": "^39.0.2",
     "react": "^16.10.2",
