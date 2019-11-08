@@ -9,7 +9,6 @@ import Accordion from 'react-bootstrap/Accordion';
 import { FormControlProps } from 'react-bootstrap/FormControl';
 import Spinner from 'react-bootstrap/Spinner';
 import ipfs from '../ipfs';
-import { Drizzled } from 'drizzle';
 import TransactionLoadingModal from './common/TransactionLoadingModal';
 
 interface RegisterFormFields {
@@ -46,7 +45,7 @@ type InputChangeEvent = React.FormEvent<FormControlProps> &
 const GENERIC_FEEDBACK = <Form.Control.Feedback>Looks good!</Form.Control.Feedback>;
 
 class RegisterArtist extends React.Component<RegisterArtistProps, RegisterArtistState> {
-  constructor (props: Drizzled) {
+  constructor (props: RegisterArtistProps) {
     super(props);
     this.state = {
       registerTransactionStackId: null,
@@ -86,7 +85,8 @@ class RegisterArtist extends React.Component<RegisterArtistProps, RegisterArtist
 
     this.setState({ validated: true, submitted: true });
 
-    const { drizzle, drizzleState } = this.props;
+    //const { drizzle, drizzleState } = this.props;
+    const { contracts, accounts } = this.props; 
 
     // eslint-disable-next-line
     const { metaIpfsHash, ...restOfTheFields } = this.state.fields;
@@ -99,14 +99,16 @@ class RegisterArtist extends React.Component<RegisterArtistProps, RegisterArtist
     await this.saveToIpfs(files, this.setMetaHash);
 
     const ipfsUrlStart = 'https://ipfs.io/ipfs/';
-    const stackId = drizzle.contracts.Artists.methods.addArtist.cacheSend(
+    console.log(ipfsUrlStart + this.state.fields.metaIpfsHash);
+    const stackId = await contracts.Artists.addArtist(
+      //"who hurt you",
       ipfsUrlStart + this.state.fields.metaIpfsHash,
       {
-        from: drizzleState.accounts[0],
+        from: accounts[0],
         gasLimit: 6000000,
       },
     ); // TODO: Catch error when this function fails and display error to user
-    console.log(this.state.fields.metaIpfsHash);
+    //console.log(this.state.fields.metaIpfsHash);
 
     this.setState({
       registerTransactionStackId: stackId,

@@ -28,28 +28,22 @@ class ArtworkList extends React.Component<ArtworkListProps, ArtworkListState> {
   }
 
   shouldComponentUpdate (): boolean {
-    const artifactRegistry = this.props.drizzle.contracts.ArtifactRegistry;
-    const currentAccount = this.props.drizzleState.accounts[0];
+    const artifactRegistry = this.props.contracts.ArtifactRegistry;
+    const currentAccount = this.props.accounts[0];
 
-    // TODO: Replace with a contract function that returns an array of
-    //       owned token ids to avoid nested promises.
-    artifactRegistry.methods.balanceOf(currentAccount).call()
-      .then((balance: number) => {
-        console.log('balance is', balance);
+    artifactRegistry.balanceOf(currentAccount)
+      .then((balanceObj: any) => {
+        const balance = balanceObj.words[0];
         if (!this.state || this.state.balance !== balance) {
           this.setState({ balance: balance });
-          const tokenIds: Array<number> = [];
-          this.setState({
-            tokenIds: tokenIds,
-          });
+          const tokenIds: Array<number> = []; 
+          this.setState({ tokenIds: tokenIds });
           for (let i = 0; i < balance; i++) {
-            artifactRegistry.methods.tokenOfOwnerByIndex(currentAccount, i)
-              .call()
-              .then((tokenId: any) => {
+            artifactRegistry.tokenOfOwnerByIndex(currentAccount, i)
+              .then((tokenIdObj: any) => {
+                const tokenId = tokenIdObj.words[0];
                 tokenIds.push(tokenId);
-                this.setState({
-                  tokenIds: tokenIds,
-                });
+                this.setState({ tokenIds: tokenIds });
               })
               .catch((err: any) => { console.log(err); });
           }

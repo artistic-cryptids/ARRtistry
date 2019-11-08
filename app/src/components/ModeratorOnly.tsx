@@ -21,8 +21,6 @@ class Governance extends React.Component<GovernanceProps, GovernanceState> {
   }
 
   render (): React.ReactNode {
-    const contracts = this.props.contracts;
-    const accounts = this.props.accounts;
     if (!this.state || this.state.isGovernor) {
       return (
         <Container>
