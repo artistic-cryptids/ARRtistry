@@ -18,7 +18,7 @@ const doDapp = async (): Promise<void> => {
   console.log('beabadoobeeeee');
 
   const web3 = new Web3('ws://127.0.0.1:8545');
-  // this is recommended way of doing it 
+  // this is recommended way of doing it
   // but it stopped working when i removed drizzle
   // const web3 = new Web3(Web3.givenProvider || 'ws://127.0.0.1:8545');
   const provider = web3.currentProvider;
