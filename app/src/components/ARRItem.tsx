@@ -32,8 +32,8 @@ class ARRItem extends React.Component<ARRItemProps, ARRItemState> {
           from: ARRData[0],
           to: ARRData[1],
           tokenId: ARRData[2],
-          price: ARRData[3],
-          arr: ARRData[4],
+          price: ARRData[3] / 100,
+          arr: ARRData[4] / 100,
           location: ARRData[5],
         };
         console.log(ARRData);

@@ -66,7 +66,7 @@ class TransferArtifact extends React.Component<TransferArtifactProps, TransferAr
       .then((jsonData: any) => {
         jsonData.previousSalePrice = price;
         jsonData.saleProvenance.push({
-          price: price,
+          price: (parseFloat(price) * 100).toString(),
           location: location,
           buyers: buyers,
           seller: seller,
@@ -100,7 +100,7 @@ class TransferArtifact extends React.Component<TransferArtifactProps, TransferAr
           this.state.fields.recipientAddress,
           this.props.tokenId,
           hash,
-          this.state.fields.price,
+          (parseFloat(this.state.fields.price) * 100).toString(),
           this.state.fields.location,
         );
 
