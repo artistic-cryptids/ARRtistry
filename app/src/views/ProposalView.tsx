@@ -2,13 +2,14 @@ import * as React from 'react';
 
 import ProposalList from '../components/ProposalList';
 import ModeratorOnly from '../components/ModeratorOnly';
-import { ContractProps } from '../helper/eth';
+import { useArrtistryContext } from '../providers/ArrtistryProvider';
+import { getAccounts } from '../helpers/user';
 
-const ProposalView: React.FC<ContractProps> = (props) => {
-  const { contracts, accounts } = props;
+const ProposalView: React.FC = () => {
+  const { contracts, user } = useArrtistryContext();
   return (
-    <ModeratorOnly contracts={contracts} accounts={accounts}>
-      <ProposalList contracts={contracts} accounts={accounts}/>
+    <ModeratorOnly contracts={contracts!!} accounts={getAccounts(user)}>
+      <ProposalList contracts={contracts!!} accounts={getAccounts(user)}/>
     </ModeratorOnly>
   );
 };

@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import ARRItem from './ARRItem';
 import CardColumns from 'react-bootstrap/CardColumns';
 import { ContractProps } from '../helper/eth';
@@ -23,7 +23,7 @@ class ARRList extends React.Component<ContractProps, ARRListState> {
   }
 
   async loadARRs (): Promise<void> {
-    const len = await this.props.contracts.Governance.getARRLength();
+    const len = await this.props.contracts.Governance.methods.getARRLength();
 
     const ids = [];
     for (let i = 0; i < len; i++) {

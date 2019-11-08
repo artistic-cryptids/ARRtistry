@@ -16,14 +16,14 @@ type ProposalItemState = {
 class ProposalItem extends React.Component<ProposalItemProps, ProposalItemState> {
   rejectProposal = (_: React.MouseEvent): void => {
     console.log('Rejecting proposal ' + this.props.id);
-    this.props.contracts.Governance.reject(this.props.id, {
+    this.props.contracts.Governance.methods.reject(this.props.id, {
       from: this.props.accounts[0],
     });
   }
 
   approveProposal = (_: React.MouseEvent): void => {
     console.log('Approving proposal ' + this.props.id);
-    this.props.contracts.Governance.approve(this.props.id, {
+    this.props.contracts.Governance.methods.approve(this.props.id, {
       from: this.props.accounts[0],
     });
   }

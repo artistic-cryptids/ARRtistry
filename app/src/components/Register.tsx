@@ -113,7 +113,7 @@ class Register extends React.Component<ContractProps, RegisterState> {
   getArtistInfo = (): Promise<Artist[]> => {
     const Artists = this.props.contracts.Artists;
 
-    return Artists.getArtistsTotal()
+    return Artists.methods.getArtistsTotal()
       .then((total: number) => {
         const artists = [];
 
@@ -176,7 +176,7 @@ class Register extends React.Component<ContractProps, RegisterState> {
     await this.saveToIpfs(files, this.setMetaHash);
 
     const ipfsUrlStart = 'https://ipfs.io/ipfs/';
-    const stackId = await contracts.ArtifactApplication.applyFor(
+    const stackId = await contracts.ArtifactApplication.methods.applyFor(
       currentAccount,
       artist,
       ipfsUrlStart + this.state.fields.metaIpfsHash,

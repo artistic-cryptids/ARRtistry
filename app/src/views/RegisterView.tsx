@@ -1,11 +1,12 @@
 import * as React from 'react';
 
 import Register from '../components/Register';
-import { ContractProps } from '../helper/eth';
+import { useArrtistryContext } from '../providers/ArrtistryProvider';
+import { getAccounts } from '../helpers/user';
 
-const RegisterView: React.FC<ContractProps> = (props) => {
-  const { contracts, accounts } = props;
-  return <Register contracts={contracts} accounts={accounts}/>;
+const RegisterView: React.FC = () => {
+  const { contracts, user } = useArrtistryContext();
+  return <Register contracts={contracts!!} accounts={getAccounts(user)}/>;
 };
 
 export default RegisterView;

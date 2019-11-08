@@ -4,7 +4,7 @@ import Col from 'react-bootstrap/Col';
 import Form from 'react-bootstrap/Form';
 import { FormControlProps } from 'react-bootstrap/FormControl';
 import Modal from 'react-bootstrap/Modal';
-import ipfs from '../ipfs';
+import ipfs from '../helpers/ipfs';
 import TransactionLoadingModal from './common/TransactionLoadingModal';
 import { ContractProps } from '../helper/eth';
 
@@ -116,7 +116,7 @@ class TransferArtifact extends React.Component<TransferArtifactProps, TransferAr
       registerSaleSubmitted: true,
     });
 
-    artifactRegistry.ownerOf(this.props.tokenId)
+    artifactRegistry.methods.ownerOf(this.props.tokenId)
       .then((address: string) => {
         owner = address;
         console.log(this.state.fields.location);
@@ -128,7 +128,7 @@ class TransferArtifact extends React.Component<TransferArtifactProps, TransferAr
         );
       })
       .then((hash: string) =>
-        artifactRegistry.transfer(
+        artifactRegistry.methods.transfer(
           owner,
           this.state.fields.recipientAddress,
           this.props.tokenId,

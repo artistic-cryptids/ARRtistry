@@ -2,13 +2,14 @@ import * as React from 'react';
 
 import ARRList from '../components/ARRList';
 import ModeratorOnly from '../components/ModeratorOnly';
-import { ContractProps } from '../helper/eth';
+import { useArrtistryContext } from '../providers/ArrtistryProvider';
+import { getAccounts } from '../helpers/user';
 
-const ARRView: React.FC<ContractProps> = (props) => {
-  const { contracts, accounts } = props;
+const ARRView: React.FC = () => {
+  const { contracts, user } = useArrtistryContext();
   return (
-    <ModeratorOnly contracts={contracts} accounts={accounts}>
-      <ARRList contracts={contracts} accounts={accounts}/>
+    <ModeratorOnly contracts={contracts!!} accounts={getAccounts(user)}>
+      <ARRList contracts={contracts!!} accounts={getAccounts(user)}/>
     </ModeratorOnly>
   );
 };

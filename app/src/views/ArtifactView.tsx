@@ -1,10 +1,11 @@
 import * as React from 'react';
 import ArtworkList from '../components/ArtworkList';
-import { ContractProps } from '../helper/eth';
+import { useArrtistryContext } from '../providers/ArrtistryProvider';
+import { getAccounts } from '../helpers/user';
 
-const ArtifactView: React.FC<ContractProps> = (props) => {
-  const { contracts, accounts } = props;
-  return <ArtworkList contracts={contracts} accounts={accounts}/>;
+const ArtifactView: React.FC = () => {
+  const { contracts, user } = useArrtistryContext();
+  return <ArtworkList contracts={contracts!!} accounts={getAccounts(user)}/>;
 };
 
 export default ArtifactView;

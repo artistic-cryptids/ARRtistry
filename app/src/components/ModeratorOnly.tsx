@@ -10,9 +10,9 @@ type GovernanceState = {
   isGovernor: false;
 }
 
-class Governance extends React.Component<GovernanceProps, GovernanceState> {
+class Governance extends React.Component<CommonProps, GovernanceState> {
   componentDidMount (): void {
-    this.props.contracts.Governance.isGovernor(this.props.accounts[0])
+    this.props.contracts.Governance.methods.isGovernor(this.props.accounts[0])
       .then((isGovernor: any) => this.setState({ isGovernor: isGovernor }))
       .catch(console.log);
   }
