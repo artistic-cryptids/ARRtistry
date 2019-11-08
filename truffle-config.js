@@ -1,4 +1,5 @@
 const path = require("path");
+const HDWalletProvider = require("@truffle/hdwallet-provider");
 
 module.exports = {
   /**
@@ -22,6 +23,16 @@ module.exports = {
       port: 8545,
       network_id: '*', // eslint-disable-line camelcase
     },
+    rinkeby: {
+      provider: function() {
+       return new HDWalletProvider(
+        process.env.WALLET_MNEMONIC,
+        "https://rinkeby.infura.io/v3/" + process.env.INFURA_API_KEY
+       );
+      },
+      network_id: 4,
+      gas: 4500000
+    }
   },
   plugins: ["solidity-coverage"],
 };
