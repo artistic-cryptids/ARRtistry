@@ -1,7 +1,7 @@
 import * as React from 'react';
 
 import Register from '../components/Register';
-import { CommonProps } from 'interfaces';
+import { CommonProps } from '../helper/eth';
 
 const RegisterView: React.FC<CommonProps> = (props) => {
   const { contracts, accounts } = props;

@@ -15,8 +15,6 @@ import Web3 from 'web3';
 const contract = require('@truffle/contract');
 
 const doDapp = async (): Promise<void> => {
-  console.log('beabadoobeeeee');
-
   const web3 = new Web3('ws://127.0.0.1:8545');
   // this is recommended way of doing it
   // but it stopped working when i removed drizzle
@@ -30,15 +28,15 @@ const doDapp = async (): Promise<void> => {
   artifactApplicationNonDeployed.setProvider(provider);
   artifactRegistryNonDeployed.setProvider(provider);
   artistsNonDeployed.setProvider(provider);
-  const gov = await governanceNonDeployed.deployed();
-  const artiApp = await artifactApplicationNonDeployed.deployed();
-  const artiReg = await artifactRegistryNonDeployed.deployed();
+  const governance = await governanceNonDeployed.deployed();
+  const artifactApplication = await artifactApplicationNonDeployed.deployed();
+  const artifactRegistry = await artifactRegistryNonDeployed.deployed();
   const artists = await artistsNonDeployed.deployed();
 
   const contracts = {
-    Governance: gov,
-    ArtifactApplication: artiApp,
-    ArtifactRegistry: artiReg,
+    Governance: governance,
+    ArtifactApplication: artifactApplication,
+    ArtifactRegistry: artifactRegistry,
     Artists: artists,
   };
   const accounts = await web3.eth.getAccounts();

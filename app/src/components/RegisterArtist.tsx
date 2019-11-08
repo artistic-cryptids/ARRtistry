@@ -83,7 +83,6 @@ class RegisterArtist extends React.Component<RegisterArtistProps, RegisterArtist
 
     this.setState({ validated: true, submitted: true });
 
-    // const { drizzle, drizzleState } = this.props;
     const { contracts, accounts } = this.props;
 
     // eslint-disable-next-line

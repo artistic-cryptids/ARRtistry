@@ -11,7 +11,7 @@ import InputGroup from 'react-bootstrap/InputGroup';
 import Spinner from 'react-bootstrap/Spinner';
 import ipfs from '../ipfs';
 import TransactionLoadingModal from './common/TransactionLoadingModal';
-import { CommonProps } from 'interfaces';
+import { CommonProps } from '../helper/eth';
 
 interface SaleProvenance {
   price: string;
@@ -172,11 +172,6 @@ class Register extends React.Component<CommonProps, RegisterState> {
   };
 
   renderSubmitButton = (): React.ReactNode => {
-    // eslint-disable-next-line
-    //const { transactions, transactionStack } = this.props.drizzleState;
-
-    // eslint-disable-next-line
-    //const registerTransactionHash = transactionStack[this.state.registerTransactionStackId];
     if (!this.state.validated && !this.state.submitted) {
       return <Button type="submit" className="my-2 btn-block" variant="primary">Submit</Button>;
     } else if (this.state.submitted) {

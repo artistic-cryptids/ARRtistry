@@ -2,7 +2,7 @@ import * as React from 'react';
 
 import ProposalList from '../components/ProposalList';
 import ModeratorOnly from '../components/ModeratorOnly';
-import { CommonProps } from 'interfaces';
+import { CommonProps } from '../helper/eth';
 
 const ProposalView: React.FC<CommonProps> = (props) => {
   const { contracts, accounts } = props;

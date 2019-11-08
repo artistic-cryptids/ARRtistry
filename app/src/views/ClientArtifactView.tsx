@@ -1,7 +1,7 @@
 import * as React from 'react';
 
 import ClientArtifacts from '../components/ClientArtifacts';
-import { CommonProps } from 'interfaces';
+import { CommonProps } from '../helper/eth';
 
 const ClientArtifactView: React.FC<CommonProps> = (props) => {
   const { contracts, accounts } = props;

@@ -1,8 +1,9 @@
 import * as React from 'react';
 import Toast from 'react-bootstrap/Toast';
+import Web3 from 'web3';
 
 interface NetworkAsideProps {
-  web3: any;
+  web3: Web3;
 }
 
 type NetworkAsideState = {
