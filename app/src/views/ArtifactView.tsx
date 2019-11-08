@@ -1,10 +1,10 @@
 import * as React from 'react';
 import ArtworkList from '../components/ArtworkList';
-import { Drizzled } from 'drizzle';
+import { CommonProps } from 'interfaces';
 
-const ArtifactView: React.FC<Drizzled> = (props) => {
-  const { drizzle, drizzleState } = props;
-  return <ArtworkList drizzle={drizzle} drizzleState={drizzleState}/>;
+const ArtifactView: React.FC<CommonProps> = (props) => {
+  const { contracts, accounts } = props;
+  return <ArtworkList contracts={contracts} accounts={accounts}/>;
 };
 
 export default ArtifactView;

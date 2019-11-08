@@ -8,8 +8,6 @@ import ipfs from '../ipfs';
 import TransactionLoadingModal from './common/TransactionLoadingModal';
 
 interface TransferArtifactProps {
-  drizzle: any;
-  drizzleState: any;
   tokenId: number;
   metaUri: string;
   contracts: any;
@@ -190,7 +188,6 @@ class TransferArtifact extends React.Component<TransferArtifactProps, TransferAr
           </Modal.Footer>
         </Modal>
         <TransactionLoadingModal
-          drizzleState={this.props.drizzleState}
           onHide={() => this.setState({ registerSaleSubmitted: false })}
           submitted={this.state.registerSaleSubmitted}
           transactionStackId={this.state.registerSaleTransactionStackId}

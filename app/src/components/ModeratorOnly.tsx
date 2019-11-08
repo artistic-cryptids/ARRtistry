@@ -2,8 +2,6 @@ import * as React from 'react';
 import Container from 'react-bootstrap/Container';
 
 interface GovernanceProps {
-  drizzle: any;
-  drizzleState: any;
   children: React.ReactNode | React.ReactNode[];
   contracts: any;
   accounts: Array<string>;

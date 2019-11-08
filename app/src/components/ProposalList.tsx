@@ -3,8 +3,6 @@ import ProposalItem from './ProposalItem';
 import CardColumns from 'react-bootstrap/CardColumns';
 
 interface ProposalListProps {
-  drizzle: any;
-  drizzleState: any;
   contracts: any;
   accounts: Array<string>;
 }
@@ -42,8 +40,6 @@ class ProposalList extends React.Component<ProposalListProps, ProposalListState>
       <ProposalItem
         contracts={this.props.contracts}
         accounts={this.props.accounts}
-        drizzle={this.props.drizzle}
-        drizzleState={this.props.drizzleState}
         id={id}
         key={id}
       />,

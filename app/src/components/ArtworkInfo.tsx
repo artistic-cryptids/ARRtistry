@@ -6,8 +6,6 @@ interface Artwork {
 }
 
 interface ArtworkInfoProps {
-  drizzle: any;
-  drizzleState: any;
   artwork: Artwork;
   id: number;
   contracts: any;

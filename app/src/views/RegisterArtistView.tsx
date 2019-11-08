@@ -1,11 +1,11 @@
 import * as React from 'react';
 
 import RegisterArtist from '../components/RegisterArtist';
-import { Drizzled } from 'drizzle';
+import { CommonProps } from 'interfaces';
 
-const RegisterArtistView: React.FC<Drizzled> = (props) => {
-  const { drizzle, drizzleState } = props;
-  return <RegisterArtist drizzle={drizzle} drizzleState={drizzleState}/>;
+const RegisterArtistView: React.FC<CommonProps> = (props) => {
+  const { contracts, accounts } = props;
+  return <RegisterArtist contracts={contracts} accounts={accounts}/>;
 };
 
 export default RegisterArtistView;

@@ -2,8 +2,6 @@ import * as React from 'react';
 import Card from 'react-bootstrap/Card';
 
 interface ARRItemProps {
-  drizzle: any;
-  drizzleState: any;
   id: number;
   contracts: any;
   accounts: Array<string>;

@@ -5,8 +5,6 @@ import Button from 'react-bootstrap/Button';
 import ButtonGroup from 'react-bootstrap/ButtonGroup';
 
 interface ProposalItemProps {
-  drizzle: any;
-  drizzleState: any;
   id: number;
   contracts: any;
   accounts: Array<string>;
@@ -53,8 +51,6 @@ class ProposalItem extends React.Component<ProposalItemProps, ProposalItemState>
         accounts={this.props.accounts}
         artwork={this.state.proposal}
         id={this.props.id}
-        drizzle={this.props.drizzle}
-        drizzleState={this.props.drizzleState}
       >
         <Row>
           <ButtonGroup aria-label="Actionbar" className="mx-auto">

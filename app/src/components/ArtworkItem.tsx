@@ -7,8 +7,6 @@ import Col from 'react-bootstrap/Col';
 import Row from 'react-bootstrap/Row';
 
 interface ArtworkItemProps {
-  drizzle: any;
-  drizzleState: any;
   tokenId: number;
   isOwnedArtifact: boolean;
   contracts: any;
@@ -47,16 +45,12 @@ class ArtworkItem extends React.Component<ArtworkItemProps, ArtworkItemState> {
           accounts={this.props.accounts}
           artwork={this.state.artwork}
           id={this.props.tokenId}
-          drizzle={this.props.drizzle}
-          drizzleState={this.props.drizzleState}
         >
           <Row>
             <Col>
               <TransferArtifact
                 contracts={this.props.contracts}
                 accounts={this.props.accounts}
-                drizzle={this.props.drizzle}
-                drizzleState={this.props.drizzleState}
                 tokenId={this.props.tokenId}
                 metaUri={this.state.artwork.metaUri}
               />
@@ -66,8 +60,6 @@ class ArtworkItem extends React.Component<ArtworkItemProps, ArtworkItemState> {
                 <ConsignArtifact
                   contracts={this.props.contracts}
                   accounts={this.props.accounts}
-                  drizzle={this.props.drizzle}
-                  drizzleState={this.props.drizzleState}
                   tokenId={this.props.tokenId}
                 />
               </Col>

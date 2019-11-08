@@ -2,7 +2,6 @@ import * as React from 'react';
 import Toast from 'react-bootstrap/Toast';
 
 interface NetworkAsideProps {
-  drizzle: any;
   web3: any;
 }
 

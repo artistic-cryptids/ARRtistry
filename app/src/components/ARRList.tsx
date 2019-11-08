@@ -3,8 +3,6 @@ import ARRItem from './ARRItem';
 import CardColumns from 'react-bootstrap/CardColumns';
 
 interface ARRListProps {
-  drizzle: any;
-  drizzleState: any;
   contracts: any;
   accounts: Array<string>;
 }
@@ -45,8 +43,6 @@ class ARRList extends React.Component<ARRListProps, ARRListState> {
       <ARRItem
         contracts={this.props.contracts}
         accounts={this.props.accounts}
-        drizzle={this.props.drizzle}
-        drizzleState={this.props.drizzleState}
         id={id}
         key={id}
       />,

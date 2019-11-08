@@ -4,8 +4,6 @@ import CardColumns from 'react-bootstrap/CardColumns';
 import Container from 'react-bootstrap/Container';
 
 interface ClientArtifactsProps {
-  drizzle: any;
-  drizzleState: any;
   contracts: any;
   accounts: Array<string>;
 }
@@ -70,8 +68,6 @@ class ClientArtifacts extends
       <ArtworkItem
         contracts={this.props.contracts}
         accounts={this.props.accounts}
-        drizzle={this.props.drizzle}
-        drizzleState={this.props.drizzleState}
         tokenId={tokenId}
         key={tokenId}
         isOwnedArtifact={false}

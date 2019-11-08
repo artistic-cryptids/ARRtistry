@@ -28,8 +28,6 @@ interface RegisterArtistState {
 }
 
 interface RegisterArtistProps {
-  drizzle: any;
-  drizzleState: any;
   contracts: any;
   accounts: Array<string>;
 }
@@ -115,10 +113,10 @@ class RegisterArtist extends React.Component<RegisterArtistProps, RegisterArtist
 
   renderSubmitButton = (): React.ReactNode => {
     // eslint-disable-next-line
-    const { transactions, transactionStack } = this.props.drizzleState;
+    //const { transactions, transactionStack } = this.props.drizzleState;
 
     // eslint-disable-next-line
-    const registerTransactionHash = transactionStack[this.state.registerTransactionStackId];
+    //const registerTransactionHash = transactionStack[this.state.registerTransactionStackId];
     if (!this.state.validated && !this.state.submitted) {
       return <Button type="submit" className="my-2 btn-block" variant="primary">Submit</Button>;
     } else if (this.state.submitted) {
@@ -240,7 +238,6 @@ class RegisterArtist extends React.Component<RegisterArtistProps, RegisterArtist
             </Col>
           </Row>
           <TransactionLoadingModal
-            drizzleState={this.props.drizzleState}
             onHide={() => this.setState({ submitted: false })}
             submitted={this.state.submitted}
             transactionStackId={this.state.registerTransactionStackId}

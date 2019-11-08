@@ -6,8 +6,6 @@ import { FormControlProps } from 'react-bootstrap/FormControl';
 import Modal from 'react-bootstrap/Modal';
 
 interface ConsignArtifactProps {
-  drizzle: any;
-  drizzleState: any;
   tokenId: number;
   contracts: any;
   accounts: Array<string>;
