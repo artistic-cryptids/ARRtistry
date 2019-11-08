@@ -9,8 +9,10 @@ import ArtifactRegistry from './contracts/ArtifactRegistry.json';
 import Artists from './contracts/Artists.json';
 
 import './theme.scss';
-import Web3 from 'web3'; 
-const contract = require("@truffle/contract");
+import Web3 from 'web3';
+
+// eslint-disable-next-line
+const contract = require('@truffle/contract');
 
 const doDapp = async (): Promise<void> => {
   console.log('beabadoobeeeee');

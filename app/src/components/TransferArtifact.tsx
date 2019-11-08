@@ -12,7 +12,7 @@ interface TransferArtifactProps {
   drizzleState: any;
   tokenId: number;
   metaUri: string;
-  contracts: any; 
+  contracts: any;
   accounts: Array<string>;
 }
 
@@ -105,8 +105,8 @@ class TransferArtifact extends React.Component<TransferArtifactProps, TransferAr
           this.state.fields.price,
           this.state.fields.location,
           {
-            from: this.props.accounts[0], 
-          }
+            from: this.props.accounts[0],
+          },
         ))
       .catch((err: any) => console.log(err));
   }

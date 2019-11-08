@@ -27,7 +27,7 @@ class ProposalItem extends React.Component<ProposalItemProps, ProposalItemState>
   approveProposal = (_: React.MouseEvent): void => {
     console.log('Approving proposal ' + this.props.id);
     this.props.contracts.Governance.approve(this.props.id, {
-      from: this.props.accounts[0], 
+      from: this.props.accounts[0],
     });
   }
 

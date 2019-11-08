@@ -5,7 +5,7 @@ interface ARRItemProps {
   drizzle: any;
   drizzleState: any;
   id: number;
-  contracts: any; 
+  contracts: any;
   accounts: Array<string>;
 }
 
@@ -18,7 +18,7 @@ type ARRItemType = {
 }
 
 type ARRItemState = {
-  ARR: ARRItemType
+  ARR: ARRItemType;
 }
 
 class ARRItem extends React.Component<ARRItemProps, ARRItemState> {

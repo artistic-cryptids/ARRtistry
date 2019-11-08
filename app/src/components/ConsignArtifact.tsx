@@ -9,7 +9,7 @@ interface ConsignArtifactProps {
   drizzle: any;
   drizzleState: any;
   tokenId: number;
-  contracts: any; 
+  contracts: any;
   accounts: Array<string>;
 }
 
@@ -50,8 +50,8 @@ class ConsignArtifact extends React.Component<ConsignArtifactProps, ConsignArtif
       this.state.fields.recipientAddress,
       this.props.tokenId,
       {
-        from: this.props.accounts[0], 
-      }
+        from: this.props.accounts[0],
+      },
     );
   }
 

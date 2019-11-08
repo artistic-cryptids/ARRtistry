@@ -63,7 +63,7 @@ class RegisterArtist extends React.Component<RegisterArtistProps, RegisterArtist
   };
 
   componentDidMount (): void {
-    this.props.contracts.Governance.isGovernor(this.props.accounts[0])      
+    this.props.contracts.Governance.isGovernor(this.props.accounts[0])
       .then((isGovernor: any) => {
         const fields = this.state.fields as Pick<RegisterFormFields, keyof RegisterFormFields>;
         this.setState({
@@ -85,8 +85,8 @@ class RegisterArtist extends React.Component<RegisterArtistProps, RegisterArtist
 
     this.setState({ validated: true, submitted: true });
 
-    //const { drizzle, drizzleState } = this.props;
-    const { contracts, accounts } = this.props; 
+    // const { drizzle, drizzleState } = this.props;
+    const { contracts, accounts } = this.props;
 
     // eslint-disable-next-line
     const { metaIpfsHash, ...restOfTheFields } = this.state.fields;
@@ -99,16 +99,14 @@ class RegisterArtist extends React.Component<RegisterArtistProps, RegisterArtist
     await this.saveToIpfs(files, this.setMetaHash);
 
     const ipfsUrlStart = 'https://ipfs.io/ipfs/';
-    console.log(ipfsUrlStart + this.state.fields.metaIpfsHash);
     const stackId = await contracts.Artists.addArtist(
-      //"who hurt you",
       ipfsUrlStart + this.state.fields.metaIpfsHash,
       {
         from: accounts[0],
         gasLimit: 6000000,
       },
     ); // TODO: Catch error when this function fails and display error to user
-    //console.log(this.state.fields.metaIpfsHash);
+    console.log(stackId);
 
     this.setState({
       registerTransactionStackId: stackId,

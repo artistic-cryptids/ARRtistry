@@ -10,7 +10,7 @@ interface ArtworkInfoProps {
   drizzleState: any;
   artwork: Artwork;
   id: number;
-  contracts: any; 
+  contracts: any;
   accounts: Array<string>;
 }
 

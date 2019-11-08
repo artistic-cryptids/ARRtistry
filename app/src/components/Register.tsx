@@ -137,9 +137,9 @@ class Register extends React.Component<Drizzled, RegisterState> {
     this.setState({ validated: true, submitted: true });
 
     const { contracts, accounts } = this.props;
-    
+
     const currentAccount = accounts[0];
-    const artist = accounts[0]; 
+    const artist = accounts[0];
 
     // eslint-disable-next-line
     const { metaIpfsHash, ...restOfTheFields } = this.state.fields;
