@@ -30,8 +30,9 @@ module.exports = {
         "https://rinkeby.infura.io/v3/" + process.env.INFURA_API_KEY
        );
       },
+    from: process.env.ACCOUNT_ADDRESS,
       network_id: 4,
-      gas: 4500000
+      gas: 6000000
     }
   },
   plugins: ["solidity-coverage"],
