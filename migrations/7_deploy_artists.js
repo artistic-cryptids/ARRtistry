@@ -1,11 +1,27 @@
 const Artists = artifacts.require('Artists');
 const ENSResolver = artifacts.require('ENSResolver');
-const FIFSRegistrar = artifacts.require('FIFSRegistrar');
 
 const newLabel = require('./helper/LoggedRegistration');
+const registrarHelper = require('./helper/RegistrarHelper');
 
 module.exports = async (deployer, network, accounts) => {
-  await deployer.deploy(Artists, accounts[0], { from: accounts[0] });
+  let owner;
+  switch (network) {
+    case 'development':
+    case 'test':
+    case 'soliditycoverage':
+    case 'ganache':
+      owner = accounts[0];
+      break;
+    case 'rinkeby':
+    case 'rinkeby-fork':
+      owner = process.env.ACCOUNT_ADDRESS;
+      break;
+    default:
+      throw new Error('No owner selected for this network');
+  }
+
+  await deployer.deploy(Artists, owner);
 
   const artists = await Artists.deployed();
 
@@ -21,9 +37,10 @@ module.exports = async (deployer, network, accounts) => {
 
   await newLabel(
     'artists',
-    accounts[0],
+    owner,
     await ENSResolver.deployed(),
-    await FIFSRegistrar.deployed(),
-    artists,
+    await registrarHelper.getRegistrar(network, artifacts, web3),
+    await Artists.deployed(),
+    network
   );
 };
