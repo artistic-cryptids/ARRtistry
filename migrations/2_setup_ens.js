@@ -1,11 +1,8 @@
 const ENS = artifacts.require('ENSRegistry');
-const FIFSRegistrar = artifacts.require('FIFSRegistrar');
-const RinkebyRegistrar = require('./helper/RinkebyRegistrar');
 const ENSResolver = artifacts.require('ENSResolver');
 
 const registrarHelper = require('./helper/RegistrarHelper');
 
-const utils = require('web3-utils');
 const namehash = require('eth-ens-namehash');
 
 const TLD = registrarHelper.tld;
@@ -17,30 +14,30 @@ const ENS_RINKEBY = '0xe7410170f87102df0055eb195163a03b7f2bff4a';
 
 module.exports = async (deployer, network, accounts) => {
   switch (network) {
-    case 'development':
-    case 'test':
-    case 'soliditycoverage':
-    case 'ganache':
-      console.log("Deploying ENS contracts on ganache");
-      await localMigrate(deployer, network, accounts);
-      return;
-    case 'rinkeby':
-    case 'rinkeby-fork':
-      console.log("Deploying ENS contracts on rinkeby");
-      await rinkebyDeploy(deployer, network);
-      return;
-    default:
-      throw new Error('ENS deploy not configured for this network');
+  case 'development':
+  case 'test':
+  case 'soliditycoverage':
+  case 'ganache':
+    console.log('Deploying ENS contracts on ganache');
+    await localMigrate(deployer, network, accounts);
+    return;
+  case 'rinkeby':
+  case 'rinkeby-fork':
+    console.log('Deploying ENS contracts on rinkeby');
+    await rinkebyDeploy(deployer, network);
+    return;
+  default:
+    throw new Error('ENS deploy not configured for this network');
   }
 };
 
 // Migrate on a local ganache network
-async function localMigrate(deployer, network, accounts) {
-  console.log("Deploying ENS on ganache");
+async function localMigrate (deployer, network, accounts) {
+  console.log('Deploying ENS on ganache');
   await deployer.deploy(ENS);
-  ens = await ENS.deployed();
+  const ens = await ENS.deployed();
 
-  await registrarHelper.deployLocalRegistrar(accounts[0], artifacts);
+  await registrarHelper.deployLocalRegistrar(deployer, accounts[0], artifacts);
 
   await deployer.deploy(ENSResolver, ens.address);
   const resolver = await ENSResolver.deployed();
@@ -48,8 +45,8 @@ async function localMigrate(deployer, network, accounts) {
 }
 
 // Migrate on the rinkeby network
-async function rinkebyDeploy(deployer, network) {
-  console.log("Finding ENS contract on rinkeby network " + ENS_RINKEBY);
+async function rinkebyDeploy (deployer, network) {
+  console.log('Finding ENS contract on rinkeby network ' + ENS_RINKEBY);
   const ens = await ENS.at(ENS_RINKEBY);
 
   await registrarHelper.setupRegistrarRinkeby(artifacts, web3);
@@ -60,15 +57,14 @@ async function rinkebyDeploy(deployer, network) {
 }
 
 // Setup functions
-//////////////////
+/// ///////////////
 
 async function setupResolver (ens, resolver) {
-  const resolverNode = namehash.hash(NAME +  "." + TLD);
-  const resolverLabel = utils.sha3(NAME + "." + TLD);
+  const resolverNode = namehash.hash(NAME + '.' + TLD);
 
   await ens.setResolver(resolverNode, resolver.address);
   await resolver.setAddr(resolverNode, resolver.address);
 
   console.log(resolver.address);
-  console.log(await resolver.addr(namehash.hash(NAME +  "." + TLD)));
+  console.log(await resolver.addr(namehash.hash(NAME + '.' + TLD)));
 }

@@ -8,20 +8,20 @@ module.exports = async (deployer, network, accounts) => {
 
       // The owner key should be stored securely in cold storage.
       switch (network) {
-        case 'development':
-        case 'test':
-        case 'soliditycoverage':
-        case 'ganache':
-          oldModerator = accounts[0];
-          newModerator = accounts[1];
-          break;
-        case 'rinkeby':
-        case 'rinkeby-fork':
-          oldModerator = process.env.ACCOUNT_ADDRESS;
-          newModerator = process.env.ACCOUNT_ADDRESS;
-          break;
-        default:
-          throw new Error('No ownership transfer defined for this network');
+      case 'development':
+      case 'test':
+      case 'soliditycoverage':
+      case 'ganache':
+        oldModerator = accounts[0];
+        newModerator = accounts[1];
+        break;
+      case 'rinkeby':
+      case 'rinkeby-fork':
+        oldModerator = process.env.ACCOUNT_ADDRESS;
+        newModerator = process.env.ACCOUNT_ADDRESS;
+        break;
+      default:
+        throw new Error('No ownership transfer defined for this network');
       }
 
       console.log('Transferring ownership');
