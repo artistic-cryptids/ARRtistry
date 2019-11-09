@@ -3,6 +3,7 @@ const Governance = artifacts.require('Governance');
 module.exports = async (deployer, network, accounts) => {
   deployer
     .then(async () => {
+      let oldModerator;
       let newModerator;
 
       // The owner key should be stored securely in cold storage.
@@ -11,11 +12,13 @@ module.exports = async (deployer, network, accounts) => {
       case 'test':
       case 'soliditycoverage':
       case 'ganache':
+        oldModerator = accounts[0];
         newModerator = accounts[1];
         break;
-      case 'ropsten':
       case 'rinkeby':
-        // newModerator = '0xA7899114e93880A5790a68F9df66174FC038849a'
+      case 'rinkeby-fork':
+        oldModerator = process.env.ACCOUNT_ADDRESS;
+        newModerator = process.env.ACCOUNT_ADDRESS;
         break;
       default:
         throw new Error('No ownership transfer defined for this network');
@@ -25,10 +28,10 @@ module.exports = async (deployer, network, accounts) => {
       const governance = await Governance.deployed();
 
       console.log('Transferring governance ownership to', newModerator);
-      await governance.transferOwnership(newModerator);
+      await governance.transferOwnership(newModerator, { from: oldModerator });
 
       console.log('Adding governance moderatorship for', newModerator);
-      await governance.addModerator(newModerator);
+      await governance.addModerator(newModerator, { from: oldModerator });
     })
     .catch((error) => {
       console.error(error);

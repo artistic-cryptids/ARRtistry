@@ -42,6 +42,7 @@
     "@ensdomains/ens": "^0.3.11",
     "@ensdomains/resolver": "^0.1.10",
     "@openzeppelin/contracts": "^2.3.0",
+    "@truffle/hdwallet-provider": "^1.0.23",
     "eth-ens-namehash": "^2.0.8",
     "truffle": "^5.0.39"
   },
