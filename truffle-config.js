@@ -1,4 +1,5 @@
 const path = require("path");
+const HDWalletProvider = require("@truffle/hdwallet-provider");
 
 module.exports = {
   /**
@@ -15,6 +16,11 @@ module.exports = {
    *
    * $ truffle test --network <network-name>
    */
+  compilers: {
+    solc: {
+      version: "0.5.12",
+    },
+  },
 
   networks: {
     development: {
@@ -22,6 +28,17 @@ module.exports = {
       port: 8545,
       network_id: '*', // eslint-disable-line camelcase
     },
+    rinkeby: {
+      provider: function() {
+       return new HDWalletProvider(
+        process.env.WALLET_MNEMONIC,
+        "https://rinkeby.infura.io/v3/" + process.env.INFURA_API_KEY
+       );
+      },
+    from: process.env.ACCOUNT_ADDRESS,
+      network_id: 4,
+      gas: 6000000
+    }
   },
   plugins: ["solidity-coverage"],
 };
