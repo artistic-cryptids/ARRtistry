@@ -24,7 +24,9 @@ module.exports = async (deployer, network, accounts) => {
     owner,
     await ENSResolver.deployed(),
     await Artists.deployed(),
-    network
+    network,
+    artifacts,
+    web3
   );
 };
 

@@ -12,7 +12,9 @@ module.exports = async (deployer, network, accounts) => {
     owner,
     await ENSResolver.deployed(),
     await Governance.deployed(),
-    network
+    network,
+    artifacts,
+    web3
   );
 };
 

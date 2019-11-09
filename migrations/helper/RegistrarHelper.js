@@ -44,7 +44,7 @@ const setupRegistrarRinkeby = async (artifacts, web3) => {
   console.log("Registered");
 };
 
-const register = async (network, name, owner) => {
+const register = async (network, name, owner, artifacts, web3) => {
   const ENS = artifacts.require('ENSRegistry');
   const FIFSRegistrar = artifacts.require('FIFSRegistrar');
   const RinkebyRegistrar = require('./RinkebyRegistrar');
@@ -56,7 +56,7 @@ const register = async (network, name, owner) => {
     case 'test':
     case 'soliditycoverage':
     case 'ganache':
-      registrar = FIFSRegistrar.deployed();
+      registrar = await FIFSRegistrar.deployed();
       await registrar.register(utils.sha3(name), owner);
       break;
     case 'rinkeby':
