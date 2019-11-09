@@ -21,7 +21,8 @@
     "react-loading": "^2.0.3",
     "react-lottie": "^1.2.3",
     "react-router-dom": "^5.1.2",
-    "react-scripts": "3.2.0"
+    "react-scripts": "3.2.0",
+    "typescript": "^3.6.4"
   },
   "scripts": {
     "start": "react-scripts start",
@@ -62,7 +63,6 @@
     "node-sass": "^4.13.0",
     "source-map-loader": "^0.2.4",
     "ts-loader": "^6.2.0",
-    "typed-scss-modules": "^0.0.12",
-    "typescript": "^3.6.4"
+    "typed-scss-modules": "^0.0.12"
   }
 }
