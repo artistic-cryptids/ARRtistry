@@ -11,7 +11,7 @@ import InputGroup from 'react-bootstrap/InputGroup';
 import Spinner from 'react-bootstrap/Spinner';
 import ipfs from '../ipfs';
 import TransactionLoadingModal from './common/TransactionLoadingModal';
-import { CommonProps } from '../helper/eth';
+import { ContractProps } from '../helper/eth';
 
 interface SaleProvenance {
   price: string;
@@ -50,6 +50,9 @@ interface RegisterState {
   artists?: Artist[];
 }
 
+interface RegisterProps extends ContractProps {
+}
+
 type InputChangeEvent = React.FormEvent<FormControlProps> &
   {
     target: {
@@ -60,8 +63,8 @@ type InputChangeEvent = React.FormEvent<FormControlProps> &
 
 const GENERIC_FEEDBACK = <Form.Control.Feedback>Looks good!</Form.Control.Feedback>;
 
-class Register extends React.Component<CommonProps, RegisterState> {
-  constructor (props: CommonProps) {
+class Register extends React.Component<RegisterProps, RegisterState> {
+  constructor (props: RegisterProps) {
     super(props);
     this.state = {
       registerTransactionStackId: null,

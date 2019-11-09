@@ -2,9 +2,9 @@ import * as React from 'react';
 
 import ProposalList from '../components/ProposalList';
 import ModeratorOnly from '../components/ModeratorOnly';
-import { CommonProps } from '../helper/eth';
+import { ContractProps } from '../helper/eth';
 
-const ProposalView: React.FC<CommonProps> = (props) => {
+const ProposalView: React.FC<ContractProps> = (props) => {
   const { contracts, accounts } = props;
   return (
     <ModeratorOnly contracts={contracts} accounts={accounts}>

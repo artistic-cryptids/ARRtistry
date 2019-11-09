@@ -4,11 +4,10 @@ import Col from 'react-bootstrap/Col';
 import Form from 'react-bootstrap/Form';
 import { FormControlProps } from 'react-bootstrap/FormControl';
 import Modal from 'react-bootstrap/Modal';
+import { ContractProps } from '../helper/eth';
 
-interface ConsignArtifactProps {
+interface ConsignArtifactProps extends ContractProps {
   tokenId: number;
-  contracts: any;
-  accounts: Array<string>;
 }
 
 interface ConsignArtifactFormFields {

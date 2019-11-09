@@ -1,15 +1,14 @@
 import * as React from 'react';
 import Card from 'react-bootstrap/Card';
+import { ContractProps } from '../helper/eth';
 
 interface Artwork {
   metaUri: string;
 }
 
-interface ArtworkInfoProps {
+interface ArtworkInfoProps extends ContractProps {
   artwork: Artwork;
   id: number;
-  contracts: any;
-  accounts: Array<string>;
 }
 
 interface Artist {

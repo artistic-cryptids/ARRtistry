@@ -1,10 +1,9 @@
 import * as React from 'react';
 import ProposalItem from './ProposalItem';
 import CardColumns from 'react-bootstrap/CardColumns';
+import { ContractProps } from '../helper/eth';
 
-interface ProposalListProps {
-  contracts: any;
-  accounts: Array<string>;
+interface ProposalListProps extends ContractProps {
 }
 
 interface ProposalListState {

@@ -3,11 +3,10 @@ import ArtworkInfo from './ArtworkInfo';
 import Row from 'react-bootstrap/Row';
 import Button from 'react-bootstrap/Button';
 import ButtonGroup from 'react-bootstrap/ButtonGroup';
+import { ContractProps } from '../helper/eth';
 
-interface ProposalItemProps {
+interface ProposalItemProps extends ContractProps {
   id: number;
-  contracts: any;
-  accounts: Array<string>;
 }
 
 type ProposalItemState = {

@@ -1,10 +1,9 @@
 import * as React from 'react';
 import ARRItem from './ARRItem';
 import CardColumns from 'react-bootstrap/CardColumns';
+import { ContractProps } from '../helper/eth';
 
-interface ARRListProps {
-  contracts: any;
-  accounts: Array<string>;
+interface ARRListProps extends ContractProps {
 }
 
 interface ARRListState {

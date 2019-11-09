@@ -1,3 +1,6 @@
+//import TruffleContract from '@truffle/contract';
+//import { ContractObject } from '@truffle/contract-schema'
+
 export interface ContractListType {
   Governance: any;
   ArtifactApplication: any;
@@ -5,7 +8,7 @@ export interface ContractListType {
   Artists: any;
 }
 
-export interface CommonProps {
+export interface ContractProps {
   contracts: ContractListType;
   accounts: Array<string>;
 }

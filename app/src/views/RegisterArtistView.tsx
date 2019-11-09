@@ -1,9 +1,9 @@
 import * as React from 'react';
 
 import RegisterArtist from '../components/RegisterArtist';
-import { CommonProps } from '../helper/eth';
+import { ContractProps } from '../helper/eth';
 
-const RegisterArtistView: React.FC<CommonProps> = (props) => {
+const RegisterArtistView: React.FC<ContractProps> = (props) => {
   const { contracts, accounts } = props;
   return <RegisterArtist contracts={contracts} accounts={accounts}/>;
 };

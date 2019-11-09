@@ -10,6 +10,7 @@ import { FormControlProps } from 'react-bootstrap/FormControl';
 import Spinner from 'react-bootstrap/Spinner';
 import ipfs from '../ipfs';
 import TransactionLoadingModal from './common/TransactionLoadingModal';
+import { ContractProps } from '../helper/eth';
 
 interface RegisterFormFields {
   name: string;
@@ -27,9 +28,7 @@ interface RegisterArtistState {
   isGovernor: false;
 }
 
-interface RegisterArtistProps {
-  contracts: any;
-  accounts: Array<string>;
+interface RegisterArtistProps extends ContractProps {
 }
 
 type InputChangeEvent = React.FormEvent<FormControlProps> &

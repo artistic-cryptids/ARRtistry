@@ -6,12 +6,11 @@ import { FormControlProps } from 'react-bootstrap/FormControl';
 import Modal from 'react-bootstrap/Modal';
 import ipfs from '../ipfs';
 import TransactionLoadingModal from './common/TransactionLoadingModal';
+import { ContractProps } from '../helper/eth';
 
-interface TransferArtifactProps {
+interface TransferArtifactProps extends ContractProps {
   tokenId: number;
   metaUri: string;
-  contracts: any;
-  accounts: Array<string>;
 }
 
 interface TransferArtifactFormFields {

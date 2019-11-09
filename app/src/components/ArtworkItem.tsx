@@ -5,12 +5,11 @@ import TransferArtifact from './TransferArtifact';
 import ConsignArtifact from './ConsignArtifact';
 import Col from 'react-bootstrap/Col';
 import Row from 'react-bootstrap/Row';
+import { ContractProps } from '../helper/eth';
 
-interface ArtworkItemProps {
+interface ArtworkItemProps extends ContractProps {
   tokenId: number;
   isOwnedArtifact: boolean;
-  contracts: any;
-  accounts: Array<string>;
 }
 
 type ArtworkItemState = {

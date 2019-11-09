@@ -1,13 +1,12 @@
 import * as React from 'react';
 import Card from 'react-bootstrap/Card';
+import { ContractProps } from '../helper/eth';
 
-interface ARRItemProps {
+interface ARRItemProps extends ContractProps {
   id: number;
-  contracts: any;
-  accounts: Array<string>;
 }
 
-type ARRItemType = {
+interface ARRItemType {
   from: string;
   to: string;
   tokenId: number;
@@ -15,7 +14,7 @@ type ARRItemType = {
   location: string;
 }
 
-type ARRItemState = {
+interface ARRItemState {
   ARR: ARRItemType;
 }
 

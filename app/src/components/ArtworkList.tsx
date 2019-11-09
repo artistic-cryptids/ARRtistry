@@ -1,10 +1,9 @@
 import * as React from 'react';
 import ArtworkItem from './ArtworkItem';
 import CardColumns from 'react-bootstrap/CardColumns';
+import { ContractProps } from '../helper/eth';
 
-interface ArtworkListProps {
-  contracts: any;
-  accounts: Array<string>;
+interface ArtworkListProps extends ContractProps {
 }
 
 interface ArtworkListState {
