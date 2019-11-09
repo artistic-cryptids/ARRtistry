@@ -16,6 +16,11 @@ module.exports = {
    *
    * $ truffle test --network <network-name>
    */
+  compilers: {
+    solc: {
+      version: "0.5.12",
+    },
+  },
 
   networks: {
     development: {
