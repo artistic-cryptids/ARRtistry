@@ -55,7 +55,7 @@ library ARRCalculator {
 
   /*
    * Divides x by y, allowing correct rounding to an integer if the result
-   * needs less than 3 significant figures (this is based on the scaling factor)
+   * needs less than 3 decimal places (this is based on the scaling factor)
    * to determine correct rounding.
    */
   function fixedPointDiv(uint x, uint y) private pure returns (uint) {
