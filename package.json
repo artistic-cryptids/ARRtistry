@@ -11,8 +11,7 @@
   ],
   "scripts": {
     "postinstall": "npm install --prefix app",
-    "build": "npm run compile && npm run migrate:rinkeby && npm build --prefix app",
-    "start": "npm start --prefix app",
+    "build": "npm run compile && npm run migrate:rinkeby && npm run build --prefix app",
     "compile": "scripts/compile.sh",
     "console": "truffle console",
     "coverage": "truffle run coverage",
