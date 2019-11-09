@@ -65,10 +65,13 @@ const register = async (network, name, owner, artifacts, web3) => {
     const registrarAddress = await ens.owner(namehash.hash('test'));
     console.log('Finding FIFSRegistrar on rinkeby network ' + registrarAddress);
     registrar = await new web3.eth.Contract(RinkebyRegistrar, registrarAddress);
-
+    console.log('Found FIFSRegistrar');
+    console.log(name);
+    console.log(owner);
     await registrar.methods.register(utils.sha3(name), owner).send({
       from: owner,
     });
+
     break;
   default:
     throw new Error('No contract implementation for registrar found on this network');
