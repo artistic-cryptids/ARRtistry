@@ -7,13 +7,8 @@
     "/contracts/**/*.sol"
   ],
   "scripts": {
-    "build": "npm run compile
-      && npm run migrate:rinkeby
-      && cd app
-      && npm run build
-      && cd ../",
-    "start": "cd appp
-      && npm run start",
+    "build": "npm run compile && npm run migrate:rinkeby && cd app && npm run build && cd ../",
+    "start": "cd app && npm run start",
     "compile": "scripts/compile.sh",
     "console": "truffle console",
     "coverage": "truffle run coverage",
