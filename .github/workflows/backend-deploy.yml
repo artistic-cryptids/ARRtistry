@@ -1,6 +1,9 @@
-name: Backend CI
+name: Backend Deploy CI
 
-on: [push]
+on:
+  push:
+    branches:
+      - master
 
 jobs:
   build:
@@ -20,3 +23,15 @@ jobs:
       run: npm run test
     - name: Lint
       run: npm run lint
+  deploy:
+    runs-on: ubuntu-latest
+    needs: build
+
+    env:
+      WALLET_MNEMONIC: ${{ secrets.WALLET_MNEMONIC }}
+      INFURA_API_KEY: ${{ secrets.INFURA_API_KEY }}
+      ACCOUNT_ADDRESS: ${{ secrets.ACCOUNT_ADDRESS }}
+
+    steps:
+    - name: deploy
+      run: truffle migrate --network rinkeby --reset
