@@ -28,4 +28,4 @@ jobs:
     - name: Lint
       run: npm run lint
     - name: deploy
-      run: truffle migrate --network rinkeby --reset
+      run: npm run migrate:rinkeby
