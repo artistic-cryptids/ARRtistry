@@ -14,7 +14,7 @@ module.exports = async (deployer, network, accounts) => {
     await Governance.deployed(),
     network,
     artifacts,
-    web3
+    web3,
   );
 };
 

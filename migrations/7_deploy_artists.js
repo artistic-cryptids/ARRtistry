@@ -26,7 +26,7 @@ module.exports = async (deployer, network, accounts) => {
     await Artists.deployed(),
     network,
     artifacts,
-    web3
+    web3,
   );
 };
 

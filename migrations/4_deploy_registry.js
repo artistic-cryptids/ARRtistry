@@ -17,7 +17,7 @@ module.exports = async (deployer, network, accounts) => {
     await ArtifactRegistry.deployed(),
     network,
     artifacts,
-    web3
+    web3,
   );
 };
 
