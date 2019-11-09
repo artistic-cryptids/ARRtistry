@@ -12,7 +12,7 @@
   "scripts": {
     "postinstall": "npm install --prefix app",
     "build": "npm run compile && npm run migrate:rinkeby && npm build --prefix app",
-    "start": "cd app && npm run start",
+    "start": "npm start --prefix app",
     "compile": "scripts/compile.sh",
     "console": "truffle console",
     "coverage": "truffle run coverage",
