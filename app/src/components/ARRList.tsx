@@ -3,15 +3,12 @@ import ARRItem from './ARRItem';
 import CardColumns from 'react-bootstrap/CardColumns';
 import { ContractProps } from '../helper/eth';
 
-interface ARRListProps extends ContractProps {
-}
-
 interface ARRListState {
   ids: string[];
 }
 
-class ARRList extends React.Component<ARRListProps, ARRListState> {
-  constructor (props: ARRListProps) {
+class ARRList extends React.Component<ContractProps, ARRListState> {
+  constructor (props: ContractProps) {
     super(props);
     this.state = { ids: [] };
   }

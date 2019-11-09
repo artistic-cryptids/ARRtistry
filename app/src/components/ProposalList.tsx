@@ -3,15 +3,12 @@ import ProposalItem from './ProposalItem';
 import CardColumns from 'react-bootstrap/CardColumns';
 import { ContractProps } from '../helper/eth';
 
-interface ProposalListProps extends ContractProps {
-}
-
 interface ProposalListState {
   ids: string[];
 }
 
-class ProposalList extends React.Component<ProposalListProps, ProposalListState> {
-  constructor (props: ProposalListProps) {
+class ProposalList extends React.Component<ContractProps, ProposalListState> {
+  constructor (props: ContractProps) {
     super(props);
     this.state = { ids: [] };
   }

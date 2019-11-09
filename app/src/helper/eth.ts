@@ -1,5 +1,5 @@
-//import TruffleContract from '@truffle/contract';
-//import { ContractObject } from '@truffle/contract-schema'
+// import TruffleContract from '@truffle/contract';
+// import { ContractObject } from '@truffle/contract-schema'
 
 export interface ContractListType {
   Governance: any;

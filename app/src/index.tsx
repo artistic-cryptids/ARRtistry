@@ -40,6 +40,7 @@ const doDapp = async (): Promise<void> => {
     Artists: artists,
   };
   const accounts = await web3.eth.getAccounts();
+  console.log(accounts[0]);
 
   ReactDOM.render(
     <App web3={ web3 } contracts={ contracts } accounts={ accounts }/>,

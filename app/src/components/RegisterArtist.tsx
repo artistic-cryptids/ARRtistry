@@ -28,9 +28,6 @@ interface RegisterArtistState {
   isGovernor: false;
 }
 
-interface RegisterArtistProps extends ContractProps {
-}
-
 type InputChangeEvent = React.FormEvent<FormControlProps> &
   {
     target: {
@@ -41,8 +38,8 @@ type InputChangeEvent = React.FormEvent<FormControlProps> &
 
 const GENERIC_FEEDBACK = <Form.Control.Feedback>Looks good!</Form.Control.Feedback>;
 
-class RegisterArtist extends React.Component<RegisterArtistProps, RegisterArtistState> {
-  constructor (props: RegisterArtistProps) {
+class RegisterArtist extends React.Component<ContractProps, RegisterArtistState> {
+  constructor (props: ContractProps) {
     super(props);
     this.state = {
       registerTransactionStackId: null,

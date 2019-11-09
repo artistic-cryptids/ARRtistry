@@ -4,17 +4,14 @@ import CardColumns from 'react-bootstrap/CardColumns';
 import Container from 'react-bootstrap/Container';
 import { ContractProps } from '../helper/eth';
 
-interface ClientArtifactsProps extends ContractProps {
-}
-
 interface ClientArtifactsState {
   numClientArtifacts: number;
   tokenIds: Array<number>;
 }
 
 class ClientArtifacts extends
-  React.Component<ClientArtifactsProps, ClientArtifactsState> {
-  constructor (props: ClientArtifactsProps) {
+  React.Component<ContractProps, ClientArtifactsState> {
+  constructor (props: ContractProps) {
     super(props);
     this.state = {
       numClientArtifacts: 0,

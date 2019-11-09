@@ -1,5 +1,4 @@
 import * as React from 'react';
-
 import ClientArtifacts from '../components/ClientArtifacts';
 import { ContractProps } from '../helper/eth';
 

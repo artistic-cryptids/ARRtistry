@@ -6,12 +6,11 @@ import { ArtifactView, ProposalView, ARRView, RegisterView, RegisterArtistView, 
 
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import LeftSidebar from './LeftSidebar';
+import { ContractProps } from '../helper/eth';
 
 import Web3 from 'web3';
 
-interface AppProps {
-  contracts: any;
-  accounts: Array<string>;
+interface AppProps extends ContractProps {
   web3: Web3;
 }
 
