@@ -3,24 +3,9 @@ const Governance = artifacts.require('Governance');
 const ENSResolver = artifacts.require('ENSResolver');
 
 const newLabel = require('./helper/LoggedRegistration');
-const registrarHelper = require('./helper/RegistrarHelper');
 
 module.exports = async (deployer, network, accounts) => {
-  let owner;
-  switch (network) {
-    case 'development':
-    case 'test':
-    case 'soliditycoverage':
-    case 'ganache':
-      owner = accounts[0];
-      break;
-    case 'rinkeby':
-    case 'rinkeby-fork':
-      owner = process.env.ACCOUNT_ADDRESS;
-      break;
-    default:
-      throw new Error('No owner selected for this network');
-  }
+  const owner = getOwner(network, accounts);
 
   const governance = await Governance.deployed();
   await deployer.deploy(ArtifactRegistry, governance.address, governance.address);
@@ -29,8 +14,22 @@ module.exports = async (deployer, network, accounts) => {
     'registry',
     owner,
     await ENSResolver.deployed(),
-    await registrarHelper.getRegistrar(network, artifacts, web3),
     await ArtifactRegistry.deployed(),
     network
   );
+};
+
+const getOwner = (network, accounts) => {
+  switch (network) {
+    case 'development':
+    case 'test':
+    case 'soliditycoverage':
+    case 'ganache':
+      return accounts[0];
+    case 'rinkeby':
+    case 'rinkeby-fork':
+      return process.env.ACCOUNT_ADDRESS;
+    default:
+      throw new Error('No owner selected for this network');
+  }
 };
