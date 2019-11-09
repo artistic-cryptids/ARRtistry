@@ -16,12 +16,12 @@ function artifactEquality (actual, expected, offset = 0) {
   expect(actual[offset + 1]).to.be.equal(expected.metaUri);
 };
 
-function ARREquality (actual, expected, offset = 0) {
-  expect(actual[offset]).to.be.equal(expected.from);
-  expect(actual[offset + 1]).to.be.equal(expected.to);
-  expect(actual[offset + 2]).to.eql(expected.tokenId);
-  expect(actual[offset + 3]).to.eql(expected.price);
-  expect(actual[offset + 4]).to.eql(expected.location);
+function ARREquality (actual, expected) {
+  expect(actual.from).to.be.equal(expected.from);
+  expect(actual.to).to.be.equal(expected.to);
+  expect(actual.tokenId).to.eql(expected.tokenId);
+  expect(actual.price).to.eql(expected.price);
+  expect(actual.location).to.eql(expected.location);
 };
 
 module.exports = {
