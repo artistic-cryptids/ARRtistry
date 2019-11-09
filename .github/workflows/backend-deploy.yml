@@ -1,8 +1,9 @@
 name: Backend Deploy CI
 
-on: [push]
-  branches:
-    - master
+on:
+  push:
+    branches:
+      - master
 
 jobs:
   build:
