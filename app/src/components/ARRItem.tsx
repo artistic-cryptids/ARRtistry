@@ -31,8 +31,9 @@ class ARRItem extends React.Component<ARRItemProps, ARRItemState> {
           to: ARRData[1],
           // tokenId and price are ints. They are accessed via 'words'
           tokenId: ARRData[2].words[0],
-          price: ARRData[3].words[0],
-          location: ARRData[4],
+          price: ARRData[3].words[0] / 100,
+          arr: ARRData[4].words[0] / 100,
+          location: ARRData[5],
         };
         console.log(ARRData);
         this.setState({ ARR: ARR });
@@ -57,7 +58,7 @@ class ARRItem extends React.Component<ARRItemProps, ARRItemState> {
             From: <i>{arr.from}</i> <br />
             To: <i>{arr.to}</i> <br />
             Price: &euro;{arr.price} <br />
-            ARR: &euro;{arr.price / 10} <br />
+            ARR: &euro;{arr.arr} <br />
             Location: {arr.location} <br />
           </Card.Text>
         </Card.Body>
