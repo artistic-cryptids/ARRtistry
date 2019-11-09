@@ -9,13 +9,15 @@ import ArtifactRegistry from './contracts/ArtifactRegistry.json';
 import Artists from './contracts/Artists.json';
 
 import './theme.scss';
-import Web3 from 'web3';
+
+// eslint-disable-next-line
+const Web3 = require('web3');
 
 // eslint-disable-next-line
 const contract = require('@truffle/contract');
 
 const doDapp = async (): Promise<void> => {
-  const web3 = new Web3('ws://127.0.0.1:8545');
+  const web3 = new Web3(Web3.givenProvider || 'ws://127.0.0.1:8545');
   // this is recommended way of doing it
   // but it stopped working when i removed drizzle
   // const web3 = new Web3(Web3.givenProvider || 'ws://127.0.0.1:8545');
