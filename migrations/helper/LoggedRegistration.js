@@ -12,9 +12,8 @@ module.exports = async function newLabel (label, owner, resolver, contract, netw
   const name = label + '.' + NAME + '.' + TLD;
   const hash = namehash.hash(name);
 
+  console.log('Registering ownership of', name, '(' + hash + ') to', owner);
   registrarHelper.register(network, label, owner, artifacts, web3);
-
-  console.log('Registering ownership of', label, '(' + utils.sha3(label) + ') to', owner);
   await resolver.setAddr(hash, addr);
   console.log('Registered', name, '(' + hash + ') to', addr);
 };
