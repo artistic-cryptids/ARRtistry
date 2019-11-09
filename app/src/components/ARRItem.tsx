@@ -11,6 +11,7 @@ interface ARRItemType {
   to: string;
   tokenId: number;
   price: number;
+  arr: number;
   location: string;
 }
 
