@@ -56,9 +56,6 @@ async function rinkebyDeploy (deployer, network) {
   await setupResolver(ens, resolver, [process.env.ACCOUNT_ADDRESS]);
 }
 
-// Setup functions
-/// ///////////////
-
 async function setupResolver (ens, resolver) {
   const resolverNode = namehash.hash(NAME + '.' + TLD);
 

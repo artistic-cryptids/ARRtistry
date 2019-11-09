@@ -6,51 +6,52 @@ const TLD = 'test';
 
 const ENS_RINKEBY = '0xe7410170f87102df0055eb195163a03b7f2bff4a';
 
-module.exports = {
-  deployRegistrar: async function deployLocalRegistrar (deployer, moderator, artifacts) {
-    const ENS = artifacts.require('ENSRegistry');
-    const FIFSRegistrar = artifacts.require('FIFSRegistrar');
+const deployLocalRegistrar = async (deployer, moderator, artifacts) => {
+  const ENS = artifacts.require('ENSRegistry');
+  const FIFSRegistrar = artifacts.require('FIFSRegistrar');
 
-    const ens = await ENS.deployed();
+  const ens = await ENS.deployed();
 
-    console.log('Deploying Registrar on ganache');
-    await deployer.deploy(FIFSRegistrar, ens.address, namehash.hash(TLD));
-    const registrar = await FIFSRegistrar.deployed();
+  console.log("Deploying Registrar on ganache");
+  await deployer.deploy(FIFSRegistrar, ens.address, namehash.hash(TLD));
+  const registrar = await FIFSRegistrar.deployed();
 
-    await ens.setSubnodeOwner('0x0000000000000000000000000000000000000000', utils.sha3(TLD), registrar.address);
-    await registrar.register(utils.sha3(NAME), moderator);
-  },
-  setupRegistrarRinkeby: async function setupRegistrarRinkeby (artifacts, web3) {
-    const ENS = artifacts.require('ENSRegistry');
-    const RinkebyRegistrar = require('./RinkebyRegistrar');
+  await ens.setSubnodeOwner('0x0000000000000000000000000000000000000000', utils.sha3(TLD), registrar.address);
+  await registrar.register(utils.sha3(NAME), moderator);
+};
 
-    const ens = await ENS.at(ENS_RINKEBY);
-    const registrarAddress = await ens.owner(namehash.hash('test'));
-    console.log('Finding FIFSRegistrar on rinkeby network ' + registrarAddress);
-    const registrar = await new web3.eth.Contract(RinkebyRegistrar, registrarAddress);
+const setupRegistrarRinkeby = async (artifacts, web3) => {
+  const ENS = artifacts.require('ENSRegistry');
+  const RinkebyRegistrar = require('./RinkebyRegistrar');
 
-    const time = await registrar.methods.expiryTimes(utils.sha3(NAME)).call();
+  const ens = await ENS.at(ENS_RINKEBY);
+  const registrarAddress = await ens.owner(namehash.hash('test'));
+  console.log("Finding FIFSRegistrar on rinkeby network " + registrarAddress);
+  const registrar = await new web3.eth.Contract(RinkebyRegistrar, registrarAddress);
 
-    console.log('Registrar registration expirytime is current set to ' + time);
+  const time = await registrar.methods.expiryTimes(utils.sha3(NAME)).call();
 
-    if (new Date(time * 1000) > Date.now()) {
-      return;
-    }
+  console.log("Registrar registration expirytime is current set to " + time);
 
-    await registrar.methods.register(utils.sha3(NAME), process.env.ACCOUNT_ADDRESS).send({
-      from: process.env.ACCOUNT_ADDRESS,
-    });
+  if (new Date(time * 1000) > Date.now()) {
+    return;
+  }
 
-    console.log('Registered');
-  },
-  register: async function register (network, name, owner) {
-    const ENS = artifacts.require('ENSRegistry');
-    const FIFSRegistrar = artifacts.require('FIFSRegistrar');
-    const RinkebyRegistrar = require('./RinkebyRegistrar');
+  await registrar.methods.register(utils.sha3(NAME), process.env.ACCOUNT_ADDRESS).send({
+    from: process.env.ACCOUNT_ADDRESS
+  });
 
-    let registrar;
+  console.log("Registered");
+};
 
-    switch (network) {
+const register = async (network, name, owner) => {
+  const ENS = artifacts.require('ENSRegistry');
+  const FIFSRegistrar = artifacts.require('FIFSRegistrar');
+  const RinkebyRegistrar = require('./RinkebyRegistrar');
+
+  let registrar;
+
+  switch (network) {
     case 'development':
     case 'test':
     case 'soliditycoverage':
@@ -62,17 +63,22 @@ module.exports = {
     case 'rinkeby-fork':
       const ens = await ENS.at(ENS_RINKEBY);
       const registrarAddress = await ens.owner(namehash.hash('test'));
-      console.log('Finding FIFSRegistrar on rinkeby network ' + registrarAddress);
+      console.log("Finding FIFSRegistrar on rinkeby network " + registrarAddress);
       registrar = await new web3.eth.Contract(RinkebyRegistrar, registrarAddress);
 
       await registrar.methods.register(utils.sha3(name), owner).send({
-        from: owner,
+        from: owner
       });
       break;
     default:
       throw new Error('No contract implementation for registrar found on this network');
-    }
-  },
-  name: NAME,
-  tld: TLD,
+  }
 };
+
+module.exports = {
+  deployLocalRegistrar: deployLocalRegistrar,
+  setupRegistrarRinkeby: setupRegistrarRinkeby,
+  register: register,
+  name: NAME,
+  tld: TLD
+}
