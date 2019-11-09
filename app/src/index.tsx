@@ -20,7 +20,7 @@ const doDapp = async (): Promise<void> => {
   const web3 = new Web3(Web3.givenProvider || 'ws://127.0.0.1:8545');
   const provider = web3.currentProvider;
   const governanceNonDeployed = contract(Governance);
-  const artifactApplicationNonDeployed = contract(ArtifactApplication);
+  const artifactApplicationNonDeployed = contract(ArtifactApplication);y
   const artifactRegistryNonDeployed = contract(ArtifactRegistry);
   const artistsNonDeployed = contract(Artists);
   governanceNonDeployed.setProvider(provider);
