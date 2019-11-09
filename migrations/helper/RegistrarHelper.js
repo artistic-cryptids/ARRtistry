@@ -1,7 +1,7 @@
 const utils = require('web3-utils');
 const namehash = require('eth-ens-namehash');
 
-const NAME = 'fame';
+const NAME = 'artistic';
 const TLD = 'test';
 
 const ENS_RINKEBY = '0xe7410170f87102df0055eb195163a03b7f2bff4a';
