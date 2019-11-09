@@ -2,7 +2,7 @@ name: Backend Deploy CI
 
 on: [push]
   branches:
-    - master
+  - master
 
 jobs:
   build:
@@ -32,5 +32,5 @@ jobs:
       ACCOUNT_ADDRESS: ${{ secrets.ACCOUNT_ADDRESS }}
 
     steps:
-      - name: deploy
-        run: truffle migrate --network rinkeby --reset
+    - name: deploy
+      run: truffle migrate --network rinkeby --reset
