@@ -1,5 +1,4 @@
 const namehash = require('eth-ens-namehash');
-const utils = require('web3-utils');
 
 const registrarHelper = require('./RegistrarHelper');
 
