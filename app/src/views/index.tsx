@@ -12,4 +12,5 @@ export {
   ARRView,
   ClientArtifactView,
   RegisterArtistView,
+  SoldArtifactView,
 };
