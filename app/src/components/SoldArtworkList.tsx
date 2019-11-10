@@ -31,22 +31,22 @@ class SoldArtworkList extends React.Component<ContractProps, SoldArtworkListStat
     const currentAccount = this.props.accounts[0];
     let eventsFound = 0;
     let eventArray: any[] = [];
-    let tokensArray = [];
+    let tokensArray: any[] = [];
 
     await governance.getPastEvents(
        "RecordARR",
          (errors:any, events:any) => {
             if (!errors) {
-               console.log(events);
-               eventsFound = events.length;
-               eventArray = events;
+               for (let i = 0; i < events.length; i++) {
+                 if(events[i].returnValues.from == currentAccount) {
+                   eventsFound +=1;
+                   eventArray.push(events[i]);
+                   tokensArray.push(eventArray[i].returnValues.tokenId);
+                 }
+               }
             }
         }
-   );
-
-    for (let i = 0; i < eventsFound; i++) {
-      tokensArray.push(eventArray[i].returnValues.tokenId);
-    }
+    );
     console.log(eventArray);
     console.log(eventsFound);
     this.setState({
