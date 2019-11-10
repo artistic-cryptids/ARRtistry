@@ -1,5 +1,5 @@
 import * as React from 'react';
-import ArtworkItem from './ArtworkItem';
+import SoldArtworkItem from './SoldArtworkItem';
 import CardColumns from 'react-bootstrap/CardColumns';
 import { ContractProps } from '../helper/eth';
 
@@ -20,6 +20,9 @@ class SoldArtworkList extends React.Component<ContractProps, SoldArtworkListStat
   componentDidMount (): void {
     const governance = this.props.contracts.Governance;
     const currentAccount = this.props.accounts[0];
+    let eventsFound = 0;
+    let eventArray:any[] = [];
+    let tokensArray = [];
 
     governance.getPastEvents('RecordARR', {
       filter: { from: currentAccount },
@@ -28,32 +31,21 @@ class SoldArtworkList extends React.Component<ContractProps, SoldArtworkListStat
 
       }
       console.log(events.length);
+      eventsFound = events.length;
+      eventArray = events;
     },
     );
+    for (let i = 0; i < eventsFound; i++) {
+      tokensArray.push(eventArray[i][0][3]);
+    }
+    this.setState({
+      balance: eventsFound,
+      tokenIds: tokensArray,
+    });
     this.shouldComponentUpdate();
   }
 
   shouldComponentUpdate (): boolean {
-    // artifactRegistry.balanceOf(currentAccount)
-    //   .then((balanceObj: any) => {
-    //     const balance = balanceObj.words[0];
-    //     if (!this.state || this.state.balance !== balance) {
-    //       this.setState({ balance: balance });
-    //       const tokenIds: Array<number> = [];
-    //       this.setState({ tokenIds: tokenIds });
-    //       for (let i = 0; i < balance; i++) {
-    //         artifactRegistry.tokenOfOwnerByIndex(currentAccount, i)
-    //           .then((tokenIdObj: any) => {
-    //             const tokenId = tokenIdObj.words[0];
-    //             tokenIds.push(tokenId);
-    //             this.setState({ tokenIds: tokenIds });
-    //           })
-    //           .catch((err: any) => { console.log(err); });
-    //       }
-    //     }
-    //   })
-    //   .catch((err: any) => { console.log(err); });
-
     return true;
   }
 
@@ -71,12 +63,11 @@ class SoldArtworkList extends React.Component<ContractProps, SoldArtworkListStat
     }
 
     const listItems = this.state.tokenIds.map((tokenId: number) =>
-      <ArtworkItem
+      <SoldArtworkItem
         contracts={this.props.contracts}
         accounts={this.props.accounts}
         tokenId={tokenId}
         key={tokenId}
-        isOwnedArtifact={true}
       />,
     );
 
