@@ -34,9 +34,9 @@ class SoldArtworkList extends React.Component<ContractProps, SoldArtworkListStat
     const governance = this.props.contracts.Governance;
     const currentAccount = this.props.accounts[0];
     let eventsFound = 0;
-    let tokensArray: any[] = [];
-    let priceArray: any[] = [];
-    let newOwnerArray: any[] = [];
+    const tokensArray: any[] = [];
+    const priceArray: any[] = [];
+    const newOwnerArray: any[] = [];
 
     await governance.getPastEvents(
       'RecordARR',
@@ -74,18 +74,18 @@ class SoldArtworkList extends React.Component<ContractProps, SoldArtworkListStat
       );
     }
 
-    let listItems = [];
+    const listItems = [];
 
     for (let i = 0; i < this.state.balance; i++) {
       listItems.push(
         <SoldArtworkItem
-        contracts={this.props.contracts}
-        accounts={this.props.accounts}
-        soldFor={this.state.prices[i]}
-        soldTo={this.state.newOwners[i]}
-        tokenId={this.state.tokenIds[i]}
-        key={this.state.tokenIds[i]}
-        />
+          contracts={this.props.contracts}
+          accounts={this.props.accounts}
+          soldFor={this.state.prices[i]}
+          soldTo={this.state.newOwners[i]}
+          tokenId={this.state.tokenIds[i]}
+          key={this.state.tokenIds[i]}
+        />,
       );
     }
 
