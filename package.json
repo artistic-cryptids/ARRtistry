@@ -1,12 +1,17 @@
 {
   "name": "contract",
   "version": "0.2.0",
+  "engines": {
+    "node": "10.16.3"
+  },
   "description": "Smart contracts for the art market",
   "main": "truffle-config.js",
   "files": [
     "/contracts/**/*.sol"
   ],
   "scripts": {
+    "postinstall": "npm install --prefix app",
+    "build": "npm run compile && npm run migrate:rinkeby && npm run build --prefix app",
     "compile": "scripts/compile.sh",
     "console": "truffle console",
     "coverage": "truffle run coverage",
