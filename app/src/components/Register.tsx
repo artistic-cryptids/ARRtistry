@@ -163,6 +163,7 @@ class Register extends React.Component<Drizzled, RegisterState> {
     const data = [];
     for (let document of jsonData.documents) {
       data.push(document.data);
+      document.data = undefined;
     }
 
     await this.saveToIpfs(data, (response: any) => {
