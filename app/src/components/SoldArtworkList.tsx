@@ -21,8 +21,8 @@ class SoldArtworkList extends React.Component<ContractProps, SoldArtworkListStat
     const governance = this.props.contracts.Governance;
     const currentAccount = this.props.accounts[0];
     let eventsFound = 0;
-    let eventArray:any[] = [];
-    let tokensArray = [];
+    let eventArray: any[] = [];
+    const tokensArray = [];
 
     governance.getPastEvents('RecordARR', {
       filter: { from: currentAccount },

@@ -39,11 +39,11 @@ const OurApp: React.FC<AppProps> = (props: AppProps) => {
         <Route path="/artifact/new">
           <RegisterView accounts={accounts} contracts={contracts}/>
         </Route>
-        <Route path="/artifact">
-          <ArtifactView accounts={accounts} contracts={contracts}/>
-        </Route>
         <Route path="/artifact/sold">
           <SoldArtifactView accounts={accounts} contracts={contracts}/>
+        </Route>
+        <Route path="/artifact">
+          <ArtifactView accounts={accounts} contracts={contracts}/>
         </Route>
         <Route path="/manage/proposal">
           <ProposalView accounts={accounts} contracts={contracts}/>
