@@ -27,7 +27,7 @@ class SoldArtworkList extends React.Component<ContractProps, SoldArtworkListStat
 
     governance.getPastEvents('RecordARR', {
         filter: {from: currentAccount},
-    }, function(error, events){
+    }, function(error:any, events:any){
       console.log(events);
       }
     )
