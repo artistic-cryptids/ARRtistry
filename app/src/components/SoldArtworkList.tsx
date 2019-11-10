@@ -80,4 +80,4 @@ class ArtworkList extends React.Component<ContractProps, ArtworkListState> {
   }
 }
 
-export default ArtworkList;
+export default SoldArtworkList;
