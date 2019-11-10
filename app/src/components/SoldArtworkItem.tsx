@@ -1,9 +1,11 @@
 import * as React from 'react';
-import ArtworkInfo from './ArtworkInfo';
+import SoldArtworkInfo from './SoldArtworkInfo';
 import ListGroup from 'react-bootstrap/ListGroup';
 import { ContractProps } from '../helper/eth';
 
 interface SoldArtworkItemProps extends ContractProps {
+  soldFor: number;
+  soldTo: string;
   tokenId: number;
 }
 
@@ -34,13 +36,15 @@ class SoldArtworkItem extends React.Component<SoldArtworkItemProps, SoldArtworkI
 
     return (
       <ListGroup.Item>
-        <ArtworkInfo
+        <SoldArtworkInfo
           contracts={this.props.contracts}
           accounts={this.props.accounts}
           artwork={this.state.artwork}
           id={this.props.tokenId}
+          soldFor={this.props.soldFor}
+          soldTo={this.props.soldTo}
         >
-        </ArtworkInfo>
+        </SoldArtworkInfo>
       </ListGroup.Item>
     );
   }

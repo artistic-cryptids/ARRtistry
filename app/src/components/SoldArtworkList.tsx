@@ -6,6 +6,8 @@ import { ContractProps } from '../helper/eth';
 interface SoldArtworkListState {
   balance: number;
   tokenIds: Array<number>;
+  prices: Array<number>;
+  newOwners: Array<string>;
 }
 
 class SoldArtworkList extends React.Component<ContractProps, SoldArtworkListState> {
@@ -14,6 +16,8 @@ class SoldArtworkList extends React.Component<ContractProps, SoldArtworkListStat
     this.state = {
       balance: 0,
       tokenIds: [],
+      prices: [],
+      newOwners: [],
     };
   }
 
@@ -30,8 +34,9 @@ class SoldArtworkList extends React.Component<ContractProps, SoldArtworkListStat
     const governance = this.props.contracts.Governance;
     const currentAccount = this.props.accounts[0];
     let eventsFound = 0;
-    const eventArray: any[] = [];
-    const tokensArray: any[] = [];
+    let tokensArray: any[] = [];
+    let priceArray: any[] = [];
+    let newOwnerArray: any[] = [];
 
     await governance.getPastEvents(
       'RecordARR',
@@ -40,8 +45,9 @@ class SoldArtworkList extends React.Component<ContractProps, SoldArtworkListStat
           for (let i = 0; i < events.length; i++) {
             if (events[i].returnValues.from === currentAccount) {
               eventsFound += 1;
-              eventArray.push(events[i]);
-              tokensArray.push(eventArray[i].returnValues.tokenId);
+              tokensArray.push(events[i].returnValues.tokenId);
+              priceArray.push(events[i].returnValues.price);
+              newOwnerArray.push(events[i].returnValues.to);
             }
           }
         }
@@ -50,6 +56,8 @@ class SoldArtworkList extends React.Component<ContractProps, SoldArtworkListStat
     this.setState({
       balance: eventsFound,
       tokenIds: tokensArray,
+      prices: priceArray,
+      newOwners: newOwnerArray,
     });
   }
 
@@ -66,14 +74,20 @@ class SoldArtworkList extends React.Component<ContractProps, SoldArtworkListStat
       );
     }
 
-    const listItems = this.state.tokenIds.map((tokenId: number) =>
-      <SoldArtworkItem
+    let listItems = [];
+
+    for (let i = 0; i < this.state.balance; i++) {
+      listItems.push(
+        <SoldArtworkItem
         contracts={this.props.contracts}
         accounts={this.props.accounts}
-        tokenId={tokenId}
-        key={tokenId}
-      />,
-    );
+        soldFor={this.state.prices[i]}
+        soldTo={this.state.newOwners[i]}
+        tokenId={this.state.tokenIds[i]}
+        key={this.state.tokenIds[i]}
+        />
+      );
+    }
 
     return (
       <CardColumns>{listItems}</CardColumns>
