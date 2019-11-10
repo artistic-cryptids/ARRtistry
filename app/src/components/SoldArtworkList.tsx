@@ -18,35 +18,41 @@ class SoldArtworkList extends React.Component<ContractProps, SoldArtworkListStat
   }
 
   componentDidMount (): void {
+    this.loadSales();
+  }
+
+  shouldComponentUpdate (): boolean {
+    this.loadSales();
+    return true;
+  }
+
+  async loadSales (): Promise<void> {
     const governance = this.props.contracts.Governance;
     const currentAccount = this.props.accounts[0];
     let eventsFound = 0;
     let eventArray: any[] = [];
-    const tokensArray = [];
+    let tokensArray = [];
 
-    governance.getPastEvents('RecordARR', {
-      filter: { from: currentAccount },
-    }, function (error: any, events: any) {
-      if (error) {
+    await governance.getPastEvents(
+       "RecordARR",
+         (errors:any, events:any) => {
+            if (!errors) {
+               console.log(events);
+               eventsFound = events.length;
+               eventArray = events;
+            }
+        }
+   );
 
-      }
-      console.log(events.length);
-      eventsFound = events.length;
-      eventArray = events;
-    },
-    );
     for (let i = 0; i < eventsFound; i++) {
-      tokensArray.push(eventArray[i][0][3]);
+      tokensArray.push(eventArray[i].returnValues.tokenId);
     }
+    console.log(eventArray);
+    console.log(eventsFound);
     this.setState({
       balance: eventsFound,
       tokenIds: tokensArray,
     });
-    this.shouldComponentUpdate();
-  }
-
-  shouldComponentUpdate (): boolean {
-    return true;
   }
 
   render (): React.ReactNode {
