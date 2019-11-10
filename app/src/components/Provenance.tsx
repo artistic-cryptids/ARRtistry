@@ -60,6 +60,7 @@ class Provenance extends React.Component<ProvenanceProps, ProvenanceState> {
   render (): React.ReactNode {
     const provenance = this.state.saleProvenance.map((saleRecord: SaleRecord, index: number) =>
       <ListGroup.Item key={index}>
+        <p>Date Sold: {new Date().toLocaleDateString(undefined, { year: 'numeric', month: 'long', day: 'numeric' })}</p>
         <p>Buyer: {saleRecord.buyers}</p>
         <p>Seller: {saleRecord.seller}</p>
         <p>Sale Location: {saleRecord.location}</p>
