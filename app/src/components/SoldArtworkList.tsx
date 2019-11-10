@@ -18,19 +18,22 @@ class SoldArtworkList extends React.Component<ContractProps, SoldArtworkListStat
   }
 
   componentDidMount (): void {
-    this.shouldComponentUpdate();
-  }
-
-  shouldComponentUpdate (): boolean {
     const governance = this.props.contracts.Governance;
     const currentAccount = this.props.accounts[0];
 
     governance.getPastEvents('RecordARR', {
-        filter: {from: currentAccount},
-    }, function(error:any, events:any){
-      console.log(events);
+      filter: { from: currentAccount },
+    }, function (error: any, events: any) {
+      if (error) {
+
       }
-    )
+      console.log(events.length);
+    },
+    );
+    this.shouldComponentUpdate();
+  }
+
+  shouldComponentUpdate (): boolean {
     // artifactRegistry.balanceOf(currentAccount)
     //   .then((balanceObj: any) => {
     //     const balance = balanceObj.words[0];
@@ -63,7 +66,7 @@ class SoldArtworkList extends React.Component<ContractProps, SoldArtworkListStat
 
     if (!this.state.balance) {
       return (
-        <span>You haven't sold any pieces of art!</span>
+        <span>No sales to display</span>
       );
     }
 

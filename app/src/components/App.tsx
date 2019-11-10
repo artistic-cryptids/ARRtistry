@@ -3,7 +3,7 @@ import NetworkAside from './NetworkAside';
 import HomePageNoAccount from './HomePageNoAccount';
 
 import { ArtifactView, ProposalView, ARRView, RegisterView, RegisterArtistView, ClientArtifactView, SoldArtifactView }
- from '../views';
+  from '../views';
 
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import LeftSidebar from './LeftSidebar';
