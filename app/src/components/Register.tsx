@@ -161,7 +161,7 @@ class Register extends React.Component<Drizzled, RegisterState> {
     jsonData.documents = this.state.documents;
 
     const data = [];
-    for (let document of jsonData.documents) {
+    for (const document of jsonData.documents) {
       data.push(document.data);
       document.data = undefined;
     }
@@ -281,11 +281,11 @@ class Register extends React.Component<Drizzled, RegisterState> {
     });
   };
 
-  onDrop = ((acceptedFiles: any) => {
+  onDrop = ((acceptedFiles: any): void => {
     const documents = this.state.documents;
-    for (let file of acceptedFiles) {
+    for (const file of acceptedFiles) {
       let newDoc = true;
-      for (let doc of documents) {
+      for (const doc of documents) {
         if (doc.filename === file.name) {
           newDoc = false;
           break;
@@ -298,12 +298,12 @@ class Register extends React.Component<Drizzled, RegisterState> {
 
       documents.push({
         filename: file.name,
-        data: file
+        data: file,
       });
     }
 
     this.setState({
-      documents: documents
+      documents: documents,
     });
   });
 
@@ -354,7 +354,7 @@ class Register extends React.Component<Drizzled, RegisterState> {
           </ListGroup>
         </Card.Body>
       </Card>
-    )
+    );
   };
 
   renderArtifactInformation = (): React.ReactNode => {
