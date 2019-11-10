@@ -22,12 +22,15 @@ class SoldArtworkList extends React.Component<ContractProps, SoldArtworkListStat
   }
 
   shouldComponentUpdate (): boolean {
-    const artifactRegistry = this.props.contracts.ArtifactRegistry;
+    const governance = this.props.contracts.Governance;
     const currentAccount = this.props.accounts[0];
 
-    let artworkSoldEvent = this.contractsGovernance.RecordARR();
-    artworkSoldEvent.watch(callback);
-
+    governance.getPastEvents('RecordARR', {
+        filter: {from: currentAccount},
+    }, function(error, events){
+      console.log(events);
+      }
+    )
     // artifactRegistry.balanceOf(currentAccount)
     //   .then((balanceObj: any) => {
     //     const balance = balanceObj.words[0];
