@@ -47,8 +47,6 @@ class SoldArtworkList extends React.Component<ContractProps, SoldArtworkListStat
             }
         }
     );
-    console.log(eventArray);
-    console.log(eventsFound);
     this.setState({
       balance: eventsFound,
       tokenIds: tokensArray,
