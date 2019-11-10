@@ -1,5 +1,5 @@
 import * as React from 'react';
-import ArtworkList from '../components/ArtworkList';
+import SoldArtworkList from '../components/SoldArtworkList';
 import { ContractProps } from '../helper/eth';
 
 const SoldArtifactView: React.FC<ContractProps> = (props) => {

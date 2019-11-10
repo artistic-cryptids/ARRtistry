@@ -3,12 +3,12 @@ import ArtworkItem from './ArtworkItem';
 import CardColumns from 'react-bootstrap/CardColumns';
 import { ContractProps } from '../helper/eth';
 
-interface ArtworkListState {
+interface SoldArtworkListState {
   balance: number;
   tokenIds: Array<number>;
 }
 
-class ArtworkList extends React.Component<ContractProps, ArtworkListState> {
+class SoldArtworkList extends React.Component<ContractProps, SoldArtworkListState> {
   constructor (props: ContractProps) {
     super(props);
     this.state = {
