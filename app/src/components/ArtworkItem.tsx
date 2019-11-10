@@ -3,6 +3,7 @@ import ArtworkInfo from './ArtworkInfo';
 import ListGroup from 'react-bootstrap/ListGroup';
 import TransferArtifact from './TransferArtifact';
 import ConsignArtifact from './ConsignArtifact';
+import Provenance from './Provenance';
 import Col from 'react-bootstrap/Col';
 import Row from 'react-bootstrap/Row';
 import { ContractProps } from '../helper/eth';
@@ -46,6 +47,9 @@ class ArtworkItem extends React.Component<ArtworkItemProps, ArtworkItemState> {
           id={this.props.tokenId}
         >
           <Row>
+            <Col>
+              <Provenance metaUri={this.state.artwork.metaUri} />
+            </Col>
             <Col>
               <TransferArtifact
                 contracts={this.props.contracts}
