@@ -5,6 +5,7 @@ const Governance = artifacts.require('./Governance.sol');
 
 contract('Artists', async accounts => {
   const creator = accounts[0];
+  const nonGovernanceAccount = accounts[2];
   const metaUri = 'https://ipfs.io/ipfs/QmT6zwWGhfEFmGfmPigwcmEXEJFJBZsHmMnNPdpiM5GH3i';
 
   describe('addArtists', async () => {
@@ -14,6 +15,13 @@ contract('Artists', async accounts => {
     beforeEach(async () => {
       governance = await Governance.new({ from: creator });
       instance = await Artists.new(creator, governance.address, { from: creator });
+    });
+
+    it('Should reject for a non-governance account', async () => {
+      await expectRevert(
+        instance.addArtist(metaUri, { from: nonGovernanceAccount }),
+        'Artists::addArtist: only governor accounts can add artists',
+      );
     });
 
     it('Should be able to add and retrieve artists', async () => {
