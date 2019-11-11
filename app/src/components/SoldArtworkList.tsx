@@ -3,11 +3,15 @@ import SoldArtworkItem from './SoldArtworkItem';
 import CardColumns from 'react-bootstrap/CardColumns';
 import { ContractProps } from '../helper/eth';
 
+interface SoldInformation {
+  tokenId: number;
+  price: number;
+  newOwner: string;
+}
+
 interface SoldArtworkListState {
   balance: number;
-  tokenIds: Array<number>;
-  prices: Array<number>;
-  newOwners: Array<string>;
+  soldInformationArray: Array<SoldInformation>;
 }
 
 class SoldArtworkList extends React.Component<ContractProps, SoldArtworkListState> {
@@ -15,9 +19,7 @@ class SoldArtworkList extends React.Component<ContractProps, SoldArtworkListStat
     super(props);
     this.state = {
       balance: 0,
-      tokenIds: [],
-      prices: [],
-      newOwners: [],
+      soldInformationArray: [],
     };
   }
 
@@ -34,9 +36,7 @@ class SoldArtworkList extends React.Component<ContractProps, SoldArtworkListStat
     const governance = this.props.contracts.Governance;
     const currentAccount = this.props.accounts[0];
     let eventsFound = 0;
-    const tokensArray: any[] = [];
-    const priceArray: any[] = [];
-    const newOwnerArray: any[] = [];
+    const soldInfoArray: any[] = [];
 
     await governance.getPastEvents(
       'RecordARR',
@@ -45,9 +45,13 @@ class SoldArtworkList extends React.Component<ContractProps, SoldArtworkListStat
           for (let i = 0; i < events.length; i++) {
             if (events[i].returnValues.from === currentAccount) {
               eventsFound += 1;
-              tokensArray.push(events[i].returnValues.tokenId);
-              priceArray.push(events[i].returnValues.price);
-              newOwnerArray.push(events[i].returnValues.to);
+              const temp:SoldInformation = {
+                tokenId: events[i].returnValues.tokenId,
+                price: events[i].returnValues.price,
+                newOwner: events[i].returnValues.to,
+              };
+              console.log(temp);
+              soldInfoArray.push(temp);
             }
           }
         }
@@ -55,9 +59,7 @@ class SoldArtworkList extends React.Component<ContractProps, SoldArtworkListStat
     );
     this.setState({
       balance: eventsFound,
-      tokenIds: tokensArray,
-      prices: priceArray,
-      newOwners: newOwnerArray,
+      soldInformationArray: soldInfoArray,
     });
   }
 
@@ -81,10 +83,10 @@ class SoldArtworkList extends React.Component<ContractProps, SoldArtworkListStat
         <SoldArtworkItem
           contracts={this.props.contracts}
           accounts={this.props.accounts}
-          soldFor={this.state.prices[i]}
-          soldTo={this.state.newOwners[i]}
-          tokenId={this.state.tokenIds[i]}
-          key={this.state.tokenIds[i]}
+          soldFor={this.state.soldInformationArray[i].price}
+          soldTo={this.state.soldInformationArray[i].newOwner}
+          tokenId={this.state.soldInformationArray[i].tokenId}
+          key={this.state.soldInformationArray[i].tokenId}
         />,
       );
     }
