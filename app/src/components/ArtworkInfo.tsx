@@ -1,14 +1,13 @@
 import * as React from 'react';
 import Card from 'react-bootstrap/Card';
+import { ContractProps } from '../helper/eth';
 import Documents from './Documents';
 
 interface Artwork {
   metaUri: string;
 }
 
-interface ArtworkInfoProps {
-  drizzle: any;
-  drizzleState: any;
+interface ArtworkInfoProps extends ContractProps {
   artwork: Artwork;
   id: number;
 }
@@ -100,8 +99,7 @@ class ArtworkInfo extends React.Component<ArtworkInfoProps, ArtworkInfoState> {
       return;
     }
 
-    this.props.drizzle.contracts.Artists.methods.getArtist(this.state.fields.artistId)
-      .call()
+    this.props.contracts.Artists.getArtist(this.state.fields.artistId)
       .then((hash: string) => this.hashToArtist(hash))
       .then((artist: Artist) => this.setState({
         retrievedData: true,

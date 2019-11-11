@@ -2,11 +2,7 @@ import * as React from 'react';
 import ArtworkItem from './ArtworkItem';
 import CardColumns from 'react-bootstrap/CardColumns';
 import Container from 'react-bootstrap/Container';
-
-interface ClientArtifactsProps {
-  drizzle: any;
-  drizzleState: any;
-}
+import { ContractProps } from '../helper/eth';
 
 interface ClientArtifactsState {
   numClientArtifacts: number;
@@ -14,8 +10,8 @@ interface ClientArtifactsState {
 }
 
 class ClientArtifacts extends
-  React.Component<ClientArtifactsProps, ClientArtifactsState> {
-  constructor (props: ClientArtifactsProps) {
+  React.Component<ContractProps, ClientArtifactsState> {
+  constructor (props: ContractProps) {
     super(props);
     this.state = {
       numClientArtifacts: 0,
@@ -28,12 +24,13 @@ class ClientArtifacts extends
   }
 
   shouldComponentUpdate (): boolean {
-    const artifactRegistry = this.props.drizzle.contracts.ArtifactRegistry;
-    const currentAccount = this.props.drizzleState.accounts[0];
+    const artifactRegistry = this.props.contracts.ArtifactRegistry;
+    const currentAccount = this.props.accounts[0];
 
-    artifactRegistry.methods.getOperatorTokenIds(currentAccount)
-      .call()
-      .then((tokenIds: any) => {
+    artifactRegistry.getOperatorTokenIds(currentAccount)
+      .then((tokenIdObjects: any) => {
+        const tokenIds: number[] = [];
+        tokenIdObjects.map((tid: any) => tokenIds.push(Number(tid.words[0])));
         if (tokenIds.length !== this.state.numClientArtifacts) {
           this.setState({
             numClientArtifacts: tokenIds.length,
@@ -65,8 +62,8 @@ class ClientArtifacts extends
 
     const listItems = this.state.tokenIds.map((tokenId: number) =>
       <ArtworkItem
-        drizzle={this.props.drizzle}
-        drizzleState={this.props.drizzleState}
+        contracts={this.props.contracts}
+        accounts={this.props.accounts}
         tokenId={tokenId}
         key={tokenId}
         isOwnedArtifact={false}

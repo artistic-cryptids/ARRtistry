@@ -6,10 +6,9 @@ import ConsignArtifact from './ConsignArtifact';
 import Provenance from './Provenance';
 import Col from 'react-bootstrap/Col';
 import Row from 'react-bootstrap/Row';
+import { ContractProps } from '../helper/eth';
 
-interface ArtworkItemProps {
-  drizzle: any;
-  drizzleState: any;
+interface ArtworkItemProps extends ContractProps {
   tokenId: number;
   isOwnedArtifact: boolean;
 }
@@ -20,8 +19,8 @@ type ArtworkItemState = {
 
 class ArtworkItem extends React.Component<ArtworkItemProps, ArtworkItemState> {
   componentDidMount (): void {
-    const registry = this.props.drizzle.contracts.ArtifactRegistry;
-    registry.methods.getArtifactForToken(this.props.tokenId).call()
+    const registry = this.props.contracts.ArtifactRegistry;
+    registry.getArtifactForToken(this.props.tokenId)
       .then((artworkData: any) => {
         console.log(artworkData);
         const artwork = {
@@ -42,10 +41,10 @@ class ArtworkItem extends React.Component<ArtworkItemProps, ArtworkItemState> {
     return (
       <ListGroup.Item>
         <ArtworkInfo
+          contracts={this.props.contracts}
+          accounts={this.props.accounts}
           artwork={this.state.artwork}
           id={this.props.tokenId}
-          drizzle={this.props.drizzle}
-          drizzleState={this.props.drizzleState}
         >
           <Row>
             <Col>
@@ -53,8 +52,8 @@ class ArtworkItem extends React.Component<ArtworkItemProps, ArtworkItemState> {
             </Col>
             <Col>
               <TransferArtifact
-                drizzle={this.props.drizzle}
-                drizzleState={this.props.drizzleState}
+                contracts={this.props.contracts}
+                accounts={this.props.accounts}
                 tokenId={this.props.tokenId}
                 metaUri={this.state.artwork.metaUri}
               />
@@ -62,8 +61,8 @@ class ArtworkItem extends React.Component<ArtworkItemProps, ArtworkItemState> {
             {this.props.isOwnedArtifact
               ? <Col>
                 <ConsignArtifact
-                  drizzle={this.props.drizzle}
-                  drizzleState={this.props.drizzleState}
+                  contracts={this.props.contracts}
+                  accounts={this.props.accounts}
                   tokenId={this.props.tokenId}
                 />
               </Col>

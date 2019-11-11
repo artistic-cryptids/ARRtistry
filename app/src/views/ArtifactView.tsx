@@ -1,10 +1,10 @@
 import * as React from 'react';
 import ArtworkList from '../components/ArtworkList';
-import { Drizzled } from 'drizzle';
+import { ContractProps } from '../helper/eth';
 
-const ArtifactView: React.FC<Drizzled> = (props) => {
-  const { drizzle, drizzleState } = props;
-  return <ArtworkList drizzle={drizzle} drizzleState={drizzleState}/>;
+const ArtifactView: React.FC<ContractProps> = (props) => {
+  const { contracts, accounts } = props;
+  return <ArtworkList contracts={contracts} accounts={accounts}/>;
 };
 
 export default ArtifactView;
