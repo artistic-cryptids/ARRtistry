@@ -5,10 +5,9 @@ import Row from 'react-bootstrap/Row';
 import Form from 'react-bootstrap/Form';
 import { FormControlProps } from 'react-bootstrap/FormControl';
 import Modal from 'react-bootstrap/Modal';
+import { ContractProps } from '../helper/eth';
 
-interface ConsignArtifactProps {
-  drizzle: any;
-  drizzleState: any;
+interface ConsignArtifactProps extends ContractProps {
   tokenId: number;
 }
 
@@ -71,11 +70,14 @@ class ConsignArtifact extends React.Component<ConsignArtifactProps, ConsignArtif
   }
 
   consign = (address: string): void => {
-    const artifactRegistry = this.props.drizzle.contracts.ArtifactRegistry;
+    const artifactRegistry = this.props.contracts.ArtifactRegistry;
 
-    artifactRegistry.methods.approve.cacheSend(
+    artifactRegistry.approve(
       address,
       this.props.tokenId,
+      {
+        from: this.props.accounts[0],
+      },
     );
   }
 

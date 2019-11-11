@@ -4,7 +4,6 @@ import Fade from 'react-bootstrap/Fade';
 import LoadingModal from './LoadingModal';
 
 interface TransactionLoadingModalProps {
-  drizzleState: any;
   onHide: () => void;
   submitted: boolean;
   title: string;
@@ -18,26 +17,7 @@ class TransactionLoadingModal extends React.Component<TransactionLoadingModalPro
   SUBMISSION_FINISHED = 100;
 
   progress = (): number => {
-    const { transactions, transactionStack } = this.props.drizzleState;
-
-    if (this.props.transactionStackId == null && this.props.submitted) {
-      return this.SUBMISSION_STARTED;
-    }
-
-    const transactionHash = transactionStack[this.props.transactionStackId];
-    if (!transactionHash) {
-      return this.TRANSACTION_REGISTERED;
-    }
-
-    if (!transactions[transactionHash]) {
-      return this.TRANSACTION_APPROVED;
-    }
-
-    if (transactions[transactionHash].status === 'success') {
-      return this.SUBMISSION_FINISHED;
-    } else {
-      return -1;
-    }
+    return 50;
   };
 
   render (): React.ReactNode {

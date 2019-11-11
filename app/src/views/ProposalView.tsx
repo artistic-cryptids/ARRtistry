@@ -2,13 +2,13 @@ import * as React from 'react';
 
 import ProposalList from '../components/ProposalList';
 import ModeratorOnly from '../components/ModeratorOnly';
-import { Drizzled } from 'drizzle';
+import { ContractProps } from '../helper/eth';
 
-const ProposalView: React.FC<Drizzled> = (props) => {
-  const { drizzle, drizzleState } = props;
+const ProposalView: React.FC<ContractProps> = (props) => {
+  const { contracts, accounts } = props;
   return (
-    <ModeratorOnly drizzle={drizzle} drizzleState={drizzleState}>
-      <ProposalList drizzle={drizzle} drizzleState={drizzleState}/>
+    <ModeratorOnly contracts={contracts} accounts={accounts}>
+      <ProposalList contracts={contracts} accounts={accounts}/>
     </ModeratorOnly>
   );
 };

@@ -1,9 +1,8 @@
 import * as React from 'react';
 import Container from 'react-bootstrap/Container';
+import { ContractProps } from '../helper/eth';
 
-interface GovernanceProps {
-  drizzle: any;
-  drizzleState: any;
+interface GovernanceProps extends ContractProps {
   children: React.ReactNode | React.ReactNode[];
 }
 
@@ -13,9 +12,9 @@ type GovernanceState = {
 
 class Governance extends React.Component<GovernanceProps, GovernanceState> {
   componentDidMount (): void {
-    this.props.drizzle.contracts.Governance.methods.isGovernor(this.props.drizzleState.accounts[0]).call()
+    this.props.contracts.Governance.isGovernor(this.props.accounts[0])
       .then((isGovernor: any) => this.setState({ isGovernor: isGovernor }))
-      .catch((err: any) => { console.log(err); });
+      .catch(console.log);
   }
 
   render (): React.ReactNode {

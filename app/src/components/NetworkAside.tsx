@@ -1,8 +1,9 @@
 import * as React from 'react';
 import Toast from 'react-bootstrap/Toast';
+import Web3 from 'web3';
 
 interface NetworkAsideProps {
-  drizzle: any;
+  web3: Web3;
 }
 
 type NetworkAsideState = {
@@ -21,7 +22,7 @@ class NetworkAside extends React.Component<NetworkAsideProps, NetworkAsideState>
   }
 
   async componentDidMount (): Promise<void> {
-    const networkType = await this.props.drizzle.web3.eth.net.getNetworkType();
+    const networkType = await this.props.web3.eth.net.getNetworkType();
     console.log(networkType);
     this.setState({ open: true, network: networkType });
   }

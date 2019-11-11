@@ -9,8 +9,8 @@ import Accordion from 'react-bootstrap/Accordion';
 import { FormControlProps } from 'react-bootstrap/FormControl';
 import Spinner from 'react-bootstrap/Spinner';
 import ipfs from '../ipfs';
-import { Drizzled } from 'drizzle';
 import TransactionLoadingModal from './common/TransactionLoadingModal';
+import { ContractProps } from '../helper/eth';
 
 interface RegisterFormFields {
   name: string;
@@ -38,8 +38,8 @@ type InputChangeEvent = React.FormEvent<FormControlProps> &
 
 const GENERIC_FEEDBACK = <Form.Control.Feedback>Looks good!</Form.Control.Feedback>;
 
-class RegisterArtist extends React.Component<Drizzled, RegisterArtistState> {
-  constructor (props: Drizzled) {
+class RegisterArtist extends React.Component<ContractProps, RegisterArtistState> {
+  constructor (props: ContractProps) {
     super(props);
     this.state = {
       registerTransactionStackId: null,
@@ -57,7 +57,7 @@ class RegisterArtist extends React.Component<Drizzled, RegisterArtistState> {
   };
 
   componentDidMount (): void {
-    this.props.drizzle.contracts.Governance.methods.isGovernor(this.props.drizzleState.accounts[0]).call()
+    this.props.contracts.Governance.isGovernor(this.props.accounts[0])
       .then((isGovernor: any) => {
         const fields = this.state.fields as Pick<RegisterFormFields, keyof RegisterFormFields>;
         this.setState({
@@ -79,7 +79,7 @@ class RegisterArtist extends React.Component<Drizzled, RegisterArtistState> {
 
     this.setState({ validated: true, submitted: true });
 
-    const { drizzle, drizzleState } = this.props;
+    const { contracts, accounts } = this.props;
 
     // eslint-disable-next-line
     const { metaIpfsHash, ...restOfTheFields } = this.state.fields;
@@ -92,14 +92,14 @@ class RegisterArtist extends React.Component<Drizzled, RegisterArtistState> {
     await this.saveToIpfs(files, this.setMetaHash);
 
     const ipfsUrlStart = 'https://ipfs.io/ipfs/';
-    const stackId = drizzle.contracts.Artists.methods.addArtist.cacheSend(
+    const stackId = await contracts.Artists.addArtist(
       ipfsUrlStart + this.state.fields.metaIpfsHash,
       {
-        from: drizzleState.accounts[0],
+        from: accounts[0],
         gasLimit: 6000000,
       },
     ); // TODO: Catch error when this function fails and display error to user
-    console.log(this.state.fields.metaIpfsHash);
+    console.log(stackId);
 
     this.setState({
       registerTransactionStackId: stackId,
@@ -108,10 +108,10 @@ class RegisterArtist extends React.Component<Drizzled, RegisterArtistState> {
 
   renderSubmitButton = (): React.ReactNode => {
     // eslint-disable-next-line
-    const { transactions, transactionStack } = this.props.drizzleState;
+    //const { transactions, transactionStack } = this.props.drizzleState;
 
     // eslint-disable-next-line
-    const registerTransactionHash = transactionStack[this.state.registerTransactionStackId];
+    //const registerTransactionHash = transactionStack[this.state.registerTransactionStackId];
     if (!this.state.validated && !this.state.submitted) {
       return <Button type="submit" className="my-2 btn-block" variant="primary">Submit</Button>;
     } else if (this.state.submitted) {
@@ -233,7 +233,6 @@ class RegisterArtist extends React.Component<Drizzled, RegisterArtistState> {
             </Col>
           </Row>
           <TransactionLoadingModal
-            drizzleState={this.props.drizzleState}
             onHide={() => this.setState({ submitted: false })}
             submitted={this.state.submitted}
             transactionStackId={this.state.registerTransactionStackId}
