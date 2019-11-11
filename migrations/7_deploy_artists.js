@@ -1,11 +1,13 @@
 const Artists = artifacts.require('Artists');
+const Governance = artifacts.require('Governance');
 const ENSResolver = artifacts.require('ENSResolver');
 
 const newLabel = require('./helper/LoggedRegistration');
 
 module.exports = async (deployer, network, accounts) => {
   const owner = getOwner(network, accounts);
-  await deployer.deploy(Artists, owner);
+  const governance = await Governance.deployed();
+  await deployer.deploy(Artists, owner, governance.address);
 
   const artists = await Artists.deployed();
 

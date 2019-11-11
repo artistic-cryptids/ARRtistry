@@ -19,6 +19,8 @@ contract IGovernance {
     string location;
   }
 
+  function isGovernor(address account) public view returns (bool);
+
   function propose(address target, bytes memory data) public returns (uint);
   function approve(uint proposalId) public;
   function reject(uint proposalId) public;
