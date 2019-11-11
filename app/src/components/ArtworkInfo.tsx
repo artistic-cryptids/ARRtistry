@@ -1,6 +1,7 @@
 import * as React from 'react';
 import Card from 'react-bootstrap/Card';
 import { ContractProps } from '../helper/eth';
+import Documents from './Documents';
 
 interface Artwork {
   metaUri: string;
@@ -30,6 +31,7 @@ interface ArtworkInfoFields {
   width: string;
   height: string;
   imageIpfsHash: string;
+  documents: any;
 }
 
 interface ArtworkInfoState {
@@ -64,6 +66,7 @@ class ArtworkInfo extends React.Component<ArtworkInfoProps, ArtworkInfoState> {
         width: '',
         height: '',
         imageIpfsHash: '',
+        documents: [],
       },
     };
   }
@@ -134,6 +137,7 @@ class ArtworkInfo extends React.Component<ArtworkInfoProps, ArtworkInfoState> {
               <span className="text-muted text-capitalize">Height:</span> {fields.height}
               <span className="text-muted text-capitalize"> Width:</span> {fields.width}
             </Card.Text>
+            <Documents documents={fields.documents}/>
           </Card.Body>
           <Card.Footer>
             <small className="text-muted">Last updated 3 mins ago</small>
