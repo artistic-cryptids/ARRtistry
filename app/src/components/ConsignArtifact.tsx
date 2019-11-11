@@ -1,6 +1,7 @@
 import * as React from 'react';
 import Button from 'react-bootstrap/Button';
 import Col from 'react-bootstrap/Col';
+import Row from 'react-bootstrap/Row';
 import Form from 'react-bootstrap/Form';
 import { FormControlProps } from 'react-bootstrap/FormControl';
 import Modal from 'react-bootstrap/Modal';
@@ -17,7 +18,8 @@ interface ConsignArtifactFormFields {
 
 interface ConsignArtifactState {
   fields: ConsignArtifactFormFields;
-  showConsignArtifactForm: boolean;
+  consignedAccount: string;
+  showConsignment: boolean;
 }
 
 type InputChangeEvent = React.FormEvent<FormControlProps> &
@@ -29,6 +31,7 @@ type InputChangeEvent = React.FormEvent<FormControlProps> &
   }
 
 const GENERIC_FEEDBACK = <Form.Control.Feedback>Looks good!</Form.Control.Feedback>;
+const ZERO_ADDR = "0x0000000000000000000000000000000000000000";
 
 class ConsignArtifact extends React.Component<ConsignArtifactProps, ConsignArtifactState> {
   constructor (props: ConsignArtifactProps) {
@@ -37,18 +40,45 @@ class ConsignArtifact extends React.Component<ConsignArtifactProps, ConsignArtif
       fields: {
         recipientAddress: '',
       },
-      showConsignArtifactForm: false,
+      consignedAccount: '',
+      showConsignment: false,
     };
   }
 
-  ConsignArtifactForArtwork = (_: React.FormEvent): void => {
+  componentDidMount (): void {
+    const artifactRegistry = this.props.drizzle.contracts.ArtifactRegistry;
+
+    artifactRegistry.methods.getApproved(this.props.tokenId)
+      .call()
+      .then((account: string) => {
+        if (account === ZERO_ADDR) {
+          return;
+        }
+
+        this.setState({
+          consignedAccount: account
+        });
+      });
+  }
+
+  consignArtifactForArtwork = (_: React.FormEvent): void => {
+    this.consign(this.state.fields.recipientAddress);
+  }
+
+
+  revokeConsignment = (_: React.FormEvent): void => {
+    this.consign(ZERO_ADDR);
+  }
+
+  consign = (address: string): void => {
     const artifactRegistry = this.props.drizzle.contracts.ArtifactRegistry;
 
     artifactRegistry.methods.approve.cacheSend(
-      this.state.fields.recipientAddress,
+      address,
       this.props.tokenId,
     );
   }
+
 
   inputChangeHandler = (event: InputChangeEvent): void => {
     const key = event.target.id;
@@ -62,7 +92,7 @@ class ConsignArtifact extends React.Component<ConsignArtifactProps, ConsignArtif
 
   handleShow = (): void => {
     this.setState({
-      showConsignArtifactForm: true,
+      showConsignment: true,
     });
   }
 
@@ -71,21 +101,25 @@ class ConsignArtifact extends React.Component<ConsignArtifactProps, ConsignArtif
       fields: {
         recipientAddress: '',
       },
-      showConsignArtifactForm: false,
+      showConsignment: false,
     });
   }
 
   render (): React.ReactNode {
     return (
-      <div>
+      <Row>
         <Button variant="primary" onClick={this.handleShow}>
-          Consign for Sale
+          Consignment
         </Button>
-        <Modal show={this.state.showConsignArtifactForm} onHide={this.handleCancel}>
+        <Modal show={this.state.showConsignment} onHide={this.handleCancel}>
           <Modal.Header closeButton>
-            <Modal.Title>Consign Entity to Sell Artifact </Modal.Title>
+            <Modal.Title>Consignment</Modal.Title>
           </Modal.Header>
           <Modal.Body>
+            {this.state.consignedAccount !== ''
+              ? <React.Fragment><p>Consigned to {this.state.consignedAccount}</p><hr/></React.Fragment>
+              : null}
+            <p>Consign Account to Sell</p>
             <Form.Group as={Col} controlId="recipientAddress">
               <Form.Label>Recipient Address</Form.Label>
               <Form.Control
@@ -99,13 +133,15 @@ class ConsignArtifact extends React.Component<ConsignArtifactProps, ConsignArtif
             <Button variant="secondary" onClick={this.handleCancel}>
               Cancel
             </Button>
-            <Button variant="primary" onClick={this.ConsignArtifactForArtwork}>
+            <Button variant="primary" onClick={this.consignArtifactForArtwork}>
               Consign for Sale
             </Button>
+            {this.state.consignedAccount !== ''
+              ? <Button variant="primary" onClick={this.revokeConsignment}>Revoke Consignment</Button>
+              : null}
           </Modal.Footer>
         </Modal>
-
-      </div>
+      </Row>
     );
   }
 }
