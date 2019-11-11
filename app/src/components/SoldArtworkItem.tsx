@@ -46,7 +46,7 @@ class SoldArtworkItem extends React.Component<SoldArtworkItemProps, SoldArtworkI
         <Row>
           <span className="text-muted text-capitalize">Sold To:</span> {this.props.soldTo}
           <br/>
-          <span className="text-muted text-capitalize">Sold For:</span> {this.props.soldFor}
+          <span className="text-muted text-capitalize">Sold For: &euro;</span>{this.props.soldFor/100}
           <br/>
         </Row>
         </ArtworkInfo>
