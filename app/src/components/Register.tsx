@@ -9,6 +9,7 @@ import Accordion from 'react-bootstrap/Accordion';
 import { FormControlProps } from 'react-bootstrap/FormControl';
 import InputGroup from 'react-bootstrap/InputGroup';
 import Spinner from 'react-bootstrap/Spinner';
+import ListGroup from 'react-bootstrap/ListGroup';
 import ipfs from '../ipfs';
 import TransactionLoadingModal from './common/TransactionLoadingModal';
 import { ContractProps } from '../helper/eth';
@@ -42,12 +43,19 @@ interface Artist {
   deathYear: string;
 }
 
+interface Document {
+  filename: string;
+  data: any;
+  metauri?: string;
+}
+
 interface RegisterState {
   fields: RegisterFormFields;
   registerTransactionStackId: any;
   validated: boolean;
   submitted: boolean;
   artists?: Artist[];
+  documents: Document[];
 }
 
 type InputChangeEvent = React.FormEvent<FormControlProps> &
@@ -79,6 +87,7 @@ class Register extends React.Component<ContractProps, RegisterState> {
         imageIpfsHash: '',
         metaIpfsHash: '',
       },
+      documents: [],
     };
   };
 
@@ -114,7 +123,6 @@ class Register extends React.Component<ContractProps, RegisterState> {
           const artist = Artists.getArtist(id)
             .then((hash: string) => this.hashToArtist(hash))
             .then((artist: Artist) => {
-              console.log(artist);
               return artist;
             });
 
@@ -147,6 +155,19 @@ class Register extends React.Component<ContractProps, RegisterState> {
 
     jsonData.previousSalePrice = 0;
     jsonData.saleProvenance = [];
+    jsonData.documents = this.state.documents;
+
+    const data = [];
+    for (const document of jsonData.documents) {
+      data.push(document.data);
+      document.data = undefined;
+    }
+
+    await this.saveToIpfs(data, (response: any) => {
+      for (let i = 0; i < jsonData.documents.length; i++) {
+        jsonData.documents[i].metauri = 'https://ipfs.io/ipfs/' + response[i].hash;
+      }
+    });
 
     const jsonDataBuffer = Buffer.from(JSON.stringify(jsonData));
     const files = Array(jsonDataBuffer);
@@ -188,20 +209,18 @@ class Register extends React.Component<ContractProps, RegisterState> {
     }
   }
 
-  setImgHash = (ipfsId: string): void => {
-    this.setState({ fields: { ...this.state.fields, imageIpfsHash: ipfsId } });
+  setImgHash = (response: any): void => {
+    this.setState({ fields: { ...this.state.fields, imageIpfsHash: response[0].hash } });
   };
 
-  setMetaHash = (ipfsId: string): void => {
-    this.setState({ fields: { ...this.state.fields, metaIpfsHash: ipfsId } });
+  setMetaHash = (response: any): void => {
+    this.setState({ fields: { ...this.state.fields, metaIpfsHash: response[0].hash } });
   };
 
   async saveToIpfs (files: any, afterwardsFunction: (arg0: string) => void): Promise<void> {
-    let ipfsId: string;
     await ipfs.add([...files], { progress: (prog: any) => console.log(`received: ${prog}`) })
       .then((response: any) => {
-        ipfsId = response[0].hash;
-        afterwardsFunction(ipfsId);
+        afterwardsFunction(response);
       }).catch((err: any) => {
         console.log(err);
       });
@@ -252,6 +271,82 @@ class Register extends React.Component<ContractProps, RegisterState> {
     return this.state.artists.map((artist: Artist, id: number) => {
       return <option key={id}>{artist.name}</option>;
     });
+  };
+
+  onDrop = ((acceptedFiles: any): void => {
+    const documents = this.state.documents;
+    for (const file of acceptedFiles) {
+      let newDoc = true;
+      for (const doc of documents) {
+        if (doc.filename === file.name) {
+          newDoc = false;
+          break;
+        }
+      }
+
+      if (!newDoc) {
+        continue;
+      }
+
+      documents.push({
+        filename: file.name,
+        data: file,
+      });
+    }
+
+    this.setState({
+      documents: documents,
+    });
+  });
+
+  renderFileDrop = (): React.ReactNode => {
+    return (
+      <Card>
+        <Card.Body>
+          <div style={{
+            position: 'relative',
+            overflow: 'hidden',
+            display: 'inline-block',
+          }}>
+            <input
+              className="btn"
+              accept="image/*"
+              id="image-upload-button"
+              multiple
+              type="file"
+              style={{
+                position: 'absolute',
+                top: '0',
+                left: '0',
+                opacity: '0',
+              }}
+              onChange={(e): void => {
+                e.stopPropagation();
+                e.preventDefault();
+                const files = e.target.files;
+                if (files != null && files[0].size < 1000000) {
+                  // max file size of one megabyte
+                  this.onDrop(files);
+                } else {
+                  // TODO: nicer way of alerting
+                  alert('Image cannot be greater than 1 MB!');
+                }
+              }}
+            />
+            <Button>
+              Upload Documents
+            </Button>
+          </div>
+          <ListGroup>
+            {this.state.documents.map((document: Document, index: number) =>
+              <ListGroup.Item key={index}>
+                <p>filename: {document.filename}</p>
+              </ListGroup.Item>,
+            )}
+          </ListGroup>
+        </Card.Body>
+      </Card>
+    );
   };
 
   renderArtifactInformation = (): React.ReactNode => {
@@ -389,6 +484,7 @@ class Register extends React.Component<ContractProps, RegisterState> {
                 </div>
               </Card.Body>
             </Card>
+            {this.renderFileDrop()}
           </Col>
           <Col sm={8}>
             <Form
