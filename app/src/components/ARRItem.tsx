@@ -1,39 +1,39 @@
 import * as React from 'react';
 import Card from 'react-bootstrap/Card';
+import { ContractProps } from '../helper/eth';
 
-interface ARRItemProps {
-  drizzle: any;
-  drizzleState: any;
+interface ARRItemProps extends ContractProps {
   id: number;
 }
 
-type ARRItemState = {
-  ARR: {
-    from: string;
-    to: string;
-    tokenId: number;
-    price: number;
-    arr: number;
-    location: string;
-  };
+interface ARRItemType {
+  from: string;
+  to: string;
+  tokenId: number;
+  price: number;
+  arr: number;
+  location: string;
+}
+
+interface ARRItemState {
+  ARR: ARRItemType;
 }
 
 class ARRItem extends React.Component<ARRItemProps, ARRItemState> {
   componentDidMount (): void {
-    // console.log(this.props.id);
     this.loadARR();
   }
 
   async loadARR (): Promise<void> {
-    this.props.drizzle.contracts.ArtifactApplication.methods.getARR(this.props.id)
-      .call()
+    this.props.contracts.ArtifactApplication.getARR(this.props.id)
       .then((ARRData: any): void => {
         const ARR = {
           from: ARRData[0],
           to: ARRData[1],
-          tokenId: ARRData[2],
-          price: ARRData[3] / 100,
-          arr: ARRData[4] / 100,
+          // tokenId and price are ints. They are accessed via 'words'
+          tokenId: ARRData[2].words[0],
+          price: ARRData[3].words[0] / 100,
+          arr: ARRData[4].words[0] / 100,
           location: ARRData[5],
         };
         console.log(ARRData);
