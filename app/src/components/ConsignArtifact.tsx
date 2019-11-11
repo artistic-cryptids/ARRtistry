@@ -30,7 +30,7 @@ type InputChangeEvent = React.FormEvent<FormControlProps> &
   }
 
 const GENERIC_FEEDBACK = <Form.Control.Feedback>Looks good!</Form.Control.Feedback>;
-const ZERO_ADDR = "0x0000000000000000000000000000000000000000";
+const ZERO_ADDR = '0x0000000000000000000000000000000000000000';
 
 class ConsignArtifact extends React.Component<ConsignArtifactProps, ConsignArtifactState> {
   constructor (props: ConsignArtifactProps) {
@@ -55,15 +55,15 @@ class ConsignArtifact extends React.Component<ConsignArtifactProps, ConsignArtif
         }
 
         this.setState({
-          consignedAccount: account
+          consignedAccount: account,
         });
-      });
+      })
+      .catch((err: any) => console.log(err)); ;
   }
 
   consignArtifactForArtwork = (_: React.FormEvent): void => {
     this.consign(this.state.fields.recipientAddress);
   }
-
 
   revokeConsignment = (_: React.FormEvent): void => {
     this.consign(ZERO_ADDR);
@@ -80,7 +80,6 @@ class ConsignArtifact extends React.Component<ConsignArtifactProps, ConsignArtif
       },
     );
   }
-
 
   inputChangeHandler = (event: InputChangeEvent): void => {
     const key = event.target.id;
