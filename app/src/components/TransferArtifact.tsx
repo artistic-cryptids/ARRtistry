@@ -37,6 +37,12 @@ type InputChangeEvent = React.FormEvent<FormControlProps> &
 
 const GENERIC_FEEDBACK = <Form.Control.Feedback>Looks good!</Form.Control.Feedback>;
 
+const LOCATIONS = [
+  'United Kingdom',
+  'France',
+  'Germany',
+];
+
 class TransferArtifact extends React.Component<TransferArtifactProps, TransferArtifactState> {
   constructor (props: TransferArtifactProps) {
     super(props);
@@ -44,7 +50,7 @@ class TransferArtifact extends React.Component<TransferArtifactProps, TransferAr
       fields: {
         recipientAddress: '',
         price: '',
-        location: '',
+        location: LOCATIONS[0],
       },
       showTransferForm: false,
       registerSaleSubmitted: false,
@@ -132,13 +138,16 @@ class TransferArtifact extends React.Component<TransferArtifactProps, TransferAr
       fields: {
         recipientAddress: '',
         price: '',
-        location: '',
+        location: LOCATIONS[0],
       },
       showTransferForm: false,
     });
   }
 
   render (): React.ReactNode {
+    const locationOptions = LOCATIONS.map((location, index) =>
+      <option key={index}>{location}</option>,
+    );
     return (
       <div>
         <Button variant="primary" onClick={this.handleShow}>
@@ -174,9 +183,7 @@ class TransferArtifact extends React.Component<TransferArtifactProps, TransferAr
                 as="select"
                 onChange={this.inputChangeHandler}>
                 // TODO: Replace with accurate list of applicable sale locations
-                <option>United Kingdom</option>
-                <option>France</option>
-                <option>Germany</option>
+                {locationOptions}
               </Form.Control>
             </Form.Group>
           </Modal.Body>
