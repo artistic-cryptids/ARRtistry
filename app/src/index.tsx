@@ -16,7 +16,7 @@ const Web3 = require('web3');
 const contract = require('@truffle/contract');
 
 const doDapp = async (): Promise<void> => {
-  const web3 = new Web3(Web3.givenProvider || 'ws://127.0.0.1:8545');
+  const web3 = new Web3((window as any).web3.givenProvider || 'ws://127.0.0.1:8545');
   const provider = web3.currentProvider;
   const governanceNonDeployed = contract(Governance);
   const artifactApplicationNonDeployed = contract(ArtifactApplication);
