@@ -45,10 +45,9 @@ class ConsignArtifact extends React.Component<ConsignArtifactProps, ConsignArtif
   }
 
   componentDidMount (): void {
-    const artifactRegistry = this.props.drizzle.contracts.ArtifactRegistry;
+    const artifactRegistry = this.props.contracts.ArtifactRegistry;
 
-    artifactRegistry.methods.getApproved(this.props.tokenId)
-      .call()
+    artifactRegistry.getApproved(this.props.tokenId, { from: this.props.accounts[0] })
       .then((account: string) => {
         if (account === ZERO_ADDR) {
           return;
