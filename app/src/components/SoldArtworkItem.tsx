@@ -1,5 +1,6 @@
 import * as React from 'react';
-import SoldArtworkInfo from './SoldArtworkInfo';
+import ArtworkInfo from './ArtworkInfo';
+import Row from 'react-bootstrap/Row';
 import ListGroup from 'react-bootstrap/ListGroup';
 import { ContractProps } from '../helper/eth';
 
@@ -36,15 +37,19 @@ class SoldArtworkItem extends React.Component<SoldArtworkItemProps, SoldArtworkI
 
     return (
       <ListGroup.Item>
-        <SoldArtworkInfo
+        <ArtworkInfo
           contracts={this.props.contracts}
           accounts={this.props.accounts}
           artwork={this.state.artwork}
           id={this.props.tokenId}
-          soldFor={this.props.soldFor}
-          soldTo={this.props.soldTo}
         >
-        </SoldArtworkInfo>
+        <Row>
+          <span className="text-muted text-capitalize">Sold To:</span> {this.props.soldTo}
+          <br/>
+          <span className="text-muted text-capitalize">Sold For:</span> {this.props.soldFor}
+          <br/>
+        </Row>
+        </ArtworkInfo>
       </ListGroup.Item>
     );
   }
