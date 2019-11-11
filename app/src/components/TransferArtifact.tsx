@@ -38,9 +38,37 @@ type InputChangeEvent = React.FormEvent<FormControlProps> &
 const GENERIC_FEEDBACK = <Form.Control.Feedback>Looks good!</Form.Control.Feedback>;
 
 const LOCATIONS = [
-  'United Kingdom',
+  'Austria',
+  'Belgium',
+  'Bulgaria',
+  'Croatia',
+  'Cyprus',
+  'Czech Republic',
+  'Denmark',
+  'Estonia',
+  'Finland',
   'France',
   'Germany',
+  'Greece',
+  'Hungary',
+  'Iceland',
+  'Ireland',
+  'Italy',
+  'Latvia',
+  'Liechtenstein',
+  'Lithuania',
+  'Luxembourg',
+  'Malta',
+  'Netherlands',
+  'Norway',
+  'Poland',
+  'Portugal',
+  'Romania',
+  'Slovak Republic',
+  'Slovenia',
+  'Spain',
+  'Sweden',
+  'United Kingdom',
 ];
 
 class TransferArtifact extends React.Component<TransferArtifactProps, TransferArtifactState> {
@@ -182,7 +210,6 @@ class TransferArtifact extends React.Component<TransferArtifactProps, TransferAr
                 required
                 as="select"
                 onChange={this.inputChangeHandler}>
-                // TODO: Replace with accurate list of applicable sale locations
                 {locationOptions}
               </Form.Control>
             </Form.Group>
