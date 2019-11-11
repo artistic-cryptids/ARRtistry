@@ -1,6 +1,7 @@
 const { expectRevert } = require('@openzeppelin/test-helpers');
 
 const Artists = artifacts.require('Artists');
+const Governance = artifacts.require('./Governance.sol');
 
 contract('Artists', async accounts => {
   const creator = accounts[0];
@@ -8,9 +9,11 @@ contract('Artists', async accounts => {
 
   describe('addArtists', async () => {
     let instance;
+    let governance;
 
     beforeEach(async () => {
-      instance = await Artists.new(creator, { from: creator });
+      governance = await Governance.new({ from: creator });
+      instance = await Artists.new(creator, governance.address, { from: creator });
     });
 
     it('Should be able to add and retrieve artists', async () => {
