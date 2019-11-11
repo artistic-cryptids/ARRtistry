@@ -4,6 +4,7 @@ pragma experimental ABIEncoderV2;
 import "@openzeppelin/contracts/drafts/Counters.sol";
 import "@openzeppelin/contracts/ownership/Ownable.sol";
 
+import { IGovernance } from "./interfaces/IGovernance.sol";
 
 /**
  * @title Artists
@@ -20,14 +21,18 @@ contract Artists is Ownable {
   Counters.Counter public _artistId;
   mapping (uint256 => Artist) public artists;
 
-  constructor(address owner) public {
+  IGovernance public governance;
+
+  constructor(address owner, IGovernance _governance) public {
     _transferOwnership(owner);
+    governance = _governance;
   }
 
-  function addArtist(string memory metaUri) public onlyOwner {
+  function addArtist(string memory metaUri) public {
+    require(governance.isGovernor(msg.sender), "Artists::addArtist: only governor accounts can add artists");
+
     _artistId.increment();
     uint256 id = _artistId.current();
-
     artists[id] = Artist(metaUri);
   }
 
