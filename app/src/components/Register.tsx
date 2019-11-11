@@ -11,8 +11,8 @@ import InputGroup from 'react-bootstrap/InputGroup';
 import Spinner from 'react-bootstrap/Spinner';
 import ListGroup from 'react-bootstrap/ListGroup';
 import ipfs from '../ipfs';
-import { Drizzled } from 'drizzle';
 import TransactionLoadingModal from './common/TransactionLoadingModal';
+import { ContractProps } from '../helper/eth';
 
 interface SaleProvenance {
   price: string;
@@ -68,8 +68,8 @@ type InputChangeEvent = React.FormEvent<FormControlProps> &
 
 const GENERIC_FEEDBACK = <Form.Control.Feedback>Looks good!</Form.Control.Feedback>;
 
-class Register extends React.Component<Drizzled, RegisterState> {
-  constructor (props: Drizzled) {
+class Register extends React.Component<ContractProps, RegisterState> {
+  constructor (props: ContractProps) {
     super(props);
     this.state = {
       registerTransactionStackId: null,
@@ -111,18 +111,16 @@ class Register extends React.Component<Drizzled, RegisterState> {
   };
 
   getArtistInfo = (): Promise<Artist[]> => {
-    const Artists = this.props.drizzle.contracts.Artists;
+    const Artists = this.props.contracts.Artists;
 
-    return Artists.methods.getArtistsTotal()
-      .call()
+    return Artists.getArtistsTotal()
       .then((total: number) => {
         const artists = [];
 
         for (let i = 1; i < total; i++) {
           // Have to extract to new variable for async issues
           const id = i;
-          const artist = Artists.methods.getArtist(id)
-            .call()
+          const artist = Artists.getArtist(id)
             .then((hash: string) => this.hashToArtist(hash))
             .then((artist: Artist) => {
               return artist;
@@ -146,11 +144,10 @@ class Register extends React.Component<Drizzled, RegisterState> {
 
     this.setState({ validated: true, submitted: true });
 
-    const { drizzle, drizzleState } = this.props;
+    const { contracts, accounts } = this.props;
 
-    const currentAccount = drizzleState.accounts[0];
-    // TODO: Update this to real artist's account
-    const artist = drizzleState.accounts[0];
+    const currentAccount = accounts[0];
+    const artist = accounts[0];
 
     // eslint-disable-next-line
     const { metaIpfsHash, ...restOfTheFields } = this.state.fields;
@@ -179,12 +176,12 @@ class Register extends React.Component<Drizzled, RegisterState> {
     await this.saveToIpfs(files, this.setMetaHash);
 
     const ipfsUrlStart = 'https://ipfs.io/ipfs/';
-    const stackId = drizzle.contracts.ArtifactApplication.methods.applyFor.cacheSend(
+    const stackId = await contracts.ArtifactApplication.applyFor(
       currentAccount,
       artist,
       ipfsUrlStart + this.state.fields.metaIpfsHash,
       {
-        from: drizzleState.accounts[0],
+        from: accounts[0],
         gasLimit: 6000000,
       },
     ); // TODO: Catch error when this function fails and display error to user
@@ -196,11 +193,6 @@ class Register extends React.Component<Drizzled, RegisterState> {
   };
 
   renderSubmitButton = (): React.ReactNode => {
-    // eslint-disable-next-line
-    const { transactions, transactionStack } = this.props.drizzleState;
-
-    // eslint-disable-next-line
-    const registerTransactionHash = transactionStack[this.state.registerTransactionStackId];
     if (!this.state.validated && !this.state.submitted) {
       return <Button type="submit" className="my-2 btn-block" variant="primary">Submit</Button>;
     } else if (this.state.submitted) {
@@ -517,7 +509,6 @@ class Register extends React.Component<Drizzled, RegisterState> {
           </Col>
         </Row>
         <TransactionLoadingModal
-          drizzleState={this.props.drizzleState}
           onHide={() => this.setState({ submitted: false })}
           submitted={this.state.submitted}
           transactionStackId={this.state.registerTransactionStackId}

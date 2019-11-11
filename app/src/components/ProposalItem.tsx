@@ -3,10 +3,9 @@ import ArtworkInfo from './ArtworkInfo';
 import Row from 'react-bootstrap/Row';
 import Button from 'react-bootstrap/Button';
 import ButtonGroup from 'react-bootstrap/ButtonGroup';
+import { ContractProps } from '../helper/eth';
 
-interface ProposalItemProps {
-  drizzle: any;
-  drizzleState: any;
+interface ProposalItemProps extends ContractProps {
   id: number;
 }
 
@@ -17,22 +16,20 @@ type ProposalItemState = {
 class ProposalItem extends React.Component<ProposalItemProps, ProposalItemState> {
   rejectProposal = (_: React.MouseEvent): void => {
     console.log('Rejecting proposal ' + this.props.id);
-    this.props.drizzle.contracts.Governance.methods.reject(this.props.id).send({
-      from: this.props.drizzleState.accounts[0],
+    this.props.contracts.Governance.reject(this.props.id, {
+      from: this.props.accounts[0],
     });
   }
 
   approveProposal = (_: React.MouseEvent): void => {
     console.log('Approving proposal ' + this.props.id);
-    this.props.drizzle.contracts.Governance.methods.approve(this.props.id)
-      .send({
-        from: this.props.drizzleState.accounts[0],
-      });
+    this.props.contracts.Governance.approve(this.props.id, {
+      from: this.props.accounts[0],
+    });
   }
 
   componentDidMount (): void {
-    this.props.drizzle.contracts.ArtifactApplication.methods.getProposal(this.props.id)
-      .call()
+    this.props.contracts.ArtifactApplication.getProposal(this.props.id)
       .then((proposalData: any): void => {
         const proposal = {
           metaUri: proposalData[2],
@@ -49,10 +46,10 @@ class ProposalItem extends React.Component<ProposalItemProps, ProposalItemState>
 
     return (
       <ArtworkInfo
+        contracts={this.props.contracts}
+        accounts={this.props.accounts}
         artwork={this.state.proposal}
         id={this.props.id}
-        drizzle={this.props.drizzle}
-        drizzleState={this.props.drizzleState}
       >
         <Row>
           <ButtonGroup aria-label="Actionbar" className="mx-auto">

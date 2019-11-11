@@ -1,18 +1,14 @@
 import * as React from 'react';
 import ARRItem from './ARRItem';
 import CardColumns from 'react-bootstrap/CardColumns';
-
-interface ARRListProps {
-  drizzle: any;
-  drizzleState: any;
-}
+import { ContractProps } from '../helper/eth';
 
 interface ARRListState {
   ids: string[];
 }
 
-class ARRList extends React.Component<ARRListProps, ARRListState> {
-  constructor (props: ARRListProps) {
+class ARRList extends React.Component<ContractProps, ARRListState> {
+  constructor (props: ContractProps) {
     super(props);
     this.state = { ids: [] };
   }
@@ -27,7 +23,7 @@ class ARRList extends React.Component<ARRListProps, ARRListState> {
   }
 
   async loadARRs (): Promise<void> {
-    const len = await this.props.drizzle.contracts.Governance.methods.getARRLength().call();
+    const len = await this.props.contracts.Governance.getARRLength();
 
     const ids = [];
     for (let i = 0; i < len; i++) {
@@ -41,8 +37,8 @@ class ARRList extends React.Component<ARRListProps, ARRListState> {
   render (): React.ReactNode {
     const listItems = this.state.ids.map((id: any) =>
       <ARRItem
-        drizzle={this.props.drizzle}
-        drizzleState={this.props.drizzleState}
+        contracts={this.props.contracts}
+        accounts={this.props.accounts}
         id={id}
         key={id}
       />,

@@ -6,10 +6,9 @@ import { FormControlProps } from 'react-bootstrap/FormControl';
 import Modal from 'react-bootstrap/Modal';
 import ipfs from '../ipfs';
 import TransactionLoadingModal from './common/TransactionLoadingModal';
+import { ContractProps } from '../helper/eth';
 
-interface TransferArtifactProps {
-  drizzle: any;
-  drizzleState: any;
+interface TransferArtifactProps extends ContractProps {
   tokenId: number;
   metaUri: string;
 }
@@ -111,13 +110,13 @@ class TransferArtifact extends React.Component<TransferArtifactProps, TransferAr
   };
 
   transferArtwork = (_: React.FormEvent): void => {
-    const artifactRegistry = this.props.drizzle.contracts.ArtifactRegistry;
+    const artifactRegistry = this.props.contracts.ArtifactRegistry;
     let owner = '';
     this.setState({
       registerSaleSubmitted: true,
     });
 
-    artifactRegistry.methods.ownerOf(this.props.tokenId).call()
+    artifactRegistry.ownerOf(this.props.tokenId)
       .then((address: string) => {
         owner = address;
         console.log(this.state.fields.location);
@@ -128,20 +127,18 @@ class TransferArtifact extends React.Component<TransferArtifactProps, TransferAr
           this.state.fields.location,
         );
       })
-      .then((hash: string) => {
-        const stackId = artifactRegistry.methods.transfer.cacheSend(
+      .then((hash: string) =>
+        artifactRegistry.transfer(
           owner,
           this.state.fields.recipientAddress,
           this.props.tokenId,
           hash,
           (parseFloat(this.state.fields.price) * 100).toString(),
           this.state.fields.location,
-        );
-
-        this.setState({
-          registerSaleTransactionStackId: stackId,
-        });
-      })
+          {
+            from: this.props.accounts[0],
+          },
+        ))
       .catch((err: any) => console.log(err));
   }
 
@@ -224,7 +221,6 @@ class TransferArtifact extends React.Component<TransferArtifactProps, TransferAr
           </Modal.Footer>
         </Modal>
         <TransactionLoadingModal
-          drizzleState={this.props.drizzleState}
           onHide={() => this.setState({ registerSaleSubmitted: false })}
           submitted={this.state.registerSaleSubmitted}
           transactionStackId={this.state.registerSaleTransactionStackId}
