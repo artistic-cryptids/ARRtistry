@@ -117,7 +117,9 @@ class ConsignArtifact extends React.Component<ConsignArtifactProps, ConsignArtif
           </Modal.Header>
           <Modal.Body>
             {this.state.consignedAccount !== ''
-              ? <React.Fragment><p>Consigned to {this.state.consignedAccount}</p><hr/></React.Fragment>
+              ? <React.Fragment><p>Consigned to {this.state.consignedAccount} <br/>
+              You may still register a sale yourself, but doing so will revoke consignment.
+              </p><hr/></React.Fragment>
               : null}
             <p>Consign Account to Sell</p>
             <Form.Group as={Col} controlId="recipientAddress">
