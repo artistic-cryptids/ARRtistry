@@ -2,7 +2,8 @@ import * as React from 'react';
 import NetworkAside from './NetworkAside';
 import HomePageNoAccount from './HomePageNoAccount';
 
-import { ArtifactView, ProposalView, ARRView, RegisterView, RegisterArtistView, ClientArtifactView } from '../views';
+import { ArtifactView, ProposalView, ARRView, RegisterView, RegisterArtistView, ClientArtifactView, SoldArtifactView }
+  from '../views';
 
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import LeftSidebar from './LeftSidebar';
@@ -37,6 +38,9 @@ const OurApp: React.FC<AppProps> = (props: AppProps) => {
         </Route>
         <Route path="/artifact/new">
           <RegisterView accounts={accounts} contracts={contracts}/>
+        </Route>
+        <Route path="/artifact/sold">
+          <SoldArtifactView accounts={accounts} contracts={contracts}/>
         </Route>
         <Route path="/artifact">
           <ArtifactView accounts={accounts} contracts={contracts}/>
