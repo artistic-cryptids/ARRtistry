@@ -52,6 +52,7 @@ class LeftSidebar extends React.Component<LeftSidebarProps, {}> {
           <h4 className={styles.section}>Artifacts</h4>
           {this.renderNavItem('New', faFingerprint, '/artifact/new')}
           {this.renderNavItem('Owned', faClone, '/artifact/list')}
+          {this.renderNavItem('Sold', faEuroSign, '/artifact/sold')}
           <h4 className={styles.section}>Management</h4>
           {this.renderNavItem('Artifact Requests', faStamp, '/manage/proposal')}
           {this.renderNavItem('ARR', faEuroSign, '/manage/arr')}
