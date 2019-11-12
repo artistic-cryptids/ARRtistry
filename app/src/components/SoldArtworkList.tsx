@@ -45,13 +45,12 @@ class SoldArtworkList extends React.Component<ContractProps, SoldArtworkListStat
           for (let i = 0; i < events.length; i++) {
             if (events[i].returnValues.from === currentAccount) {
               eventsFound += 1;
-              const temp: SoldInformation = {
+              const soldInfo: SoldInformation = {
                 tokenId: events[i].returnValues.tokenId,
                 price: events[i].returnValues.price,
                 newOwner: events[i].returnValues.to,
               };
-              console.log(temp);
-              soldInfoArray.push(temp);
+              soldInfoArray.push(soldInfo);
             }
           }
         }
