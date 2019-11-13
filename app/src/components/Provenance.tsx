@@ -4,7 +4,7 @@ import Modal from 'react-bootstrap/Modal';
 import Col from 'react-bootstrap/Col';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
-  faEuroSign
+  faEuroSign,
 } from '@fortawesome/free-solid-svg-icons';
 
 import * as styles from './Timeline.module.scss';
@@ -31,7 +31,7 @@ interface ProvenanceState {
   saleProvenance: Array<SaleRecord>;
 }
 
-const PlaintextField: React.FC<{label: string, value: string}> = ({label, value}) => {
+const PlaintextField: React.FC<{label: string; value: string}> = ({ label, value }) => {
   return <Form.Group as={Form.Row}>
     <Form.Label column sm="2">
       {label}
@@ -39,10 +39,10 @@ const PlaintextField: React.FC<{label: string, value: string}> = ({label, value}
     <Col sm="10">
       <Form.Control plaintext readOnly defaultValue={value} />
     </Col>
-  </Form.Group>
-}
+  </Form.Group>;
+};
 
-const TimelineBlock: React.FC<{record: SaleRecord}> = ({record}) => {
+const TimelineBlock: React.FC<{record: SaleRecord}> = ({ record }) => {
   return (
     <li className={styles.timelineBlock}>
       <a href="#!">
@@ -51,11 +51,11 @@ const TimelineBlock: React.FC<{record: SaleRecord}> = ({record}) => {
       <div className={styles.timelineContent}>
         <Row>
           <Col sm='8'>
-          <h4 className="font-weight-bold">Sale</h4>
+            <h4 className="font-weight-bold">Sale</h4>
           </Col>
           <Col sm='4'>
-            <p className={"text-muted " + styles.date}>
-            {new Date().toLocaleDateString(undefined, { year: 'numeric', month: 'long', day: 'numeric' })}
+            <p className={'text-muted ' + styles.date}>
+              {new Date().toLocaleDateString(undefined, { year: 'numeric', month: 'long', day: 'numeric' })}
             </p>
           </Col>
         </Row>
@@ -65,24 +65,24 @@ const TimelineBlock: React.FC<{record: SaleRecord}> = ({record}) => {
               <PlaintextField label='Buyer' value={record.buyers.join(', ')} />
               <PlaintextField label='Seller' value={record.seller} />
               <PlaintextField label='Sale Location' value={record.location} />
-              <PlaintextField label='Sale Price' value={"€" + (record.price / 100).toString()} />
+              <PlaintextField label='Sale Price' value={'€' + (record.price / 100).toString()} />
             </Form>
           </Col>
         </Row>
       </div>
     </li>
   );
-}
+};
 
 const Timeline: React.FC<{records: SaleRecord[]}> = ({ records }) => {
   return (
     <Col md='12'>
       <ul className={styles.timeline}>
-      {records.map((saleRecord: SaleRecord, _: number) => <TimelineBlock record={saleRecord}/>)}
+        {records.map((saleRecord: SaleRecord, index: number) => <TimelineBlock record={saleRecord} key={index}/>)}
       </ul>
     </Col>
   );
-}
+};
 
 class Provenance extends React.Component<ProvenanceProps, ProvenanceState> {
   constructor (props: ProvenanceProps) {
