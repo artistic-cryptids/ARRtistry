@@ -38,7 +38,7 @@
     "serve": "^11.2.0"
   },
   "scripts": {
-    "serve": "serve -s build"
+    "serve": "serve -s build",
     "start": "react-scripts start",
     "watch": "npx tsm src --watch",
     "build": "npx tsm src && react-scripts build",
