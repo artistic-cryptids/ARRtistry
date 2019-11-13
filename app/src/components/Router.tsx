@@ -5,12 +5,11 @@ import { useSessionContext } from '../providers/SessionProvider';
 
 import * as View from '../views';
 
-
 import { AppProps } from './App';
 import Main from './Main';
 import NetworkAside from './NetworkAside';
 
-const Router: React.FC<AppProps> = ({web3, accounts, contracts}) => {
+const Router: React.FC<AppProps> = ({ web3, accounts, contracts }) => {
   const { user } = useSessionContext();
 
   return (

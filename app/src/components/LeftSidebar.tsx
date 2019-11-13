@@ -18,15 +18,15 @@ import {
 import * as styles from './LeftSidebar.module.scss';
 import { useSessionContext, User } from '../providers/SessionProvider';
 
-const NavItem: React.FC<{name: string, icon: IconDefinition, path: string}> = ({name, icon, path}) => {
-    return (
-      <Nav.Item className={styles.navItem}>
-        <Nav.Link to={path} as={Link} bsPrefix={'nav-link ' + styles.navLink}>
-          <FontAwesomeIcon icon={icon} /> {name}
-        </Nav.Link>
-      </Nav.Item>
-    );
-  }
+const NavItem: React.FC<{name: string; icon: IconDefinition; path: string}> = ({ name, icon, path }) => {
+  return (
+    <Nav.Item className={styles.navItem}>
+      <Nav.Link to={path} as={Link} bsPrefix={'nav-link ' + styles.navLink}>
+        <FontAwesomeIcon icon={icon} /> {name}
+      </Nav.Link>
+    </Nav.Item>
+  );
+};
 
 const NavMenu: React.FC<{user: User}> = ({ user }) => {
   return (
@@ -58,8 +58,7 @@ const NavMenu: React.FC<{user: User}> = ({ user }) => {
       </Nav>
     </Col>
   );
-}
-
+};
 
 const LeftSidebar: React.FC = ({ children }) => {
   const { user } = useSessionContext();
@@ -73,6 +72,6 @@ const LeftSidebar: React.FC = ({ children }) => {
       </Row>
     </Container>
   );
-}
+};
 
 export default LeftSidebar;

@@ -11,7 +11,6 @@ export interface AppProps extends ContractProps {
 }
 
 const App: React.FC<AppProps> = (props) => {
-
   return (
     <SessionProvider address={props.accounts[0]}>
       <Router {...props}/>
