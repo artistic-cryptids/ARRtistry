@@ -1,12 +1,6 @@
 
 
-@import './variables';
-
-// Configuration
-
-@import "node_modules/bootstrap/scss/functions";
-@import "node_modules/bootstrap/scss/variables";
-@import "node_modules/bootstrap/scss/mixins";
+@import './config';
 @import "node_modules/bootstrap/scss/utilities";
 
 
