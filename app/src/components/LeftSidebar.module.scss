@@ -22,9 +22,10 @@ $background-color: $primary;
 
 .sidebar {
   position: fixed!important;
-  top: 30px;
-  bottom: 30px;
-  left: 30px;
+  top: 1.5rem;
+  bottom: 1.5rem;
+  left: 1.5rem;
+  margin-right: 1.5rem;
   z-index: 2; /* Behind the navbar */
   background-color: $background-color;
   box-shadow: 0 0 28px 0 rgba(82, 63, 105, .13);
@@ -201,6 +202,7 @@ hr {
 
 .sidebarSticky {
   position: relative;
+  flex-wrap: nowrap!important;
   top: 0;
   height: calc(100vh - 48px);
   padding-top: .5rem;

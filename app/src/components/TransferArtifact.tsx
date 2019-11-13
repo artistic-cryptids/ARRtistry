@@ -174,7 +174,7 @@ class TransferArtifact extends React.Component<TransferArtifactProps, TransferAr
       <option key={index}>{location}</option>,
     );
     return (
-      <div>
+      <>
         <Button variant="primary" onClick={this.handleShow}>
           Register Sale
         </Button>
@@ -226,7 +226,7 @@ class TransferArtifact extends React.Component<TransferArtifactProps, TransferAr
           transactionStackId={this.state.registerSaleTransactionStackId}
           title="Registering sale..."
         />
-      </div>
+      </>
     );
   }
 }

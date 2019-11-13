@@ -69,7 +69,7 @@ class Provenance extends React.Component<ProvenanceProps, ProvenanceState> {
     );
 
     return (
-      <div>
+      <>
         <Button variant="primary" onClick={this.handleShow}>
           Provenance
         </Button>
@@ -83,7 +83,7 @@ class Provenance extends React.Component<ProvenanceProps, ProvenanceState> {
             </ListGroup>
           </Modal.Body>
         </Modal>
-      </div>
+      </>
     );
   }
 }
