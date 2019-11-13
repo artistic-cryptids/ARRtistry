@@ -126,11 +126,6 @@ $white: #ffffff;
     line-height: 1.6;
   }
 
-  // .date {
-  //   float: left;
-  //   opacity: .7;
-  // }
-
   &::before {
     content: '';
     position: absolute;
@@ -154,14 +149,6 @@ $white: #ffffff;
       border-left-color: $white;
     }
 
-    // .date {
-    //   position: absolute;
-    //   width: 100%;
-    //   left: 110%;
-    //   margin-left: 60px;
-    //   top: 6px;
-    // }
-
     .timelineBlock:nth-child(even) & {
       float: right;
 
@@ -172,12 +159,6 @@ $white: #ffffff;
         border-color: transparent;
         border-right-color: $white;
       }
-      // .date {
-      //   left: auto;
-      //   right: 110%;
-      //   margin-right: 60px;
-      //   text-align: right;
-      // }
     }
   }
 }
