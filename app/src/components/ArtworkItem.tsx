@@ -52,10 +52,10 @@ class ArtworkItem extends React.Component<ArtworkItemProps, ArtworkItemState> {
             />
             {this.props.isOwnedArtifact
               ? <ConsignArtifact
-                  contracts={this.props.contracts}
-                  accounts={this.props.accounts}
-                  tokenId={this.props.tokenId}
-                />
+                contracts={this.props.contracts}
+                accounts={this.props.accounts}
+                tokenId={this.props.tokenId}
+              />
               : null}
           </ButtonGroup>
         </div>
