@@ -22,8 +22,7 @@ interface TransferArtifactFormFields {
 interface TransferArtifactState {
   fields: TransferArtifactFormFields;
   showTransferForm: boolean;
-  registerSaleSubmitted: boolean;
-  registerSaleTransactionStackId: any;
+  submitted: boolean;
 }
 
 type InputChangeEvent = React.FormEvent<FormControlProps> &
@@ -80,8 +79,7 @@ class TransferArtifact extends React.Component<TransferArtifactProps, TransferAr
         location: LOCATIONS[0],
       },
       showTransferForm: false,
-      registerSaleSubmitted: false,
-      registerSaleTransactionStackId: null,
+      submitted: false,
     };
   }
 
@@ -113,7 +111,7 @@ class TransferArtifact extends React.Component<TransferArtifactProps, TransferAr
     const artifactRegistry = this.props.contracts.ArtifactRegistry;
     let owner = '';
     this.setState({
-      registerSaleSubmitted: true,
+      submitted: true,
     });
 
     artifactRegistry.ownerOf(this.props.tokenId)
@@ -127,7 +125,7 @@ class TransferArtifact extends React.Component<TransferArtifactProps, TransferAr
           this.state.fields.location,
         );
       })
-      .then((hash: string) =>
+      .then((hash: string) => {
         artifactRegistry.transfer(
           owner,
           this.state.fields.recipientAddress,
@@ -138,8 +136,18 @@ class TransferArtifact extends React.Component<TransferArtifactProps, TransferAr
           {
             from: this.props.accounts[0],
           },
-        ))
-      .catch((err: any) => console.log(err));
+        ).then(() => {
+          this.setState({ submitted: false });
+        }).catch((err: any) => {
+          // rejection, usually
+          console.log(err);
+          this.setState({ submitted: false });
+        });
+      })
+      .catch((err: any) => {
+        console.log(err);
+        this.setState({ submitted: false });
+      });
   }
 
   inputChangeHandler = (event: InputChangeEvent): void => {
@@ -221,9 +229,8 @@ class TransferArtifact extends React.Component<TransferArtifactProps, TransferAr
           </Modal.Footer>
         </Modal>
         <TransactionLoadingModal
-          onHide={() => this.setState({ registerSaleSubmitted: false })}
-          submitted={this.state.registerSaleSubmitted}
-          transactionStackId={this.state.registerSaleTransactionStackId}
+          onHide={() => this.setState({ submitted: false })}
+          submitted={this.state.submitted}
           title="Registering sale..."
         />
       </>

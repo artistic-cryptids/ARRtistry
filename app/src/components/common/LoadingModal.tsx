@@ -1,9 +1,10 @@
 import * as React from 'react';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
-import ProgressBar from 'react-bootstrap/ProgressBar';
+// import ProgressBar from 'react-bootstrap/ProgressBar';
+import Spinner from 'react-bootstrap/Spinner';
 
-const LoadingModal = (props: {show: boolean; onHide: () => void; progress: number; title: string}): JSX.Element => {
+const LoadingModal = (props: {show: boolean; onHide: () => void; title: string}): JSX.Element => {
   return (
     <Modal
       {...props }
@@ -17,7 +18,9 @@ const LoadingModal = (props: {show: boolean; onHide: () => void; progress: numbe
         </Modal.Title>
       </Modal.Header>
       <Modal.Body>
-        <ProgressBar now={props.progress} />
+        <div style={{ display: 'flex', justifyContent: 'center' }}>
+          <Spinner animation="border" />
+        </div>
       </Modal.Body>
       <Modal.Footer>
         <Button onClick={props.onHide}>Close</Button>
