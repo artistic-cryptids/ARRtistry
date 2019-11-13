@@ -88,10 +88,10 @@ class ArtworkInfo extends React.Component<ArtworkInfoProps, ArtworkInfoState> {
     this.getArtistInfo();
   }
 
-  hashToArtist = (hash: string): Promise<Artist> => {
+  hashToArtist = async (hash: string): Promise<Artist> => {
     console.log(hash);
-    return fetch(hash)
-      .then((response: any) => response.json());
+    const response = await fetch(hash);
+    return response.json();
   };
 
   getArtistInfo = (): void => {
