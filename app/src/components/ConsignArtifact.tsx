@@ -107,7 +107,7 @@ class ConsignArtifact extends React.Component<ConsignArtifactProps, ConsignArtif
 
   render (): React.ReactNode {
     return (
-      <Row>
+      <>
         <Button variant="primary" onClick={this.handleShow}>
           Consignment
         </Button>
@@ -143,7 +143,7 @@ class ConsignArtifact extends React.Component<ConsignArtifactProps, ConsignArtif
               : null}
           </Modal.Footer>
         </Modal>
-      </Row>
+      </>
     );
   }
 }
