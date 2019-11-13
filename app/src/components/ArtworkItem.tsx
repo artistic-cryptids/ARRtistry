@@ -44,10 +44,8 @@ class ArtworkItem extends React.Component<ArtworkItemProps, ArtworkItemState> {
         artwork={this.state.artwork}
         id={this.props.tokenId}
       >
-
-        <Row>
+        <div className="text-center">
           <ButtonGroup>
-            <Provenance metaUri={this.state.artwork.metaUri} />
             <TransferArtifact
               contracts={this.props.contracts}
               accounts={this.props.accounts}
@@ -62,7 +60,7 @@ class ArtworkItem extends React.Component<ArtworkItemProps, ArtworkItemState> {
                 />
               : null}
           </ButtonGroup>
-        </Row>
+        </div>
       </ArtworkInfo>
     );
   }
