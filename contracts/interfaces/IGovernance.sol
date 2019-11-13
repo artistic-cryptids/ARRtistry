@@ -17,6 +17,7 @@ contract IGovernance {
     uint256 tokenId;
     uint price;
     string location;
+    string date;
   }
 
   function isGovernor(address account) public view returns (bool);

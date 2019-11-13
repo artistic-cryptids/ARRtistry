@@ -133,6 +133,7 @@ class TransferArtifact extends React.Component<TransferArtifactProps, TransferAr
           hash,
           (parseFloat(this.state.fields.price) * 100).toString(),
           this.state.fields.location,
+          this.state.fields.dateeeeeeeeeeeeeeeeeeeeeee
           {
             from: this.props.accounts[0],
           },
