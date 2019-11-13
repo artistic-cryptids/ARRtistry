@@ -1,13 +1,15 @@
 import * as React from 'react';
 import ArtworkList from '../components/ArtworkList';
 import { ContractProps } from '../helper/eth';
-import { Container } from 'react-bootstrap';
+import Main from '../components/Main';
 
 const ArtifactView: React.FC<ContractProps> = (props) => {
   const { contracts, accounts } = props;
-  return <Container>
-    <ArtworkList contracts={contracts} accounts={accounts}/>
-  </Container>;
+  return (
+    <Main page="Owned" parents={['Artifacts']}>
+      <ArtworkList contracts={contracts} accounts={accounts}/>
+    </Main>
+  );
 };
 
 export default ArtifactView;

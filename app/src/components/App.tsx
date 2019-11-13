@@ -1,6 +1,5 @@
 import * as React from 'react';
 import NetworkAside from './NetworkAside';
-import HomePageNoAccount from './HomePageNoAccount';
 
 import { ArtifactView, ProposalView, ARRView, RegisterView, RegisterArtistView, ClientArtifactView, SoldArtifactView }
   from '../views';
@@ -10,6 +9,7 @@ import LeftSidebar from './LeftSidebar';
 import { ContractProps } from '../helper/eth';
 
 import Web3 from 'web3';
+import Main from './Main';
 
 interface AppProps extends ContractProps {
   web3: Web3;
@@ -34,7 +34,9 @@ const OurApp: React.FC<AppProps> = (props: AppProps) => {
     <div><NetworkAside web3={web3}/>
       <Switch>
         <Route exact path="/">
-          <HomePageNoAccount/>
+          <Main page="Home" parents={['Dashboards']}>
+            <h1>Welcome back!</h1>
+          </Main>
         </Route>
         <Route path="/artifact/new">
           <RegisterView accounts={accounts} contracts={contracts}/>
