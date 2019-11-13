@@ -1,12 +1,11 @@
 import * as React from 'react';
 import ArtworkInfo from './ArtworkInfo';
-import ListGroup from 'react-bootstrap/ListGroup';
 import TransferArtifact from './TransferArtifact';
 import ConsignArtifact from './ConsignArtifact';
 import Provenance from './Provenance';
-import Col from 'react-bootstrap/Col';
 import Row from 'react-bootstrap/Row';
 import { ContractProps } from '../helper/eth';
+import ButtonGroup from 'react-bootstrap/ButtonGroup';
 
 interface ArtworkItemProps extends ContractProps {
   tokenId: number;
@@ -39,37 +38,32 @@ class ArtworkItem extends React.Component<ArtworkItemProps, ArtworkItemState> {
     console.log('Artwork ' + JSON.stringify(this.state.artwork));
 
     return (
-      <ListGroup.Item>
-        <ArtworkInfo
-          contracts={this.props.contracts}
-          accounts={this.props.accounts}
-          artwork={this.state.artwork}
-          id={this.props.tokenId}
-        >
-          <Row>
-            <Col>
-              <Provenance metaUri={this.state.artwork.metaUri} />
-            </Col>
-            <Col>
-              <TransferArtifact
-                contracts={this.props.contracts}
-                accounts={this.props.accounts}
-                tokenId={this.props.tokenId}
-                metaUri={this.state.artwork.metaUri}
-              />
-            </Col>
+      <ArtworkInfo
+        contracts={this.props.contracts}
+        accounts={this.props.accounts}
+        artwork={this.state.artwork}
+        id={this.props.tokenId}
+      >
+
+        <Row>
+          <ButtonGroup>
+            <Provenance metaUri={this.state.artwork.metaUri} />
+            <TransferArtifact
+              contracts={this.props.contracts}
+              accounts={this.props.accounts}
+              tokenId={this.props.tokenId}
+              metaUri={this.state.artwork.metaUri}
+            />
             {this.props.isOwnedArtifact
-              ? <Col>
-                <ConsignArtifact
+              ? <ConsignArtifact
                   contracts={this.props.contracts}
                   accounts={this.props.accounts}
                   tokenId={this.props.tokenId}
                 />
-              </Col>
               : null}
-          </Row>
-        </ArtworkInfo>
-      </ListGroup.Item>
+          </ButtonGroup>
+        </Row>
+      </ArtworkInfo>
     );
   }
 }
