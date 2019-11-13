@@ -45,7 +45,7 @@ class Documents extends React.Component<DocumentsProps, DocumentsState> {
     );
 
     return (
-      <div>
+      <>
         <Button variant="primary" onClick={this.handleShow}>
           Documents
         </Button>
@@ -59,7 +59,7 @@ class Documents extends React.Component<DocumentsProps, DocumentsState> {
             </ListGroup>
           </Modal.Body>
         </Modal>
-      </div>
+      </>
     );
   }
 }

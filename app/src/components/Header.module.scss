@@ -1,0 +1,133 @@
+@import "../config";
+
+.header {
+  @include make-row();
+
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -ms-flex-wrap: wrap;
+  flex-wrap: wrap;
+  padding-left: 1.5rem!important;
+  padding-bottom: 1rem;
+
+  .title {
+    margin: 0;
+    padding: 0 0.65rem 0 0;
+    font-size: 1.3rem;
+    font-weight: 500;
+    color: #595d6e;
+  }
+}
+
+.subheader {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: stretch;
+  -ms-flex-align: stretch;
+  align-items: stretch;
+
+  margin-right: auto !important;
+}
+
+.breadcrumb {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  list-style-type: none;
+  -ms-flex-wrap: wrap;
+  flex-wrap: wrap;
+  align-self: flex-end;
+  margin: 0;
+  padding: 0;
+
+
+  .link {
+    padding: 0 .35rem 0 0;
+    font-size: .8rem;
+    font-weight: 500;
+    color: #959cb6;
+    -webkit-transition: all .3s;
+    transition: all .3s;
+  }
+
+  .separator {
+    padding: 0 .45rem 0 0;
+
+    &:after {
+      display: block;
+      width: 4px;
+      height: 4px;
+      border-radius: 50%;
+      content: " ";
+      background: rgba(149,156,182,.5);
+    }
+  }
+}
+
+.topbar {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: stretch;
+  -ms-flex-align: stretch;
+  align-items: stretch;
+  padding: 0;
+
+  .item {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-align: stretch;
+    -ms-flex-align: stretch;
+    align-items: stretch;
+    margin: 0 .5rem;
+  }
+}
+
+.avatarDropdown {
+  padding: unset!important;
+  margin: unset!important;
+  border: none!important;
+
+  min-width: 15rem!important;
+}
+
+.blueGradient {
+  background: linear-gradient(40deg, $blue, $midnight-blue) !important
+}
+
+.testimonialCard {
+  .cardUp {
+    height: 120px;
+    overflow: hidden;
+    border-top-left-radius: .25rem;
+    border-top-right-radius: .25rem;
+  }
+
+  .avatar {
+      width: 120px;
+      margin-top: -60px;
+      overflow: hidden;
+      border: 5px solid #fff;
+      border-radius: 50%;
+
+      img {
+          width: 100%
+      }
+  }
+
+  .cardBody {
+      text-align: center;
+  }
+}

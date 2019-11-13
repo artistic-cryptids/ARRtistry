@@ -46,7 +46,7 @@ class NetworkAside extends React.Component<NetworkAsideProps, NetworkAsideState>
         aria-atomic="true"
         style={{
           position: 'relative',
-          minHeight: '100px',
+          minHeight: '0px',
         }}
       >
         <Toast

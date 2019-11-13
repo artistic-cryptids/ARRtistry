@@ -1,7 +1,6 @@
 import * as React from 'react';
 import Button from 'react-bootstrap/Button';
 import Col from 'react-bootstrap/Col';
-import Row from 'react-bootstrap/Row';
 import Form from 'react-bootstrap/Form';
 import { FormControlProps } from 'react-bootstrap/FormControl';
 import Modal from 'react-bootstrap/Modal';
@@ -107,7 +106,7 @@ class ConsignArtifact extends React.Component<ConsignArtifactProps, ConsignArtif
 
   render (): React.ReactNode {
     return (
-      <Row>
+      <>
         <Button variant="primary" onClick={this.handleShow}>
           Consignment
         </Button>
@@ -143,7 +142,7 @@ class ConsignArtifact extends React.Component<ConsignArtifactProps, ConsignArtif
               : null}
           </Modal.Footer>
         </Modal>
-      </Row>
+      </>
     );
   }
 }

@@ -34,7 +34,7 @@ class LeftSidebar extends React.Component<LeftSidebarProps, {}> {
 
   private renderNavMenu (): React.ReactNode {
     return (
-      <Container className={'col-md-2 d-none d-md-block ' + styles.sidebar}>
+      <Col md={2} className={'d-none d-md-block ' + styles.sidebar}>
         <Row className={styles.brand}>
           <div className={styles.brandLogo}>
             <Link to="/">
@@ -51,7 +51,7 @@ class LeftSidebar extends React.Component<LeftSidebarProps, {}> {
           {this.renderNavItem('Home', faColumns, '/')}
           <h4 className={styles.section}>Artifacts</h4>
           {this.renderNavItem('New', faFingerprint, '/artifact/new')}
-          {this.renderNavItem('Owned', faClone, '/artifact/list')}
+          {this.renderNavItem('Owned', faClone, '/artifact')}
           {this.renderNavItem('Sold', faEuroSign, '/artifact/sold')}
           <h4 className={styles.section}>Management</h4>
           {this.renderNavItem('Artifact Requests', faStamp, '/manage/proposal')}
@@ -60,7 +60,7 @@ class LeftSidebar extends React.Component<LeftSidebarProps, {}> {
           <h4 className={styles.section}>Artists</h4>
           {this.renderNavItem('New', faPalette, '/artist/new')}
         </Nav>
-      </Container>
+      </Col>
     );
   }
 
@@ -69,9 +69,9 @@ class LeftSidebar extends React.Component<LeftSidebarProps, {}> {
       <Container fluid>
         <Row>
           {this.renderNavMenu()}
-          <main role="main" className="col-md-9 ml-sm-auto col-lg-10 px-4">
+          <Col md={{ span: 10, offset: 2 }} className="pl-4 pt-4">
             {this.props.children}
-          </main>
+          </Col>
         </Row>
       </Container>
     );

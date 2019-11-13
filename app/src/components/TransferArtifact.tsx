@@ -209,7 +209,7 @@ class TransferArtifact extends React.Component<TransferArtifactProps, TransferAr
       <option key={index} value={(index + 1).toString()}>{month}</option>,
     );
     return (
-      <div>
+      <>
         <Button variant="primary" onClick={this.handleShow}>
           Register Sale
         </Button>
@@ -268,7 +268,7 @@ class TransferArtifact extends React.Component<TransferArtifactProps, TransferAr
           submitted={this.state.submitted}
           title="Registering sale..."
         />
-      </div>
+      </>
     );
   }
 }
