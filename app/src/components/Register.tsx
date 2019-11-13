@@ -51,7 +51,6 @@ interface Document {
 
 interface RegisterState {
   fields: RegisterFormFields;
-  registerTransactionStackId: any;
   validated: boolean;
   submitted: boolean;
   artists?: Artist[];
@@ -72,7 +71,6 @@ class Register extends React.Component<ContractProps, RegisterState> {
   constructor (props: ContractProps) {
     super(props);
     this.state = {
-      registerTransactionStackId: null,
       validated: false,
       submitted: false,
       fields: {
@@ -176,7 +174,7 @@ class Register extends React.Component<ContractProps, RegisterState> {
     await this.saveToIpfs(files, this.setMetaHash);
 
     const ipfsUrlStart = 'https://ipfs.io/ipfs/';
-    const stackId = await contracts.ArtifactApplication.applyFor(
+    await contracts.ArtifactApplication.applyFor(
       currentAccount,
       artist,
       ipfsUrlStart + this.state.fields.metaIpfsHash,
@@ -184,12 +182,12 @@ class Register extends React.Component<ContractProps, RegisterState> {
         from: accounts[0],
         gasLimit: 6000000,
       },
-    ); // TODO: Catch error when this function fails and display error to user
-    console.log(stackId);
-
-    this.setState({
-      registerTransactionStackId: stackId,
+    ).catch((err: any) => {
+      // rejection, usually
+      console.log('register error');
+      console.log(err);
     });
+    this.setState({ submitted: false });
   };
 
   renderSubmitButton = (): React.ReactNode => {
@@ -511,7 +509,6 @@ class Register extends React.Component<ContractProps, RegisterState> {
         <TransactionLoadingModal
           onHide={() => this.setState({ submitted: false })}
           submitted={this.state.submitted}
-          transactionStackId={this.state.registerTransactionStackId}
           title="Submitting your Artifact..."
         />
       </Container>
