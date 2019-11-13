@@ -2,6 +2,8 @@ import * as React from 'react';
 import Card from 'react-bootstrap/Card';
 import { ContractProps } from '../helper/eth';
 import Documents from './Documents';
+import Provenance from './Provenance';
+import ButtonGroup from 'react-bootstrap/ButtonGroup';
 
 interface Artwork {
   metaUri: string;
@@ -88,10 +90,10 @@ class ArtworkInfo extends React.Component<ArtworkInfoProps, ArtworkInfoState> {
     this.getArtistInfo();
   }
 
-  hashToArtist = (hash: string): Promise<Artist> => {
+  hashToArtist = async (hash: string): Promise<Artist> => {
     console.log(hash);
-    return fetch(hash)
-      .then((response: any) => response.json());
+    const response = await fetch(hash);
+    return response.json();
   };
 
   getArtistInfo = (): void => {
@@ -137,7 +139,13 @@ class ArtworkInfo extends React.Component<ArtworkInfoProps, ArtworkInfoState> {
               <span className="text-muted text-capitalize">Height:</span> {fields.height}
               <span className="text-muted text-capitalize"> Width:</span> {fields.width}
             </Card.Text>
-            <Documents documents={fields.documents}/>
+            <div className="text-center">
+              <ButtonGroup>
+                <Documents documents={fields.documents}/>
+                <Provenance metaUri={this.props.artwork.metaUri} />
+              </ButtonGroup>
+            </div>
+
           </Card.Body>
           <Card.Footer>
             <small className="text-muted">Last updated 3 mins ago</small>
