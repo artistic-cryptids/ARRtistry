@@ -16,6 +16,7 @@ interface SaleRecord {
   location: string;
   buyers: Array<string>;
   seller: string;
+  date: string;
 }
 
 interface ProvenanceState {
@@ -60,11 +61,12 @@ class Provenance extends React.Component<ProvenanceProps, ProvenanceState> {
   render (): React.ReactNode {
     const provenance = this.state.saleProvenance.map((saleRecord: SaleRecord, index: number) =>
       <ListGroup.Item key={index}>
-        <p>Date Sold: {new Date().toLocaleDateString(undefined, { year: 'numeric', month: 'long', day: 'numeric' })}</p>
+        {/*<p>Date Sold: {new Date().toLocaleDateString(undefined, { year: 'numeric', month: 'long', day: 'numeric' })}</p>*/}
         <p>Buyer: {saleRecord.buyers}</p>
         <p>Seller: {saleRecord.seller}</p>
         <p>Sale Location: {saleRecord.location}</p>
         <p>Sale Price: &euro;{saleRecord.price / 100}</p>
+        <p>Date: {saleRecord.date}</p>
       </ListGroup.Item>,
     );
 

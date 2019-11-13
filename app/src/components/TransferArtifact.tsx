@@ -1,12 +1,15 @@
 import * as React from 'react';
 import Button from 'react-bootstrap/Button';
 import Col from 'react-bootstrap/Col';
+import Row from 'react-bootstrap/Row';
 import Form from 'react-bootstrap/Form';
 import { FormControlProps } from 'react-bootstrap/FormControl';
 import Modal from 'react-bootstrap/Modal';
 import ipfs from '../ipfs';
 import TransactionLoadingModal from './common/TransactionLoadingModal';
 import { ContractProps } from '../helper/eth';
+import { Contract } from 'web3-eth-contract';
+import { faCalendarDay } from '@fortawesome/free-solid-svg-icons';
 
 interface TransferArtifactProps extends ContractProps {
   tokenId: number;
@@ -17,6 +20,7 @@ interface TransferArtifactFormFields {
   recipientAddress: string;
   price: string;
   location: string;
+  date: string;
 }
 
 interface TransferArtifactState {
@@ -34,6 +38,21 @@ type InputChangeEvent = React.FormEvent<FormControlProps> &
   }
 
 const GENERIC_FEEDBACK = <Form.Control.Feedback>Looks good!</Form.Control.Feedback>;
+
+const MONTHS = [
+  'January',
+  'February',
+  'March',
+  'April',
+  'May',
+  'June',
+  'July',
+  'August',
+  'September',
+  'October',
+  'November',
+  'December',
+]
 
 const LOCATIONS = [
   'Austria',
@@ -77,6 +96,7 @@ class TransferArtifact extends React.Component<TransferArtifactProps, TransferAr
         recipientAddress: '',
         price: '',
         location: LOCATIONS[0],
+        date: '',
       },
       showTransferForm: false,
       submitted: false,
@@ -91,7 +111,7 @@ class TransferArtifact extends React.Component<TransferArtifactProps, TransferAr
       .then((response: any) => 'https://ipfs.io/ipfs/' + response[0].hash);
   }
 
-  addProvenance = (price: string, buyers: string[], seller: string, location: string): Promise<string> => {
+  addProvenance = (price: string, buyers: string[], seller: string, location: string, date: string): Promise<string> => {
     return fetch(this.props.metaUri)
       .then((response: any) => response.json())
       .then((jsonData: any) => {
@@ -101,6 +121,7 @@ class TransferArtifact extends React.Component<TransferArtifactProps, TransferAr
           location: location,
           buyers: buyers,
           seller: seller,
+          date: date,
         });
 
         return this.saveMetaData(jsonData);
@@ -123,6 +144,7 @@ class TransferArtifact extends React.Component<TransferArtifactProps, TransferAr
           [this.state.fields.recipientAddress],
           owner,
           this.state.fields.location,
+          this.state.fields.date,
         );
       })
       .then((hash: string) => {
@@ -133,7 +155,7 @@ class TransferArtifact extends React.Component<TransferArtifactProps, TransferAr
           hash,
           (parseFloat(this.state.fields.price) * 100).toString(),
           this.state.fields.location,
-          this.state.fields.dateeeeeeeeeeeeeeeeeeeeeee
+          this.state.fields.date,
           {
             from: this.props.accounts[0],
           },
@@ -173,6 +195,7 @@ class TransferArtifact extends React.Component<TransferArtifactProps, TransferAr
         recipientAddress: '',
         price: '',
         location: LOCATIONS[0],
+        date: '',
       },
       showTransferForm: false,
     });
@@ -181,6 +204,9 @@ class TransferArtifact extends React.Component<TransferArtifactProps, TransferAr
   render (): React.ReactNode {
     const locationOptions = LOCATIONS.map((location, index) =>
       <option key={index}>{location}</option>,
+    );
+    const monthOptions = MONTHS.map((month, index) =>
+      <option key={index} value={(index + 1).toString()}>{month}</option>,
     );
     return (
       <div>
@@ -218,6 +244,14 @@ class TransferArtifact extends React.Component<TransferArtifactProps, TransferAr
                 onChange={this.inputChangeHandler}>
                 {locationOptions}
               </Form.Control>
+            </Form.Group>
+            <Form.Group as={Col} controlId="date">
+              <Form.Label>Date (YYYY-MM-DD)</Form.Label>
+              <Form.Control
+                required
+                type="text"
+                onChange={this.inputChangeHandler}/>
+              {GENERIC_FEEDBACK}
             </Form.Group>
           </Modal.Body>
           <Modal.Footer>
