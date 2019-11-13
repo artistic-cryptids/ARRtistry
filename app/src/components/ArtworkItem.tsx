@@ -2,8 +2,6 @@ import * as React from 'react';
 import ArtworkInfo from './ArtworkInfo';
 import TransferArtifact from './TransferArtifact';
 import ConsignArtifact from './ConsignArtifact';
-import Provenance from './Provenance';
-import Row from 'react-bootstrap/Row';
 import { ContractProps } from '../helper/eth';
 import ButtonGroup from 'react-bootstrap/ButtonGroup';
 
