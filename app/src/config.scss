@@ -17,6 +17,8 @@ $theme-colors: (
 $font-family-sans-serif: 'Poppins', sans-serif;
 $enable-shadows: true;
 
+// Configuration
+
 @import "node_modules/bootstrap/scss/functions";
 @import "node_modules/bootstrap/scss/variables";
 @import "node_modules/bootstrap/scss/mixins";

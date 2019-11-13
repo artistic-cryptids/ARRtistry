@@ -1,7 +1,15 @@
 import * as React from 'react';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
-import ListGroup from 'react-bootstrap/ListGroup';
+import Col from 'react-bootstrap/Col';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import {
+  faEuroSign,
+} from '@fortawesome/free-solid-svg-icons';
+
+import * as styles from './Timeline.module.scss';
+import Form from 'react-bootstrap/Form';
+import Row from 'react-bootstrap/Row';
 
 interface ProvenanceProps {
   metaUri: string;
@@ -22,6 +30,59 @@ interface ProvenanceState {
   showProvenance: boolean;
   saleProvenance: Array<SaleRecord>;
 }
+
+const PlaintextField: React.FC<{label: string; value: string}> = ({ label, value }) => {
+  return <Form.Group as={Form.Row}>
+    <Form.Label column sm="2">
+      {label}
+    </Form.Label>
+    <Col sm="10">
+      <Form.Control plaintext readOnly defaultValue={value} />
+    </Col>
+  </Form.Group>;
+};
+
+const TimelineBlock: React.FC<{record: SaleRecord}> = ({ record }) => {
+  return (
+    <li className={styles.timelineBlock}>
+      <a href="#!">
+        <span className={styles.timelineIcon}><FontAwesomeIcon icon={faEuroSign} size='1x'/></span>
+      </a>
+      <div className={styles.timelineContent}>
+        <Row>
+          <Col sm='8'>
+            <h4 className="font-weight-bold">Sale</h4>
+          </Col>
+          <Col sm='4'>
+            <p className={'text-muted ' + styles.date}>
+              {new Date().toLocaleDateString(undefined, { year: 'numeric', month: 'long', day: 'numeric' })}
+            </p>
+          </Col>
+        </Row>
+        <Row>
+          <Col sm='12'>
+            <Form>
+              <PlaintextField label='Buyer' value={record.buyers.join(', ')} />
+              <PlaintextField label='Seller' value={record.seller} />
+              <PlaintextField label='Sale Location' value={record.location} />
+              <PlaintextField label='Sale Price' value={'€' + (record.price / 100).toString()} />
+            </Form>
+          </Col>
+        </Row>
+      </div>
+    </li>
+  );
+};
+
+const Timeline: React.FC<{records: SaleRecord[]}> = ({ records }) => {
+  return (
+    <Col md='12'>
+      <ul className={styles.timeline}>
+        {records.map((saleRecord: SaleRecord, index: number) => <TimelineBlock record={saleRecord} key={index}/>)}
+      </ul>
+    </Col>
+  );
+};
 
 class Provenance extends React.Component<ProvenanceProps, ProvenanceState> {
   constructor (props: ProvenanceProps) {
@@ -58,29 +119,21 @@ class Provenance extends React.Component<ProvenanceProps, ProvenanceState> {
   }
 
   render (): React.ReactNode {
-    const provenance = this.state.saleProvenance.map((saleRecord: SaleRecord, index: number) =>
-      <ListGroup.Item key={index}>
-        <p>Date Sold: {new Date().toLocaleDateString(undefined, { year: 'numeric', month: 'long', day: 'numeric' })}</p>
-        <p>Buyer: {saleRecord.buyers}</p>
-        <p>Seller: {saleRecord.seller}</p>
-        <p>Sale Location: {saleRecord.location}</p>
-        <p>Sale Price: &euro;{saleRecord.price / 100}</p>
-      </ListGroup.Item>,
-    );
-
     return (
       <>
         <Button variant="primary" onClick={this.handleShow}>
           Provenance
         </Button>
-        <Modal show={this.state.showProvenance} onHide={this.handleClose}>
+        <Modal
+          show={this.state.showProvenance}
+          onHide={this.handleClose}
+          dialogClassName={styles.modal}
+        >
           <Modal.Header closeButton>
             <Modal.Title>Provenance</Modal.Title>
           </Modal.Header>
           <Modal.Body>
-            <ListGroup>
-              {provenance}
-            </ListGroup>
+            <Timeline records={this.state.saleProvenance}/>
           </Modal.Body>
         </Modal>
       </>
