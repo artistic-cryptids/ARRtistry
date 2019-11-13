@@ -22,7 +22,6 @@ interface RegisterFormFields {
 
 interface RegisterArtistState {
   fields: RegisterFormFields;
-  registerTransactionStackId: any;
   validated: boolean;
   submitted: boolean;
   isGovernor: false;
@@ -42,7 +41,6 @@ class RegisterArtist extends React.Component<ContractProps, RegisterArtistState>
   constructor (props: ContractProps) {
     super(props);
     this.state = {
-      registerTransactionStackId: null,
       validated: false,
       submitted: false,
       isGovernor: false,
@@ -92,26 +90,21 @@ class RegisterArtist extends React.Component<ContractProps, RegisterArtistState>
     await this.saveToIpfs(files, this.setMetaHash);
 
     const ipfsUrlStart = 'https://ipfs.io/ipfs/';
-    const stackId = await contracts.Artists.addArtist(
+    await contracts.Artists.addArtist(
       ipfsUrlStart + this.state.fields.metaIpfsHash,
       {
         from: accounts[0],
         gasLimit: 6000000,
       },
-    ); // TODO: Catch error when this function fails and display error to user
-    console.log(stackId);
-
-    this.setState({
-      registerTransactionStackId: stackId,
+    ).catch((err: any) => {
+      // rejection, usually
+      console.log('register artist err:');
+      console.log(err);
     });
+    this.setState({ submitted: false });
   };
 
   renderSubmitButton = (): React.ReactNode => {
-    // eslint-disable-next-line
-    //const { transactions, transactionStack } = this.props.drizzleState;
-
-    // eslint-disable-next-line
-    //const registerTransactionHash = transactionStack[this.state.registerTransactionStackId];
     if (!this.state.validated && !this.state.submitted) {
       return <Button type="submit" className="my-2 btn-block" variant="primary">Submit</Button>;
     } else if (this.state.submitted) {
@@ -235,7 +228,6 @@ class RegisterArtist extends React.Component<ContractProps, RegisterArtistState>
           <TransactionLoadingModal
             onHide={() => this.setState({ submitted: false })}
             submitted={this.state.submitted}
-            transactionStackId={this.state.registerTransactionStackId}
             title="Submitting this new artist..."
           />
         </Container>
