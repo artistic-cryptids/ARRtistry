@@ -97,6 +97,7 @@ class RegisterArtist extends React.Component<ContractProps, RegisterArtistState>
         gasLimit: 6000000,
       },
     ).catch((err: any) => {
+      // rejection, usually
       console.log('register artist err:');
       console.log(err);
     });

@@ -183,6 +183,7 @@ class Register extends React.Component<ContractProps, RegisterState> {
         gasLimit: 6000000,
       },
     ).catch((err: any) => {
+      // rejection, usually
       console.log('register error');
       console.log(err);
     });
