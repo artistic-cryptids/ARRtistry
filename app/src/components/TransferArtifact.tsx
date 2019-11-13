@@ -136,10 +136,10 @@ class TransferArtifact extends React.Component<TransferArtifactProps, TransferAr
           {
             from: this.props.accounts[0],
           },
-        ); 
+        );
         this.setState({ submitted: false });
       })
-      .catch((err: any) => { 
+      .catch((err: any) => {
         console.log(err);
         this.setState({ submitted: false });
       });
