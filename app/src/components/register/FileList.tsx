@@ -7,7 +7,7 @@ import { faTimes } from '@fortawesome/free-solid-svg-icons';
 import { saveSingleToIPFS } from '../../helper/ipfs';
 import ProgressBar from 'react-bootstrap/ProgressBar';
 import Row from 'react-bootstrap/Row';
-import { useFilesContext, IPFSDocument } from '../../providers/FileProvider';
+import { useFilesContext, IpfsDocument } from '../../providers/FileProvider';
 import _ from 'lodash';
 
 const FileUploadButton: React.FC = () => {
@@ -17,7 +17,7 @@ const FileUploadButton: React.FC = () => {
     const reader = new FileReader();
 
     const setHash = (hash: string): void => {
-      const documents = _.map(files.documents, (document: IPFSDocument) => {
+      const documents = _.map(files.documents, (document: IpfsDocument) => {
         if (document.filename === file.name) {
           document.metauri = hash;
         }
@@ -101,7 +101,7 @@ const FileList: React.FC = () => {
 
   return <div className="text-center pt-3">
     <ListGroup className={styles.fileList}>
-      {files.documents.map((document: IPFSDocument, index: number) => {
+      {files.documents.map((document: IpfsDocument, index: number) => {
         return <ListGroup.Item key={index} className={'d-flex justify-content-between align-items-center'}>
           {document.filename}
           <Row>
