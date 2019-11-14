@@ -1,0 +1,204 @@
+@import '../../config';
+
+$primary: map-get($theme-colors, 'primary');
+
+.dropzone {
+  position: relative;
+  width: 180px;
+  height: 180px;
+  background: $primary;
+  border-radius: 10px;
+  box-shadow: 0 5px 30px 5px rgba(0, 0, 0, .2);
+  font-size: 22px;
+  color: #fff;
+  text-align: center;
+  cursor: pointer;
+  overflow: hidden;
+  margin: auto;
+
+  -webkit-transition: padding .3s ease, background .3s ease 1.6s;
+  -moz-transition: padding .3s ease, background .3s ease 1.6s;
+  -o-transition: padding .3s ease, background .3s ease 1.6s;
+  transition: padding .3s ease, background .3s ease 1.6s;
+}
+
+.imageHolder {
+  position: absolute;
+  top: -110%;
+  -webkit-transition: .5s ease;
+  -moz-transition: .5s ease;
+  -o-transition: .5s ease;
+  transition: .5s ease;
+  -webkit-transition-delay: 1.5s;
+  -moz-transition-delay: 1.5s;
+  -o-transition-delay: 1.5s;
+  transition-delay: 1.5s;
+  left: -100%;
+  right: -100%;
+  margin: auto;
+  height: 100%;
+  background: #fff;
+}
+
+.imageHolder.move {
+  top: 50%;
+  -webkit-transform: translateY(-50%);
+  -moz-transform: translateY(-50%);
+  -o-transform: translateY(-50%);
+  -ms-transform: translateY(-50%);
+  transform: translateY(-50%);
+}
+
+.dropzone.fileOver {
+  padding: 10px;
+}
+
+.dropzone.fileOver .arrow {
+  top: 50%;
+  opacity: 1;
+}
+
+.box {
+  position: absolute;
+  width: 60px;
+  height: 60px;
+  background: rgba(255, 255, 255, .2);
+  border-radius: 10px;
+  top: 50%;
+  left: 50%;
+  -webkit-transform: translate(-50%, -50%);
+  -moz-transform: translate(-50%, -50%);
+  -o-transform: translate(-50%, -50%);
+  -ms-transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%);
+  overflow: hidden;
+  z-index: 0;
+  -webkit-transition: .3s ease;
+  -moz-transition: .3s ease;
+  -o-transition: .3s ease;
+  transition: .3s ease;
+
+  &:before {
+    content: '';
+    position: absolute;
+    top: 40%;
+    left: 60%;
+    -webkit-transform: translate(-50%, -50%);
+    -moz-transform: translate(-50%, -50%);
+    -o-transform: translate(-50%, -50%);
+    -ms-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
+    width: 40%;
+    height: 40%;
+    border: dashed 2px rgba(255, 255, 255, .9);
+    border-radius: 5px;
+    -webkit-transition: .3s ease;
+    -moz-transition: .3s ease;
+    -o-transition: .3s ease;
+    transition: .3s ease;
+  }
+
+  &:after {
+    content: '';
+    position: absolute;
+    top: 60%;
+    left: 40%;
+    -webkit-transform: translate(-50%, -50%);
+    -moz-transform: translate(-50%, -50%);
+    -o-transform: translate(-50%, -50%);
+    -ms-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
+    width: 45%;
+    height: 45%;
+    border-radius: 5px;
+    background: rgba(255, 255, 255, .3);
+    -webkit-transition: .3s ease;
+    -moz-transition: .3s ease;
+    -o-transition: .3s ease;
+    transition: .3s ease;
+  }
+}
+
+.progress {
+  position: absolute;
+  z-index: 0;
+  top: 0;
+  left: 0;
+  width: 0;
+  height: 100%;
+  background: #fff;
+  -webkit-transition: 1s ease;
+  -moz-transition: 1s ease;
+  -o-transition: 1s ease;
+  transition: 1s ease;
+}
+
+.progress.complete {
+  width: 100%;
+}
+
+.dropzone.fileOver .box {
+  width: 80px;
+  height: 3px;
+  border-radius: 100px;
+  top: 70%;
+}
+
+.dropzone.fileOver .box:before, .dropzone.fileOver .box:after {
+  -webkit-transform: translate(-50%, -50%) scale(0);
+  -moz-transform: translate(-50%, -50%) scale(0);
+  -o-transform: translate(-50%, -50%) scale(0);
+  -ms-transform: translate(-50%, -50%) scale(0);
+  transform: translate(-50%, -50%) scale(0);
+}
+
+/* Arrow icon */
+.arrow {
+  opacity: 0;
+  position: absolute;
+  z-index: 0;
+  top: 30%;
+  left: 50%;
+  -webkit-transform: translate(-50%, -50%);
+  -moz-transform: translate(-50%, -50%);
+  -o-transform: translate(-50%, -50%);
+  -ms-transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%);
+  width: 35px;
+  height: 35px;
+  background: url(https://s3-us-west-2.amazonaws.com/s.cdpn.io/269193/arrow-down.png) no-repeat center;
+  background-size: 60px;
+  -webkit-transition: .3s ease;
+  -moz-transition: .3s ease;
+  -o-transition: .3s ease;
+  transition: .3s ease;
+  overflow: hidden;
+}
+
+/* Popup */
+.top {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 500px;
+  text-align: center!important;
+}
+
+.popup {
+  padding: 1rem 2rem;
+  box-shadow: 0 3px 20px 2px rgba(0, 0, 0, .1);
+  border-radius: 5px;
+  z-index: 10;
+  margin-bottom: 1rem;
+}
+
+.message {
+  position: relative;
+  display: block;
+  width: 80%;
+  padding: 10px 10px;
+  margin: 0 auto;
+  font-size: 14px;
+  text-align: center;
+}
