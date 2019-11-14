@@ -80,7 +80,7 @@ contract('ArtifactRegistry', async accounts => {
     it('should reset setUri', async () => {
       const price = 9999;
       await registry.transfer(tokenOwner, accounts[3], TOKEN_ID, 'new metaUri',
-        price, 'location', { from: tokenOwner });
+        price, 'location', '2019-11-11', { from: tokenOwner });
 
       const result = await registry.getArtifactForToken(TOKEN_ID);
 

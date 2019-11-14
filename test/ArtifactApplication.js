@@ -95,6 +95,7 @@ contract('ArtifactApplication', async accounts => {
       const tokenId = toBN(1);
       const metaUri = 'dud metaUri';
       const location = 'location';
+      const date = '2019-11-11';
 
       beforeEach(async () => {
         governance = await Governance.new({ from: creator });
@@ -110,7 +111,7 @@ contract('ArtifactApplication', async accounts => {
           ARTIFACT.metaUri,
         );
         await governance.approve(0);
-        await registry.transfer(from, to, tokenId, metaUri, price, location);
+        await registry.transfer(from, to, tokenId, metaUri, price, location, date);
 
         const result = await artifactApplication.getARR(0);
         const actualARR = {
@@ -119,6 +120,7 @@ contract('ArtifactApplication', async accounts => {
           tokenId: result[2],
           price: result[3],
           location: result[5],
+          date: result[6],
         };
 
         const expectedARR = {
@@ -127,6 +129,7 @@ contract('ArtifactApplication', async accounts => {
           tokenId: tokenId,
           price: price,
           location: location,
+          date: date,
         };
 
         ARREquality(actualARR, expectedARR);
@@ -141,7 +144,7 @@ contract('ArtifactApplication', async accounts => {
               ARTIFACT.metaUri,
             );
             await governance.approve(0);
-            await registry.transfer(from, to, tokenId, metaUri, toBN(price), location);
+            await registry.transfer(from, to, tokenId, metaUri, toBN(price), location, date);
             const result = await artifactApplication.getARR(0);
             const actualARR = result[4];
             expect(actualARR.toNumber()).to.be.eql(expectedARR);

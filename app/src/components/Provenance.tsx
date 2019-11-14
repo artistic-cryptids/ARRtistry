@@ -24,6 +24,7 @@ interface SaleRecord {
   location: string;
   buyers: Array<string>;
   seller: string;
+  date: string;
 }
 
 interface ProvenanceState {
@@ -55,7 +56,8 @@ const TimelineBlock: React.FC<{record: SaleRecord}> = ({ record }) => {
           </Col>
           <Col sm='4'>
             <p className={'text-muted ' + styles.date}>
-              {new Date().toLocaleDateString(undefined, { year: 'numeric', month: 'long', day: 'numeric' })}
+              {/* {new Date().toLocaleDateString(undefined, { year: 'numeric', month: 'long', day: 'numeric' })} */}
+              {record.date}
             </p>
           </Col>
         </Row>
