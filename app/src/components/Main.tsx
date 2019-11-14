@@ -1,8 +1,9 @@
-import React from 'react';
+import * as React from 'react';
 import { Container, Navbar, Nav, Dropdown, NavItem, Card } from 'react-bootstrap';
-
+import { User, useSessionContext } from '../providers/SessionProvider';
 import * as styles from './Header.module.scss';
 import NavLink from 'react-bootstrap/NavLink';
+import LeftSidebar from './LeftSidebar';
 
 const BreadCrumb: React.FC<{crumbs: string[]}> = ({ crumbs }) => {
   return <div className={styles.breadcrumb}>
@@ -15,12 +16,6 @@ const BreadCrumb: React.FC<{crumbs: string[]}> = ({ crumbs }) => {
   </div>;
 };
 
-interface User {
-  img: string;
-  name: string;
-  role: string;
-}
-
 const UserCard: React.FC<{user: User}> = ({ user }) => {
   return <Card className={styles.testimonialCard}>
     <div className={styles.blueGradient + ' ' + styles.cardUp}>
@@ -30,12 +25,16 @@ const UserCard: React.FC<{user: User}> = ({ user }) => {
     </div>
     <Card.Body>
       <h4 className="font-weight-bold mb-4">{user.name} <small>{user.role}</small></h4>
-      <hr/>
+      <blockquote className="blockquote text-right">
+        <footer className="blockquote-footer">{user.address}</footer>
+      </blockquote>
     </Card.Body>
   </Card>;
 };
 
-const UserDropdown: React.FC<{user: User}> = ({ user }) => {
+const UserDropdown: React.FC = () => {
+  const { user } = useSessionContext();
+
   return <Dropdown as={NavItem} alignRight>
     <Dropdown.Toggle as={NavLink} id="nav-dropdown">
       <img src={user.img} className="rounded-circle z-depth-0" style={{ 'width': '3rem' }} alt='avatar'/>
@@ -58,11 +57,7 @@ const Header: React.FC<{page: string; parents: string[]}> = ({ page, parents }) 
           <BreadCrumb crumbs={parents.concat([page])}/>
         </Nav>
         <Nav>
-          <UserDropdown user={{
-            name: 'Anna Doe',
-            img: 'https://mdbootstrap.com/img/Photos/Avatars/img%20%2820%29.jpg',
-            role: 'DACS',
-          }}/>
+          <UserDropdown/>
         </Nav>
       </Navbar.Collapse>
     </Navbar>
@@ -71,12 +66,12 @@ const Header: React.FC<{page: string; parents: string[]}> = ({ page, parents }) 
 
 const Main: React.FC<{page: string; parents: string[]}> = ({ page, parents, children }) => {
   return (
-    <>
+    <LeftSidebar>
       <Header page={page} parents={parents}/>
       <Container>
         {children}
       </Container>
-    </>
+    </LeftSidebar>
   );
 };
 
