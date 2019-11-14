@@ -1,15 +1,12 @@
 import * as React from 'react';
 import Button from 'react-bootstrap/Button';
 import Col from 'react-bootstrap/Col';
-import Row from 'react-bootstrap/Row';
 import Form from 'react-bootstrap/Form';
 import { FormControlProps } from 'react-bootstrap/FormControl';
 import Modal from 'react-bootstrap/Modal';
 import ipfs from '../ipfs';
 import TransactionLoadingModal from './common/TransactionLoadingModal';
 import { ContractProps } from '../helper/eth';
-import { Contract } from 'web3-eth-contract';
-import { faCalendarDay } from '@fortawesome/free-solid-svg-icons';
 
 interface TransferArtifactProps extends ContractProps {
   tokenId: number;
@@ -38,21 +35,6 @@ type InputChangeEvent = React.FormEvent<FormControlProps> &
   }
 
 const GENERIC_FEEDBACK = <Form.Control.Feedback>Looks good!</Form.Control.Feedback>;
-
-const MONTHS = [
-  'January',
-  'February',
-  'March',
-  'April',
-  'May',
-  'June',
-  'July',
-  'August',
-  'September',
-  'October',
-  'November',
-  'December',
-]
 
 const LOCATIONS = [
   'Austria',
@@ -111,7 +93,8 @@ class TransferArtifact extends React.Component<TransferArtifactProps, TransferAr
       .then((response: any) => 'https://ipfs.io/ipfs/' + response[0].hash);
   }
 
-  addProvenance = (price: string, buyers: string[], seller: string, location: string, date: string): Promise<string> => {
+  addProvenance = (price: string, buyers: string[],
+    seller: string, location: string, date: string): Promise<string> => {
     return fetch(this.props.metaUri)
       .then((response: any) => response.json())
       .then((jsonData: any) => {
@@ -204,9 +187,6 @@ class TransferArtifact extends React.Component<TransferArtifactProps, TransferAr
   render (): React.ReactNode {
     const locationOptions = LOCATIONS.map((location, index) =>
       <option key={index}>{location}</option>,
-    );
-    const monthOptions = MONTHS.map((month, index) =>
-      <option key={index} value={(index + 1).toString()}>{month}</option>,
     );
     return (
       <>
