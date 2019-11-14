@@ -61,8 +61,7 @@ const FileUploadButton: React.FC = () => {
     <>
       <input
         className="btn"
-        accept="image/*"
-        id="image-upload-button"
+        id="file-upload-button"
         multiple
         type="file"
         style={{
