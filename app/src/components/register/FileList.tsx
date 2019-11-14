@@ -102,20 +102,17 @@ const FileList: React.FC = () => {
     <ListGroup className={styles.fileList}>
       {files.documents.map((document: IpfsDocument, index: number) => {
         return <ListGroup.Item key={index} className={styles.fileItem}>
-            <div className={styles.fileName}>
-              {document.filename}
-            </div>
-            <div className={styles.fileProgress}>
-              <ProgressBar label={document.metauri} now={document.metauri ? 100 : 10} srOnly/>
-            </div>
-            <div className={styles.fileToolbar}>
-              {/*<Button variant="link" className={styles.fileStart} onClick={() => uploadFileAt(index)}>
-                <FontAwesomeIcon icon={faArrow} />
-              </Button>*/}
-              <Button variant="link" className={styles.fileDelete} onClick={() => removeFile(index)}>
-                <FontAwesomeIcon icon={faTimes} />
-              </Button>
-            </div>
+          <div className={styles.fileName}>
+            {document.filename}
+          </div>
+          <div className={styles.fileProgress}>
+            <ProgressBar label={document.metauri} now={document.metauri ? 100 : 10} srOnly/>
+          </div>
+          <div className={styles.fileToolbar}>
+            <Button variant="link" className={styles.fileDelete} onClick={() => removeFile(index)}>
+              <FontAwesomeIcon icon={faTimes} />
+            </Button>
+          </div>
         </ListGroup.Item>;
       })}
       <div className={styles.fileFooter}>
