@@ -1,22 +1,24 @@
 import React, { useCallback } from 'react';
 import * as styles from './DropZone.module.scss';
 import { useDropzone } from 'react-dropzone';
-import { FilesContext } from './RegisterForm';
-import { saveToIPFS } from '../../helper/ipfs';
+import { saveSingleToIPFS } from '../../helper/ipfs';
+import { useFilesContext } from '../../providers/FileProvider';
 
 const DropZone: React.FC<{popup?: true; callback: (hash: string) => void}> = ({ popup, callback }) => {
-  const { files } = React.useContext(FilesContext);
+  const { files } = useFilesContext();
+  const [dropped, setDropped] = React.useState(false);
 
   const onDrop = useCallback((acceptedFiles: Blob[]) => {
+    setDropped(true);
     const reader = new FileReader();
     reader.addEventListener('loadend', function () {
-      saveToIPFS([reader.result], callback);
+      saveSingleToIPFS(reader.result, callback);
     });
     acceptedFiles.forEach((blob) => reader.readAsArrayBuffer(blob));
   }, [callback]);
   const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop });
 
-  const isFileOver = isDragActive || files.image !== '';
+  const isFileOver = isDragActive || dropped;
   const isComplete = files.image !== '';
 
   return (
@@ -38,56 +40,17 @@ const DropZone: React.FC<{popup?: true; callback: (hash: string) => void}> = ({ 
         <div>
           <div className={styles.arrow}></div>
         </div>
-        <img
-          className={styles.imageHolder + (isComplete ? ' ' + styles.move : '')}
-          src={'https://ipfs.io/ipfs/' + files.image}
-          alt='artifact-img'
-        />
+        { isComplete
+          ? <img
+            className={styles.imageHolder + ' ' + styles.move}
+            src={'https://ipfs.io/ipfs/' + files.image}
+            alt='artifact-img'
+          /> : null
+        }
         <input accept="image/*" {...getInputProps()} />
       </div>
     </>
   );
 };
-
-// $(function() {
-//
-//   $('#container').on('dragover', function(e) {
-//     e.preventDefault();
-//     $(this).addClass('file-over');
-//     //$('svg path').show();
-//   });
-//
-//   $('#container').on('dragleave', function(e) {
-//     e.preventDefault();
-//     e.stopPropagation();
-//     $(this).removeClass('file-over');
-//   });
-//
-//   $('#container').on('drop', function(e) {
-//     e.preventDefault();
-//     e.stopPropagation();
-//     $(this).addClass('file-over').stop(true, true).css({
-//       background:'#fff'
-//     });
-//     $('.progress').toggleClass('complete');
-//     $('#image-holder').addClass('move');
-//   });
-//
-//   var dropzone = document.getElementById("container");
-//
-//   FileReaderJS.setupDrop(dropzone, {
-//     readAsDefault: "DataURL",
-//     on: {
-//       load: function(e, file) {
-//         var img = document.getElementById("image-holder");
-//         img.onload = function() {
-//           document.getElementById("image-holder").appendChild(img);
-//         };
-//         img.src = e.target.result;
-//       }
-//     }
-//   });
-//
-// });
 
 export default DropZone;
