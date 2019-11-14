@@ -45,8 +45,8 @@
     "build": "npx tsm src && react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "lint": "npx eslint './src/**/*.{ts,tsx}'",
-    "lint:fix": "npx eslint './src/**/*.{ts,tsx}' --fix"
+    "lint": "npx eslint --ignore-path .gitignore './src/**/*.{ts,tsx}'",
+    "lint:fix": "npx eslint --ignore-path .gitignore './src/**/*.{ts,tsx}' --fix"
   },
   "eslintConfig": {
     "extends": "react-app"
