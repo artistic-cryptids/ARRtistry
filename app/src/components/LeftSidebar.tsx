@@ -16,66 +16,62 @@ import {
   IconDefinition,
 } from '@fortawesome/free-solid-svg-icons';
 import * as styles from './LeftSidebar.module.scss';
+import { useSessionContext, User } from '../providers/SessionProvider';
 
-interface LeftSidebarProps {
-  children: React.ReactNode;
-}
+const NavItem: React.FC<{name: string; icon: IconDefinition; path: string}> = ({ name, icon, path }) => {
+  return (
+    <Nav.Item className={styles.navItem}>
+      <Nav.Link to={path} as={Link} bsPrefix={'nav-link ' + styles.navLink}>
+        <FontAwesomeIcon icon={icon} /> {name}
+      </Nav.Link>
+    </Nav.Item>
+  );
+};
 
-class LeftSidebar extends React.Component<LeftSidebarProps, {}> {
-  private renderNavItem (name: string, icon: IconDefinition, path: string): React.ReactNode {
-    return (
-      <Nav.Item className={styles.navItem}>
-        <Nav.Link to={path} as={Link} bsPrefix={'nav-link ' + styles.navLink}>
-          <FontAwesomeIcon icon={icon} /> {name}
-        </Nav.Link>
-      </Nav.Item>
-    );
-  }
+const NavMenu: React.FC<{user: User}> = ({ user }) => {
+  return (
+    <Col md={2} className={'d-none d-md-block ' + styles.sidebar}>
+      <Row className={styles.brand}>
+        <div className={styles.brandLogo}>
+          <Link to="/">
+            ARRtistry
+          </Link>
+        </div>
+        <div className={styles.brandTools}>
+          <Button className={styles.brandToggle}><span></span></Button>
+        </div>
+      </Row>
+      <hr/>
+      <Nav className={'flex-column ' + styles.sidebarSticky} as={Col}>
+        <h4 className={styles.section}>Dashboards</h4>
+        <NavItem name='Home' icon={faColumns} path='/'/>
+        <h4 className={styles.section}>Artifacts</h4>
+        <NavItem name='New' icon={faFingerprint} path='/artifact/new'/>
+        <NavItem name='Owned' icon={faClone} path='/artifact'/>
+        <NavItem name='Sold' icon={faEuroSign} path='/artifact/sold'/>
+        <h4 className={styles.section}>Management</h4>
+        {user.role === 'DACS' && <NavItem name='Artifact Requests' icon={faStamp} path='/manage/proposal'/>}
+        {user.role === 'DACS' && <NavItem name='ARR' icon={faEuroSign} path='/manage/arr'/>}
+        {user.role === 'DEAL' && <NavItem name='Clients' icon={faIdCardAlt} path='/client/all/artifact'/>}
+        <h4 className={styles.section}>Artists</h4>
+        <NavItem name='New' icon={faPalette} path='/artist/new'/>
+      </Nav>
+    </Col>
+  );
+};
 
-  private renderNavMenu (): React.ReactNode {
-    return (
-      <Col md={2} className={'d-none d-md-block ' + styles.sidebar}>
-        <Row className={styles.brand}>
-          <div className={styles.brandLogo}>
-            <Link to="/">
-              ARRtistry
-            </Link>
-          </div>
-          <div className={styles.brandTools}>
-            <Button className={styles.brandToggle}><span></span></Button>
-          </div>
-        </Row>
-        <hr/>
-        <Nav className={'flex-column ' + styles.sidebarSticky} as={Col}>
-          <h4 className={styles.section}>Dashboards</h4>
-          {this.renderNavItem('Home', faColumns, '/')}
-          <h4 className={styles.section}>Artifacts</h4>
-          {this.renderNavItem('New', faFingerprint, '/artifact/new')}
-          {this.renderNavItem('Owned', faClone, '/artifact')}
-          {this.renderNavItem('Sold', faEuroSign, '/artifact/sold')}
-          <h4 className={styles.section}>Management</h4>
-          {this.renderNavItem('Artifact Requests', faStamp, '/manage/proposal')}
-          {this.renderNavItem('ARR', faEuroSign, '/manage/arr')}
-          {this.renderNavItem('Clients', faIdCardAlt, '/client/all/artifact')}
-          <h4 className={styles.section}>Artists</h4>
-          {this.renderNavItem('New', faPalette, '/artist/new')}
-        </Nav>
-      </Col>
-    );
-  }
-
-  render (): React.ReactNode {
-    return (
-      <Container fluid>
-        <Row>
-          {this.renderNavMenu()}
-          <Col md={{ span: 10, offset: 2 }} className="pl-4 pt-4">
-            {this.props.children}
-          </Col>
-        </Row>
-      </Container>
-    );
-  }
-}
+const LeftSidebar: React.FC = ({ children }) => {
+  const { user } = useSessionContext();
+  return (
+    <Container fluid>
+      <Row>
+        <NavMenu user={user}/>
+        <Col md={{ span: 10, offset: 2 }} className="pl-4 pt-4">
+          { children }
+        </Col>
+      </Row>
+    </Container>
+  );
+};
 
 export default LeftSidebar;
