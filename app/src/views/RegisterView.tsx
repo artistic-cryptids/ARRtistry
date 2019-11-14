@@ -1,14 +1,13 @@
 import * as React from 'react';
 
-import Register from '../components/Register';
 import { ContractProps } from '../helper/eth';
 import Main from '../components/Main';
+import RegisterArtifact from '../components/RegisterArtifact';
 
 const RegisterView: React.FC<ContractProps> = (props) => {
-  const { contracts, accounts } = props;
   return (
     <Main page="Register a Piece" parents={['Artifacts']}>
-      <Register contracts={contracts} accounts={accounts}/>
+      <RegisterArtifact {...props} />
     </Main>
   );
 };
