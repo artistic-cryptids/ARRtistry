@@ -17,6 +17,7 @@ interface TransferArtifactFormFields {
   recipientAddress: string;
   price: string;
   location: string;
+  date: string;
 }
 
 interface TransferArtifactState {
@@ -77,6 +78,7 @@ class TransferArtifact extends React.Component<TransferArtifactProps, TransferAr
         recipientAddress: '',
         price: '',
         location: LOCATIONS[0],
+        date: '',
       },
       showTransferForm: false,
       submitted: false,
@@ -91,7 +93,8 @@ class TransferArtifact extends React.Component<TransferArtifactProps, TransferAr
       .then((response: any) => 'https://ipfs.io/ipfs/' + response[0].hash);
   }
 
-  addProvenance = (price: string, buyers: string[], seller: string, location: string): Promise<string> => {
+  addProvenance = (price: string, buyers: string[],
+    seller: string, location: string, date: string): Promise<string> => {
     return fetch(this.props.metaUri)
       .then((response: any) => response.json())
       .then((jsonData: any) => {
@@ -101,6 +104,7 @@ class TransferArtifact extends React.Component<TransferArtifactProps, TransferAr
           location: location,
           buyers: buyers,
           seller: seller,
+          date: date,
         });
 
         return this.saveMetaData(jsonData);
@@ -123,6 +127,7 @@ class TransferArtifact extends React.Component<TransferArtifactProps, TransferAr
           [this.state.fields.recipientAddress],
           owner,
           this.state.fields.location,
+          this.state.fields.date,
         );
       })
       .then((hash: string) => {
@@ -133,6 +138,7 @@ class TransferArtifact extends React.Component<TransferArtifactProps, TransferAr
           hash,
           (parseFloat(this.state.fields.price) * 100).toString(),
           this.state.fields.location,
+          this.state.fields.date,
           {
             from: this.props.accounts[0],
           },
@@ -172,6 +178,7 @@ class TransferArtifact extends React.Component<TransferArtifactProps, TransferAr
         recipientAddress: '',
         price: '',
         location: LOCATIONS[0],
+        date: '',
       },
       showTransferForm: false,
     });
@@ -217,6 +224,14 @@ class TransferArtifact extends React.Component<TransferArtifactProps, TransferAr
                 onChange={this.inputChangeHandler}>
                 {locationOptions}
               </Form.Control>
+            </Form.Group>
+            <Form.Group as={Col} controlId="date">
+              <Form.Label>Date (YYYY-MM-DD)</Form.Label>
+              <Form.Control
+                required
+                type="text"
+                onChange={this.inputChangeHandler}/>
+              {GENERIC_FEEDBACK}
             </Form.Group>
           </Modal.Body>
           <Modal.Footer>

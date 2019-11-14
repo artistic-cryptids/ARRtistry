@@ -17,6 +17,7 @@ contract IGovernance {
     uint256 tokenId;
     uint price;
     string location;
+    string date;
   }
 
   function isGovernor(address account) public view returns (bool);
@@ -27,7 +28,7 @@ contract IGovernance {
   function getProposal(uint proposalId) public view returns (Proposal memory);
   function getProposals() public view returns (uint[] memory);
 
-  function recordARR(address from, address to, uint256 tokenId, uint price, string memory location) public returns (uint);
+  function recordARR(address from, address to, uint256 tokenId, uint price, string memory location, string memory data) public returns (uint);
   function getARRLength() public view returns (uint);
   function getARR(uint arrId) public view returns (ARR memory);
 }
