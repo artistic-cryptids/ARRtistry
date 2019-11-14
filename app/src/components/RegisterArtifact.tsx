@@ -1,11 +1,6 @@
 import {
   RegisterForm,
-  DEFAULT_ERRORS,
   RegisterOnSubmit,
-  TextFields,
-  ErrorMessages,
-  FilesContext,
-  Document,
 } from './register/RegisterForm';
 import * as React from 'react';
 import Accordion from 'react-bootstrap/Accordion';
@@ -18,26 +13,13 @@ import RegisterFields from './register/RegisterFields';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import DropZone from './register/DropZone';
-import ListGroup from 'react-bootstrap/ListGroup';
-import Button from 'react-bootstrap/Button';
-
-const registerArtifact: RegisterOnSubmit = async ({ fields }, _event): Promise<void> => {
-  console.log(fields);
-};
+import FileList from './register/FileList';
+import { TextFields, ErrorMessages, DEFAULT_ERRORS } from '../providers/FormProvider';
+import { useFilesContext } from '../providers/FileProvider';
+import { IPFS_URL_START, saveSingleToIPFS } from '../helper/ipfs';
 
 const registerValidator: (textFields: TextFields) => ErrorMessages = (_fields) => {
   return DEFAULT_ERRORS;
-};
-
-const FileList: React.FC = () => {
-  const { files } = React.useContext(FilesContext);
-  return <ListGroup>
-    {files.documents.map((document: Document, index: number) => {
-      return <ListGroup.Item key={index}>
-        <p>filename: {document.filename}</p>
-      </ListGroup.Item>;
-    })}
-  </ListGroup>;
 };
 
 const RegisterFieldLayout: React.FC = () => {
