@@ -2,14 +2,14 @@ import * as React from 'react';
 
 import Button from 'react-bootstrap/Button';
 import Spinner from 'react-bootstrap/Spinner';
-import { FormStatusContext } from './RegisterForm';
+import { useFormControlContext } from '../../providers/FormProvider';
 
 const FormSubmitButton: React.FC = () => {
-  const formStatus = React.useContext(FormStatusContext);
+  const { status } = useFormControlContext();
 
-  if (!formStatus.validated && !formStatus.submitted) {
+  if (!status.validated && !status.submitted) {
     return <Button type="submit" className="my-2 btn-block" variant="primary">Submit</Button>;
-  } else if (formStatus.submitted) {
+  } else if (status.submitted) {
     return <Button type="submit" className="my-2 btn-block" variant="primary" disabled>
       <Spinner
         as="span"

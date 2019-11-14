@@ -60,89 +60,75 @@ const RegisterFieldLayout: React.FC = () => {
 };
 
 const ImageDropZone: React.FC = () => {
-  const { files, setFiles } = React.useContext(FilesContext);
+  const { setImage } = useFilesContext();
   return <DropZone popup callback={(hash: string) => {
-    setFiles({ ...files, image: hash });
+    setImage(hash);
   }}/>;
 };
 
-const DocumentDropZone: React.FC = () => {
-  const { files, setFiles } = React.useContext(FilesContext);
+interface ArtifactDocument {
+  filename: string;
+  metauri: string;
+}
 
-  const onDrop = (acceptedFiles: any): void => {
-    const documents = files.documents;
-    for (const file of acceptedFiles) {
-      let newDoc = true;
-      for (const doc of documents) {
-        if (doc.filename === file.name) {
-          newDoc = false;
-          break;
-        }
-      }
+interface ArtifactMetadata {
+  title: string;
+  artistId: string;
+  description: string;
+  edition: string;
+  artifactCreationDate: string;
+  medium: string;
+  width: string;
+  height: string;
+  previousSalePrice: number;
+  imageIpfsHash: string;
+  saleProvenance: string[];
+  documents: ArtifactDocument[];
+}
 
-      if (!newDoc) {
-        continue;
-      }
+const RegisterArtifact: React.FC<ContractProps> = ({ contracts, accounts }) => {
+  const onSubmit: RegisterOnSubmit = ({ files, fields }): void => {
+    const currentAccount = accounts[0];
+    const artist = accounts[0];
 
-      documents.push({
-        filename: file.name,
-        data: file,
+    const jsonData: ArtifactMetadata = {
+      ...fields,
+      previousSalePrice: 0,
+      saleProvenance: [],
+      imageIpfsHash: files.image,
+      documents: files.documents.map((ipfsDocument) => {
+        return {
+          filename: ipfsDocument.filename,
+          metauri: IPFS_URL_START + ipfsDocument.metauri,
+        };
+      }),
+    };
+
+    const jsonDataBuffer = Buffer.from(JSON.stringify(jsonData));
+    saveSingleToIPFS(jsonDataBuffer, (hash: string) => {
+      contracts.ArtifactApplication.applyFor(
+        currentAccount,
+        artist,
+        IPFS_URL_START + hash,
+        {
+          from: accounts[0],
+          gasLimit: 6000000,
+        },
+      ).catch((err: any) => {
+        // rejection, usually
+        console.log('register error', err);
       });
-    }
-
-    setFiles({
-      ...files,
-      documents: documents,
     });
   };
-  return <div style={{
-    position: 'absolute',
-    top: '75%',
-    left: '50%',
-    transform: 'translateX(-50%',
-    boxShadow: '0 5px 30px 5px rgba(0, 0, 0, 0.2)',
-  }}>
-    <input
-      className="btn"
-      accept="image/*"
-      id="image-upload-button"
-      multiple
-      type="file"
-      style={{
-        position: 'absolute',
-        top: '0',
-        left: '0',
-        opacity: '0',
-      }}
-      onChange={(e): void => {
-        e.stopPropagation();
-        e.preventDefault();
-        const files = e.target.files;
-        if (files != null && files[0].size < 1000000) {
-          // max file size of one megabyte
-          onDrop(files);
-        } else {
-          // TODO: nicer way of alerting
-          alert('Image cannot be greater than 1 MB!');
-        }
-      }}
-    />
-    <Button>
-      Upload Documents
-    </Button>
-    <FileList/>
-  </div>;
-};
 
-const RegisterArtifact: React.FC<ContractProps> = ({ contracts }) => {
   return (
     <ArtistProvider artistContract={contracts.Artists}>
-      <RegisterForm validator={registerValidator} onSubmit={registerArtifact}>
+      <RegisterForm validator={registerValidator} onSubmit={onSubmit}>
         <Row>
           <Col sm={4}>
             <ImageDropZone/>
-            <DocumentDropZone/>
-
+            <hr/>
+            <FileList/>
           </Col>
           <Col sm={8}>
             <RegisterFieldLayout/>

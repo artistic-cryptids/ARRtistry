@@ -1,15 +1,24 @@
 import Form from 'react-bootstrap/Form';
-import { TextFieldContext, SetValueContext, InputChangeEvent } from './RegisterForm';
 import * as React from 'react';
 import Col from 'react-bootstrap/Col';
 import InputGroup from 'react-bootstrap/InputGroup';
+import { useFormControlContext, useTextFieldsContext, TextFields } from '../../providers/FormProvider';
+import { FormControlProps } from 'react-bootstrap/FormControl';
+
+type InputChangeEvent = React.FormEvent<FormControlProps> &
+  {
+    target: {
+      id: keyof TextFields;
+      value: TextFields[keyof TextFields];
+    };
+  }
 
 const RegisterFields: React.FC = () => {
-  const setValue = React.useContext(SetValueContext);
-  const textFields = React.useContext(TextFieldContext);
+  const { setField } = useFormControlContext();
+  const textFields = useTextFieldsContext();
 
   const inputChangeHandler = (event: InputChangeEvent): void => {
-    setValue(event.target.id, event.target.value);
+    setField(event.target.id, event.target.value);
   };
 
   return (
