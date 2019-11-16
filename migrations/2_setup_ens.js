@@ -7,6 +7,7 @@ const namehash = require('eth-ens-namehash');
 
 const TLD = registrarHelper.tld;
 const NAME = registrarHelper.name;
+const NAMES = registrarHelper.names;
 
 // const ENS_MAINNET = 0x314159265dd8dbb310642f98f50c066173c1259b;
 // const ENS_ROPSTEN = 0x112234455c3a32fd11230c42e7bccd4a84e02010;
@@ -37,7 +38,7 @@ async function localMigrate (deployer, network, accounts) {
   await deployer.deploy(ENS);
   const ens = await ENS.deployed();
 
-  await registrarHelper.deployLocalRegistrar(deployer, accounts[0], artifacts);
+  await registrarHelper.deployLocalRegistrar(deployer, accounts[0], artifacts, accounts);
 
   await deployer.deploy(ENSResolver, ens.address);
   const resolver = await ENSResolver.deployed();
@@ -56,12 +57,23 @@ async function rinkebyDeploy (deployer, network) {
   await setupResolver(ens, resolver, [process.env.ACCOUNT_ADDRESS]);
 }
 
-async function setupResolver (ens, resolver) {
+async function setupResolver (ens, resolver, accounts) {
   const resolverNode = namehash.hash(NAME + '.' + TLD);
 
   await ens.setResolver(resolverNode, resolver.address);
   await resolver.setAddr(resolverNode, resolver.address);
 
+  await setupExtraAccounts(resolver, accounts);
+
   console.log(resolver.address);
   console.log(await resolver.addr(namehash.hash(NAME + '.' + TLD)));
+}
+
+async function setupExtraAccounts (resolver, accounts) {
+  for (let i = 0; i < NAMES.length; i++) {
+    const node = namehash.hash(NAMES[i] + '.' + TLD);
+    await resolver.setAddr(node, accounts[i + 1]);
+    const nameAddr = await resolver.addr(namehash.hash(NAMES[i] + '.' + TLD));
+    console.log('ENS name-to-addr mapping:::  name: ' + NAMES[i] + '. addr: ' + nameAddr);
+  }
 }
