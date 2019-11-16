@@ -37,7 +37,7 @@ module.exports = {
       },
     from: process.env.ACCOUNT_ADDRESS,
       network_id: 4,
-      gas: 6000000
+      gas: 7000000
     }
   },
   plugins: ["solidity-coverage"],
