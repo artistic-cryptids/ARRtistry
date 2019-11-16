@@ -30,10 +30,10 @@ class ARRItem extends React.Component<ARRItemProps, ARRItemState> {
         const ARR = {
           from: ARRData[0],
           to: ARRData[1],
-          // tokenId and price are ints. They are accessed via 'words'
-          tokenId: ARRData[2].words[0],
-          price: ARRData[3].words[0] / 100,
-          arr: ARRData[4].words[0] / 100,
+          // uints are returned as big numbers so we need to convert them
+          tokenId: ARRData[2].toNumber(),
+          price: ARRData[3].toNumber() / 100,
+          arr: ARRData[4].toNumber() / 100,
           location: ARRData[5],
         };
         console.log(ARRData);
