@@ -30,7 +30,7 @@ class ClientArtifacts extends
     artifactRegistry.getOperatorTokenIds(currentAccount)
       .then((tokenIdObjects: any) => {
         const tokenIds: number[] = [];
-        tokenIdObjects.map((tid: any) => tokenIds.push(Number(tid.words[0])));
+        tokenIdObjects.map((tid: any) => tokenIds.push(tid.toNumber()));
         if (tokenIds.length !== this.state.numClientArtifacts) {
           this.setState({
             numClientArtifacts: tokenIds.length,
