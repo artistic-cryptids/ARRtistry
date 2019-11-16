@@ -6,6 +6,7 @@ import Governance from './contracts/Governance.json';
 import ArtifactApplication from './contracts/ArtifactApplication.json';
 import ArtifactRegistry from './contracts/ArtifactRegistry.json';
 import Artists from './contracts/Artists.json';
+import ENSResolver from './contracts/ENSResolver.json';
 
 import './theme.scss';
 
@@ -21,14 +22,17 @@ const doDapp = async (): Promise<void> => {
   const artifactApplicationNonDeployed = contract(ArtifactApplication);
   const artifactRegistryNonDeployed = contract(ArtifactRegistry);
   const artistsNonDeployed = contract(Artists);
+  const ensNonDeployed = contract(ENSResolver);
   governanceNonDeployed.setProvider(provider);
   artifactApplicationNonDeployed.setProvider(provider);
   artifactRegistryNonDeployed.setProvider(provider);
   artistsNonDeployed.setProvider(provider);
+  ensNonDeployed.setProvider(provider);
   const governance = await governanceNonDeployed.deployed();
   const artifactApplication = await artifactApplicationNonDeployed.deployed();
   const artifactRegistry = await artifactRegistryNonDeployed.deployed();
   const artists = await artistsNonDeployed.deployed();
+  const ens = await ensNonDeployed.deployed();
 
   const contracts = {
     Governance: governance,
@@ -40,7 +44,7 @@ const doDapp = async (): Promise<void> => {
   console.log(accounts[0]);
 
   ReactDOM.render(
-    <App web3={ web3 } contracts={ contracts } accounts={ accounts }/>,
+    <App ens={ens} web3={web3} contracts={contracts} accounts={accounts}/>,
     document.getElementById('root'),
   );
 };

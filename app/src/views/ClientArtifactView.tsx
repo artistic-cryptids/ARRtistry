@@ -4,10 +4,10 @@ import Main from '../components/Main';
 import { ContractProps } from '../helper/eth';
 
 const ClientArtifactView: React.FC<ContractProps> = (props) => {
-  const { contracts, accounts } = props;
+  const { contracts, accounts, ens } = props;
   return (
     <Main page="Client Artifacts" parents={['Management']}>
-      <ClientArtifacts contracts={contracts} accounts={accounts}/>
+      <ClientArtifacts contracts={contracts} accounts={accounts} ens={ens}/>
     </Main>
   );
 };

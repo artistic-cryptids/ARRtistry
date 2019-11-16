@@ -39,6 +39,7 @@ class ARRList extends React.Component<ContractProps, ARRListState> {
       <ARRItem
         contracts={this.props.contracts}
         accounts={this.props.accounts}
+        ens={this.props.ens}
         id={id}
         key={id}
       />,

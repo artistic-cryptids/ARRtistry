@@ -36,6 +36,7 @@ class ProposalList extends React.Component<ContractProps, ProposalListState> {
       <ProposalItem
         contracts={this.props.contracts}
         accounts={this.props.accounts}
+        ens={this.props.ens}
         id={id}
         key={id}
       />,

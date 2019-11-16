@@ -64,6 +64,7 @@ class ClientArtifacts extends
       <ArtworkItem
         contracts={this.props.contracts}
         accounts={this.props.accounts}
+        ens={this.props.ens}
         tokenId={tokenId}
         key={tokenId}
         isOwnedArtifact={false}

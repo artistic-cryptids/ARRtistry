@@ -7,6 +7,7 @@ import Modal from 'react-bootstrap/Modal';
 import ipfs from '../helper/ipfs';
 import TransactionLoadingModal from './common/TransactionLoadingModal';
 import { ContractProps } from '../helper/eth';
+import { addressFromName } from '../helper/ensResolver';
 
 interface TransferArtifactProps extends ContractProps {
   tokenId: number;
@@ -14,7 +15,7 @@ interface TransferArtifactProps extends ContractProps {
 }
 
 interface TransferArtifactFormFields {
-  recipientAddress: string;
+  recipientName: string;
   price: string;
   location: string;
   date: string;
@@ -75,7 +76,7 @@ class TransferArtifact extends React.Component<TransferArtifactProps, TransferAr
     super(props);
     this.state = {
       fields: {
-        recipientAddress: '',
+        recipientName: '',
         price: '',
         location: LOCATIONS[0],
         date: '',
@@ -118,37 +119,47 @@ class TransferArtifact extends React.Component<TransferArtifactProps, TransferAr
       submitted: true,
     });
 
-    artifactRegistry.ownerOf(this.props.tokenId)
-      .then((address: string) => {
-        owner = address;
-        console.log(this.state.fields.location);
-        return this.addProvenance(
-          this.state.fields.price,
-          [this.state.fields.recipientAddress],
-          owner,
-          this.state.fields.location,
-          this.state.fields.date,
-        );
-      })
-      .then((hash: string) => {
-        artifactRegistry.transfer(
-          owner,
-          this.state.fields.recipientAddress,
-          this.props.tokenId,
-          hash,
-          (parseFloat(this.state.fields.price) * 100).toString(),
-          this.state.fields.location,
-          this.state.fields.date,
-          {
-            from: this.props.accounts[0],
-          },
-        ).then(() => {
-          this.setState({ submitted: false });
-        }).catch((err: any) => {
-          // rejection, usually
-          console.log(err);
-          this.setState({ submitted: false });
-        });
+    const ens = this.props.ens;
+    addressFromName(ens, this.state.fields.recipientName)
+      .then((recipientAddress: string) => {
+        console.log('addr: ' + recipientAddress);
+        artifactRegistry.ownerOf(this.props.tokenId)
+          .then((address: string) => {
+            owner = address;
+            console.log(this.state.fields.location);
+            return this.addProvenance(
+              this.state.fields.price,
+              [recipientAddress],
+              owner,
+              this.state.fields.location,
+              this.state.fields.date,
+            );
+          })
+          .then((hash: string) => {
+            console.log(this.state.fields.recipientName + ' ' + recipientAddress);
+            artifactRegistry.transfer(
+              owner,
+              recipientAddress,
+              this.props.tokenId,
+              hash,
+              (parseFloat(this.state.fields.price) * 100).toString(),
+              this.state.fields.location,
+              this.state.fields.date,
+              {
+                from: this.props.accounts[0],
+              },
+            ).then(() => {
+              this.setState({ submitted: false });
+            }).catch((err: any) => {
+              // rejection, usually
+              console.log(err);
+              this.setState({ submitted: false });
+            });
+          })
+          .catch((err: any) => {
+            console.log(err);
+            this.setState({ submitted: false });
+          });
       })
       .catch((err: any) => {
         console.log(err);
@@ -175,7 +186,7 @@ class TransferArtifact extends React.Component<TransferArtifactProps, TransferAr
   handleCancel = (): void => {
     this.setState({
       fields: {
-        recipientAddress: '',
+        recipientName: '',
         price: '',
         location: LOCATIONS[0],
         date: '',
@@ -198,8 +209,8 @@ class TransferArtifact extends React.Component<TransferArtifactProps, TransferAr
             <Modal.Title>Register Sale of Artifact</Modal.Title>
           </Modal.Header>
           <Modal.Body>
-            <Form.Group as={Col} controlId="recipientAddress">
-              <Form.Label>Recipient Address</Form.Label>
+            <Form.Group as={Col} controlId="recipientName">
+              <Form.Label>Recipient Name</Form.Label>
               <Form.Control
                 required
                 type="text"

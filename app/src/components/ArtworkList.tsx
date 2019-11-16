@@ -65,6 +65,7 @@ class ArtworkList extends React.Component<ContractProps, ArtworkListState> {
       <ArtworkItem
         contracts={this.props.contracts}
         accounts={this.props.accounts}
+        ens={this.props.ens}
         tokenId={tokenId}
         key={tokenId}
         isOwnedArtifact={true}

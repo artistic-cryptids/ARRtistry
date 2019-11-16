@@ -40,6 +40,7 @@ class SoldArtworkItem extends React.Component<SoldArtworkItemProps, SoldArtworkI
         <ArtworkInfo
           contracts={this.props.contracts}
           accounts={this.props.accounts}
+          ens={this.props.ens}
           artwork={this.state.artwork}
           id={this.props.tokenId}
         >
