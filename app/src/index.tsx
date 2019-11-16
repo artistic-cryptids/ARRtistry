@@ -9,6 +9,7 @@ import Artists from './contracts/Artists.json';
 import Ens from './contracts/ENSRegistry.json';
 
 import './theme.scss';
+import { nameFromAddress } from './helper/ensResolver';
 
 // eslint-disable-next-line
 const Web3 = require('web3');
@@ -44,8 +45,10 @@ const doDapp = async (): Promise<void> => {
   const accounts = await web3.eth.getAccounts();
   console.log(accounts[0]);
 
+  const name = await nameFromAddress(ens, accounts[0]);
+
   ReactDOM.render(
-    <App web3={web3} contracts={contracts} accounts={accounts}/>,
+    <App web3={web3} contracts={contracts} accounts={accounts} name={name}/>,
     document.getElementById('root'),
   );
 };
