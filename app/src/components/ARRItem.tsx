@@ -1,6 +1,7 @@
 import * as React from 'react';
 import Card from 'react-bootstrap/Card';
 import { ContractProps } from '../helper/eth';
+import ENSName from './common/ENSName';
 
 interface ARRItemProps extends ContractProps {
   id: number;
@@ -56,8 +57,16 @@ class ARRItem extends React.Component<ARRItemProps, ARRItemState> {
           <Card.Subtitle className="mb-2 text-muted"></Card.Subtitle>
           <Card.Text>
             Piece: {arr.tokenId} <br />
-            From: <i>{arr.from}</i> <br />
-            To: <i>{arr.to}</i> <br />
+            From: <ENSName
+              address={arr.from}
+              contracts={this.props.contracts}
+              accounts={this.props.accounts}
+            /> <br />
+            To: <ENSName
+              address={arr.to}
+              contracts={this.props.contracts}
+              accounts={this.props.accounts}
+            /> <br />
             Price: &euro;{arr.price} <br />
             ARR: &euro;{arr.arr} <br />
             Location: {arr.location} <br />
