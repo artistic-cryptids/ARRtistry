@@ -50,7 +50,6 @@ class ProposalItem extends React.Component<ProposalItemProps, ProposalItemState>
       <ArtworkInfo
         contracts={this.props.contracts}
         accounts={this.props.accounts}
-        ens={this.props.ens}
         artwork={this.state.proposal}
         id={this.props.id}
       >

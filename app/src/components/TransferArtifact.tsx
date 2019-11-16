@@ -119,7 +119,7 @@ class TransferArtifact extends React.Component<TransferArtifactProps, TransferAr
       submitted: true,
     });
 
-    const ens = this.props.ens;
+    const ens = this.props.contracts.Ens;
     addressFromName(ens, this.state.fields.recipientName)
       .then((recipientAddress: string) => {
         console.log('addr: ' + recipientAddress);

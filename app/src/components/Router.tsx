@@ -9,7 +9,7 @@ import { AppProps } from './App';
 import Main from './Main';
 import NetworkAside from './NetworkAside';
 
-const Router: React.FC<AppProps> = ({ web3, accounts, contracts, ens }) => {
+const Router: React.FC<AppProps> = ({ web3, accounts, contracts }) => {
   const { user } = useSessionContext();
 
   return (
@@ -24,25 +24,25 @@ const Router: React.FC<AppProps> = ({ web3, accounts, contracts, ens }) => {
           </Main>
         </Route>
         <Route path="/artifact/new">
-          <View.RegisterView accounts={accounts} contracts={contracts} ens={ens}/>
+          <View.RegisterView accounts={accounts} contracts={contracts} />
         </Route>
         <Route path="/artifact/sold">
-          <View.SoldArtifactView accounts={accounts} contracts={contracts} ens={ens}/>
+          <View.SoldArtifactView accounts={accounts} contracts={contracts} />
         </Route>
         <Route path="/artifact">
-          <View.ArtifactView accounts={accounts} contracts={contracts} ens={ens}/>
+          <View.ArtifactView accounts={accounts} contracts={contracts} />
         </Route>
         <Route path="/manage/proposal">
-          <View.ProposalView accounts={accounts} contracts={contracts} ens={ens}/>
+          <View.ProposalView accounts={accounts} contracts={contracts} />
         </Route>
         <Route path="/manage/arr">
-          <View.ARRView accounts={accounts} contracts={contracts} ens={ens}/>
+          <View.ARRView accounts={accounts} contracts={contracts} />
         </Route>
         <Route path ="/artist/new">
-          <View.RegisterArtistView accounts={accounts} contracts={contracts} ens={ens}/>
+          <View.RegisterArtistView accounts={accounts} contracts={contracts} />
         </Route>
         <Route path="/client/all/artifact">
-          <View.ClientArtifactView accounts={accounts} contracts={contracts} ens={ens}/>
+          <View.ClientArtifactView accounts={accounts} contracts={contracts} />
         </Route>
       </Switch>
     </BrowserRouter>

@@ -5,10 +5,10 @@ import Main from '../components/Main';
 import { ContractProps } from '../helper/eth';
 
 const RegisterArtistView: React.FC<ContractProps> = (props) => {
-  const { contracts, accounts, ens } = props;
+  const { contracts, accounts } = props;
   return (
     <Main page="New" parents={['Management', 'Artists']}>
-      <RegisterArtist contracts={contracts} accounts={accounts} ens={ens}/>
+      <RegisterArtist contracts={contracts} accounts={accounts}/>
     </Main>
   );
 };

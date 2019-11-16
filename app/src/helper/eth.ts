@@ -6,12 +6,12 @@ export interface ContractListType {
   ArtifactApplication: any;
   ArtifactRegistry: any;
   Artists: any;
+  Ens: any;
 }
 
 export interface ContractProps {
   contracts: ContractListType;
   accounts: Array<string>;
-  ens: any;
 }
 
 // keeping in case they're useful later

@@ -41,7 +41,6 @@ class ArtworkItem extends React.Component<ArtworkItemProps, ArtworkItemState> {
         accounts={this.props.accounts}
         artwork={this.state.artwork}
         id={this.props.tokenId}
-        ens={this.props.ens}
       >
         <div className="text-center">
           <ButtonGroup>
@@ -50,14 +49,12 @@ class ArtworkItem extends React.Component<ArtworkItemProps, ArtworkItemState> {
               accounts={this.props.accounts}
               tokenId={this.props.tokenId}
               metaUri={this.state.artwork.metaUri}
-              ens={this.props.ens}
             />
             {this.props.isOwnedArtifact
               ? <ConsignArtifact
                 contracts={this.props.contracts}
                 accounts={this.props.accounts}
                 tokenId={this.props.tokenId}
-                ens={this.props.ens}
               />
               : null}
           </ButtonGroup>

@@ -1,6 +1,7 @@
 import * as React from 'react';
 import Card from 'react-bootstrap/Card';
 import { ContractProps } from '../helper/eth';
+import ENSName from './common/ENSName';
 import { nameFromAddress } from '../helper/ensResolver';
 
 interface ARRItemProps extends ContractProps {
@@ -26,10 +27,9 @@ class ARRItem extends React.Component<ARRItemProps, ARRItemState> {
   }
 
   async loadARR (): Promise<void> {
-    const ens = this.props.ens;
     const ARRData = await this.props.contracts.ArtifactApplication.getARR(this.props.id);
-    const fromName = await nameFromAddress(ens, ARRData[0]);
-    const toName = await nameFromAddress(ens, ARRData[1]);
+    const fromName = await nameFromAddress(this.props.contracts.Ens, ARRData[0]);
+    const toName = await nameFromAddress(this.props.contracts.Ens, ARRData[1]);
     const ARR = {
       from: fromName,
       to: toName,
@@ -57,8 +57,16 @@ class ARRItem extends React.Component<ARRItemProps, ARRItemState> {
           <Card.Subtitle className="mb-2 text-muted"></Card.Subtitle>
           <Card.Text>
             Piece: {arr.tokenId} <br />
-            From: <i>{arr.from}</i> <br />
-            To: <i>{arr.to}</i> <br />
+            From: <ENSName
+              address={arr.from}
+              contracts={this.props.contracts}
+              accounts={this.props.accounts}
+            /> <br />
+            To: <ENSName
+              address={arr.to}
+              contracts={this.props.contracts}
+              accounts={this.props.accounts}
+            /> <br />
             Price: &euro;{arr.price} <br />
             ARR: &euro;{arr.arr} <br />
             Location: {arr.location} <br />

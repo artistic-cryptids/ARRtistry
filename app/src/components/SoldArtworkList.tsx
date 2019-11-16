@@ -82,7 +82,6 @@ class SoldArtworkList extends React.Component<ContractProps, SoldArtworkListStat
         <SoldArtworkItem
           contracts={this.props.contracts}
           accounts={this.props.accounts}
-          ens={this.props.ens}
           soldFor={this.state.soldInformationArray[i].price}
           soldTo={this.state.soldInformationArray[i].newOwner}
           tokenId={this.state.soldInformationArray[i].tokenId}

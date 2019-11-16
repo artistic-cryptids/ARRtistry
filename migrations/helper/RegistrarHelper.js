@@ -4,8 +4,6 @@ const namehash = require('eth-ens-namehash');
 const NAME = 'artistic';
 const TLD = 'test';
 
-const NAMES = ['acc1', 'acc2', 'acc3', 'acc4', 'acc5', 'acc6', 'acc7'];
-
 const ENS_RINKEBY = '0xe7410170f87102df0055eb195163a03b7f2bff4a';
 
 const deployLocalRegistrar = async (deployer, moderator, artifacts) => {
@@ -20,14 +18,6 @@ const deployLocalRegistrar = async (deployer, moderator, artifacts) => {
 
   await ens.setSubnodeOwner('0x0000000000000000000000000000000000000000', utils.sha3(TLD), registrar.address);
   await registrar.register(utils.sha3(NAME), moderator);
-
-  registerExtraAccounts(moderator, registrar);
-};
-
-const registerExtraAccounts = (moderator, registrar) => {
-  for (let i = 0; i < NAMES.length; i++) {
-    registrar.register(utils.sha3(NAMES[i]), moderator);
-  }
 };
 
 const setupRegistrarRinkeby = async (artifacts, web3) => {
@@ -59,5 +49,4 @@ module.exports = {
   setupRegistrarRinkeby: setupRegistrarRinkeby,
   name: NAME,
   tld: TLD,
-  names: NAMES,
 };

@@ -4,10 +4,10 @@ import { ContractProps } from '../helper/eth';
 import Main from '../components/Main';
 
 const SoldArtifactView: React.FC<ContractProps> = (props) => {
-  const { contracts, accounts, ens } = props;
+  const { contracts, accounts } = props;
   return (
     <Main page="Sold Artifacts" parents={['Artifacts']}>
-      <SoldArtworkList contracts={contracts} accounts={accounts} ens={ens}/>
+      <SoldArtworkList contracts={contracts} accounts={accounts}/>
     </Main>
   );
 };

@@ -7,6 +7,7 @@ import ArtifactApplication from './contracts/ArtifactApplication.json';
 import ArtifactRegistry from './contracts/ArtifactRegistry.json';
 import Artists from './contracts/Artists.json';
 import ENSResolver from './contracts/ENSResolver.json';
+import Ens from './contracts/ENSRegistry.json';
 
 import './theme.scss';
 
@@ -22,7 +23,8 @@ const doDapp = async (): Promise<void> => {
   const artifactApplicationNonDeployed = contract(ArtifactApplication);
   const artifactRegistryNonDeployed = contract(ArtifactRegistry);
   const artistsNonDeployed = contract(Artists);
-  const ensNonDeployed = contract(ENSResolver);
+  //const ensNonDeployed2 = contract(ENSResolver);
+  const ensNonDeployed = contract(Ens);
   governanceNonDeployed.setProvider(provider);
   artifactApplicationNonDeployed.setProvider(provider);
   artifactRegistryNonDeployed.setProvider(provider);
@@ -39,12 +41,13 @@ const doDapp = async (): Promise<void> => {
     ArtifactApplication: artifactApplication,
     ArtifactRegistry: artifactRegistry,
     Artists: artists,
+    Ens: ens,
   };
   const accounts = await web3.eth.getAccounts();
   console.log(accounts[0]);
 
   ReactDOM.render(
-    <App ens={ens} web3={web3} contracts={contracts} accounts={accounts}/>,
+    <App web3={web3} contracts={contracts} accounts={accounts}/>,
     document.getElementById('root'),
   );
 };

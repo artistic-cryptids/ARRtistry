@@ -61,7 +61,7 @@ class ConsignArtifact extends React.Component<ConsignArtifactProps, ConsignArtif
   }
 
   consignArtifactForArtwork = async (_: React.FormEvent): Promise<void> => {
-    const recipientAddress = await addressFromName(this.props.ens, this.state.fields.recipientName);
+    const recipientAddress = await addressFromName(this.props.contracts.Ens, this.state.fields.recipientName);
     console.log(this.state.fields.recipientName);
     console.log(recipientAddress);
     this.consign(recipientAddress);
