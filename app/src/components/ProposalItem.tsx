@@ -18,6 +18,7 @@ class ProposalItem extends React.Component<ProposalItemProps, ProposalItemState>
     console.log('Rejecting proposal ' + this.props.id);
     this.props.contracts.Governance.reject(this.props.id, {
       from: this.props.accounts[0],
+      gasLimit: 6000000,
     });
   }
 
@@ -25,6 +26,7 @@ class ProposalItem extends React.Component<ProposalItemProps, ProposalItemState>
     console.log('Approving proposal ' + this.props.id);
     this.props.contracts.Governance.approve(this.props.id, {
       from: this.props.accounts[0],
+      gasLimit: 6000000,
     });
   }
 

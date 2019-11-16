@@ -75,6 +75,7 @@ class ConsignArtifact extends React.Component<ConsignArtifactProps, ConsignArtif
       this.props.tokenId,
       {
         from: this.props.accounts[0],
+        gasLimit: 6000000,
       },
     );
   }
