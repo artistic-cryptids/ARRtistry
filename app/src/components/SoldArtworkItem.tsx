@@ -3,6 +3,7 @@ import ArtworkInfo from './ArtworkInfo';
 import Row from 'react-bootstrap/Row';
 import ListGroup from 'react-bootstrap/ListGroup';
 import { ContractProps } from '../helper/eth';
+import ENSName from './common/ENSName';
 
 interface SoldArtworkItemProps extends ContractProps {
   soldFor: number;
@@ -44,7 +45,12 @@ class SoldArtworkItem extends React.Component<SoldArtworkItemProps, SoldArtworkI
           id={this.props.tokenId}
         >
           <Row>
-            <span className="text-muted text-capitalize">Sold To:</span> {this.props.soldTo}
+            <span className="text-muted text-capitalize">Sold To:</span>
+            <ENSName
+              address={this.props.soldTo}
+              contracts={this.props.contracts}
+              accounts={this.props.accounts}
+            />
             <br/>
             <span className="text-muted text-capitalize">Sold For: &euro;</span>{this.props.soldFor / 100}
             <br/>

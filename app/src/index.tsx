@@ -6,6 +6,7 @@ import Governance from './contracts/Governance.json';
 import ArtifactApplication from './contracts/ArtifactApplication.json';
 import ArtifactRegistry from './contracts/ArtifactRegistry.json';
 import Artists from './contracts/Artists.json';
+import Ens from './contracts/ENSRegistry.json';
 
 import './theme.scss';
 
@@ -21,20 +22,24 @@ const doDapp = async (): Promise<void> => {
   const artifactApplicationNonDeployed = contract(ArtifactApplication);
   const artifactRegistryNonDeployed = contract(ArtifactRegistry);
   const artistsNonDeployed = contract(Artists);
+  const ensNonDeployed = contract(Ens);
   governanceNonDeployed.setProvider(provider);
   artifactApplicationNonDeployed.setProvider(provider);
   artifactRegistryNonDeployed.setProvider(provider);
   artistsNonDeployed.setProvider(provider);
+  ensNonDeployed.setProvider(provider);
   const governance = await governanceNonDeployed.deployed();
   const artifactApplication = await artifactApplicationNonDeployed.deployed();
   const artifactRegistry = await artifactRegistryNonDeployed.deployed();
   const artists = await artistsNonDeployed.deployed();
+  const ens = await ensNonDeployed.deployed();
 
   const contracts = {
     Governance: governance,
     ArtifactApplication: artifactApplication,
     ArtifactRegistry: artifactRegistry,
     Artists: artists,
+    Ens: ens,
   };
   const accounts = await web3.eth.getAccounts();
   console.log(accounts[0]);
