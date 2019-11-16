@@ -27,7 +27,7 @@ class ArtworkList extends React.Component<ContractProps, ArtworkListState> {
 
     artifactRegistry.balanceOf(currentAccount)
       .then((balanceObj: any) => {
-        const balance = balanceObj.words[0];
+        const balance = balanceObj.toNumber();
         if (!this.state || this.state.balance !== balance) {
           this.setState({ balance: balance });
           const tokenIds: Array<number> = [];
@@ -35,7 +35,7 @@ class ArtworkList extends React.Component<ContractProps, ArtworkListState> {
           for (let i = 0; i < balance; i++) {
             artifactRegistry.tokenOfOwnerByIndex(currentAccount, i)
               .then((tokenIdObj: any) => {
-                const tokenId = tokenIdObj.words[0];
+                const tokenId = tokenIdObj.toNumber();
                 tokenIds.push(tokenId);
                 this.setState({ tokenIds: tokenIds });
               })
