@@ -141,6 +141,7 @@ class TransferArtifact extends React.Component<TransferArtifactProps, TransferAr
           this.state.fields.date,
           {
             from: this.props.accounts[0],
+            gasLimit: 6000000,
           },
         ).then(() => {
           this.setState({ submitted: false });
