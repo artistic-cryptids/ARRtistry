@@ -1,5 +1,5 @@
 export const addressFromName = async (ens: any, name: string): Promise<string> => {
-  /*// eslint-disable-next-line
+  /* // eslint-disable-next-line
   const namehash = require('eth-ens-namehash');
   const nh = namehash.hash(name);
   // ens is a truffle contract
@@ -7,19 +7,19 @@ export const addressFromName = async (ens: any, name: string): Promise<string> =
   console.log(resolverContract);
   // resolverContract is a web3 contract
   const addr = await resolverContract.methods.addr(nh).call();
-  return addr;*/
+  return addr; */
 
   switch (name) {
-    case 'artistic.test': return '0xDf08F82De32B8d460adbE8D72043E3a7e25A3B39';
-    case 'acc1.test': return '0x6704Fbfcd5Ef766B287262fA2281C105d57246a6';
-    case 'acc2.test': return '0x9E1Ef1eC212F5DFfB41d35d9E5c14054F26c6560';
-    case 'acc3.test': return '0xce42bdB34189a93c55De250E011c68FaeE374Dd3';
-    case 'acc4.test': return '0x97A3FC5Ee46852C1Cf92A97B7BaD42F2622267cC';
-    case 'acc5.test': return '0xB9dcBf8A52Edc0C8DD9983fCc1d97b1F5d975Ed7';
-    case 'acc6.test': return '0x26064a2E2b568D9A6D01B93D039D1da9Cf2A58CD';
-    case 'acc7.test': return '0xe84Da28128a48Dd5585d1aBB1ba67276FdD70776';
-    default: return 'noname';
-    }
+  case 'artistic.test': return '0xDf08F82De32B8d460adbE8D72043E3a7e25A3B39';
+  case 'acc1.test': return '0x6704Fbfcd5Ef766B287262fA2281C105d57246a6';
+  case 'acc2.test': return '0x9E1Ef1eC212F5DFfB41d35d9E5c14054F26c6560';
+  case 'acc3.test': return '0xce42bdB34189a93c55De250E011c68FaeE374Dd3';
+  case 'acc4.test': return '0x97A3FC5Ee46852C1Cf92A97B7BaD42F2622267cC';
+  case 'acc5.test': return '0xB9dcBf8A52Edc0C8DD9983fCc1d97b1F5d975Ed7';
+  case 'acc6.test': return '0x26064a2E2b568D9A6D01B93D039D1da9Cf2A58CD';
+  case 'acc7.test': return '0xe84Da28128a48Dd5585d1aBB1ba67276FdD70776';
+  default: return 'noname';
+  }
 };
 
 // TODO:

@@ -6,10 +6,6 @@ import Governance from './contracts/Governance.json';
 import ArtifactApplication from './contracts/ArtifactApplication.json';
 import ArtifactRegistry from './contracts/ArtifactRegistry.json';
 import Artists from './contracts/Artists.json';
-<<<<<<< HEAD
-import ENSResolver from './contracts/ENSResolver.json';
-=======
->>>>>>> master
 import Ens from './contracts/ENSRegistry.json';
 
 import './theme.scss';
@@ -26,10 +22,6 @@ const doDapp = async (): Promise<void> => {
   const artifactApplicationNonDeployed = contract(ArtifactApplication);
   const artifactRegistryNonDeployed = contract(ArtifactRegistry);
   const artistsNonDeployed = contract(Artists);
-<<<<<<< HEAD
-  //const ensNonDeployed2 = contract(ENSResolver);
-=======
->>>>>>> master
   const ensNonDeployed = contract(Ens);
   governanceNonDeployed.setProvider(provider);
   artifactApplicationNonDeployed.setProvider(provider);
