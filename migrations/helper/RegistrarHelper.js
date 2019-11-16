@@ -26,9 +26,9 @@ const deployLocalRegistrar = async (deployer, moderator, artifacts) => {
 
 const registerExtraAccounts = (moderator, registrar) => {
   for (let i = 0; i < NAMES.length; i++) {
-    registrar.register(utils.sha3(NAMES[i]), moderator)
+    registrar.register(utils.sha3(NAMES[i]), moderator);
   }
-}
+};
 
 const setupRegistrarRinkeby = async (artifacts, web3) => {
   const ENS = artifacts.require('ENSRegistry');
