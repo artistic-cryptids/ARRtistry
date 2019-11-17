@@ -52,14 +52,14 @@ const getENS = async (artifacts, network) => {
   case 'test':
   case 'soliditycoverage':
   case 'ganache':
-    return await ENS.deployed();
+    return ENS.deployed();
   case 'rinkeby':
   case 'rinkeby-fork':
-    return await ENS.at(ENS_RINKEBY);
+    return ENS.at(ENS_RINKEBY);
   default:
     throw new Error('No owner selected for this network');
   }
-}
+};
 
 module.exports = {
   getENS: getENS,
