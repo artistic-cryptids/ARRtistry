@@ -44,12 +44,15 @@ class SoldArtworkList extends React.Component<ContractProps, SoldArtworkListStat
       'RecordARR', options).then(function (events: any) {
       eventsFound = events.length;
       for (let i = 0; i < events.length; i++) {
-        const soldInfo: SoldInformation = {
-          tokenId: events[i].returnValues.tokenId,
-          price: events[i].returnValues.price,
-          newOwner: events[i].returnValues.to,
-        };
-        soldInfoArray.push(soldInfo);
+        if (events[i].returnValues.from === currentAccount) {
+          eventsFound += 1;
+          const soldInfo: SoldInformation = {
+            tokenId: events[i].returnValues.tokenId,
+            price: events[i].returnValues.price,
+            newOwner: events[i].returnValues.to,
+          };
+          soldInfoArray.push(soldInfo);
+        }
       }
     }).catch(console.log);
     // TODO: @felination make this error message nicer
