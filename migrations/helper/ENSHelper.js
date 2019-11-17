@@ -44,7 +44,25 @@ const setupRegistrarRinkeby = async (artifacts, web3) => {
   console.log('Registered');
 };
 
+const getENS = async (artifacts, network) => {
+  const ENS = artifacts.require('ENSRegistry');
+
+  switch (network) {
+  case 'development':
+  case 'test':
+  case 'soliditycoverage':
+  case 'ganache':
+    return ENS.deployed();
+  case 'rinkeby':
+  case 'rinkeby-fork':
+    return ENS.at(ENS_RINKEBY);
+  default:
+    throw new Error('No owner selected for this network');
+  }
+};
+
 module.exports = {
+  getENS: getENS,
   deployLocalRegistrar: deployLocalRegistrar,
   setupRegistrarRinkeby: setupRegistrarRinkeby,
   name: NAME,
