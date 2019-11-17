@@ -20,6 +20,20 @@ const deployLocalRegistrar = async (deployer, moderator, artifacts) => {
   await registrar.register(utils.sha3(NAME), moderator);
 };
 
+const deployLocalReverseRegistrar = async (deployer, moderator, artifacts, resolver) => {
+  const ENS = artifacts.require('ENSRegistry');
+  const ReverseRegistrar = artifacts.require('ReverseRegistrar');
+
+  const ens = await ENS.deployed();
+
+  console.log('Deploying Reverse Registrar on ganache');
+  await deployer.deploy(ReverseRegistrar, ens.address, resolver.address);
+  const reverseRegistrar = await ReverseRegistrar.deployed();
+
+  await ens.setSubnodeOwner("0x0000000000000000000000000000000000000000", utils.sha3("reverse"), moderator);
+  await ens.setSubnodeOwner(namehash.hash("reverse"), utils.sha3("addr"), reverseRegistrar.address, {from : moderator});
+};
+
 const setupRegistrarRinkeby = async (artifacts, web3) => {
   const ENS = artifacts.require('ENSRegistry');
   const RinkebyRegistrar = require('./RinkebyRegistrar');
@@ -64,6 +78,7 @@ const getENS = async (artifacts, network) => {
 module.exports = {
   getENS: getENS,
   deployLocalRegistrar: deployLocalRegistrar,
+  deployLocalReverseRegistrar: deployLocalReverseRegistrar,
   setupRegistrarRinkeby: setupRegistrarRinkeby,
   name: NAME,
   tld: TLD,

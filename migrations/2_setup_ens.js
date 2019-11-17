@@ -42,6 +42,8 @@ async function localMigrate (deployer, network, accounts) {
   await deployer.deploy(ENSResolver, ens.address);
   const resolver = await ENSResolver.deployed();
   await setupResolver(ens, resolver, accounts);
+
+  await ensHelper.deployLocalReverseRegistrar(deployer, accounts[0], artifacts, resolver);
 }
 
 // Migrate on the rinkeby network
