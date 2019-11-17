@@ -1,11 +1,16 @@
 // import TruffleContract from '@truffle/contract';
 // import { ContractObject } from '@truffle/contract-schema'
 
+export type Governance = any;
+export type ArtifactApplication = any;
+export type ArtifactRegistry = any;
+export type Artists = any;
+
 export interface ContractListType {
-  Governance: any;
-  ArtifactApplication: any;
-  ArtifactRegistry: any;
-  Artists: any;
+  Governance: Governance;
+  ArtifactApplication: ArtifactApplication;
+  ArtifactRegistry: ArtifactRegistry;
+  Artists: Artists;
 }
 
 export interface ContractProps {
