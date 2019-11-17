@@ -10,11 +10,11 @@ import {
 import * as styles from './Timeline.module.scss';
 import Form from 'react-bootstrap/Form';
 import Row from 'react-bootstrap/Row';
-import { nameFromAddress } from '../helper/ensResolver';
+import { ContractProps } from '../helper/eth';
+import ENSName from './common/ENSName';
 
-interface ProvenanceProps {
+interface ProvenanceProps extends ContractProps {
   metaUri: string;
-  ens: any;
 }
 
 interface ArtworkInfo {
@@ -45,7 +45,20 @@ const PlaintextField: React.FC<{label: string; value: string}> = ({ label, value
   </Form.Group>;
 };
 
-const TimelineBlock: React.FC<{record: SaleRecord}> = ({ record }) => {
+const TimelineBlock: React.FC<{accounts: Array<string>; contracts: any; record: SaleRecord}> =
+({ accounts, contracts, record }) => {
+  const buyerListItems = record.buyers.map((buyerAddress: string) =>
+    <div key={buyerAddress}>
+      <Form.Group as={Form.Row}>
+        <Form.Label column sm="2">
+          Buyer
+        </Form.Label>
+        <Col sm="10">
+          <ENSName accounts={accounts} contracts={contracts} address={buyerAddress}/>
+        </Col>
+      </Form.Group> </div>,
+  );
+
   return (
     <li className={styles.timelineBlock}>
       <a href="#!">
@@ -58,7 +71,6 @@ const TimelineBlock: React.FC<{record: SaleRecord}> = ({ record }) => {
           </Col>
           <Col sm='4'>
             <p className={'text-muted ' + styles.date}>
-              {/* {new Date().toLocaleDateString(undefined, { year: 'numeric', month: 'long', day: 'numeric' })} */}
               {record.date}
             </p>
           </Col>
@@ -66,8 +78,15 @@ const TimelineBlock: React.FC<{record: SaleRecord}> = ({ record }) => {
         <Row>
           <Col sm='12'>
             <Form>
-              <PlaintextField label='Buyer' value={record.buyers.join(', ')} />
-              <PlaintextField label='Seller' value={record.seller} />
+              {buyerListItems}
+              <Form.Group as={Form.Row}>
+                <Form.Label column sm="2">
+                  Seller
+                </Form.Label>
+                <Col sm="10">
+                  <ENSName accounts={accounts} contracts={contracts} address={record.seller}/>
+                </Col>
+              </Form.Group>
               <PlaintextField label='Sale Location' value={record.location} />
               <PlaintextField label='Sale Price' value={'€' + (record.price / 100).toString()} />
             </Form>
@@ -78,11 +97,13 @@ const TimelineBlock: React.FC<{record: SaleRecord}> = ({ record }) => {
   );
 };
 
-const Timeline: React.FC<{records: SaleRecord[]}> = ({ records }) => {
+const Timeline: React.FC<{accounts: Array<string>; contracts: any; records: SaleRecord[]}> =
+({ accounts, contracts, records }) => {
   return (
     <Col md='12'>
       <ul className={styles.timeline}>
-        {records.map((saleRecord: SaleRecord, index: number) => <TimelineBlock record={saleRecord} key={index}/>)}
+        {records.map((saleRecord: SaleRecord, index: number) =>
+          <TimelineBlock accounts={accounts} contracts={contracts} record={saleRecord} key={index}/>)}
       </ul>
     </Col>
   );
@@ -98,32 +119,16 @@ class Provenance extends React.Component<ProvenanceProps, ProvenanceState> {
   }
 
   componentDidMount (): void {
-    this.setupProvenanceRecords();
-  }
-
-  async setupProvenanceRecords (): Promise<void> {
-    const fetchedMeta = await fetch(this.props.metaUri);
-    const artworkInfo: ArtworkInfo = await fetchedMeta.json();
-    const saleProvenanceWithNames: Array<SaleRecord> = [];
-    for (let record of artworkInfo.saleProvenance) {
-      const buyerNames: Array<string> = [];
-      for (let buyerAddress of record.buyers) {
-        const buyerName = await nameFromAddress(this.props.ens, buyerAddress);
-        buyerNames.push(buyerName);
-      }
-      const sellerName = await nameFromAddress(this.props.ens, record.seller);
-      const recordWithNames: SaleRecord = {
-        price: record.price,
-        location: record.location,
-        buyers: buyerNames,
-        seller: sellerName,
-        date: record.date,
-      }
-      saleProvenanceWithNames.push(recordWithNames);
-    }
-    this.setState({
-      saleProvenance: saleProvenanceWithNames,
-    });
+    fetch(this.props.metaUri)
+      .then((response) => {
+        return response.json();
+      })
+      .then((artworkInfo: ArtworkInfo) => {
+        this.setState({
+          saleProvenance: artworkInfo.saleProvenance,
+        });
+      })
+      .catch((err: any) => { console.log(err); });
   }
 
   handleShow = (): void => {
@@ -153,7 +158,9 @@ class Provenance extends React.Component<ProvenanceProps, ProvenanceState> {
             <Modal.Title>Provenance</Modal.Title>
           </Modal.Header>
           <Modal.Body>
-            <Timeline records={this.state.saleProvenance}/>
+            <Timeline accounts={this.props.accounts}
+              contracts={this.props.contracts}
+              records={this.state.saleProvenance}/>
           </Modal.Body>
         </Modal>
       </>
