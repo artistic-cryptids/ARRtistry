@@ -10,9 +10,11 @@ import {
 import * as styles from './Timeline.module.scss';
 import Form from 'react-bootstrap/Form';
 import Row from 'react-bootstrap/Row';
+import { nameFromAddress } from '../helper/ensResolver';
 
 interface ProvenanceProps {
   metaUri: string;
+  ens: any;
 }
 
 interface ArtworkInfo {
@@ -96,16 +98,32 @@ class Provenance extends React.Component<ProvenanceProps, ProvenanceState> {
   }
 
   componentDidMount (): void {
-    fetch(this.props.metaUri)
-      .then((response) => {
-        return response.json();
-      })
-      .then((artworkInfo: ArtworkInfo) => {
-        this.setState({
-          saleProvenance: artworkInfo.saleProvenance,
-        });
-      })
-      .catch((err: any) => { console.log(err); });
+    this.setupProvenanceRecords();
+  }
+
+  async setupProvenanceRecords (): Promise<void> {
+    const fetchedMeta = await fetch(this.props.metaUri);
+    const artworkInfo: ArtworkInfo = await fetchedMeta.json();
+    const saleProvenanceWithNames: Array<SaleRecord> = [];
+    for (let record of artworkInfo.saleProvenance) {
+      const buyerNames: Array<string> = [];
+      for (let buyerAddress of record.buyers) {
+        const buyerName = await nameFromAddress(this.props.ens, buyerAddress);
+        buyerNames.push(buyerName);
+      }
+      const sellerName = await nameFromAddress(this.props.ens, record.seller);
+      const recordWithNames: SaleRecord = {
+        price: record.price,
+        location: record.location,
+        buyers: buyerNames,
+        seller: sellerName,
+        date: record.date,
+      }
+      saleProvenanceWithNames.push(recordWithNames);
+    }
+    this.setState({
+      saleProvenance: saleProvenanceWithNames,
+    });
   }
 
   handleShow = (): void => {
