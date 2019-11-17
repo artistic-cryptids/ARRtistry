@@ -51,7 +51,9 @@ class SoldArtworkList extends React.Component<ContractProps, SoldArtworkListStat
         };
         soldInfoArray.push(soldInfo);
       }
-    }).catch(error:any => alert('An error occured while searching for sales'));
+    }).catch(function(error :any) {
+      alert(error.message)
+    });
     // TODO: @felination make this error message nicer
     this.setState({
       balance: eventsFound,
