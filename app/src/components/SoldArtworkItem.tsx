@@ -37,27 +37,27 @@ class SoldArtworkItem extends React.Component<SoldArtworkItemProps, SoldArtworkI
     console.log('Artwork ' + JSON.stringify(this.state.artwork));
 
     return (
-        <ArtworkInfo
-          contracts={this.props.contracts}
-          accounts={this.props.accounts}
-          artwork={this.state.artwork}
-          id={this.props.tokenId}
-        >
-          <Row>
-            <Col>
-              <span className="text-muted text-capitalize">Sold To:</span>
-              <ENSName
-                address={this.props.soldTo}
-                contracts={this.props.contracts}
-                accounts={this.props.accounts}
-              />
-            </Col>
-            <Col>
-              <span className="text-muted text-capitalize">Sold For: &euro;</span>
-              <p>{this.props.soldFor / 100}</p>
-            </Col>
-          </Row>
-        </ArtworkInfo>
+      <ArtworkInfo
+        contracts={this.props.contracts}
+        accounts={this.props.accounts}
+        artwork={this.state.artwork}
+        id={this.props.tokenId}
+      >
+        <Row>
+          <Col>
+            <span className="text-muted text-capitalize">Sold To:</span>
+            <ENSName
+              address={this.props.soldTo}
+              contracts={this.props.contracts}
+              accounts={this.props.accounts}
+            />
+          </Col>
+          <Col>
+            <span className="text-muted text-capitalize">Sold For: &euro;</span>
+            <p>{this.props.soldFor / 100}</p>
+          </Col>
+        </Row>
+      </ArtworkInfo>
     );
   }
 }
