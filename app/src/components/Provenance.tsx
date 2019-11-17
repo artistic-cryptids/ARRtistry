@@ -5,12 +5,15 @@ import Col from 'react-bootstrap/Col';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   faEuroSign,
+  faFingerprint,
 } from '@fortawesome/free-solid-svg-icons';
 
 import * as styles from './Timeline.module.scss';
 import Form from 'react-bootstrap/Form';
 import Row from 'react-bootstrap/Row';
 import ENSName from './common/ENSName';
+import { Dictionary } from 'lodash';
+import { IconProp } from '@fortawesome/fontawesome-svg-core';
 
 interface ProvenanceProps {
   metaUri: string;
@@ -33,15 +36,20 @@ interface ProvenanceState {
   saleProvenance: Array<SaleRecord>;
 }
 
-const PlaintextField: React.FC<{label: string; value: string}> = ({ label, value }) => {
-  return <Form.Group as={Form.Row}>
-    <Form.Label column sm="2">
-      {label}
-    </Form.Label>
-    <Col sm="10">
-      <Form.Control plaintext readOnly defaultValue={value} />
-    </Col>
-  </Form.Group>;
+interface BlockHeading {
+  header: string;
+  icon: IconProp;
+}
+
+const BLOCK_HEADINGS: Dictionary<BlockHeading> = {
+  'mint': {
+    header: 'Mint',
+    icon: faFingerprint,
+  },
+  'sale': {
+    header: 'Sale',
+    icon: faEuroSign,
+  },
 };
 
 const AddressInfo: React.FC<{address: string; label: string}> =
@@ -56,38 +64,27 @@ const AddressInfo: React.FC<{address: string; label: string}> =
   </Form.Group>;
 };
 
-const TimelineBlock: React.FC<{record: SaleRecord}> =
-({ record }) => {
-  const buyerListItems = record.buyers.map((buyerAddress: string) =>
-    <div key={buyerAddress}>
-      <AddressInfo label='Buyer' address={buyerAddress}/>
-    </div>,
-  );
-
+const TimelineBlock: React.FC<{type: string; date: string}> = ({ type, date, children }) => {
+  const { header, icon } = BLOCK_HEADINGS[type];
   return (
     <li className={styles.timelineBlock}>
       <a href="#!">
-        <span className={styles.timelineIcon}><FontAwesomeIcon icon={faEuroSign} size='1x'/></span>
+        <span className={styles.timelineIcon}><FontAwesomeIcon icon={icon} size='1x'/></span>
       </a>
       <div className={styles.timelineContent}>
         <Row>
           <Col sm='8'>
-            <h4 className="font-weight-bold">Sale</h4>
+            <h4 className="font-weight-bold">{header}</h4>
           </Col>
           <Col sm='4'>
             <p className={'text-muted ' + styles.date}>
-              {record.date}
+              {date}
             </p>
           </Col>
         </Row>
         <Row>
           <Col sm='12'>
-            <Form>
-              {buyerListItems}
-              <AddressInfo label='Seller' address={record.seller} />
-              <PlaintextField label='Sale Location' value={record.location} />
-              <PlaintextField label='Sale Price' value={'€' + (record.price / 100).toString()} />
-            </Form>
+            {children}
           </Col>
         </Row>
       </div>
@@ -100,8 +97,16 @@ const Timeline: React.FC<{records: SaleRecord[]}> =
   return (
     <Col md='12'>
       <ul className={styles.timeline}>
-        {records.map((saleRecord: SaleRecord, index: number) =>
-          <TimelineBlock record={saleRecord} key={index}/>)}
+        <TimelineBlock type="mint" date={'Today'}>
+        </TimelineBlock>
+        {records.map((record: SaleRecord, index: number) => <TimelineBlock type="sale" date={record.date} key={index}>
+          <Form>
+            <AddressInfo label='Buyer' address={record.buyer}/>
+            <AddressInfo label='Seller' address={record.seller} />
+            <PlaintextField label='Sale Location' value={record.location} />
+            <PlaintextField label='Sale Price' value={'€' + (record.price / 100).toString()} />
+          </Form>
+        </TimelineBlock>)}
       </ul>
     </Col>
   );
