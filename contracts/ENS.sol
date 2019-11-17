@@ -9,10 +9,11 @@ contract ENSResolver {
   mapping(bytes32 => address) public addresses;
   mapping(bytes32 => string) public names;
 
-  // Our resolver supports (supportsInterface & addr) interface
+  // Our resolver supports (supportsInterface & addr & name) interface
   function supportsInterface(bytes4 interfaceID) public pure returns (bool) {
     return interfaceID == 0x3b3b57de
-    || interfaceID == 0x01ffc9a7;
+    || interfaceID == 0x01ffc9a7
+    || interfaceID == 0x691f3431;
   }
 
   // TODO(mm): remove this hint disable
