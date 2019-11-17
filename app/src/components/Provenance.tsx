@@ -14,9 +14,13 @@ import Row from 'react-bootstrap/Row';
 import ENSName from './common/ENSName';
 import { Dictionary } from 'lodash';
 import { IconProp } from '@fortawesome/fontawesome-svg-core';
+import { ArtifactRegistry } from '../helper/eth';
+import { useSessionContext } from '../providers/SessionProvider';
+
 
 interface ProvenanceProps {
   metaUri: string;
+  registry: ArtifactRegistry;
 }
 
 interface ArtworkInfo {
@@ -43,7 +47,7 @@ interface BlockHeading {
 
 const BLOCK_HEADINGS: Dictionary<BlockHeading> = {
   'mint': {
-    header: 'Mint',
+    header: 'Artifact Registered',
     icon: faFingerprint,
   },
   'sale': {
@@ -112,61 +116,41 @@ const Timeline: React.FC<{records: SaleRecord[]}> =
   );
 };
 
-class Provenance extends React.Component<ProvenanceProps, ProvenanceState> {
-  constructor (props: ProvenanceProps) {
-    super(props);
-    this.state = {
-      showProvenance: false,
-      saleProvenance: [],
-    };
-  }
+const Provenance: React.FC<ProvenanceProps> = ({ metaUri, registry }) => {
+  const [show, setShow] = React.useState<boolean>(false);
+  const [events, setEvents] = React.useState<any>({});
+  const { user } = useSessionContext();
 
-  componentDidMount (): void {
-    fetch(this.props.metaUri)
-      .then((response) => {
-        return response.json();
-      })
-      .then((artworkInfo: ArtworkInfo) => {
-        this.setState({
-          saleProvenance: artworkInfo.saleProvenance,
-        });
-      })
-      .catch((err: any) => { console.log(err); });
-  }
+  console.log(user);
 
-  handleShow = (): void => {
-    this.setState({
-      showProvenance: true,
-    });
-  }
+  React.useEffect(() => {
+    const filter = { filter: { from: user.address, tokenId: '4' } };
+    const options = { filter, fromBlock: 0 };
 
-  handleClose = (): void => {
-    this.setState({
-      showProvenance: false,
-    });
-  }
+    registry.getPastEvents('allEvents', options).then(function (events: any) {
+        setEvents(events);
+      }).catch(console.log);
+  }, [user.address, events]);
 
-  render (): React.ReactNode {
-    return (
-      <>
-        <Button variant="primary" onClick={this.handleShow}>
-          Provenance
-        </Button>
-        <Modal
-          show={this.state.showProvenance}
-          onHide={this.handleClose}
-          dialogClassName={styles.modal}
-        >
-          <Modal.Header closeButton>
-            <Modal.Title>Provenance</Modal.Title>
-          </Modal.Header>
-          <Modal.Body>
-            <Timeline records={this.state.saleProvenance}/>
-          </Modal.Body>
-        </Modal>
-      </>
-    );
-  }
-}
+  return (
+    <>
+      <Button variant="primary" onClick={() => setShow(true)}>
+        Provenance
+      </Button>
+      <Modal
+        show={show}
+        onHide={() => setShow(false)}
+        dialogClassName={styles.modal}
+      >
+        <Modal.Header closeButton>
+          <Modal.Title>Provenance</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <Timeline records={[]}/>
+        </Modal.Body>
+      </Modal>
+    </>
+  );
+};
 
 export default Provenance;
