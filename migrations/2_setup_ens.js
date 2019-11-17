@@ -1,12 +1,12 @@
 const ENS = artifacts.require('ENSRegistry');
 const ENSResolver = artifacts.require('ENSResolver');
 
-const registrarHelper = require('./helper/RegistrarHelper');
+const ensHelper = require('./helper/ENSHelper');
 
 const namehash = require('eth-ens-namehash');
 
-const TLD = registrarHelper.tld;
-const NAME = registrarHelper.name;
+const TLD = ensHelper.tld;
+const NAME = ensHelper.name;
 
 // const ENS_MAINNET = 0x314159265dd8dbb310642f98f50c066173c1259b;
 // const ENS_ROPSTEN = 0x112234455c3a32fd11230c42e7bccd4a84e02010;
@@ -37,7 +37,7 @@ async function localMigrate (deployer, network, accounts) {
   await deployer.deploy(ENS);
   const ens = await ENS.deployed();
 
-  await registrarHelper.deployLocalRegistrar(deployer, accounts[0], artifacts);
+  await ensHelper.deployLocalRegistrar(deployer, accounts[0], artifacts);
 
   await deployer.deploy(ENSResolver, ens.address);
   const resolver = await ENSResolver.deployed();
@@ -49,7 +49,7 @@ async function rinkebyDeploy (deployer, network) {
   console.log('Finding ENS contract on rinkeby network ' + ENS_RINKEBY);
   const ens = await ENS.at(ENS_RINKEBY);
 
-  await registrarHelper.setupRegistrarRinkeby(artifacts, web3);
+  await ensHelper.setupRegistrarRinkeby(artifacts, web3);
 
   await deployer.deploy(ENSResolver, ens.address);
   const resolver = await ENSResolver.deployed();
