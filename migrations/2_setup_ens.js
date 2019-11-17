@@ -4,6 +4,7 @@ const ENSResolver = artifacts.require('ENSResolver');
 const ensHelper = require('./helper/ENSHelper');
 
 const namehash = require('eth-ens-namehash');
+const utils = require('web3-utils');
 
 const TLD = ensHelper.tld;
 const NAME = ensHelper.name;
@@ -42,6 +43,31 @@ async function localMigrate (deployer, network, accounts) {
   await deployer.deploy(ENSResolver, ens.address);
   const resolver = await ENSResolver.deployed();
   await setupResolver(ens, resolver, accounts);
+
+  await ensHelper.deployLocalReverseRegistrar(deployer, accounts[0], artifacts, resolver);
+
+  // For local net prepopulate with some records
+  const domain = NAME + '.' + TLD;
+  const domainHash = namehash.hash(domain);
+
+  for (let i = 0; i < accounts.length; i++) {
+    const account = accounts[i];
+
+    const label = 'account' + i;
+    const name = label + '.' + domain;
+    console.log('Registering ' + account + ' to ' + name);
+
+    const labelHash = utils.sha3(label);
+    const hash = namehash.hash(name);
+
+    await ens.setSubnodeOwner(domainHash, labelHash, account);
+    await ens.setResolver(hash, resolver.address, { from: account });
+    await resolver.setAddr(hash, account, { from: account });
+
+    console.log('Reverse registering ' + name + ' to ' + account);
+
+    await ensHelper.reverseRegister(account, name, artifacts, network);
+  }
 }
 
 // Migrate on the rinkeby network
