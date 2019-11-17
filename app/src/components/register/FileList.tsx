@@ -6,7 +6,6 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTimes } from '@fortawesome/free-solid-svg-icons';
 import { saveSingleToIPFS } from '../../helper/ipfs';
 import ProgressBar from 'react-bootstrap/ProgressBar';
-import Row from 'react-bootstrap/Row';
 import { useFilesContext, IpfsDocument } from '../../providers/FileProvider';
 import _ from 'lodash';
 
@@ -62,8 +61,7 @@ const FileUploadButton: React.FC = () => {
     <>
       <input
         className="btn"
-        accept="image/*"
-        id="image-upload-button"
+        id="file-upload-button"
         multiple
         type="file"
         style={{
@@ -102,14 +100,18 @@ const FileList: React.FC = () => {
   return <div className="text-center pt-3">
     <ListGroup className={styles.fileList}>
       {files.documents.map((document: IpfsDocument, index: number) => {
-        return <ListGroup.Item key={index} className={'d-flex justify-content-between align-items-center'}>
-          {document.filename}
-          <Row>
+        return <ListGroup.Item key={index} className={styles.fileItem}>
+          <div className={styles.fileName}>
+            {document.filename}
+          </div>
+          <div className={styles.fileProgress}>
             <ProgressBar label={document.metauri} now={document.metauri ? 100 : 10} srOnly/>
-            <Button variant="link" className="badge badge-danger badge-pill" onClick={() => removeFile(index)}>
+          </div>
+          <div className={styles.fileToolbar}>
+            <Button variant="link" className={styles.fileDelete} onClick={() => removeFile(index)}>
               <FontAwesomeIcon icon={faTimes} />
             </Button>
-          </Row>
+          </div>
         </ListGroup.Item>;
       })}
       <div className={styles.fileFooter}>

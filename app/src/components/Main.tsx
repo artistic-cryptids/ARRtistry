@@ -8,10 +8,10 @@ import LeftSidebar from './LeftSidebar';
 const BreadCrumb: React.FC<{crumbs: string[]}> = ({ crumbs }) => {
   return <div className={styles.breadcrumb}>
     {crumbs.map((value: string, index: number) => {
-      return <>
+      return <React.Fragment key={index}>
         <a href="#!" className={styles.link}>{value}</a>
         {index === (crumbs.length - 1) ? null : <span className={styles.separator}></span>}
-      </>;
+      </React.Fragment>;
     })}
   </div>;
 };
