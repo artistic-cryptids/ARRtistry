@@ -51,9 +51,7 @@ class SoldArtworkList extends React.Component<ContractProps, SoldArtworkListStat
         };
         soldInfoArray.push(soldInfo);
       }
-    }).catch(function (error: any) {
-      alert(error.message);
-    });
+    }).catch(console.log);
     // TODO: @felination make this error message nicer
     this.setState({
       balance: eventsFound,
