@@ -24,6 +24,12 @@ contract('ENSResolver', async accounts => {
       assert.equal(result, true);
     });
 
+    it('Should support interface name', async () => {
+      const result = await instance.supportsInterface('0x691f3431');
+
+      assert.equal(result, true);
+    });
+
     it('Should not support unknown interface', async () => {
       const result = await instance.supportsInterface('0x21ffc9a7');
 
@@ -51,6 +57,29 @@ contract('ENSResolver', async accounts => {
 
       const resolvedAddr = await instance.addr(namehash.hash('test'));
       assert.equal(resolvedAddr, accounts[6]);
+    });
+  });
+
+  describe('name', async () => {
+    it('Should return empty string on unknown node', async () => {
+      const resolvedName = await instance.name(namehash.hash('Unknown'));
+
+      assert.equal(resolvedName, '');
+    });
+
+    it('Should resolve to correct name once set', async () => {
+      await instance.setName(namehash.hash('test'), 'name');
+      const resolvedName = await instance.name(namehash.hash('test'));
+
+      assert.equal(resolvedName, 'name');
+    });
+
+    it('Should be able to reset name', async () => {
+      await instance.setName(namehash.hash('test'), 'name');
+      await instance.setName(namehash.hash('test'), 'name2');
+      const resolvedName = await instance.name(namehash.hash('test'));
+
+      assert.equal(resolvedName, 'name2');
     });
   });
 });
