@@ -36,23 +36,22 @@ class SoldArtworkList extends React.Component<ContractProps, SoldArtworkListStat
     const governance = this.props.contracts.Governance;
     const currentAccount = this.props.accounts[0];
     let eventsFound = 0;
-    const soldInfoArray: any[] = [];
-    const filter = {filter: {from: currentAccount}}
-    const options = {filter, fromBlock: 0}
+    const soldInfoArray: SoldInformation[] = [];
+    const filter = { filter: { from: currentAccount } };
+    const options = { filter, fromBlock: 0 };
 
     await governance.getPastEvents(
-      'RecordARR', options).then(function(events:any)
-      {
-        eventsFound = events.length;
-        for (let i = 0; i < events.length; i++) {
-            const soldInfo: SoldInformation = {
-              tokenId: events[i].returnValues.tokenId,
-              price: events[i].returnValues.price,
-              newOwner: events[i].returnValues.to,
-            };
-            soldInfoArray.push(soldInfo);
-        }
-      });
+      'RecordARR', options).then(function (events: any) {
+      eventsFound = events.length;
+      for (let i = 0; i < events.length; i++) {
+        const soldInfo: SoldInformation = {
+          tokenId: events[i].returnValues.tokenId,
+          price: events[i].returnValues.price,
+          newOwner: events[i].returnValues.to,
+        };
+        soldInfoArray.push(soldInfo);
+      }
+    });
     this.setState({
       balance: eventsFound,
       soldInformationArray: soldInfoArray,
