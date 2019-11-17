@@ -5,13 +5,14 @@ import Form from 'react-bootstrap/Form';
 import { FormControlProps } from 'react-bootstrap/FormControl';
 import Modal from 'react-bootstrap/Modal';
 import { ContractProps } from '../helper/eth';
+import { addressFromName } from '../helper/ensResolver';
 
 interface ConsignArtifactProps extends ContractProps {
   tokenId: number;
 }
 
 interface ConsignArtifactFormFields {
-  recipientAddress: string;
+  recipientName: string;
 }
 
 interface ConsignArtifactState {
@@ -36,7 +37,7 @@ class ConsignArtifact extends React.Component<ConsignArtifactProps, ConsignArtif
     super(props);
     this.state = {
       fields: {
-        recipientAddress: '',
+        recipientName: '',
       },
       consignedAccount: '',
       showConsignment: false,
@@ -59,8 +60,9 @@ class ConsignArtifact extends React.Component<ConsignArtifactProps, ConsignArtif
       .catch((err: any) => console.log(err)); ;
   }
 
-  consignArtifactForArtwork = (_: React.FormEvent): void => {
-    this.consign(this.state.fields.recipientAddress);
+  consignArtifactForArtwork = async (_: React.FormEvent): Promise<void> => {
+    const recipientAddress = await addressFromName(this.props.contracts.Ens, this.state.fields.recipientName);
+    this.consign(recipientAddress);
   }
 
   revokeConsignment = (_: React.FormEvent): void => {
@@ -99,7 +101,7 @@ class ConsignArtifact extends React.Component<ConsignArtifactProps, ConsignArtif
   handleCancel = (): void => {
     this.setState({
       fields: {
-        recipientAddress: '',
+        recipientName: '',
       },
       showConsignment: false,
     });
@@ -122,8 +124,8 @@ class ConsignArtifact extends React.Component<ConsignArtifactProps, ConsignArtif
               </p><hr/></React.Fragment>
               : null}
             <p>Consign Account to Sell</p>
-            <Form.Group as={Col} controlId="recipientAddress">
-              <Form.Label>Recipient Address</Form.Label>
+            <Form.Group as={Col} controlId="recipientName">
+              <Form.Label>Recipient Name</Form.Label>
               <Form.Control
                 required
                 type="text"

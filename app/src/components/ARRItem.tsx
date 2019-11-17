@@ -26,22 +26,19 @@ class ARRItem extends React.Component<ARRItemProps, ARRItemState> {
   }
 
   async loadARR (): Promise<void> {
-    this.props.contracts.ArtifactApplication.getARR(this.props.id)
-      .then((ARRData: any): void => {
-        const ARR = {
-          from: ARRData[0],
-          to: ARRData[1],
-          // uints are returned as big numbers so we need to convert them
-          tokenId: ARRData[2].toNumber(),
-          price: ARRData[3].toNumber() / 100,
-          arr: ARRData[4].toNumber() / 100,
-          location: ARRData[5],
-        };
-        console.log(ARRData);
-        this.setState({ ARR: ARR });
-        console.log(ARR);
-      })
-      .catch((err: any): void => { console.log(err); });
+    const ARRData = await this.props.contracts.ArtifactApplication.getARR(this.props.id);
+    const ARR = {
+      from: ARRData[0],
+      to: ARRData[1],
+      // uints are returned as big numbers so we need to convert them
+      tokenId: ARRData[2].toNumber(),
+      price: ARRData[3].toNumber() / 100,
+      arr: ARRData[4].toNumber() / 100,
+      location: ARRData[5],
+    };
+    console.log(ARRData);
+    this.setState({ ARR: ARR });
+    console.log(ARR);
   }
 
   render (): React.ReactNode {
