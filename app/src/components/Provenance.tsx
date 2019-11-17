@@ -10,7 +10,7 @@ import {
 import * as styles from './Timeline.module.scss';
 import Form from 'react-bootstrap/Form';
 import Row from 'react-bootstrap/Row';
-import { ContractProps } from '../helper/eth';
+import { ContractProps, ContractListType } from '../helper/eth';
 import ENSName from './common/ENSName';
 
 interface ProvenanceProps extends ContractProps {
@@ -45,18 +45,24 @@ const PlaintextField: React.FC<{label: string; value: string}> = ({ label, value
   </Form.Group>;
 };
 
-const TimelineBlock: React.FC<{accounts: Array<string>; contracts: any; record: SaleRecord}> =
+const AddressInfo: React.FC<{accounts: Array<string>; contracts: ContractListType; address: string; label: string}> =
+({ accounts, address, contracts, label }) => {
+  return <Form.Group as={Form.Row}>
+    <Form.Label column sm="2">
+      {label}
+    </Form.Label>
+    <Col sm="10">
+      <ENSName accounts={accounts} contracts={contracts} address={address}/>
+    </Col>
+  </Form.Group>;
+};
+
+const TimelineBlock: React.FC<{accounts: Array<string>; contracts: ContractListType; record: SaleRecord}> =
 ({ accounts, contracts, record }) => {
   const buyerListItems = record.buyers.map((buyerAddress: string) =>
     <div key={buyerAddress}>
-      <Form.Group as={Form.Row}>
-        <Form.Label column sm="2">
-          Buyer
-        </Form.Label>
-        <Col sm="10">
-          <ENSName accounts={accounts} contracts={contracts} address={buyerAddress}/>
-        </Col>
-      </Form.Group> </div>,
+      <AddressInfo label='Buyer' accounts={accounts} address={buyerAddress} contracts={contracts}/>
+    </div>,
   );
 
   return (
@@ -79,14 +85,7 @@ const TimelineBlock: React.FC<{accounts: Array<string>; contracts: any; record: 
           <Col sm='12'>
             <Form>
               {buyerListItems}
-              <Form.Group as={Form.Row}>
-                <Form.Label column sm="2">
-                  Seller
-                </Form.Label>
-                <Col sm="10">
-                  <ENSName accounts={accounts} contracts={contracts} address={record.seller}/>
-                </Col>
-              </Form.Group>
+              <AddressInfo label='Seller' accounts={accounts} address={record.seller} contracts={contracts}/>
               <PlaintextField label='Sale Location' value={record.location} />
               <PlaintextField label='Sale Price' value={'€' + (record.price / 100).toString()} />
             </Form>
@@ -97,7 +96,7 @@ const TimelineBlock: React.FC<{accounts: Array<string>; contracts: any; record: 
   );
 };
 
-const Timeline: React.FC<{accounts: Array<string>; contracts: any; records: SaleRecord[]}> =
+const Timeline: React.FC<{accounts: Array<string>; contracts: ContractListType; records: SaleRecord[]}> =
 ({ accounts, contracts, records }) => {
   return (
     <Col md='12'>

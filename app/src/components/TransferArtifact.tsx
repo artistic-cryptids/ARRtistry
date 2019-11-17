@@ -112,7 +112,7 @@ class TransferArtifact extends React.Component<TransferArtifactProps, TransferAr
       });
   };
 
-  transferArtwork = (_: React.FormEvent): void => {
+  transferArtwork = async (_: React.FormEvent): Promise<void> => {
     const artifactRegistry = this.props.contracts.ArtifactRegistry;
     let owner = '';
     this.setState({
@@ -120,52 +120,36 @@ class TransferArtifact extends React.Component<TransferArtifactProps, TransferAr
     });
 
     const ens = this.props.contracts.Ens;
-    addressFromName(ens, this.state.fields.recipientName)
-      .then((recipientAddress: string) => {
-        console.log('addr: ' + recipientAddress);
-        artifactRegistry.ownerOf(this.props.tokenId)
-          .then((address: string) => {
-            owner = address;
-            console.log(this.state.fields.location);
-            return this.addProvenance(
-              this.state.fields.price,
-              [recipientAddress],
-              owner,
-              this.state.fields.location,
-              this.state.fields.date,
-            );
-          })
-          .then((hash: string) => {
-            console.log(this.state.fields.recipientName + ' ' + recipientAddress);
-            artifactRegistry.transfer(
-              owner,
-              recipientAddress,
-              this.props.tokenId,
-              hash,
-              (parseFloat(this.state.fields.price) * 100).toString(),
-              this.state.fields.location,
-              this.state.fields.date,
-              {
-                from: this.props.accounts[0],
-                gasLimit: 6000000,
-              },
-            ).then(() => {
-              this.setState({ submitted: false });
-            }).catch((err: any) => {
-              // rejection, usually
-              console.log(err);
-              this.setState({ submitted: false });
-            });
-          })
-          .catch((err: any) => {
-            console.log(err);
-            this.setState({ submitted: false });
-          });
-      })
-      .catch((err: any) => {
-        console.log(err);
-        this.setState({ submitted: false });
-      });
+    const recipientAddress = await addressFromName(ens, this.state.fields.recipientName);
+    const address = await artifactRegistry.ownerOf(this.props.tokenId);
+    owner = address;
+    const provenanceHash = await this.addProvenance(
+      this.state.fields.price,
+      [recipientAddress],
+      owner,
+      this.state.fields.location,
+      this.state.fields.date,
+    );
+
+    artifactRegistry.transfer(
+      owner,
+      recipientAddress,
+      this.props.tokenId,
+      provenanceHash,
+      (parseFloat(this.state.fields.price) * 100).toString(),
+      this.state.fields.location,
+      this.state.fields.date,
+      {
+        from: this.props.accounts[0],
+        gasLimit: 6000000,
+      },
+    ).then(() => {
+      this.setState({ submitted: false });
+    }).catch((err: any) => {
+      // rejection, usually
+      console.log(err);
+      this.setState({ submitted: false });
+    });
   }
 
   inputChangeHandler = (event: InputChangeEvent): void => {

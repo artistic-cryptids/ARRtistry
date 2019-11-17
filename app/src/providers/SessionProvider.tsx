@@ -52,19 +52,18 @@ export const SessionProvider: React.FC<SessionProviderProps> = ({ address, contr
   const defaultUser = DEFAULT_USER;
   const [user, setUser] = React.useState<User>(defaultUser);
 
+  let newUser = DACS_DEFAULT;
   contracts.Governance.isGovernor(address)
     .then((isGovernor: boolean) => {
-      const newUser = isGovernor ? DACS_DEFAULT : DEAL_DEFAULT;
+      if (!isGovernor) {
+        newUser = DEAL_DEFAULT;
+      }
       newUser.address = address;
-      return newUser;
+      return nameFromAddress(contracts.Ens, address);
     })
-    .then((user: User) => {
-      nameFromAddress(contracts.Ens, address)
-        .then((name: string) => {
-          user.name = name;
-          setUser(user);
-        })
-        .catch(console.log);
+    .then((name: string) => {
+      newUser.name = name;
+      setUser(newUser);
     })
     .catch(console.log);
 
