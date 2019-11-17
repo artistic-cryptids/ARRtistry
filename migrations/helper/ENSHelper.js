@@ -76,7 +76,7 @@ const deployLocalReverseRegistrar = async (deployer, moderator, artifacts, resol
     namehash.hash('reverse'),
     utils.sha3('addr'),
     reverseRegistrar.address,
-    { from: moderator }
+    { from: moderator },
   );
 };
 
