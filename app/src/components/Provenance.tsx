@@ -10,8 +10,10 @@ import {
 import * as styles from './Timeline.module.scss';
 import Form from 'react-bootstrap/Form';
 import Row from 'react-bootstrap/Row';
+import { ContractProps, ContractListType } from '../helper/eth';
+import ENSName from './common/ENSName';
 
-interface ProvenanceProps {
+interface ProvenanceProps extends ContractProps {
   metaUri: string;
 }
 
@@ -43,7 +45,26 @@ const PlaintextField: React.FC<{label: string; value: string}> = ({ label, value
   </Form.Group>;
 };
 
-const TimelineBlock: React.FC<{record: SaleRecord}> = ({ record }) => {
+const AddressInfo: React.FC<{accounts: Array<string>; contracts: ContractListType; address: string; label: string}> =
+({ accounts, address, contracts, label }) => {
+  return <Form.Group as={Form.Row}>
+    <Form.Label column sm="2">
+      {label}
+    </Form.Label>
+    <Col sm="10">
+      <ENSName accounts={accounts} contracts={contracts} address={address}/>
+    </Col>
+  </Form.Group>;
+};
+
+const TimelineBlock: React.FC<{accounts: Array<string>; contracts: ContractListType; record: SaleRecord}> =
+({ accounts, contracts, record }) => {
+  const buyerListItems = record.buyers.map((buyerAddress: string) =>
+    <div key={buyerAddress}>
+      <AddressInfo label='Buyer' accounts={accounts} address={buyerAddress} contracts={contracts}/>
+    </div>,
+  );
+
   return (
     <li className={styles.timelineBlock}>
       <a href="#!">
@@ -56,7 +77,6 @@ const TimelineBlock: React.FC<{record: SaleRecord}> = ({ record }) => {
           </Col>
           <Col sm='4'>
             <p className={'text-muted ' + styles.date}>
-              {/* {new Date().toLocaleDateString(undefined, { year: 'numeric', month: 'long', day: 'numeric' })} */}
               {record.date}
             </p>
           </Col>
@@ -64,8 +84,8 @@ const TimelineBlock: React.FC<{record: SaleRecord}> = ({ record }) => {
         <Row>
           <Col sm='12'>
             <Form>
-              <PlaintextField label='Buyer' value={record.buyers.join(', ')} />
-              <PlaintextField label='Seller' value={record.seller} />
+              {buyerListItems}
+              <AddressInfo label='Seller' accounts={accounts} address={record.seller} contracts={contracts}/>
               <PlaintextField label='Sale Location' value={record.location} />
               <PlaintextField label='Sale Price' value={'€' + (record.price / 100).toString()} />
             </Form>
@@ -76,11 +96,13 @@ const TimelineBlock: React.FC<{record: SaleRecord}> = ({ record }) => {
   );
 };
 
-const Timeline: React.FC<{records: SaleRecord[]}> = ({ records }) => {
+const Timeline: React.FC<{accounts: Array<string>; contracts: ContractListType; records: SaleRecord[]}> =
+({ accounts, contracts, records }) => {
   return (
     <Col md='12'>
       <ul className={styles.timeline}>
-        {records.map((saleRecord: SaleRecord, index: number) => <TimelineBlock record={saleRecord} key={index}/>)}
+        {records.map((saleRecord: SaleRecord, index: number) =>
+          <TimelineBlock accounts={accounts} contracts={contracts} record={saleRecord} key={index}/>)}
       </ul>
     </Col>
   );
@@ -135,7 +157,9 @@ class Provenance extends React.Component<ProvenanceProps, ProvenanceState> {
             <Modal.Title>Provenance</Modal.Title>
           </Modal.Header>
           <Modal.Body>
-            <Timeline records={this.state.saleProvenance}/>
+            <Timeline accounts={this.props.accounts}
+              contracts={this.props.contracts}
+              records={this.state.saleProvenance}/>
           </Modal.Body>
         </Modal>
       </>
