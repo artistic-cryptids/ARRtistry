@@ -30,8 +30,13 @@ const deployLocalReverseRegistrar = async (deployer, moderator, artifacts, resol
   await deployer.deploy(ReverseRegistrar, ens.address, resolver.address);
   const reverseRegistrar = await ReverseRegistrar.deployed();
 
-  await ens.setSubnodeOwner("0x0000000000000000000000000000000000000000", utils.sha3("reverse"), moderator);
-  await ens.setSubnodeOwner(namehash.hash("reverse"), utils.sha3("addr"), reverseRegistrar.address, {from : moderator});
+  await ens.setSubnodeOwner('0x0000000000000000000000000000000000000000', utils.sha3('reverse'), moderator);
+  await ens.setSubnodeOwner(
+    namehash.hash('reverse'),
+    utils.sha3('addr'),
+    reverseRegistrar.address,
+    { from: moderator }
+  );
 };
 
 const setupRegistrarRinkeby = async (artifacts, web3) => {
@@ -99,8 +104,8 @@ const reverseRegister = async (account, name, artifacts, network) => {
     throw new Error('No owner selected for this network');
   }
 
-  await reverseRegistrar.setName(name, { from : account });
-}
+  await reverseRegistrar.setName(name, { from: account });
+};
 
 module.exports = {
   getENS: getENS,
