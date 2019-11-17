@@ -1,7 +1,6 @@
 import * as React from 'react';
 import ArtworkInfo from './ArtworkInfo';
 import Row from 'react-bootstrap/Row';
-import ListGroup from 'react-bootstrap/ListGroup';
 import { ContractProps } from '../helper/eth';
 import ENSName from './common/ENSName';
 import Col from 'react-bootstrap/Col';
