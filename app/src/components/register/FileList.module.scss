@@ -1,8 +1,55 @@
 @import '../../config';
 
 .fileList {
-  :global(.list-group-item):nth-last-of-type(2) {
+  .fileItem:nth-last-of-type(2) {
     padding-bottom: 2rem;
+  }
+
+  .fileItem {
+    display: flex;
+    align-items: center;
+    border-radius: 4px;
+    padding: .5rem 1rem;
+    background-color: #f4f6fa;
+  }
+
+  .fileName {
+    flex-grow: 1;
+
+    font-size: .9rem;
+    font-weight: 500;
+    color: #595d6e;
+    
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+
+    margin-right: .5rem;
+  }
+
+  .fileProgress {
+    width: 15%;
+    :global(.progress) {
+      height: 5px;
+      background-color: #ebedf2;
+
+      display: flex;
+      overflow: hidden;
+      font-size: .75rem;
+      border-radius: .25rem;
+    }
+  }
+
+  .fileToolbar {
+    margin-left: 1rem;
+    display: flex;
+    flex-wrap: nowrap;
+  }
+
+  .fileStart, .fileDelete {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
   }
 
   .fileFooter {
