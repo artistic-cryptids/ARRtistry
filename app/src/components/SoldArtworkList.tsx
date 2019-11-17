@@ -42,7 +42,6 @@ class SoldArtworkList extends React.Component<ContractProps, SoldArtworkListStat
 
     await governance.getPastEvents(
       'RecordARR', options).then(function (events: any) {
-      eventsFound = events.length;
       for (let i = 0; i < events.length; i++) {
         if (events[i].returnValues.from === currentAccount) {
           eventsFound += 1;
