@@ -59,7 +59,7 @@ export const SessionProvider: React.FC<SessionProviderProps> = ({ address, contr
         newUser = DEAL_DEFAULT;
       }
       newUser.address = address;
-      return nameFromAddress(contracts.Ens, address);
+      return nameFromAddress({}, address);
     })
     .then((name: string) => {
       newUser.name = name;
