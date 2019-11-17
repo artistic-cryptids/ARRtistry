@@ -8,12 +8,11 @@ import Router from './Router';
 
 export interface AppProps extends ContractProps {
   web3: Web3;
-  name: string;
 }
 
 const App: React.FC<AppProps> = (props) => {
   return (
-    <SessionProvider address={props.accounts[0]} name={props.name}>
+    <SessionProvider address={props.accounts[0]} contracts={props.contracts}>
       <Router {...props}/>
     </SessionProvider>
   );

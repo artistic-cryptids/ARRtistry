@@ -1,4 +1,14 @@
 import * as React from 'react';
+import { ContractListType } from '../helper/eth';
+import { nameFromAddress } from '../helper/ensResolver';
+
+const DEFAULT_USER = {
+  nickname: '',
+  name: '',
+  img: 'https://file.globalupload.io/HO8sN3I2nJ.png',
+  role: '',
+  address: '',
+};
 
 export const DACS_DEFAULT: User = {
   nickname: 'Anna Doe',
@@ -31,13 +41,32 @@ export interface Session {
   setUser: React.Dispatch<React.SetStateAction<User>>;
 }
 
+interface SessionProviderProps {
+  address: string;
+  contracts: ContractListType;
+}
+
 export const SessionContext = React.createContext<Session>({} as any);
 
-export const SessionProvider: React.FC<{address: string; name: string}> = ({ address, name, children }) => {
-  const defaultUser = (address === DACS_DEFAULT.address) ? DACS_DEFAULT : DEAL_DEFAULT;
-  defaultUser.name = name;
-  defaultUser.address = address;
+export const SessionProvider: React.FC<SessionProviderProps> = ({ address, contracts, children }) => {
+  const defaultUser = DEFAULT_USER;
   const [user, setUser] = React.useState<User>(defaultUser);
+
+  contracts.Governance.isGovernor(address)
+    .then((isGovernor: boolean) => {
+      const newUser = isGovernor ? DACS_DEFAULT : DEAL_DEFAULT;
+      newUser.address = address;
+      return newUser;
+    })
+    .then((user: User) => {
+      nameFromAddress(contracts.Ens, address)
+        .then((name: string) => {
+          user.name = name;
+          setUser(user);
+        })
+        .catch(console.log);
+    })
+    .catch(console.log);
 
   return (
     <SessionContext.Provider value={{ user: user, setUser: setUser }}>
