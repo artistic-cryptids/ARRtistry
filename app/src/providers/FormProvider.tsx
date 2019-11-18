@@ -65,7 +65,7 @@ const FormControlContext = React.createContext<FormControl>({
 });
 const ErrorsContext = React.createContext<ErrorMessages>(DEFAULT_ERRORS);
 
-type formOnSubmit = (fields: TextFields) => void;
+type formOnSubmit = (fields: TextFields) => Promise<void>;
 
 export interface FormProviderProps {
   validator: (textFields: TextFields) => ErrorMessages;
@@ -85,14 +85,14 @@ export const FormProvider: React.FC<FormProviderProps> = ({ onSubmit, validator,
     });
   };
 
-  const _validate = (): ErrorMessages => {
+  const _validate = (submittedBool: boolean): ErrorMessages => {
     const errors = validator(textFields);
     const foundErrors = _.pickBy(errors, (b: any) => !!b);
     const hasErrors = Object.keys(foundErrors).length > 0;
     if (hasErrors) {
       return errors;
     }
-    setFormStatus({ ...formStatus, validated: true });
+    setFormStatus({ ...formStatus, submitted: submittedBool, validated: true });
     return DEFAULT_ERRORS;
   };
 
@@ -103,12 +103,11 @@ export const FormProvider: React.FC<FormProviderProps> = ({ onSubmit, validator,
     onClear && onClear();
   };
 
-  const _onSubmit = (event: React.FormEvent<HTMLFormElement>): void => {
+  const _onSubmit = async (event: React.FormEvent<HTMLFormElement>): Promise<void> => {
     event.preventDefault();
-    setFormStatus({ ...formStatus, submitted: true });
-    const errors = _validate();
+    const errors = _validate(true);
     setErrors(errors);
-    onSubmit(textFields);
+    await onSubmit(textFields);
     clearForm();
   };
 

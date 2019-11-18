@@ -16,7 +16,7 @@ import DropZone from './register/DropZone';
 import FileList from './register/FileList';
 import { TextFields, ErrorMessages, DEFAULT_ERRORS } from '../providers/FormProvider';
 import { useFilesContext } from '../providers/FileProvider';
-import { IPFS_URL_START, saveSingleToIPFS } from '../helper/ipfs';
+import { IPFS_URL_START, saveSingleToIPFSNoCallBack } from '../helper/ipfs';
 
 const registerValidator: (textFields: TextFields) => ErrorMessages = (_fields) => {
   return DEFAULT_ERRORS;
@@ -69,7 +69,7 @@ interface ArtifactMetadata {
 }
 
 const RegisterArtifact: React.FC<ContractProps> = ({ contracts, accounts }) => {
-  const onSubmit: RegisterOnSubmit = ({ files, fields }): void => {
+  const onSubmit: RegisterOnSubmit = async ({ files, fields }): Promise<void> => {
     const currentAccount = accounts[0];
     const artist = accounts[0];
 
@@ -87,19 +87,18 @@ const RegisterArtifact: React.FC<ContractProps> = ({ contracts, accounts }) => {
     };
 
     const jsonDataBuffer = Buffer.from(JSON.stringify(jsonData));
-    saveSingleToIPFS(jsonDataBuffer, (hash: string) => {
-      contracts.ArtifactApplication.applyFor(
-        currentAccount,
-        artist,
-        IPFS_URL_START + hash,
-        {
-          from: accounts[0],
-          gasLimit: 6000000,
-        },
-      ).catch((err: any) => {
-        // rejection, usually
-        console.log('register error', err);
-      });
+    const hash = await saveSingleToIPFSNoCallBack(jsonDataBuffer);
+    await contracts.ArtifactApplication.applyFor(
+      currentAccount,
+      artist,
+      IPFS_URL_START + hash,
+      {
+        from: accounts[0],
+        gasLimit: 6000000,
+      },
+    ).catch((err: any) => {
+      // rejection, usually
+      console.log('register error', err);
     });
   };
 
