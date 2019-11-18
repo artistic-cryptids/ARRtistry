@@ -20,14 +20,15 @@ const SoldArtworkList: React.FC<ContractProps> = ({ contracts, accounts }) => {
     const options = { filter, fromBlock: 0 };
 
     governance.getPastEvents('RecordARR', options).then((events: any[]) => {
-      const soldMap = events.map((event) => {
-        return {
-          tokenId: event.returnValues.tokenId,
-          price: event.returnValues.price,
-          newOwner: event.returnValues.to,
-        };
-      },
-      ).filter(event => event.returnValues.from === currentAccount);
+      const soldMap = events.filter(event => event.returnValues.from === currentAccount)
+        .map((event) => {
+          return {
+            tokenId: event.returnValues.tokenId,
+            price: event.returnValues.price,
+            newOwner: event.returnValues.to,
+          };
+        },
+        );
       setSoldList(soldMap);
       setBalance(soldMap.length);
     }).catch(console.log);
