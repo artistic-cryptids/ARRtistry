@@ -10,7 +10,7 @@ const BreadCrumb: React.FC<{crumbs: string[]}> = ({ crumbs }) => {
     {crumbs.map((value: string, index: number) => {
       return <React.Fragment key={index}>
         <a href="#!" className={styles.link}>{value}</a>
-        {index === (crumbs.length - 1) ? null : <span className={styles.separator}></span>}
+        {index === (crumbs.length - 1) ? null : <span className={styles.separator}/>}
       </React.Fragment>;
     })}
   </div>;
