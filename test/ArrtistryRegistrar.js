@@ -37,10 +37,8 @@ contract('ArrtistryRegistrar', async accounts => {
 
   describe('setRootNode', async () => {
     let instance;
-    let ens;
 
     beforeEach(async () => {
-      ens = await ENS.deployed();
       instance = await Contract.deployed();
     });
 
