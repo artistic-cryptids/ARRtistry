@@ -2,6 +2,7 @@ import Form from 'react-bootstrap/Form';
 import * as React from 'react';
 import Col from 'react-bootstrap/Col';
 import InputGroup from 'react-bootstrap/InputGroup';
+import TransactionLoadingModal from '../common/TransactionLoadingModal';
 import { useFormControlContext, useTextFieldsContext, TextFields } from '../../providers/FormProvider';
 import { FormControlProps } from 'react-bootstrap/FormControl';
 
@@ -14,7 +15,7 @@ type InputChangeEvent = React.FormEvent<FormControlProps> &
   }
 
 const RegisterFields: React.FC = () => {
-  const { setField } = useFormControlContext();
+  const { setField, status } = useFormControlContext();
   const textFields = useTextFieldsContext();
 
   const inputChangeHandler = (event: InputChangeEvent): void => {
@@ -93,6 +94,12 @@ const RegisterFields: React.FC = () => {
           </InputGroup>
         </Form.Group>
       </Form.Row>
+      <TransactionLoadingModal
+      onHide={() => status.submitted = false} //DOESNT WORK also this should be in another file.
+      //onHide={() => {}}
+      submitted={status.submitted}
+      title="Submitting this new artist..."
+    />
     </>
   );
 };
