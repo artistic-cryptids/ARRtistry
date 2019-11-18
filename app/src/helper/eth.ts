@@ -6,7 +6,6 @@ export interface ContractListType {
   ArtifactApplication: any;
   ArtifactRegistry: any;
   Artists: any;
-  Ens: any;
 }
 
 export interface ContractProps {
