@@ -3,7 +3,7 @@ import * as React from 'react';
 export interface IpfsDocument {
   filename: string;
   data: File;
-  metauri?: string;
+  metaUri?: string;
 }
 
 export interface Files {

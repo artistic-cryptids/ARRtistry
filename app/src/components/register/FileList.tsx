@@ -18,7 +18,7 @@ const FileUploadButton: React.FC = () => {
     const setHash = (hash: string): void => {
       const documents = _.map(files.documents, (document: IpfsDocument) => {
         if (document.filename === file.name) {
-          document.metauri = hash;
+          document.metaUri = hash;
         }
         return document;
       });
@@ -105,7 +105,7 @@ const FileList: React.FC = () => {
             {document.filename}
           </div>
           <div className={styles.fileProgress}>
-            <ProgressBar label={document.metauri} now={document.metauri ? 100 : 10} srOnly/>
+            <ProgressBar label={document.metaUri} now={document.metaUri ? 100 : 10} srOnly/>
           </div>
           <div className={styles.fileToolbar}>
             <Button variant="link" className={styles.fileDelete} onClick={() => removeFile(index)}>
