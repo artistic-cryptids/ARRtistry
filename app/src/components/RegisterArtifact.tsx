@@ -23,7 +23,6 @@ const registerValidator: (textFields: TextFields) => ErrorMessages = (_fields) =
 };
 
 const RegisterFieldLayout: React.FC = () => {
-  console.log('herery');
   return <>
     <Accordion defaultActiveKey="0">
       <Card>
