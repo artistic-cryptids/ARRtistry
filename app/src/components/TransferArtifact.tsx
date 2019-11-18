@@ -2,7 +2,6 @@ import * as React from 'react';
 import Button from 'react-bootstrap/Button';
 import Col from 'react-bootstrap/Col';
 import Form from 'react-bootstrap/Form';
-import { FormControlProps } from 'react-bootstrap/FormControl';
 import Modal from 'react-bootstrap/Modal';
 import ipfs from '../helper/ipfs';
 import TransactionLoadingModal from './common/TransactionLoadingModal';
@@ -27,7 +26,7 @@ interface TransferArtifactState {
   submitted: boolean;
 }
 
-type InputChangeEvent = React.FormEvent<FormControlProps> &
+type InputChangeEvent = React.FormEvent<any> &
   {
     target: {
       id: keyof TransferArtifactFormFields;

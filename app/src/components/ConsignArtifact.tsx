@@ -2,7 +2,6 @@ import * as React from 'react';
 import Button from 'react-bootstrap/Button';
 import Col from 'react-bootstrap/Col';
 import Form from 'react-bootstrap/Form';
-import { FormControlProps } from 'react-bootstrap/FormControl';
 import Modal from 'react-bootstrap/Modal';
 import { ContractProps } from '../helper/eth';
 import { addressFromName } from '../helper/ensResolver';
@@ -21,7 +20,7 @@ interface ConsignArtifactState {
   showConsignment: boolean;
 }
 
-type InputChangeEvent = React.FormEvent<FormControlProps> &
+type InputChangeEvent = React.FormEvent<any> &
   {
     target: {
       id: keyof ConsignArtifactFormFields;
