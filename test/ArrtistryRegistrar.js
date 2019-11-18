@@ -51,5 +51,12 @@ contract('ArrtistryRegistrar', async accounts => {
 
       assert.equal(node, namehash.hash('different.test'));
     });
+
+    it('Non owner cannot reset the rootnode', async () => {
+      await expectRevert(
+        instance.setRootNode(namehash.hash('different.test'), { from: accounts[2] }),
+        'revert',
+      );
+    });
   });
 });
