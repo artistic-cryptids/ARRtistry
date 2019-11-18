@@ -86,7 +86,7 @@ class RegisterArtist extends React.Component<ContractProps, RegisterArtistState>
     const files = Array(jsonDataBuffer);
 
     // TODO: this upload takes like 5 seconds. Some kind of loading notification should display
-    await this.saveToIpfs(files, this.setMetaHash);
+    await ipfs.saveArtistToIpfs(files, this.setMetaHash);
 
     const ipfsUrlStart = 'https://ipfs.io/ipfs/';
     await contracts.Artists.addArtist(
@@ -118,22 +118,11 @@ class RegisterArtist extends React.Component<ContractProps, RegisterArtistState>
         Submitting...
       </Button>;
     }
-  }
+  };
 
   setMetaHash = (ipfsId: string): void => {
     this.setState({ fields: { ...this.state.fields, metaIpfsHash: ipfsId } });
   };
-
-  async saveToIpfs (files: any, afterwardsFunction: (arg0: string) => void): Promise<void> {
-    let ipfsId: string;
-    await ipfs.add([...files], { progress: (prog: any) => console.log(`received: ${prog}`) })
-      .then((response: any) => {
-        ipfsId = response[0].hash;
-        afterwardsFunction(ipfsId);
-      }).catch((err: any) => {
-        console.log(err);
-      });
-  }
 
   // This needs to be an arrow constructor to bind `this`, which is bonkers.
   inputChangeHandler = (event: InputChangeEvent): void => {

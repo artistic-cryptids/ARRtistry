@@ -3,6 +3,7 @@ import Button from 'react-bootstrap/Button';
 import Col from 'react-bootstrap/Col';
 import Form from 'react-bootstrap/Form';
 import Modal from 'react-bootstrap/Modal';
+import * as ipfs from '../ipfs';
 import ipfs from '../helper/ipfs';
 import TransactionLoadingModal from './common/TransactionLoadingModal';
 import { ContractProps } from '../helper/eth';
@@ -86,7 +87,7 @@ const TransferArtifact: React.FC<TransferArtifactProps> = ({ tokenId, metaUri, c
     const jsonDataBuffer = Buffer.from(JSON.stringify(jsonData));
     const files = Array(jsonDataBuffer);
 
-    return ipfs.add([...files], { progress: (prog: any) => console.log(`received: ${prog}`) })
+    return ipfs.ipfs.add([...files], { progress: (prog: any) => console.log(`received: ${prog}`) })
       .then((response: any) => 'https://ipfs.io/ipfs/' + response[0].hash);
   };
 
