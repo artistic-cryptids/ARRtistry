@@ -44,11 +44,12 @@ contract('ArrtistryRegistrar', async accounts => {
       instance = await Contract.deployed();
     });
 
-    it('Register a name sets the owner', async () => {
-      await instance.register(utils.sha3('test'), accounts[4]);
+    it('Can reset the rootnode', async () => {
+      await instance.setRootNode(namehash.hash('different.test'));
 
-      const addr = await ens.owner(namehash.hash('test.' + NAME + '.' + TLD));
-      assert.equal(addr, accounts[4]);
+      const node = await instance.rootNode.call();
+
+      assert.equal(node, namehash.hash('different.test'));
     });
   });
 });
