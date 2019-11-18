@@ -12,7 +12,7 @@ type Uploadable = (string | ArrayBuffer | null);
 type HashCallback = (hash: string) => void;
 type ResponseCallback = (response: IpfsResponse[]) => void;
 // create a new ipfs client pointing to infura
-const ipfs = new IpfsClient({
+export const ipfs = new IpfsClient({
   host: 'ipfs.infura.io',
   port: '5001',
   protocol: 'https',
@@ -29,6 +29,7 @@ export const saveSingleToIPFS = async (files: Uploadable, callback: HashCallback
   }
 };
 
+<<<<<<< HEAD
 export const saveSingleToIPFSNoCallBack = async (files: Uploadable): Promise<string> => {
   const responseArray = await ipfs.add(files, { progress: progressMonitor });
   if (responseArray.length > 0) {
@@ -46,6 +47,24 @@ export const saveToIPFS = async (files: Uploadable[], callback: ResponseCallback
   } else {
     console.error('IPFS failed to return', responseArray);
   }
+=======
+export const saveArtifactToIpfs = async (files: any, afterwardsFunction: ResponseCallback): Promise<void> => {
+  await ipfs.add([...files], { progress: (prog: any) => console.log(`received: ${prog}`) })
+    .then((response: any) => {
+      afterwardsFunction(response);
+    }).catch((err: any) => {
+      console.log(err);
+    });
+>>>>>>> Merge in from master and put ipfs in helper folder
 };
 
-export default ipfs;
+export const saveArtistToIpfs = async (files: any, afterwardsFunction: ResponseCallback): Promise<void> => {
+  let hash: string;
+  await ipfs.add([...files], { progress: (prog: any) => console.log(`received: ${prog}`) })
+    .then((response: any) => {
+      hash = response[0].hash;
+      afterwardsFunction([{hash}]);
+    }).catch((err: any) => {
+      console.log(err);
+    });
+};
