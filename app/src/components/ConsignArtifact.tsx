@@ -4,7 +4,7 @@ import Col from 'react-bootstrap/Col';
 import Form from 'react-bootstrap/Form';
 import Modal from 'react-bootstrap/Modal';
 import { ContractProps } from '../helper/eth';
-import { addressFromName } from '../helper/ensResolver';
+import { addressFromName, nameFromAddress } from '../helper/ensResolver';
 
 interface ConsignArtifactProps extends ContractProps {
   tokenId: number;
@@ -51,12 +51,13 @@ class ConsignArtifact extends React.Component<ConsignArtifactProps, ConsignArtif
         if (account === ZERO_ADDR) {
           return;
         }
-
+        return nameFromAddress(this.props.contracts.Ens, account);
+      }).then((name: string) => {
         this.setState({
-          consignedAccount: account,
+          consignedAccount: name,
         });
       })
-      .catch((err: any) => console.log(err)); ;
+      .catch(console.log);
   }
 
   consignArtifactForArtwork = async (_: React.FormEvent): Promise<void> => {
