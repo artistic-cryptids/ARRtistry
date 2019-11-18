@@ -8,8 +8,8 @@ import Form from 'react-bootstrap/Form';
 import Accordion from 'react-bootstrap/Accordion';
 import { FormControlProps } from 'react-bootstrap/FormControl';
 import Spinner from 'react-bootstrap/Spinner';
-import TransactionLoadingModal from './common/TransactionLoadingModal';
 import { ContractProps } from '../helper/eth';
+import TransactionLoadingModal from './common/TransactionLoadingModal';
 import ipfs from '../helper/ipfs';
 
 interface RegisterFormFields {
@@ -226,7 +226,6 @@ class RegisterArtist extends React.Component<ContractProps, RegisterArtistState>
             </Col>
           </Row>
           <TransactionLoadingModal
-            onHide={() => this.setState({ submitted: false })}
             submitted={this.state.submitted}
             title="Submitting this new artist..."
           />

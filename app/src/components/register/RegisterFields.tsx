@@ -95,11 +95,9 @@ const RegisterFields: React.FC = () => {
         </Form.Group>
       </Form.Row>
       <TransactionLoadingModal
-      onHide={() => status.submitted = false} //DOESNT WORK also this should be in another file.
-      //onHide={() => {}}
-      submitted={status.submitted}
-      title="Submitting this new artist..."
-    />
+        submitted={status.submitted}
+        title="Submitting this new artist..."
+      />
     </>
   );
 };
