@@ -2,58 +2,52 @@ import * as React from 'react';
 import ArtworkItem from './ArtworkItem';
 import CardColumns from 'react-bootstrap/CardColumns';
 import { ContractProps } from '../helper/eth';
-import BigNumber from 'bignumber.js';
+import { useWeb3Context } from '../providers/Web3Provider';
 
-interface ArtworkListState {
-  tokenIds: Array<number>;
-}
+const ArtworkList: React.FC<ContractProps> = ({ contracts, accounts }) => {
+  const [tokenIds, setTokenIds] = React.useState<Array<number>>([]);
+  const web3 = useWeb3Context();
 
-class ArtworkList extends React.Component<ContractProps, ArtworkListState> {
-  constructor (props: ContractProps) {
-    super(props);
-    this.state = {
-      tokenIds: [],
+  React.useEffect(() => {
+    const artifactRegistry = web3.contracts.ArtifactRegistry;
+    const currentAccount = web3.accounts[0];
+    const updateTokenIds = (currentAccount: string): void => {
+      artifactRegistry.methods.getTokenIdsOfOwner(currentAccount)
+        .call()
+        .then((tokenIds: Array<number>) => {
+          setTokenIds(tokenIds);
+        })
+        .catch(console.log);
     };
-  }
 
-  componentDidMount (): void {
-    this.shouldComponentUpdate();
-  }
+    updateTokenIds(currentAccount);
 
-  shouldComponentUpdate (): boolean {
-    const artifactRegistry = this.props.contracts.ArtifactRegistry;
-    const currentAccount = this.props.accounts[0];
+    const transferSubscription = artifactRegistry.events.Transfer({
+      filter: { from: currentAccount },
+    })
+      .on('data', (_: any) => {
+        updateTokenIds(currentAccount);
+      });
 
-    artifactRegistry.getTokenIdsOfOwner(currentAccount)
-      .then((tokenIds: Array<BigNumber>) => {
-        this.setState({ tokenIds: tokenIds.map((tid: BigNumber) => tid.toNumber()) });
-      })
-      .catch((err: any) => { console.log(err); });
+    return () => {
+      // Unsubscribe when this component is unmounted
+      transferSubscription.unsubscribe();
+    };
+  }, [accounts, web3]);
 
-    return true;
-  }
+  const listItems = tokenIds.map((tokenId: number) =>
+    <ArtworkItem
+      contracts={contracts}
+      accounts={accounts}
+      tokenId={tokenId}
+      key={tokenId}
+      isOwnedArtifact={true}
+    />,
+  );
 
-  render (): React.ReactNode {
-    if (!this.state) {
-      return (
-        <span>Loading artworks...</span>
-      );
-    }
-
-    const listItems = this.state.tokenIds.map((tokenId: number) =>
-      <ArtworkItem
-        contracts={this.props.contracts}
-        accounts={this.props.accounts}
-        tokenId={tokenId}
-        key={tokenId}
-        isOwnedArtifact={true}
-      />,
-    );
-
-    return (
-      <CardColumns>{listItems}</CardColumns>
-    );
-  }
-}
+  return (
+    <CardColumns>{listItems}</CardColumns>
+  );
+};
 
 export default ArtworkList;
