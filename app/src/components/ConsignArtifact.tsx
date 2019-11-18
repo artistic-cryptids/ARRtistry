@@ -51,7 +51,7 @@ class ConsignArtifact extends React.Component<ConsignArtifactProps, ConsignArtif
         if (account === ZERO_ADDR) {
           return;
         }
-        return nameFromAddress(this.props.contracts.Ens, account);
+        return nameFromAddress({}, account);
       }).then((name: string) => {
         this.setState({
           consignedAccount: name,
