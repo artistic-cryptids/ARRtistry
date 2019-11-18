@@ -4,9 +4,8 @@ import Col from 'react-bootstrap/Col';
 import InputGroup from 'react-bootstrap/InputGroup';
 import TransactionLoadingModal from '../common/TransactionLoadingModal';
 import { useFormControlContext, useTextFieldsContext, TextFields } from '../../providers/FormProvider';
-import { FormControlProps } from 'react-bootstrap/FormControl';
 
-type InputChangeEvent = React.FormEvent<FormControlProps> &
+type InputChangeEvent = React.FormEvent<any> &
   {
     target: {
       id: keyof TextFields;
