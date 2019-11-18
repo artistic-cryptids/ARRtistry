@@ -18,7 +18,7 @@ interface Results {
   files: Files;
 }
 
-export type RegisterOnSubmit = (res: Results) => void;
+export type RegisterOnSubmit = (res: Results) => Promise<void>;
 
 export interface RegisterProps {
   validator: any;
@@ -28,8 +28,8 @@ export interface RegisterProps {
 const SubmitWithFiles: React.FC<RegisterProps> = ({ validator, onSubmit, children }) => {
   const { files, setImage, setDocuments } = useFilesContext();
 
-  const _formSubmit = (fields: TextFields): void => {
-    onSubmit({ files: files, fields: fields });
+  const _formSubmit = async (fields: TextFields): Promise<void> => {
+    await onSubmit({ files: files, fields: fields });
   };
 
   const clearFiles = (): void => {

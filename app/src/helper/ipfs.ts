@@ -29,6 +29,16 @@ export const saveSingleToIPFS = async (files: Uploadable, callback: HashCallback
   }
 };
 
+export const saveSingleToIPFSNoCallBack = async (files: Uploadable): Promise<string> => {
+  const responseArray = await ipfs.add(files, { progress: progressMonitor });
+  if (responseArray.length > 0) {
+    return responseArray[0].hash;
+  } else {
+    console.error('IPFS failed to return', responseArray);
+    return 'saveSingleToIPFS failed';
+  }
+};
+
 export const saveToIPFS = async (files: Uploadable[], callback: ResponseCallback): Promise<void> => {
   const responseArray: IpfsResponse[] = await ipfs.add(files, { progress: progressMonitor });
   if (responseArray.length > 0) {

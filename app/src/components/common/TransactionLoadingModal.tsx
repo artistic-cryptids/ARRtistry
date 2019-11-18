@@ -4,7 +4,6 @@ import Fade from 'react-bootstrap/Fade';
 import LoadingModal from './LoadingModal';
 
 interface TransactionLoadingModalProps {
-  onHide: () => void;
   submitted: boolean;
   title: string;
 }
@@ -15,7 +14,6 @@ class TransactionLoadingModal extends React.Component<TransactionLoadingModalPro
       <Fade in={this.props.submitted}>
         <LoadingModal
           show={this.props.submitted}
-          onHide={this.props.onHide}
           title={this.props.title}
         />
       </Fade>
