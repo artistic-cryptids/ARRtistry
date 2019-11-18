@@ -33,7 +33,7 @@ class ENSName extends React.Component<ENSNameProps, ENSNameState> {
   }
 
   getName = async (): Promise<void> => {
-    const name = await nameFromAddress(this.props.contracts.Ens, this.props.address);
+    const name = await nameFromAddress({}, this.props.address);
     this.setState({ name: name });
   }
 

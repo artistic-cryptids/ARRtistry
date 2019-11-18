@@ -118,8 +118,7 @@ class TransferArtifact extends React.Component<TransferArtifactProps, TransferAr
       submitted: true,
     });
 
-    const ens = this.props.contracts.Ens;
-    const recipientAddress = await addressFromName(ens, this.state.fields.recipientName);
+    const recipientAddress = await addressFromName({}, this.state.fields.recipientName);
     const address = await artifactRegistry.ownerOf(this.props.tokenId);
     owner = address;
     const provenanceHash = await this.addProvenance(
