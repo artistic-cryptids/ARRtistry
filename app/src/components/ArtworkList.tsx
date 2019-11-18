@@ -2,9 +2,9 @@ import * as React from 'react';
 import ArtworkItem from './ArtworkItem';
 import CardColumns from 'react-bootstrap/CardColumns';
 import { ContractProps } from '../helper/eth';
+import BigNumber from 'bignumber.js';
 
 interface ArtworkListState {
-  balance: number;
   tokenIds: Array<number>;
 }
 
@@ -12,7 +12,6 @@ class ArtworkList extends React.Component<ContractProps, ArtworkListState> {
   constructor (props: ContractProps) {
     super(props);
     this.state = {
-      balance: 0,
       tokenIds: [],
     };
   }
@@ -25,23 +24,9 @@ class ArtworkList extends React.Component<ContractProps, ArtworkListState> {
     const artifactRegistry = this.props.contracts.ArtifactRegistry;
     const currentAccount = this.props.accounts[0];
 
-    artifactRegistry.balanceOf(currentAccount)
-      .then((balanceObj: any) => {
-        const balance = balanceObj.toNumber();
-        if (!this.state || this.state.balance !== balance) {
-          this.setState({ balance: balance });
-          const tokenIds: Array<number> = [];
-          this.setState({ tokenIds: tokenIds });
-          for (let i = 0; i < balance; i++) {
-            artifactRegistry.tokenOfOwnerByIndex(currentAccount, i)
-              .then((tokenIdObj: any) => {
-                const tokenId = tokenIdObj.toNumber();
-                tokenIds.push(tokenId);
-                this.setState({ tokenIds: tokenIds });
-              })
-              .catch((err: any) => { console.log(err); });
-          }
-        }
+    artifactRegistry.getTokenIdsOfOwner(currentAccount)
+      .then((tokenIds: Array<BigNumber>) => {
+        this.setState({ tokenIds: tokenIds.map((tid: BigNumber) => tid.toNumber()) });
       })
       .catch((err: any) => { console.log(err); });
 
@@ -52,12 +37,6 @@ class ArtworkList extends React.Component<ContractProps, ArtworkListState> {
     if (!this.state) {
       return (
         <span>Loading artworks...</span>
-      );
-    }
-
-    if (!this.state.balance) {
-      return (
-        <span>No artworks to show, please register one below</span>
       );
     }
 
