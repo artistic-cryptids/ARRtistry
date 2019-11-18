@@ -59,7 +59,6 @@ async function localMigrate (deployer, network, accounts) {
     const name = label + '.' + DOMAIN;
     console.log('Registering ' + account + ' to ' + name);
 
-    const labelHash = utils.sha3(label);
     const hash = namehash.hash(name);
 
     await registrar.register(hash, account);
@@ -87,17 +86,17 @@ async function setupResolver (ens, resolver, moderator) {
   const ArrtistryRegistrar = artifacts.require('ArrtistryRegistrar');
   const registrar = await ArrtistryRegistrar.deployed();
 
-  const label = "resolver";
+  const label = 'resolver';
   const labelHash = utils.sha3(label);
 
-  const name = label + "." + DOMAIN;
+  const name = label + '.' + DOMAIN;
   const hash = namehash.hash(name);
 
   await registrar.register(labelHash, moderator);
-  await ens.setResolver(hash, resolver.address, { from : moderator });
-  await ens.setOwner(hash, resolver.address, { from : moderator });
+  await ens.setResolver(hash, resolver.address, { from: moderator });
+  await ens.setOwner(hash, resolver.address, { from: moderator });
   await resolver.setAddr(hash, resolver.address);
 
-  console.log("Resolver address " + resolver.address);
-  console.log(name + " is registered to " + await resolver.addr(hash));
+  console.log('Resolver address ' + resolver.address);
+  console.log(name + ' is registered to ' + await resolver.addr(hash));
 }

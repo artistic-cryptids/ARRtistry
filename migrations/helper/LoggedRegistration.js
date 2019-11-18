@@ -1,5 +1,4 @@
 const namehash = require('eth-ens-namehash');
-const utils = require('web3-utils');
 
 const ensHelper = require('./ENSHelper');
 
@@ -12,7 +11,6 @@ module.exports = async function newLabel (label, owner, resolver, contract, netw
   const domain = NAME + '.' + TLD;
   const name = label + '.' + domain;
 
-  const domainHash = namehash.hash(domain);
   const hash = namehash.hash(name);
 
   const ens = await ensHelper.getENS(artifacts, network);
