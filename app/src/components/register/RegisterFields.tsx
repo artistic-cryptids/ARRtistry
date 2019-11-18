@@ -95,7 +95,7 @@ const RegisterFields: React.FC = () => {
       </Form.Row>
       <TransactionLoadingModal
         submitted={status.submitted}
-        title="Submitting this new artist..."
+        title="Submitting this new artifact..."
       />
     </>
   );
