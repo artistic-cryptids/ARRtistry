@@ -32,14 +32,12 @@ const doDapp = async (): Promise<void> => {
   const artifactApplication = await artifactApplicationNonDeployed.deployed();
   const artifactRegistry = await artifactRegistryNonDeployed.deployed();
   const artists = await artistsNonDeployed.deployed();
-  const ens = await ensNonDeployed.deployed();
 
   const contracts = {
     Governance: governance,
     ArtifactApplication: artifactApplication,
     ArtifactRegistry: artifactRegistry,
     Artists: artists,
-    Ens: ens,
   };
   const accounts = await web3.eth.getAccounts();
   console.log(accounts[0]);
