@@ -24,25 +24,25 @@ const Router: React.FC<AppProps> = ({ web3, accounts, contracts }) => {
           </Main>
         </Route>
         <Route path="/artifact/new">
-          <View.RegisterView accounts={accounts} contracts={contracts}/>
+          <View.RegisterView accounts={accounts} contracts={contracts} />
         </Route>
         <Route path="/artifact/sold">
-          <View.SoldArtifactView accounts={accounts} contracts={contracts}/>
+          <View.SoldArtifactView accounts={accounts} contracts={contracts} />
         </Route>
         <Route path="/artifact">
-          <View.ArtifactView accounts={accounts} contracts={contracts}/>
+          <View.ArtifactView accounts={accounts} contracts={contracts} />
         </Route>
         <Route path="/manage/proposal">
-          <View.ProposalView accounts={accounts} contracts={contracts}/>
+          <View.ProposalView accounts={accounts} contracts={contracts} />
         </Route>
         <Route path="/manage/arr">
-          <View.ARRView accounts={accounts} contracts={contracts}/>
+          <View.ARRView accounts={accounts} contracts={contracts} />
         </Route>
         <Route path ="/artist/new">
-          <View.RegisterArtistView accounts={accounts} contracts={contracts}/>
+          <View.RegisterArtistView accounts={accounts} contracts={contracts} />
         </Route>
         <Route path="/client/all/artifact">
-          <View.ClientArtifactView accounts={accounts} contracts={contracts}/>
+          <View.ClientArtifactView accounts={accounts} contracts={contracts} />
         </Route>
       </Switch>
     </BrowserRouter>

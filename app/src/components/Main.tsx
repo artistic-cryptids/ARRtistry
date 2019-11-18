@@ -24,8 +24,11 @@ const UserCard: React.FC<{user: User}> = ({ user }) => {
       <img src={user.img} className="rounded-circle img-fluid" alt='avatar'/>
     </div>
     <Card.Body>
-      <h4 className="font-weight-bold mb-4">{user.name} <small>{user.role}</small></h4>
-      <blockquote className="blockquote text-right">
+      <h4 className="font-weight-bold mb-4">{user.nickname} <small>{user.role}</small></h4>
+      <blockquote className="blockquote text-left">
+        <footer className="blockquote-footer">{user.name}</footer>
+      </blockquote>
+      <blockquote className="blockquote text-left">
         <footer className="blockquote-footer">{user.address}</footer>
       </blockquote>
     </Card.Body>
