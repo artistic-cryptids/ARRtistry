@@ -2,7 +2,6 @@ import * as React from 'react';
 import Button from 'react-bootstrap/Button';
 import Col from 'react-bootstrap/Col';
 import Form from 'react-bootstrap/Form';
-import { FormControlProps } from 'react-bootstrap/FormControl';
 import Modal from 'react-bootstrap/Modal';
 import ipfs from '../helper/ipfs';
 import TransactionLoadingModal from './common/TransactionLoadingModal';
@@ -27,7 +26,7 @@ interface TransferArtifactState {
   submitted: boolean;
 }
 
-type InputChangeEvent = React.FormEvent<FormControlProps> &
+type InputChangeEvent = React.FormEvent<any> &
   {
     target: {
       id: keyof TransferArtifactFormFields;
@@ -119,8 +118,7 @@ class TransferArtifact extends React.Component<TransferArtifactProps, TransferAr
       submitted: true,
     });
 
-    const ens = this.props.contracts.Ens;
-    const recipientAddress = await addressFromName(ens, this.state.fields.recipientName);
+    const recipientAddress = await addressFromName({}, this.state.fields.recipientName);
     const address = await artifactRegistry.ownerOf(this.props.tokenId);
     owner = address;
     const provenanceHash = await this.addProvenance(
@@ -240,7 +238,6 @@ class TransferArtifact extends React.Component<TransferArtifactProps, TransferAr
           </Modal.Footer>
         </Modal>
         <TransactionLoadingModal
-          onHide={() => this.setState({ submitted: false })}
           submitted={this.state.submitted}
           title="Registering sale..."
         />

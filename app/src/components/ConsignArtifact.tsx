@@ -2,10 +2,9 @@ import * as React from 'react';
 import Button from 'react-bootstrap/Button';
 import Col from 'react-bootstrap/Col';
 import Form from 'react-bootstrap/Form';
-import { FormControlProps } from 'react-bootstrap/FormControl';
 import Modal from 'react-bootstrap/Modal';
 import { ContractProps } from '../helper/eth';
-import { addressFromName } from '../helper/ensResolver';
+import { addressFromName, nameFromAddress } from '../helper/ensResolver';
 
 interface ConsignArtifactProps extends ContractProps {
   tokenId: number;
@@ -21,7 +20,7 @@ interface ConsignArtifactState {
   showConsignment: boolean;
 }
 
-type InputChangeEvent = React.FormEvent<FormControlProps> &
+type InputChangeEvent = React.FormEvent<any> &
   {
     target: {
       id: keyof ConsignArtifactFormFields;
@@ -52,16 +51,17 @@ class ConsignArtifact extends React.Component<ConsignArtifactProps, ConsignArtif
         if (account === ZERO_ADDR) {
           return;
         }
-
+        return nameFromAddress({}, account);
+      }).then((name: string) => {
         this.setState({
-          consignedAccount: account,
+          consignedAccount: name,
         });
       })
-      .catch((err: any) => console.log(err)); ;
+      .catch(console.log);
   }
 
   consignArtifactForArtwork = async (_: React.FormEvent): Promise<void> => {
-    const recipientAddress = await addressFromName(this.props.contracts.Ens, this.state.fields.recipientName);
+    const recipientAddress = await addressFromName({}, this.state.fields.recipientName);
     this.consign(recipientAddress);
   }
 
