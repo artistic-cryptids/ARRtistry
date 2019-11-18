@@ -1,7 +1,7 @@
 const utils = require('web3-utils');
 const namehash = require('eth-ens-namehash');
 
-const NAME = 'artistic';
+const NAME = 'artistry';
 const TLD = 'test';
 
 const ENS_RINKEBY = '0xe7410170f87102df0055eb195163a03b7f2bff4a';
@@ -34,9 +34,8 @@ const setupRegistrarRinkeby = async (deployer, artifacts, web3) => {
 
   const time = await rinkebyRegistrar.methods.expiryTimes(utils.sha3(NAME)).call();
 
-  console.log('Deploying Registrar on ganache');
-  await deployer.deploy(ArrtistryRegistrar, ens.address, namehash.hash(NAME + '.' + TLD));
-  const registrar = await ArrtistryRegistrar.deployed();
+  console.log('Finding ArrtistryRegistrar on ganache');
+  const registrar = await ArrtistryRegistrar.at(ARRTISTRY_REGISTRAR_RINKEBY);
 
   console.log('Registrar registration expirytime is current set to ' + time);
 
