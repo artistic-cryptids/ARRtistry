@@ -1,7 +1,7 @@
 import React, { useCallback } from 'react';
 import * as styles from './DropZone.module.scss';
 import { useDropzone } from 'react-dropzone';
-import { saveSingleToIPFS } from '../../helper/ipfs';
+import { saveSingleToIpfs } from '../../helper/ipfs';
 import { useFilesContext } from '../../providers/FileProvider';
 
 const DropZone: React.FC<{popup?: true; callback: (hash: string) => void}> = ({ popup, callback }) => {
@@ -12,7 +12,7 @@ const DropZone: React.FC<{popup?: true; callback: (hash: string) => void}> = ({ 
     setDropped(true);
     const reader = new FileReader();
     reader.addEventListener('loadend', function () {
-      saveSingleToIPFS(reader.result, callback);
+      saveSingleToIpfs(reader.result, callback);
     });
     acceptedFiles.forEach((blob) => reader.readAsArrayBuffer(blob));
   }, [callback]);

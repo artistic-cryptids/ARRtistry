@@ -12,14 +12,14 @@ type NetworkAsideState = {
 }
 
 class NetworkAside extends React.Component<NetworkAsideProps, NetworkAsideState> {
-  handleClose = (): void => {
-    this.setState({ open: false });
-  }
-
   constructor (props: NetworkAsideProps, state: NetworkAsideState) {
     super(props, state);
     this.state = { open: false, network: 'unknown' };
   }
+
+  handleClose = (): void => {
+    this.setState({ open: false });
+  };
 
   async componentDidMount (): Promise<void> {
     const networkType = await this.props.web3.eth.net.getNetworkType();

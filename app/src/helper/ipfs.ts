@@ -20,7 +20,7 @@ export const ipfs = new IpfsClient({
 
 const progressMonitor = (prog: number): void => console.log(`received: ${prog}`);
 
-export const saveSingleToIPFS = async (files: Uploadable, callback: HashCallback): Promise<void> => {
+export const saveSingleToIpfs = async (files: Uploadable, callback: HashCallback): Promise<void> => {
   const responseArray = await ipfs.add(files, { progress: progressMonitor });
   if (responseArray.length > 0) {
     callback(responseArray[0].hash);
@@ -56,15 +56,4 @@ export const saveArtifactToIpfs = async (files: any, afterwardsFunction: Respons
       console.log(err);
     });
 >>>>>>> Merge in from master and put ipfs in helper folder
-};
-
-export const saveArtistToIpfs = async (files: any, afterwardsFunction: ResponseCallback): Promise<void> => {
-  let hash: string;
-  await ipfs.add([...files], { progress: (prog: any) => console.log(`received: ${prog}`) })
-    .then((response: any) => {
-      hash = response[0].hash;
-      afterwardsFunction([{hash}]);
-    }).catch((err: any) => {
-      console.log(err);
-    });
 };

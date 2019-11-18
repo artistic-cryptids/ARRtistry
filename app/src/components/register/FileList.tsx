@@ -4,7 +4,7 @@ import * as React from 'react';
 import * as styles from './FileList.module.scss';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTimes } from '@fortawesome/free-solid-svg-icons';
-import { saveSingleToIPFS } from '../../helper/ipfs';
+import { saveSingleToIpfs } from '../../helper/ipfs';
 import ProgressBar from 'react-bootstrap/ProgressBar';
 import { useFilesContext, IpfsDocument } from '../../providers/FileProvider';
 import _ from 'lodash';
@@ -27,7 +27,7 @@ const FileUploadButton: React.FC = () => {
     };
 
     reader.addEventListener('loadend', () => {
-      saveSingleToIPFS(reader.result, setHash);
+      saveSingleToIpfs(reader.result, setHash);
     });
     reader.readAsArrayBuffer(file);
   };

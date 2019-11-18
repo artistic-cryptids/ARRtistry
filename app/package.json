@@ -40,7 +40,8 @@
     "ts-loader": "^6.2.0",
     "typed-scss-modules": "^0.0.12",
     "typescript": "^3.6.4",
-    "web3": "^1.2.1"
+    "web3": "^1.2.1",
+    "eth-crypto": "latest"
   },
   "scripts": {
     "serve": "serve -s build",

@@ -7,6 +7,8 @@ import Container from 'react-bootstrap/Container';
 import Form from 'react-bootstrap/Form';
 import Accordion from 'react-bootstrap/Accordion';
 import Spinner from 'react-bootstrap/Spinner';
+import * as ipfs from '../helper/ipfs';
+import TransactionLoadingModal from './common/TransactionLoadingModal';
 import { ContractProps } from '../helper/eth';
 import TransactionLoadingModal from './common/TransactionLoadingModal';
 import ipfs from '../helper/ipfs';
@@ -83,10 +85,9 @@ class RegisterArtist extends React.Component<ContractProps, RegisterArtistState>
     const jsonData: any = restOfTheFields;
 
     const jsonDataBuffer = Buffer.from(JSON.stringify(jsonData));
-    const files = Array(jsonDataBuffer);
 
     // TODO: this upload takes like 5 seconds. Some kind of loading notification should display
-    await ipfs.saveArtistToIpfs(files, this.setMetaHash);
+    await ipfs.saveSingleToIpfs(jsonDataBuffer, this.setMetaHash);
 
     const ipfsUrlStart = 'https://ipfs.io/ipfs/';
     await contracts.Artists.addArtist(
@@ -120,8 +121,8 @@ class RegisterArtist extends React.Component<ContractProps, RegisterArtistState>
     }
   };
 
-  setMetaHash = (ipfsId: string): void => {
-    this.setState({ fields: { ...this.state.fields, metaIpfsHash: ipfsId } });
+  setMetaHash = (hash: string): void => {
+    this.setState({ fields: { ...this.state.fields, metaIpfsHash: hash } });
   };
 
   // This needs to be an arrow constructor to bind `this`, which is bonkers.
