@@ -83,7 +83,7 @@ class SoldArtworkList extends React.Component<ContractProps, SoldArtworkListStat
           soldFor={this.state.soldInformationArray[i].price}
           soldTo={this.state.soldInformationArray[i].newOwner}
           tokenId={this.state.soldInformationArray[i].tokenId}
-          key={this.state.soldInformationArray[i].tokenId}
+          key={this.state.soldInformationArray[i].tokenId * 3 + i * 5}
         />,
       );
     }
