@@ -238,7 +238,6 @@ class TransferArtifact extends React.Component<TransferArtifactProps, TransferAr
           </Modal.Footer>
         </Modal>
         <TransactionLoadingModal
-          onHide={() => this.setState({ submitted: false })}
           submitted={this.state.submitted}
           title="Registering sale..."
         />
