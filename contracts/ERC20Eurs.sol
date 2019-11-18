@@ -21,7 +21,7 @@ contract ERC20Eurs {
 
    constructor(uint256 total) public {
 	    balances[msg.sender] = totalSupply;
-      emit Transfer('0x0000000000000000000000000000000000000000', msg.sender, total);
+      emit Transfer(address(0), msg.sender, total);
     }
 
     function balanceOf(address tokenOwner) public view returns (uint) {
