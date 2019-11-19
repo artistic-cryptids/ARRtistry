@@ -47,7 +47,7 @@ interface BlockHeading {
 
 const BLOCK_HEADINGS: Dictionary<BlockHeading> = {
   'mint': {
-    header: 'Artifact Registered',
+    header: 'Piece of Art Registered',
     icon: faFingerprint,
   },
   'sale': {
