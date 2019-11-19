@@ -14,11 +14,12 @@ import Row from 'react-bootstrap/Row';
 import ENSName from './common/ENSName';
 import { Dictionary } from 'lodash';
 import { IconProp } from '@fortawesome/fontawesome-svg-core';
-import { ArtifactRegistry } from '../helper/eth';
+import { ArtifactRegistry, ContractProps, ContractListType } from '../helper/eth';
 import { useSessionContext } from '../providers/SessionProvider';
+import ENSName from './common/ENSName';
 
 
-interface ProvenanceProps {
+interface ProvenanceProps extends ContractProps {
   metaUri: string;
   registry: ArtifactRegistry;
   tokenId: number;
@@ -31,7 +32,7 @@ interface ArtworkInfo {
 interface SaleRecord {
   price: number;
   location: string;
-  buyers: Array<string>;
+  buyer: string;
   seller: string;
   date: string;
 }
@@ -69,7 +70,21 @@ const AddressInfo: React.FC<{address: string; label: string}> =
   </Form.Group>;
 };
 
-const TimelineBlock: React.FC<{type: string; date: string}> = ({ type, date, children }) => {
+const AddressInfo: React.FC<{accounts: Array<string>; contracts: ContractListType; address: string; label: string}> =
+({ accounts, address, contracts, label }) => {
+  return <Form.Group as={Form.Row}>
+    <Form.Label column sm="2">
+      {label}
+    </Form.Label>
+    <Col sm="10">
+      <ENSName accounts={accounts} contracts={contracts} address={address}/>
+    </Col>
+  </Form.Group>;
+};
+
+
+const TimelineBlock: React.FC<{type: string; accounts: Array<string>; contracts: ContractListType; record: SaleRecord}>
+= ({ type, children, accounts, contracts, record }) => {
   const { header, icon } = BLOCK_HEADINGS[type];
   return (
     <li className={styles.timelineBlock}>
@@ -79,17 +94,22 @@ const TimelineBlock: React.FC<{type: string; date: string}> = ({ type, date, chi
       <div className={styles.timelineContent}>
         <Row>
           <Col sm='8'>
-            <h4 className="font-weight-bold">{header}</h4>
+            <h4 className="font-weight-bold">Sale</h4>
           </Col>
           <Col sm='4'>
             <p className={'text-muted ' + styles.date}>
-              {date}
+              {record.date}
             </p>
           </Col>
         </Row>
         <Row>
           <Col sm='12'>
-            {children}
+            <Form>
+              <AddressInfo label='Buyer' accounts={accounts} address={record.buyer} contracts={contracts}/>
+              <AddressInfo label='Seller' accounts={accounts} address={record.seller} contracts={contracts}/>
+              <PlaintextField label='Sale Location' value={record.location} />
+              <PlaintextField label='Sale Price' value={'€' + (record.price / 100).toString()} />
+            </Form>
           </Col>
         </Row>
       </div>
@@ -97,27 +117,19 @@ const TimelineBlock: React.FC<{type: string; date: string}> = ({ type, date, chi
   );
 };
 
-const Timeline: React.FC<{records: SaleRecord[]}> =
-({ records }) => {
+const Timeline: React.FC<{records: SaleRecord[], contracts: ContractListType, accounts: string[]}> = ({ records, contracts, accounts }) => {
   return (
     <Col md='12'>
       <ul className={styles.timeline}>
-        <TimelineBlock type="mint" date={'Today'}>
-        </TimelineBlock>
-        {records.map((record: SaleRecord, index: number) => <TimelineBlock type="sale" date={record.date} key={index}>
-          <Form>
-            <AddressInfo label='Buyer' address={record.buyer}/>
-            <AddressInfo label='Seller' address={record.seller} />
-            <PlaintextField label='Sale Location' value={record.location} />
-            <PlaintextField label='Sale Price' value={'€' + (record.price / 100).toString()} />
-          </Form>
+        {records.map((record: SaleRecord, index: number) =>
+          <TimelineBlock type={'sale'} accounts={accounts} contracts={contracts} record={record} key={index}>
         </TimelineBlock>)}
       </ul>
     </Col>
   );
 };
 
-const Provenance: React.FC<ProvenanceProps> = ({ metaUri, registry, tokenId }) => {
+const Provenance: React.FC<ProvenanceProps> = ({ metaUri, registry, tokenId, contracts, accounts }) => {
   const [show, setShow] = React.useState<boolean>(false);
   const [events, setEvents] = React.useState<any>({});
   const { user } = useSessionContext();
@@ -129,9 +141,11 @@ const Provenance: React.FC<ProvenanceProps> = ({ metaUri, registry, tokenId }) =
         setEvents(events.filter(event => event.returnValues.tokenId === tokenId.toString())
         .map((event) => {
           return {
-            tokenId: event.returnValues.tokenId,
+            seller: event.returnValues.from,
             price: event.returnValues.price,
-            newOwner: event.returnValues.to,
+            buyer: event.returnValues.to,
+            location: event.returnValues.location,
+            date: event.returnValues.date,
           };
         },
         ));
@@ -152,7 +166,7 @@ const Provenance: React.FC<ProvenanceProps> = ({ metaUri, registry, tokenId }) =
           <Modal.Title>Provenance</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <Timeline records={[]}/>
+          <Timeline records={events}  contracts={contracts} accounts={accounts} />
         </Modal.Body>
       </Modal>
     </>

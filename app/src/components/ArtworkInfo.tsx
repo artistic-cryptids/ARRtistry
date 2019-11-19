@@ -142,7 +142,8 @@ class ArtworkInfo extends React.Component<ArtworkInfoProps, ArtworkInfoState> {
             <div className="text-center">
               <ButtonGroup>
                 <Documents documents={fields.documents}/>
-                <Provenance registry={this.props.contracts.ArtifactRegistry} metaUri={this.props.artwork.metaUri} tokenId = {this.props.id} />
+                <Provenance registry={this.props.contracts.ArtifactRegistry} metaUri={this.props.artwork.metaUri}
+                tokenId={this.props.id} contracts={this.props.contracts} accounts={this.props.accounts}/>
               </ButtonGroup>
             </div>
 
