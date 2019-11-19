@@ -8,7 +8,7 @@ contract ArrtistryRegistrar is Ownable {
   ENSRegistry public ens;
   bytes32 public rootNode;
 
-  modifier only_owner() {
+  modifier onlyOwner() {
     require(owner() == msg.sender);
     _;
   }
@@ -28,7 +28,7 @@ contract ArrtistryRegistrar is Ownable {
     ens.setSubnodeOwner(rootNode, label, owner);
   }
 
-  function setRootNode(bytes32 node) public only_owner {
+  function setRootNode(bytes32 node) public onlyOwner {
     rootNode = node;
   }
 }
