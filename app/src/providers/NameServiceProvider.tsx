@@ -27,9 +27,13 @@ export const NameServiceProvider: React.FC = ({ children }) => {
   const { web3, networkId } = useWeb3Context();
 
   React.useEffect(() => {
-      const { abi, address } = getABIAndAddress(networkId, ENSRegistry as any, '0xe7410170f87102df0055eb195163a03b7f2bff4a')
-      const ens = new web3.eth.Contract(abi, address);
-      setEns(ens);
+    const { abi, address } = getABIAndAddress(
+      networkId,
+      ENSRegistry as any,
+      '0xe7410170f87102df0055eb195163a03b7f2bff4a',
+    );
+    const ens = new web3.eth.Contract(abi, address);
+    setEns(ens);
   }, [web3, networkId]);
 
   const nameFromAddress = (address: string): Promise<string> => {

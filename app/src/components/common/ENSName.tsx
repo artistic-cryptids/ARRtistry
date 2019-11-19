@@ -25,7 +25,7 @@ const ENSName: React.FC<ENSNameProps> = ({ address, className }) => {
     <>
       {name === ''
         ? address
-        : <OverlayTrigger placement='left' overlay={<Tooltip id="address">{address}</Tooltip>}>
+        : <OverlayTrigger placement='right' overlay={<Tooltip id="address">{address}</Tooltip>}>
           <p className={className}>{name}</p>
         </OverlayTrigger>}
     </>

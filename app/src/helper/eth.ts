@@ -72,7 +72,12 @@ export interface TruffleArtifact {
   };
 }
 
-export const getABIAndAddress = (networkId: number, json: TruffleArtifact, defaultAddress: string): { abi: any; address: string } => {
+type ABIandAddress = (
+  networkId: number,
+  json: TruffleArtifact,
+  defaultAddress: string) => { abi: any; address: string };
+
+export const getABIAndAddress: ABIandAddress = (networkId, json, defaultAddress) => {
   const deployed = json.networks[networkId];
   const address = deployed && deployed.address;
   return {

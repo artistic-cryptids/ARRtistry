@@ -5,13 +5,13 @@ import { ContractProps } from '../helper/eth';
 import { useWeb3Context } from '../providers/Web3Provider';
 import { useRegistryContext } from '../providers/RegistryProvider';
 
-const ArtworkList: React.FC<ContractProps> = ({contracts}) => {
+const ArtworkList: React.FC<ContractProps> = ({ contracts }) => {
   const [tokenIds, setTokenIds] = React.useState<Array<number>>([]);
   const { accounts } = useWeb3Context();
   const registry = useRegistryContext();
 
   React.useEffect(() => {
-    const subscribeToTransfer = () => {
+    const subscribeToTransfer: VoidFunction = () => {
       const currentAccount = accounts[0];
       const updateTokenIds = (currentAccount: string): void => {
         registry.methods.getTokenIdsOfOwner(currentAccount)
@@ -35,7 +35,7 @@ const ArtworkList: React.FC<ContractProps> = ({contracts}) => {
         // Unsubscribe when this component is unmounted
         transferSubscription.unsubscribe();
       };
-    }
+    };
 
     if (registry && accounts.length > 0) {
       subscribeToTransfer();

@@ -11,9 +11,13 @@ export const RegistryProvider: React.FC = ({ children }) => {
   const { web3, networkId } = useWeb3Context();
 
   React.useEffect(() => {
-      const { abi, address } = getABIAndAddress(networkId, ArtifactRegistry as any, '0x0000000000000000000000000000000000000000')
-      const registry = new web3.eth.Contract(abi, address);
-      setRegistry(registry);
+    const { abi, address } = getABIAndAddress(
+      networkId,
+      ArtifactRegistry as any,
+      '0x0000000000000000000000000000000000000000',
+    );
+    const registry = new web3.eth.Contract(abi, address);
+    setRegistry(registry);
   }, [networkId, web3]);
 
   return (
@@ -23,4 +27,5 @@ export const RegistryProvider: React.FC = ({ children }) => {
   );
 };
 
-export const useRegistryContext: () => Contracts.ArtifactRegistry = () => React.useContext<Contracts.ArtifactRegistry>(RegistryContext);
+export const useRegistryContext: () => Contracts.ArtifactRegistry =
+  () => React.useContext<Contracts.ArtifactRegistry>(RegistryContext);

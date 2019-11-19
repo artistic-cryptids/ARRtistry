@@ -21,7 +21,6 @@ import { useSessionContext } from '../providers/SessionProvider';
 import ENSName from './common/ENSName';
 import { useWeb3Context } from '../providers/Web3Provider';
 
-
 interface ProvenanceProps extends ContractProps {
   metaUri: string;
   registry: Contracts.ArtifactRegistry;
@@ -83,9 +82,8 @@ const AddressInfo: React.FC<{address: string; label: string}> =
   </Form.Group>;
 };
 
-
-const TimelineBlock: React.FC<{type: string; subheader: string;}>
-= ({ type, children, subheader }) => {
+const TimelineBlock: React.FC<{type: string; subheader: string}> =
+({ type, children, subheader }) => {
   const { header, icon } = BLOCK_HEADINGS[type];
   return (
     <li className={styles.timelineBlock}>
@@ -113,35 +111,35 @@ const TimelineBlock: React.FC<{type: string; subheader: string;}>
   );
 };
 
-const Timeline: React.FC<{records: ProvenanceRecord[], contracts: Contracts.ContractListType, accounts: string[]}> = ({ records, contracts, accounts }) => {
+const Timeline: React.FC<{ records: ProvenanceRecord[] }> = ({ records }) => {
   return (
     <Col md='12'>
       <ul className={styles.timeline}>
         {records.map((record: ProvenanceRecord, index: number) =>
           <TimelineBlock type={record.type} subheader={record.txDate.fromNow()} key={index}>
-            {record.type === 'sale'
-            ? <Form>
-                <PlaintextField label='Date' value={record.sale!.date} />
-                <AddressInfo label='Buyer' address={record.sale!.buyer}/>
-                <AddressInfo label='Seller' address={record.sale!.seller}/>
-                <PlaintextField label='Sale Location' value={record.sale!.location} />
-                <PlaintextField label='Sale Price' value={'€' + (record.sale!.price / 100).toString()} />
+            {record.type === 'sale' && record.sale
+              ? <Form>
+                <PlaintextField label='Date' value={record.sale.date} />
+                <AddressInfo label='Buyer' address={record.sale.buyer}/>
+                <AddressInfo label='Seller' address={record.sale.seller}/>
+                <PlaintextField label='Sale Location' value={record.sale.location} />
+                <PlaintextField label='Sale Price' value={'€' + (record.sale.price / 100).toString()} />
               </Form>
-            : null}
-            {record.type === 'mint'
-            ? <Form>
-                <AddressInfo label='Artist' address={record.artist!}/>
+              : null}
+            {record.type === 'mint' && record.artist
+              ? <Form>
+                <AddressInfo label='Artist' address={record.artist}/>
               </Form>
-            : null}
+              : null}
 
-          </TimelineBlock>
+          </TimelineBlock>,
         )}
       </ul>
     </Col>
   );
 };
 
-const Provenance: React.FC<ProvenanceProps> = ({ metaUri, registry, tokenId, contracts, accounts }) => {
+const Provenance: React.FC<ProvenanceProps> = ({ registry, tokenId }) => {
   const [show, setShow] = React.useState<boolean>(false);
   const [events, setEvents] = React.useState<any>({});
   const { web3 } = useWeb3Context();
@@ -152,42 +150,42 @@ const Provenance: React.FC<ProvenanceProps> = ({ metaUri, registry, tokenId, con
 
     const registration = registry.getPastEvents('Transfer', options)
       .then((events: EventData[]) => events.filter(e => e.returnValues.tokenId === tokenId.toString())
-                                           .filter(e => e.returnValues.from === '0x0000000000000000000000000000000000000000')
-           )
+        .filter(e => e.returnValues.from === '0x0000000000000000000000000000000000000000'),
+      )
       .then((events: EventData[]) => events.map(async (event) => {
-          const timestamp = await web3.eth.getBlock(event.blockNumber).then((block) => block.timestamp);
-          return {
-            type: 'mint',
-            txDate: moment.unix(Number(timestamp)),
-            artist: event.returnValues.to,
-          };
-        })
+        const timestamp = await web3.eth.getBlock(event.blockNumber).then((block) => block.timestamp);
+        return {
+          type: 'mint',
+          txDate: moment.unix(Number(timestamp)),
+          artist: event.returnValues.to,
+        };
+      }),
       )
       .then((records: ProvenanceRecord[]) => Promise.all(records));
 
     const sales = registry.getPastEvents('RecordSale', options).then(async function (events: EventData[]) {
       const tokenRelevantEvents = events.filter(event => event.returnValues.tokenId === tokenId.toString());
-      return await Promise.all(tokenRelevantEvents.map(async (event) => {
-          const timestamp = await web3.eth.getBlock(event.blockNumber).then((block) => block.timestamp);
-          return {
-            type: 'sale',
-            txDate: moment.unix(Number(timestamp)),
-            sale: {
-              seller: event.returnValues.from,
-              price: event.returnValues.price,
-              buyer: event.returnValues.to,
-              location: event.returnValues.location,
-              date: event.returnValues.date,
-            },
-          };
-        }
+      return Promise.all(tokenRelevantEvents.map(async (event) => {
+        const timestamp = await web3.eth.getBlock(event.blockNumber).then((block) => block.timestamp);
+        return {
+          type: 'sale',
+          txDate: moment.unix(Number(timestamp)),
+          sale: {
+            seller: event.returnValues.from,
+            price: event.returnValues.price,
+            buyer: event.returnValues.to,
+            location: event.returnValues.location,
+            date: event.returnValues.date,
+          },
+        };
+      },
       ));
     });
 
     Promise.all([registration, sales])
-      .then(([regs, sales]) => setEvents(regs.concat(sales)));
-
-  }, [user.address, registry, tokenId]);
+      .then(([regs, sales]) => setEvents(regs.concat(sales)))
+      .catch(console.warn);
+  }, [user.address, web3.eth, registry, tokenId]);
 
   return (
     <>
@@ -203,7 +201,7 @@ const Provenance: React.FC<ProvenanceProps> = ({ metaUri, registry, tokenId, con
           <Modal.Title>Provenance</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <Timeline records={events} contracts={contracts} accounts={accounts} />
+          <Timeline records={events} />
         </Modal.Body>
       </Modal>
     </>

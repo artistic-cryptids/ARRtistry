@@ -15,22 +15,19 @@ interface Web3ProviderProps {
 
 const Web3Context = React.createContext<Web3Interface>({} as any);
 
-async function retrieveWeb3() {
+async function retrieveWeb3 (): Promise<Web3 | undefined> {
   const { ethereum } = window as any;
   if (ethereum) {
     try {
       const web3 = new Web3(ethereum);
       const selectedAccount = await ethereum.enable();
       if (!selectedAccount) {
-        // User didn't give permission for dapp to access wallet
-        console.warn('User opted out')
+        console.warn('User opted out');
       } else {
-        // User allowed access
-        console.log('user gave access!')
+        console.log('user gave access!');
       }
-      return web3
+      return web3;
     } catch (error) {
-      // whoopsie!
       console.error(error);
     }
   }
@@ -42,16 +39,19 @@ export const Web3Provider: React.FC<Web3ProviderProps> = ({ children }) => {
   const [accounts, setAccounts] = React.useState<string[]>([]);
 
   React.useEffect(() => {
-    async function setWeb3Properties() {
-      const foundWeb3 = (await retrieveWeb3())!;
+    async function setWeb3Properties (): Promise<void> {
+      const foundWeb3 = await retrieveWeb3();
+      if (foundWeb3) {
+        setWeb3(foundWeb3);
 
-      setWeb3(foundWeb3);
+        foundWeb3.eth.net.getId()
+          .then((nId) => setNetworkId(nId))
+          .catch(console.warn);
 
-      foundWeb3.eth.net.getId()
-        .then((nId) => setNetworkId(nId));
-
-      foundWeb3.eth.getAccounts()
-        .then((accounts) => setAccounts(accounts));
+        foundWeb3.eth.getAccounts()
+          .then((accounts) => setAccounts(accounts))
+          .catch(console.warn);
+      }
     }
     setWeb3Properties();
   }, []);
@@ -61,7 +61,7 @@ export const Web3Provider: React.FC<Web3ProviderProps> = ({ children }) => {
   }
 
   return (
-    <Web3Context.Provider value={{ web3: web3!, networkId: networkId, accounts: accounts }}>
+    <Web3Context.Provider value={{ web3: web3, networkId: networkId, accounts: accounts }}>
       { children }
     </Web3Context.Provider>
   );

@@ -23,7 +23,7 @@ const ContractProvider: React.FC = ({ children }) => {
       </RegistryProvider>
     </NameServiceProvider>
   );
-}
+};
 
 const App: React.FC<AppProps> = (props) => {
   return (
