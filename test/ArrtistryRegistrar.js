@@ -25,7 +25,7 @@ contract('ArrtistryRegistrar', async accounts => {
       assert.equal(addr, accounts[4]);
     });
 
-    it('Cant register subnode if not approved', async () => {
+    it('Can\'t register subnode if not approved', async () => {
       await instance.register(utils.sha3('test'), accounts[4], { from: accounts[4] });
 
       await expectRevert(
@@ -50,7 +50,7 @@ contract('ArrtistryRegistrar', async accounts => {
       assert.equal(node, namehash.hash('different.test'));
     });
 
-    it('Non owner cannot reset the rootnode', async () => {
+    it('Can\'t reset rootnode unless owner', async () => {
       await expectRevert(
         instance.setRootNode(namehash.hash('different.test'), { from: accounts[2] }),
         'revert',
