@@ -5,9 +5,10 @@ import { useNameServiceContext } from '../../providers/NameServiceProvider';
 
 interface ENSNameProps {
   address: string;
+  className?: string;
 }
 
-const ENSName: React.FC<ENSNameProps> = ({ address }) => {
+const ENSName: React.FC<ENSNameProps> = ({ address, className }) => {
   const [name, setName] = React.useState<string>('');
 
   const { nameFromAddress } = useNameServiceContext();
@@ -25,7 +26,7 @@ const ENSName: React.FC<ENSNameProps> = ({ address }) => {
       {name === ''
         ? address
         : <OverlayTrigger placement='left' overlay={<Tooltip id="address">{address}</Tooltip>}>
-          <p>{name}</p>
+          <p className={className}>{name}</p>
         </OverlayTrigger>}
     </>
   );
