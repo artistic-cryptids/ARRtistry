@@ -1,12 +1,11 @@
 import * as React from 'react';
-import { ContractListType } from '../helper/eth';
 import Web3 from 'web3';
-import { Ens } from 'web3-eth-ens';
 import { Contract } from 'web3-eth-contract';
 import ENSRegistry from '../contracts/ENSRegistry.json';
 import ENSResolver from '../contracts/ENSResolver.json';
 import { AbiItem } from 'web3-utils';
 
+// eslint-disable-next-line
 const namehash = require('eth-ens-namehash');
 
 export interface User {
@@ -18,7 +17,6 @@ export interface User {
 }
 
 export interface NameService {
-  ens: Contract;
   nameFromAddress: Function;
   addressFromName: Function;
 }
@@ -26,13 +24,13 @@ export interface NameService {
 interface TruffleArtifact {
   networks: {
     [k: number]: {
-      address: string
-    }
-  }
+      address: string;
+    };
+  };
   abi: AbiItem[];
 }
 
-const getABIAndAddress = (networkId: number, json: TruffleArtifact) => {
+const getABIAndAddress = (networkId: number, json: TruffleArtifact): { abi: any; address: string } => {
   const deployed = json.networks[networkId];
   const address = deployed && deployed.address;
   return {
@@ -41,67 +39,70 @@ const getABIAndAddress = (networkId: number, json: TruffleArtifact) => {
   };
 };
 
-const nameFromAddress = (address: string): Promise<string> => {
-  const { ethereum } = window as any;
-  const web3 = new Web3(ethereum);
-  const lookup = address.toLowerCase().substr(2) + '.addr.reverse';
-  const hash = namehash.hash(lookup);
-  return web3.eth.net.getId()
-    .then((n) => getABIAndAddress(n, ENSRegistry as any))
-    .then(({abi, address}) => new web3.eth.Contract(abi, address))
-    .then((ens: Contract) => ens.methods.resolver(hash).call())
-    .then((resolverAddr: any) => {
-      return {
-        abi: (ENSResolver as any).abi,
-        addr: resolverAddr,
-      };
-    })
-    .then(({abi, addr}: any) => new web3.eth.Contract(abi, addr))
-    .then((resolver: any) => resolver.methods.name(hash).call())
-    .catch((err: any) => {
-      console.log(err);
-      return '';
-    });
-};
-
-const addressFromName = (name: string): Promise<string> => {
-  const { ethereum } = window as any;
-  const web3 = new Web3(ethereum);
-  const hash = namehash.hash(name);
-  return web3.eth.net.getId()
-    .then((n) => getABIAndAddress(n, ENSRegistry as any))
-    .then(({abi, address}) => new web3.eth.Contract(abi, address))
-    .then((ens: Contract) => ens.methods.resolver(hash).call())
-    .then((resolverAddr: any) => {
-      return {
-        abi: (ENSResolver as any).abi,
-        addr: resolverAddr,
-      };
-    })
-    .then(({abi, addr}: any) => new web3.eth.Contract(abi, addr))
-    .then((resolver: any) => resolver.methods.addr(hash).call())
-    .catch((err: any) => {
-      console.log(err);
-      return '';
-    });
-};
-
 export const NameServiceContext = React.createContext<NameService>({} as any);
 
 export const NameServiceProvider: React.FC = ({ children }) => {
   const [ens, setEns] = React.useState<Contract>();
 
+  const { ethereum } = window as any;
+  const web3 = new Web3(ethereum);
+
   React.useEffect(() => {
-    const { ethereum } = window as any;
-    const web3 = new Web3(ethereum);
     web3.eth.net.getId()
       .then((n) => getABIAndAddress(n, ENSRegistry as any))
-      .then(({abi, address}) => new web3.eth.Contract(abi, address))
-      .then((ens) => setEns(ens));
-  }, []);
+      .then(({ abi, address }) => new web3.eth.Contract(abi, address))
+      .then((ens) => setEns(ens))
+      .catch((err: any) => console.log(err));
+  }, [web3]);
+
+  const nameFromAddress = (address: string): Promise<string> => {
+    if (ens === undefined) {
+      return Promise.resolve('');
+    }
+
+    const lookup = address.toLowerCase().substr(2) + '.addr.reverse';
+    const hash = namehash.hash(lookup);
+    return ens.methods.resolver(hash).call()
+      .then((resolverAddr: string) => {
+        return {
+          abi: (ENSResolver as any).abi,
+          addr: resolverAddr,
+        };
+      })
+      .then(({ abi, addr }: any) => new web3.eth.Contract(abi, addr))
+      .then((resolver: Contract) => resolver.methods.name(hash).call())
+      .catch((err: any) => {
+        console.log(err);
+        return '';
+      });
+  };
+
+  const addressFromName = (name: string): Promise<string> => {
+    if (ens === undefined) {
+      return Promise.resolve('');
+    }
+
+    const hash = namehash.hash(name);
+    return ens.methods.resolver(hash).call()
+      .then((resolverAddr: string) => {
+        return {
+          abi: (ENSResolver as any).abi,
+          addr: resolverAddr,
+        };
+      })
+      .then(({ abi, addr }: any) => new web3.eth.Contract(abi, addr))
+      .then((resolver: Contract) => resolver.methods.addr(hash).call())
+      .catch((err: any) => {
+        console.log(err);
+        return '';
+      });
+  };
 
   return (
-    <NameServiceContext.Provider value={{ ens: ens!!, addressFromName: addressFromName, nameFromAddress: nameFromAddress}}>
+    <NameServiceContext.Provider value={{
+      addressFromName: addressFromName,
+      nameFromAddress: nameFromAddress,
+    }}>
       { children }
     </NameServiceContext.Provider>
   );

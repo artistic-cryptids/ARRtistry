@@ -7,7 +7,6 @@ import { ContractProps } from '../helper/eth';
 import { useNameServiceContext } from '../providers/NameServiceProvider';
 import ENSName from './common/ENSName';
 
-
 interface ConsignArtifactProps extends ContractProps {
   tokenId: number;
 }
@@ -44,15 +43,6 @@ const ConsignArtifact: React.FC<ConsignArtifactProps> = ({ tokenId, contracts, a
       .catch(console.log);
   }, [accounts, contracts, tokenId]);
 
-  const consignArtifactForArtwork = async (): Promise<void> => {
-    const recipientAddress = await addressFromName(fields.recipientName);
-    consign(recipientAddress);
-  }
-
-  const revokeConsignment = (_: React.FormEvent): void => {
-    consign(ZERO_ADDR);
-  }
-
   const consign = (address: string): void => {
     const artifactRegistry = contracts.ArtifactRegistry;
 
@@ -64,7 +54,16 @@ const ConsignArtifact: React.FC<ConsignArtifactProps> = ({ tokenId, contracts, a
         gasLimit: 6000000,
       },
     );
-  }
+  };
+
+  const consignArtifactForArtwork = async (): Promise<void> => {
+    const recipientAddress = await addressFromName(fields.recipientName);
+    consign(recipientAddress);
+  };
+
+  const revokeConsignment = (_: React.FormEvent): void => {
+    consign(ZERO_ADDR);
+  };
 
   const inputChangeHandler = (event: InputChangeEvent): void => {
     const key = event.target.id;
@@ -78,14 +77,14 @@ const ConsignArtifact: React.FC<ConsignArtifactProps> = ({ tokenId, contracts, a
 
   const handleShow = (): void => {
     setShowConsignment(true);
-  }
+  };
 
   const handleCancel = (): void => {
     setShowConsignment(false);
     setFields({
       recipientName: '',
-    })
-  }
+    });
+  };
 
   return (
     <>
@@ -98,7 +97,7 @@ const ConsignArtifact: React.FC<ConsignArtifactProps> = ({ tokenId, contracts, a
         </Modal.Header>
         <Modal.Body>
           {consignedAccount !== ZERO_ADDR
-            ? <React.Fragment><p>Consigned to <ENSName address={consignedAccount} contracts={contracts} accounts={accounts}/> <br/>
+            ? <React.Fragment><p>Consigned to <ENSName address={consignedAccount}/> <br/>
             You may still register a sale yourself, but doing so will revoke consignment.
             </p><hr/></React.Fragment>
             : null}

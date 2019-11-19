@@ -1,14 +1,13 @@
 import * as React from 'react';
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import Tooltip from 'react-bootstrap/Tooltip';
-import { ContractProps } from '../../helper/eth';
 import { useNameServiceContext } from '../../providers/NameServiceProvider';
 
-interface ENSNameProps extends ContractProps {
+interface ENSNameProps {
   address: string;
 }
 
-const ENSName: React.FC<ENSNameProps> = ({ address, contracts, accounts }) => {
+const ENSName: React.FC<ENSNameProps> = ({ address }) => {
   const [name, setName] = React.useState<string>('');
 
   const { nameFromAddress } = useNameServiceContext();
@@ -19,15 +18,15 @@ const ENSName: React.FC<ENSNameProps> = ({ address, contracts, accounts }) => {
         setName(name);
       })
       .catch((err: any) => console.log(err));
-  }, [address]);
+  }, [address, nameFromAddress]);
 
   return (
     <>
       {name === ''
         ? address
-        :  <OverlayTrigger placement='left' overlay={<Tooltip id="address">{address}</Tooltip>}>
-            <p>{name}</p>
-          </OverlayTrigger>}
+        : <OverlayTrigger placement='left' overlay={<Tooltip id="address">{address}</Tooltip>}>
+          <p>{name}</p>
+        </OverlayTrigger>}
     </>
   );
 };
