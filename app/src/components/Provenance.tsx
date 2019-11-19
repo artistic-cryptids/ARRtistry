@@ -125,10 +125,18 @@ const Provenance: React.FC<ProvenanceProps> = ({ metaUri, registry, tokenId }) =
   React.useEffect(() => {
     const options = { fromBlock: 0 };
 
-    registry.getPastEvents('Transfer', options).then(function (events: any[]) {
-        setEvents(events.filter(event => event.returnValues.tokenId === tokenId.toString()));
+    registry.getPastEvents('RecordSale', options).then(function (events: any[]) {
+        setEvents(events.filter(event => event.returnValues.tokenId === tokenId.toString())
+        .map((event) => {
+          return {
+            tokenId: event.returnValues.tokenId,
+            price: event.returnValues.price,
+            newOwner: event.returnValues.to,
+          };
+        },
+        ));
       }).catch(console.log);
-  }, [user.address, events]);
+  }, [user.address, events, registry, tokenId]);
 
   return (
     <>
