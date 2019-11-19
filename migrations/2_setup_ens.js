@@ -4,7 +4,6 @@ const ENSResolver = artifacts.require('ENSResolver');
 const ensHelper = require('./helper/ENSHelper');
 
 const namehash = require('eth-ens-namehash');
-const utils = require('web3-utils');
 
 const TLD = ensHelper.tld;
 const NAME = ensHelper.name;
@@ -42,12 +41,9 @@ async function localMigrate (deployer, network, accounts) {
 
   await ensHelper.deployLocalRegistrar(deployer, accounts[0], artifacts);
 
-  const ArrtistryRegistrar = artifacts.require('ArrtistryRegistrar');
-  const registrar = await ArrtistryRegistrar.deployed();
-
   await deployer.deploy(ENSResolver, ens.address);
   const resolver = await ENSResolver.deployed();
-  await setupResolver(ens, resolver, accounts[0]);
+  await ensHelper.setupResolver(ens, resolver, accounts[0], artifacts, network);
 
   await ensHelper.deployLocalReverseRegistrar(deployer, accounts[0], artifacts, resolver);
 
@@ -61,7 +57,8 @@ async function localMigrate (deployer, network, accounts) {
 
     const hash = namehash.hash(name);
 
-    await registrar.register(hash, account);
+    await ensHelper.registerName(label, account, artifacts, network);
+    await ens.setResolver(hash, resolver.address, { from: account });
     await resolver.setAddr(hash, account, { from: account });
 
     console.log('Reverse registering ' + name + ' to ' + account);
@@ -79,24 +76,5 @@ async function rinkebyDeploy (deployer, network) {
 
   await deployer.deploy(ENSResolver, ens.address);
   const resolver = await ENSResolver.deployed();
-  await setupResolver(ens, resolver, process.env.ACCOUNT_ADDRESS);
-}
-
-async function setupResolver (ens, resolver, moderator) {
-  const ArrtistryRegistrar = artifacts.require('ArrtistryRegistrar');
-  const registrar = await ArrtistryRegistrar.deployed();
-
-  const label = 'resolver';
-  const labelHash = utils.sha3(label);
-
-  const name = label + '.' + DOMAIN;
-  const hash = namehash.hash(name);
-
-  await registrar.register(labelHash, moderator);
-  await ens.setResolver(hash, resolver.address, { from: moderator });
-  await ens.setOwner(hash, resolver.address, { from: moderator });
-  await resolver.setAddr(hash, resolver.address);
-
-  console.log('Resolver address ' + resolver.address);
-  console.log(name + ' is registered to ' + await resolver.addr(hash));
+  await ensHelper.setupResolver(ens, resolver, process.env.ACCOUNT_ADDRESS, artifacts, network);
 }
