@@ -1,6 +1,5 @@
 import * as React from 'react';
 import Web3 from 'web3';
-import { Contract } from 'web3-eth-contract';
 import ENSRegistry from '../contracts/ENSRegistry.json';
 import ENSResolver from '../contracts/ENSResolver.json';
 import { AbiItem } from 'web3-utils';
@@ -42,7 +41,7 @@ const getABIAndAddress = (networkId: number, json: TruffleArtifact): { abi: any;
 export const NameServiceContext = React.createContext<NameService>({} as any);
 
 export const NameServiceProvider: React.FC = ({ children }) => {
-  const [ens, setEns] = React.useState<Contract>();
+  const [ens, setEns] = React.useState<any>();
 
   const { ethereum } = window as any;
   const web3 = new Web3(ethereum);
@@ -70,7 +69,7 @@ export const NameServiceProvider: React.FC = ({ children }) => {
         };
       })
       .then(({ abi, addr }: any) => new web3.eth.Contract(abi, addr))
-      .then((resolver: Contract) => resolver.methods.name(hash).call())
+      .then((resolver: any) => resolver.methods.name(hash).call())
       .catch((err: any) => {
         console.log(err);
         return '';
