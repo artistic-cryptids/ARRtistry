@@ -1,47 +1,51 @@
 const utils = require('web3-utils');
 const namehash = require('eth-ens-namehash');
 
-const NAME = 'artistic';
+const NAME = 'artistry';
 const TLD = 'test';
 
 const ENS_RINKEBY = '0xe7410170f87102df0055eb195163a03b7f2bff4a';
+const ARRTISTRY_REGISTRAR_RINKEBY = '0xE56Ee60A8096a0e65F04c253c46F07091245ed8e';
 
 const deployLocalRegistrar = async (deployer, moderator, artifacts) => {
   const ENS = artifacts.require('ENSRegistry');
-  const FIFSRegistrar = artifacts.require('FIFSRegistrar');
+  const ArrtistryRegistrar = artifacts.require('ArrtistryRegistrar');
 
   const ens = await ENS.deployed();
 
-  console.log('Deploying Registrar on ganache');
-  await deployer.deploy(FIFSRegistrar, ens.address, namehash.hash(TLD));
-  const registrar = await FIFSRegistrar.deployed();
+  await ens.setSubnodeOwner('0x0000000000000000000000000000000000000000', utils.sha3(TLD), moderator);
 
-  await ens.setSubnodeOwner('0x0000000000000000000000000000000000000000', utils.sha3(TLD), registrar.address);
-  await registrar.register(utils.sha3(NAME), moderator);
+  console.log('Deploying Registrar on ganache');
+  await deployer.deploy(ArrtistryRegistrar, ens.address, namehash.hash(NAME + '.' + TLD));
+  const registrar = await ArrtistryRegistrar.deployed();
+
+  await ens.setSubnodeOwner(namehash.hash(TLD), utils.sha3(NAME), registrar.address, { from: moderator });
 };
 
-const setupRegistrarRinkeby = async (artifacts, web3) => {
+const setupRegistrarRinkeby = async (deployer, artifacts, web3) => {
   const ENS = artifacts.require('ENSRegistry');
+  const ArrtistryRegistrar = artifacts.require('ArrtistryRegistrar');
   const RinkebyRegistrar = require('./RinkebyRegistrar');
 
   const ens = await ENS.at(ENS_RINKEBY);
   const registrarAddress = await ens.owner(namehash.hash('test'));
-  console.log('Finding FIFSRegistrar on rinkeby network ' + registrarAddress);
-  const registrar = await new web3.eth.Contract(RinkebyRegistrar, registrarAddress);
+  console.log('Finding RinkebyRegistrar on rinkeby network ' + registrarAddress);
+  const rinkebyRegistrar = await new web3.eth.Contract(RinkebyRegistrar, registrarAddress);
 
-  const time = await registrar.methods.expiryTimes(utils.sha3(NAME)).call();
+  const time = await rinkebyRegistrar.methods.expiryTimes(utils.sha3(NAME)).call();
+
+  console.log('Finding ArrtistryRegistrar on ganache');
+  const registrar = await ArrtistryRegistrar.at(ARRTISTRY_REGISTRAR_RINKEBY);
 
   console.log('Registrar registration expirytime is current set to ' + time);
 
-  if (new Date(time * 1000) > Date.now()) {
-    return;
+  if (new Date(time * 1000) <= Date.now()) {
+    await rinkebyRegistrar.methods.register(utils.sha3(NAME), registrar.address).send({
+      from: process.env.ACCOUNT_ADDRESS,
+    });
+
+    console.log('Registered');
   }
-
-  await registrar.methods.register(utils.sha3(NAME), process.env.ACCOUNT_ADDRESS).send({
-    from: process.env.ACCOUNT_ADDRESS,
-  });
-
-  console.log('Registered');
 };
 
 const getENS = async (artifacts, network) => {
@@ -107,6 +111,15 @@ const reverseRegister = async (account, name, artifacts, network) => {
   await reverseRegistrar.setName(name, { from: account });
 };
 
+const registerName = async (label, address, artifacts) => {
+  const ArrtistryRegistrar = artifacts.require('ArrtistryRegistrar');
+  const registrar = await ArrtistryRegistrar.deployed();
+
+  const labelHash = utils.sha3(label);
+
+  await registrar.register(labelHash, address);
+};
+
 module.exports = {
   getENS: getENS,
   deployLocalRegistrar: deployLocalRegistrar,
@@ -115,4 +128,5 @@ module.exports = {
   name: NAME,
   tld: TLD,
   reverseRegister: reverseRegister,
+  registerName: registerName,
 };

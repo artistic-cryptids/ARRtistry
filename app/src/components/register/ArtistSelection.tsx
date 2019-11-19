@@ -3,7 +3,6 @@ import React from 'react';
 import Form from 'react-bootstrap/Form';
 import Col from 'react-bootstrap/Col';
 import { useFormControlContext } from '../../providers/FormProvider';
-import { FormControlProps } from 'react-bootstrap/FormControl';
 
 const ArtistSelection: React.FC = () => {
   const { artists } = useArtistContext();
@@ -13,7 +12,7 @@ const ArtistSelection: React.FC = () => {
     return <option key={id} value={artist.id}>{artist.name}</option>;
   });
 
-  const onArtistChange = (event: React.FormEvent<HTMLSelectElement & FormControlProps>): void => {
+  const onArtistChange = (event: React.FormEvent<HTMLSelectElement & any>): void => {
     setField('artistId', event.currentTarget.value.toString());
   };
 

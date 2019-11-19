@@ -23,7 +23,7 @@ export const ArtistProvider: React.FC<{artistContract: any}> = ({ artistContract
       const total = await artistContract.getArtistsTotal();
       const artists = [];
 
-      for (let i = 1; i < total; i++) {
+      for (let i = 1; i <= total; i++) {
         const id = i;
         const hash: string = await artistContract.getArtist(id);
         const hashResponse = await fetch(hash);
