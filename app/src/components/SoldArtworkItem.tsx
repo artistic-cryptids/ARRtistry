@@ -48,7 +48,7 @@ class SoldArtworkItem extends React.Component<SoldArtworkItemProps, SoldArtworkI
       >
         <Form>
           <AddressField label='Sold to' address={this.props.soldTo} />
-          <PlaintextField label='Sold for' value={'&euro; ' + (this.props.soldFor / 100).toString()}/>
+          <PlaintextField label='Sold for' value={'€ ' + (this.props.soldFor / 100).toString()}/>
         </Form>
       </ArtworkInfo>
     );
