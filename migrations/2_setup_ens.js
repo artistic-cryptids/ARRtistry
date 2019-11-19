@@ -4,7 +4,6 @@ const ENSResolver = artifacts.require('ENSResolver');
 const ensHelper = require('./helper/ENSHelper');
 
 const namehash = require('eth-ens-namehash');
-const utils = require('web3-utils');
 
 const TLD = ensHelper.tld;
 const NAME = ensHelper.name;
@@ -41,9 +40,6 @@ async function localMigrate (deployer, network, accounts) {
   const ens = await ENS.deployed();
 
   await ensHelper.deployLocalRegistrar(deployer, accounts[0], artifacts);
-
-  const ArrtistryRegistrar = artifacts.require('ArrtistryRegistrar');
-  const registrar = await ArrtistryRegistrar.deployed();
 
   await deployer.deploy(ENSResolver, ens.address);
   const resolver = await ENSResolver.deployed();

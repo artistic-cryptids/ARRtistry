@@ -168,7 +168,7 @@ const setupResolver = async (ens, resolver, moderator, artifacts, network) => {
 
   console.log('Resolver address ' + resolver.address);
   console.log(name + ' is registered to ' + await resolver.addr(hash));
-}
+};
 
 module.exports = {
   getENS: getENS,
@@ -179,5 +179,5 @@ module.exports = {
   tld: TLD,
   reverseRegister: reverseRegister,
   registerName: registerName,
-  setupResolver: setupResolver
+  setupResolver: setupResolver,
 };
