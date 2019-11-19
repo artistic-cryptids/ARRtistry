@@ -14,12 +14,11 @@ const SoldArtworkList: React.FC<ContractProps> = ({ contracts, accounts }) => {
   const [soldList, setSoldList] = React.useState<SoldInformation[]>([]);
 
   const loadSales: VoidFunction = () => {
-    const governance = contracts.Governance;
+    const registry = contracts.ArtifactRegistry;
     const currentAccount = accounts[0];
-    const filter = { filter: { from: currentAccount } };
-    const options = { filter, fromBlock: 0 };
+    const options = { fromBlock: 0 };
 
-    governance.getPastEvents('RecordARR', options).then((events: any[]) => {
+    registry.getPastEvents('RecordSale', options).then((events: any[]) => {
       const soldMap = events.filter(event => event.returnValues.from === currentAccount)
         .map((event) => {
           return {
