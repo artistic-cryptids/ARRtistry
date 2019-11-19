@@ -21,6 +21,7 @@ import { useSessionContext } from '../providers/SessionProvider';
 interface ProvenanceProps {
   metaUri: string;
   registry: ArtifactRegistry;
+  tokenId: number;
 }
 
 interface ArtworkInfo {
@@ -116,19 +117,16 @@ const Timeline: React.FC<{records: SaleRecord[]}> =
   );
 };
 
-const Provenance: React.FC<ProvenanceProps> = ({ metaUri, registry }) => {
+const Provenance: React.FC<ProvenanceProps> = ({ metaUri, registry, tokenId }) => {
   const [show, setShow] = React.useState<boolean>(false);
   const [events, setEvents] = React.useState<any>({});
   const { user } = useSessionContext();
 
-  console.log(user);
-
   React.useEffect(() => {
-    const filter = { filter: { from: user.address, tokenId: '4' } };
-    const options = { filter, fromBlock: 0 };
+    const options = { fromBlock: 0 };
 
-    registry.getPastEvents('allEvents', options).then(function (events: any) {
-        setEvents(events);
+    registry.getPastEvents('Transfer', options).then(function (events: any[]) {
+        setEvents(events.filter(event => event.returnValues.tokenId === tokenId.toString()));
       }).catch(console.log);
   }, [user.address, events]);
 
