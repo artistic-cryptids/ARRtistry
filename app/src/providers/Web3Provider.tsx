@@ -1,38 +1,67 @@
 import * as React from 'react';
 import Web3 from 'web3';
-import ArtifactRegistry from '../contracts/ArtifactRegistry.json';
-import { ContractListType } from '../helper/eth';
+import Loading from '../components/common/Loading';
 
 interface Web3Interface {
   web3: Web3;
-  accounts: Array<string>;
-  contracts: ContractListType;
+  accounts: string[];
+  networkId: number;
 }
 
 interface Web3ProviderProps {
   networkId: number;
-  accounts: Array<string>;
+  accounts: string[];
 }
 
 const Web3Context = React.createContext<Web3Interface>({} as any);
 
-export const Web3Provider: React.FC<Web3ProviderProps> = ({ networkId, accounts, children }) => {
-  const web3 = new Web3(Web3.givenProvider || 'ws://127.0.0.1:8545');
+async function retrieveWeb3() {
+  const { ethereum } = window as any;
+  if (ethereum) {
+    try {
+      const web3 = new Web3(ethereum);
+      const selectedAccount = await ethereum.enable();
+      if (!selectedAccount) {
+        // User didn't give permission for dapp to access wallet
+        console.warn('User opted out')
+      } else {
+        // User allowed access
+        console.log('user gave access!')
+      }
+      return web3
+    } catch (error) {
+      // whoopsie!
+      console.error(error);
+    }
+  }
+}
 
-  const artifactRegistryContractAddress = (ArtifactRegistry.networks as any)[networkId.toString()].address;
-  const artifactRegistry = new web3.eth.Contract(ArtifactRegistry.abi, artifactRegistryContractAddress);
+export const Web3Provider: React.FC<Web3ProviderProps> = ({ children }) => {
+  const [web3, setWeb3] = React.useState<Web3>();
+  const [networkId, setNetworkId] = React.useState<number>();
+  const [accounts, setAccounts] = React.useState<string[]>([]);
 
-  // TODO: Update these to have the actual contracts when refactoring
-  const contracts = {
-    Governance: null,
-    ArtifactApplication: null,
-    ArtifactRegistry: artifactRegistry,
-    Artists: null,
-    Ens: null,
-  };
+  React.useEffect(() => {
+    async function setWeb3Properties() {
+      const foundWeb3 = (await retrieveWeb3())!;
+
+      setWeb3(foundWeb3);
+
+      foundWeb3.eth.net.getId()
+        .then((nId) => setNetworkId(nId));
+
+      foundWeb3.eth.getAccounts()
+        .then((accounts) => setAccounts(accounts));
+    }
+    setWeb3Properties();
+  }, []);
+
+  if (!web3 || !networkId) {
+    return <Loading/>;
+  }
 
   return (
-    <Web3Context.Provider value={{ web3: web3, accounts: accounts, contracts: contracts }}>
+    <Web3Context.Provider value={{ web3: web3!, networkId: networkId, accounts: accounts }}>
       { children }
     </Web3Context.Provider>
   );
