@@ -7,26 +7,25 @@ import {
   faEuroSign,
   faFingerprint,
 } from '@fortawesome/free-solid-svg-icons';
-
-import * as styles from './Timeline.module.scss';
+import { IconProp } from '@fortawesome/fontawesome-svg-core';
 import Form from 'react-bootstrap/Form';
 import Row from 'react-bootstrap/Row';
-import ENSName from './common/ENSName';
 import { Dictionary } from 'lodash';
-import { IconProp } from '@fortawesome/fontawesome-svg-core';
-import { ArtifactRegistry, ContractProps, ContractListType } from '../helper/eth';
+import * as moment from 'moment';
+import { EventData } from 'web3-eth-contract';
+
+import * as styles from './Timeline.module.scss';
+import * as Contracts from '../helper/contracts';
+import { ContractProps } from '../helper/eth';
 import { useSessionContext } from '../providers/SessionProvider';
 import ENSName from './common/ENSName';
+import { useWeb3Context } from '../providers/Web3Provider';
 
 
 interface ProvenanceProps extends ContractProps {
   metaUri: string;
-  registry: ArtifactRegistry;
+  registry: Contracts.ArtifactRegistry;
   tokenId: number;
-}
-
-interface ArtworkInfo {
-  saleProvenance: Array<SaleRecord>;
 }
 
 interface SaleRecord {
@@ -37,9 +36,12 @@ interface SaleRecord {
   date: string;
 }
 
-interface ProvenanceState {
-  showProvenance: boolean;
-  saleProvenance: Array<SaleRecord>;
+interface ProvenanceRecord {
+  type: string;
+  txDate: moment.Moment;
+
+  artist?: string;
+  sale?: SaleRecord;
 }
 
 interface BlockHeading {
@@ -58,6 +60,17 @@ const BLOCK_HEADINGS: Dictionary<BlockHeading> = {
   },
 };
 
+const PlaintextField: React.FC<{label: string; value: string}> = ({ label, value }) => {
+  return <Form.Group as={Form.Row}>
+    <Form.Label column sm="2">
+      {label}
+    </Form.Label>
+    <Col sm="10">
+      <Form.Control plaintext readOnly defaultValue={value} />
+    </Col>
+  </Form.Group>;
+};
+
 const AddressInfo: React.FC<{address: string; label: string}> =
 ({ address, label }) => {
   return <Form.Group as={Form.Row}>
@@ -65,26 +78,14 @@ const AddressInfo: React.FC<{address: string; label: string}> =
       {label}
     </Form.Label>
     <Col sm="10">
-      <ENSName address={address}/>
-    </Col>
-  </Form.Group>;
-};
-
-const AddressInfo: React.FC<{accounts: Array<string>; contracts: ContractListType; address: string; label: string}> =
-({ accounts, address, contracts, label }) => {
-  return <Form.Group as={Form.Row}>
-    <Form.Label column sm="2">
-      {label}
-    </Form.Label>
-    <Col sm="10">
-      <ENSName accounts={accounts} contracts={contracts} address={address}/>
+      <ENSName className='form-control-plaintext' address={address}/>
     </Col>
   </Form.Group>;
 };
 
 
-const TimelineBlock: React.FC<{type: string; accounts: Array<string>; contracts: ContractListType; record: SaleRecord}>
-= ({ type, children, accounts, contracts, record }) => {
+const TimelineBlock: React.FC<{type: string; subheader: string;}>
+= ({ type, children, subheader }) => {
   const { header, icon } = BLOCK_HEADINGS[type];
   return (
     <li className={styles.timelineBlock}>
@@ -94,22 +95,17 @@ const TimelineBlock: React.FC<{type: string; accounts: Array<string>; contracts:
       <div className={styles.timelineContent}>
         <Row>
           <Col sm='8'>
-            <h4 className="font-weight-bold">Sale</h4>
+            <h4 className="font-weight-bold">{header}</h4>
           </Col>
           <Col sm='4'>
             <p className={'text-muted ' + styles.date}>
-              {record.date}
+              {subheader}
             </p>
           </Col>
         </Row>
         <Row>
           <Col sm='12'>
-            <Form>
-              <AddressInfo label='Buyer' accounts={accounts} address={record.buyer} contracts={contracts}/>
-              <AddressInfo label='Seller' accounts={accounts} address={record.seller} contracts={contracts}/>
-              <PlaintextField label='Sale Location' value={record.location} />
-              <PlaintextField label='Sale Price' value={'€' + (record.price / 100).toString()} />
-            </Form>
+            {children}
           </Col>
         </Row>
       </div>
@@ -117,13 +113,29 @@ const TimelineBlock: React.FC<{type: string; accounts: Array<string>; contracts:
   );
 };
 
-const Timeline: React.FC<{records: SaleRecord[], contracts: ContractListType, accounts: string[]}> = ({ records, contracts, accounts }) => {
+const Timeline: React.FC<{records: ProvenanceRecord[], contracts: Contracts.ContractListType, accounts: string[]}> = ({ records, contracts, accounts }) => {
   return (
     <Col md='12'>
       <ul className={styles.timeline}>
-        {records.map((record: SaleRecord, index: number) =>
-          <TimelineBlock type={'sale'} accounts={accounts} contracts={contracts} record={record} key={index}>
-        </TimelineBlock>)}
+        {records.map((record: ProvenanceRecord, index: number) =>
+          <TimelineBlock type={record.type} subheader={record.txDate.fromNow()} key={index}>
+            {record.type === 'sale'
+            ? <Form>
+                <PlaintextField label='Date' value={record.sale!.date} />
+                <AddressInfo label='Buyer' address={record.sale!.buyer}/>
+                <AddressInfo label='Seller' address={record.sale!.seller}/>
+                <PlaintextField label='Sale Location' value={record.sale!.location} />
+                <PlaintextField label='Sale Price' value={'€' + (record.sale!.price / 100).toString()} />
+              </Form>
+            : null}
+            {record.type === 'mint'
+            ? <Form>
+                <AddressInfo label='Artist' address={record.artist!}/>
+              </Form>
+            : null}
+
+          </TimelineBlock>
+        )}
       </ul>
     </Col>
   );
@@ -132,25 +144,50 @@ const Timeline: React.FC<{records: SaleRecord[], contracts: ContractListType, ac
 const Provenance: React.FC<ProvenanceProps> = ({ metaUri, registry, tokenId, contracts, accounts }) => {
   const [show, setShow] = React.useState<boolean>(false);
   const [events, setEvents] = React.useState<any>({});
+  const { web3 } = useWeb3Context();
   const { user } = useSessionContext();
 
   React.useEffect(() => {
     const options = { fromBlock: 0 };
 
-    registry.getPastEvents('RecordSale', options).then(function (events: any[]) {
-        setEvents(events.filter(event => event.returnValues.tokenId === tokenId.toString())
-        .map((event) => {
+    const registration = registry.getPastEvents('Transfer', options)
+      .then((events: EventData[]) => events.filter(e => e.returnValues.tokenId === tokenId.toString())
+                                           .filter(e => e.returnValues.from === '0x0000000000000000000000000000000000000000')
+           )
+      .then((events: EventData[]) => events.map(async (event) => {
+          const timestamp = await web3.eth.getBlock(event.blockNumber).then((block) => block.timestamp);
           return {
-            seller: event.returnValues.from,
-            price: event.returnValues.price,
-            buyer: event.returnValues.to,
-            location: event.returnValues.location,
-            date: event.returnValues.date,
+            type: 'mint',
+            txDate: moment.unix(Number(timestamp)),
+            artist: event.returnValues.to,
           };
-        },
-        ));
-      }).catch(console.log);
-  }, [user.address, events, registry, tokenId]);
+        })
+      )
+      .then((records: ProvenanceRecord[]) => Promise.all(records));
+
+    const sales = registry.getPastEvents('RecordSale', options).then(async function (events: EventData[]) {
+      const tokenRelevantEvents = events.filter(event => event.returnValues.tokenId === tokenId.toString());
+      return await Promise.all(tokenRelevantEvents.map(async (event) => {
+          const timestamp = await web3.eth.getBlock(event.blockNumber).then((block) => block.timestamp);
+          return {
+            type: 'sale',
+            txDate: moment.unix(Number(timestamp)),
+            sale: {
+              seller: event.returnValues.from,
+              price: event.returnValues.price,
+              buyer: event.returnValues.to,
+              location: event.returnValues.location,
+              date: event.returnValues.date,
+            },
+          };
+        }
+      ));
+    });
+
+    Promise.all([registration, sales])
+      .then(([regs, sales]) => setEvents(regs.concat(sales)));
+
+  }, [user.address, registry, tokenId]);
 
   return (
     <>
@@ -166,7 +203,7 @@ const Provenance: React.FC<ProvenanceProps> = ({ metaUri, registry, tokenId, con
           <Modal.Title>Provenance</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <Timeline records={events}  contracts={contracts} accounts={accounts} />
+          <Timeline records={events} contracts={contracts} accounts={accounts} />
         </Modal.Body>
       </Modal>
     </>
