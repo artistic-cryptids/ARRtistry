@@ -1,5 +1,4 @@
 const namehash = require('eth-ens-namehash');
-const utils = require('web3-utils');
 
 const ensHelper = require('./ENSHelper');
 
@@ -12,14 +11,12 @@ module.exports = async function newLabel (label, owner, resolver, contract, netw
   const domain = NAME + '.' + TLD;
   const name = label + '.' + domain;
 
-  const domainHash = namehash.hash(domain);
-  const labelHash = utils.sha3(label);
   const hash = namehash.hash(name);
 
   const ens = await ensHelper.getENS(artifacts, network);
 
   console.log('Registering ownership of', name, '(' + hash + ') to', owner);
-  await ens.setSubnodeOwner(domainHash, labelHash, owner);
+  await ensHelper.registerName(label, owner, artifacts);
   console.log('Registered ownership of', name, '(' + hash + ') to', await ens.owner(hash));
 
   console.log('Registering resolver of', name, '(' + hash + ') to', resolver.address);
