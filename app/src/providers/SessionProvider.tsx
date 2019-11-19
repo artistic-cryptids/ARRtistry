@@ -70,7 +70,6 @@ export const SessionProvider: React.FC<SessionProviderProps> = ({ address, child
   const users = [DACS_DEFAULT, DEAL_DEFAULT, NATASHA, BUYER_DEFAULT];
 
   React.useEffect(() => {
-
     let curUser: User = defaultUser;
     for (const user of users) {
       if (user.address === address) {
