@@ -1,6 +1,7 @@
 const { expectRevert } = require('@openzeppelin/test-helpers');
 const { ARTIFACT, artifactEquality } = require('./constants/artifact');
 const { expect } = require('chai');
+const { toBN } = web3.utils;
 
 const { shouldBehaveLikeERC721 } = require('./behaviours/ERC721.behavior.js');
 const { shouldBehaveLikeERC721ApprovalEnumerable } = require('./behaviours/ERC721ApprovalEnumerable.behavior.js');
@@ -85,6 +86,22 @@ contract('ArtifactRegistry', async accounts => {
       const result = await registry.getArtifactForToken(TOKEN_ID);
 
       expect(result[1]).to.be.equal('new metaUri');
+    });
+  });
+
+  describe('getTokenIdsOfOwner', async () => {
+    const accountStartingWithNoTokens = accounts[2];
+
+    it('should retrieve no token ids if no artifacts minted', async () => {
+      const tokenIds = await registry.getTokenIdsOfOwner(accountStartingWithNoTokens);
+      expect(tokenIds).to.eql([]);
+    });
+
+    it('should retrieve correct token ids of minted artifacts', async () => {
+      await registry.mint(accountStartingWithNoTokens, ARTIFACT, { from: creator });
+      await registry.mint(accountStartingWithNoTokens, ARTIFACT, { from: creator });
+      const tokenIds = await registry.getTokenIdsOfOwner(accountStartingWithNoTokens);
+      expect(tokenIds).to.eql([toBN(4), toBN(5)]);
     });
   });
 }); // end Registry contract

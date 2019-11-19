@@ -17,6 +17,7 @@ const contract = require('@truffle/contract');
 
 const doDapp = async (): Promise<void> => {
   const web3 = new Web3(Web3.givenProvider || 'ws://127.0.0.1:8545');
+  const networkId = await web3.eth.net.getId();
   const provider = web3.currentProvider;
   const governanceNonDeployed = contract(Governance);
   const artifactApplicationNonDeployed = contract(ArtifactApplication);
@@ -43,7 +44,7 @@ const doDapp = async (): Promise<void> => {
   console.log(accounts[0]);
 
   ReactDOM.render(
-    <App web3={web3} contracts={contracts} accounts={accounts}/>,
+    <App web3={web3} networkId={networkId} contracts={contracts} accounts={accounts}/>,
     document.getElementById('root'),
   );
 };
