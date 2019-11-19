@@ -51,7 +51,7 @@ export const NameServiceProvider: React.FC = ({ children }) => {
     web3.eth.net.getId()
       .then((n) => getABIAndAddress(n, ENSRegistry as any))
       .then(({ abi, address }) => new web3.eth.Contract(abi, address))
-      .then((ens) => setEns(ens))
+      .then((ens: Contract) => setEns(ens))
       .catch((err: any) => console.log(err));
   }, [web3]);
 
