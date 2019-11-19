@@ -4,6 +4,7 @@ import { ContractProps } from '../helper/eth';
 
 import Web3 from 'web3';
 import { SessionProvider } from '../providers/SessionProvider';
+import { NameServiceProvider } from '../providers/NameServiceProvider';
 import Router from './Router';
 
 export interface AppProps extends ContractProps {
@@ -12,9 +13,11 @@ export interface AppProps extends ContractProps {
 
 const App: React.FC<AppProps> = (props) => {
   return (
-    <SessionProvider address={props.accounts[0]} contracts={props.contracts}>
-      <Router {...props}/>
-    </SessionProvider>
+    <NameServiceProvider>
+      <SessionProvider address={props.accounts[0]} contracts={props.contracts}>
+        <Router {...props}/>
+      </SessionProvider>
+    </NameServiceProvider>
   );
 };
 
