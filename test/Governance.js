@@ -189,8 +189,6 @@ contract('Governance', async accounts => {
       let to;
       let tokenId;
       let price;
-      const location = 'location';
-      const date = '2019-11-11';
 
       beforeEach(async () => {
         from = await MockTarget.new();
@@ -203,15 +201,6 @@ contract('Governance', async accounts => {
       it('should return zero length for no ARRs', async () => {
         const arrLen = await governance.getARRLength();
         expect(arrLen).to.eql(toBN(0));
-      });
-
-      it('should be able to record ARRs', async () => {
-        await governance.recordARR(from.address, to.address, tokenId, price, location, date);
-        await governance.recordARR(from.address, to.address, tokenId, price, location, date);
-        await governance.recordARR(from.address, to.address, tokenId, price, location, date);
-
-        const arrLen = await governance.getARRLength();
-        expect(arrLen).to.eql(toBN(3));
       });
     });
   });
