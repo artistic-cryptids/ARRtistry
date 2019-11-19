@@ -98,7 +98,7 @@ const ArtworkCard: React.FC<ArtworkCardProps> = ({
           ? <div className="text-center">
               <ButtonGroup>
                 {fields && <DocumentsModal documents={fields.documents}/>}
-                {metaUri && <ProvenanceModal metaUri={metaUri} />}
+                {id && <ProvenanceModal tokenId={id} />}
               </ButtonGroup>
             </div>
           : <Card.Text>
@@ -109,7 +109,7 @@ const ArtworkCard: React.FC<ArtworkCardProps> = ({
                   <Documents documents={fields.documents}/>
                 </>
               }
-              {metaUri &&
+              {id &&
                 <>
                   <h5>Provenance</h5>
                   <hr/>
