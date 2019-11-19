@@ -16,7 +16,7 @@ module.exports = async function newLabel (label, owner, resolver, contract, netw
   const ens = await ensHelper.getENS(artifacts, network);
 
   console.log('Registering ownership of', name, '(' + hash + ') to', owner);
-  await ensHelper.registerName(label, owner, artifacts);
+  await ensHelper.registerName(label, owner, artifacts, network);
   console.log('Registered ownership of', name, '(' + hash + ') to', await ens.owner(hash));
 
   console.log('Registering resolver of', name, '(' + hash + ') to', resolver.address);

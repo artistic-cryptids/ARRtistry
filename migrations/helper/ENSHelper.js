@@ -3,6 +3,7 @@ const namehash = require('eth-ens-namehash');
 
 const NAME = 'artistry';
 const TLD = 'test';
+const DOMAIN = NAME + '.' + TLD;
 
 const ENS_RINKEBY = '0xe7410170f87102df0055eb195163a03b7f2bff4a';
 const ARRTISTRY_REGISTRAR_RINKEBY = '0xE56Ee60A8096a0e65F04c253c46F07091245ed8e';
@@ -111,13 +112,62 @@ const reverseRegister = async (account, name, artifacts, network) => {
   await reverseRegistrar.setName(name, { from: account });
 };
 
-const registerName = async (label, address, artifacts) => {
+const registerName = async (label, address, artifacts, network) => {
   const ArrtistryRegistrar = artifacts.require('ArrtistryRegistrar');
-  const registrar = await ArrtistryRegistrar.deployed();
+  let registrar;
+
+  switch (network) {
+  case 'development':
+  case 'test':
+  case 'soliditycoverage':
+  case 'ganache':
+    registrar = await ArrtistryRegistrar.deployed();
+    break;
+  case 'rinkeby':
+  case 'rinkeby-fork':
+    registrar = await ArrtistryRegistrar.at(ARRTISTRY_REGISTRAR_RINKEBY);
+    break;
+  default:
+    throw new Error('No ArrtistryRegistrar selected for this network');
+  }
 
   const labelHash = utils.sha3(label);
 
   await registrar.register(labelHash, address);
+};
+
+const setupResolver = async (ens, resolver, moderator, artifacts, network) => {
+  const ArrtistryRegistrar = artifacts.require('ArrtistryRegistrar');
+  let registrar;
+
+  switch (network) {
+  case 'development':
+  case 'test':
+  case 'soliditycoverage':
+  case 'ganache':
+    registrar = await ArrtistryRegistrar.deployed();
+    break;
+  case 'rinkeby':
+  case 'rinkeby-fork':
+    registrar = await ArrtistryRegistrar.at(ARRTISTRY_REGISTRAR_RINKEBY);
+    break;
+  default:
+    throw new Error('No ArrtistryRegistrar selected for this network');
+  }
+
+  const label = 'resolver';
+  const labelHash = utils.sha3(label);
+
+  const name = label + '.' + DOMAIN;
+  const hash = namehash.hash(name);
+
+  await registrar.register(labelHash, moderator);
+  await ens.setResolver(hash, resolver.address, { from: moderator });
+  await ens.setOwner(hash, resolver.address, { from: moderator });
+  await resolver.setAddr(hash, resolver.address);
+
+  console.log('Resolver address ' + resolver.address);
+  console.log(name + ' is registered to ' + await resolver.addr(hash));
 };
 
 module.exports = {
@@ -129,4 +179,5 @@ module.exports = {
   tld: TLD,
   reverseRegister: reverseRegister,
   registerName: registerName,
+  setupResolver: setupResolver,
 };
