@@ -6,7 +6,7 @@ import Modal from 'react-bootstrap/Modal';
 import ipfs from '../helper/ipfs';
 import TransactionLoadingModal from './common/TransactionLoadingModal';
 import { ContractProps } from '../helper/eth';
-import { addressFromName } from '../helper/ensResolver';
+import { useNameServiceContext } from '../providers/NameServiceProvider';
 
 interface TransferArtifactProps extends ContractProps {
   tokenId: number;
@@ -70,32 +70,29 @@ const LOCATIONS = [
   'United Kingdom',
 ];
 
-class TransferArtifact extends React.Component<TransferArtifactProps, TransferArtifactState> {
-  constructor (props: TransferArtifactProps) {
-    super(props);
-    this.state = {
-      fields: {
-        recipientName: '',
-        price: '',
-        location: LOCATIONS[0],
-        date: '',
-      },
-      showTransferForm: false,
-      submitted: false,
-    };
-  }
+const TransferArtifact: React.FC<TransferArtifactProps> = ({ tokenId, metaUri, contracts, accounts }) => {
+  const [fields, setFields] = React.useState<TransferArtifactFormFields>({
+    recipientName: '',
+    price: '',
+    location: LOCATIONS[0],
+    date: '',
+  });
+  const [showTransferForm, setShowTransferForm] = React.useState<boolean>(false);
+  const [submitted, setSubmitted] = React.useState<boolean>(false);
 
-  saveMetaData = (jsonData: string): Promise<string> => {
+  const { addressFromName } = useNameServiceContext();
+
+  const saveMetaData = (jsonData: string): Promise<string> => {
     const jsonDataBuffer = Buffer.from(JSON.stringify(jsonData));
     const files = Array(jsonDataBuffer);
 
     return ipfs.add([...files], { progress: (prog: any) => console.log(`received: ${prog}`) })
       .then((response: any) => 'https://ipfs.io/ipfs/' + response[0].hash);
-  }
+  };
 
-  addProvenance = (price: string, buyers: string[],
+  const addProvenance = (price: string, buyers: string[],
     seller: string, location: string, date: string): Promise<string> => {
-    return fetch(this.props.metaUri)
+    return fetch(metaUri)
       .then((response: any) => response.json())
       .then((jsonData: any) => {
         jsonData.previousSalePrice = price;
@@ -107,143 +104,138 @@ class TransferArtifact extends React.Component<TransferArtifactProps, TransferAr
           date: date,
         });
 
-        return this.saveMetaData(jsonData);
+        return saveMetaData(jsonData);
       });
   };
 
-  transferArtwork = async (_: React.FormEvent): Promise<void> => {
-    const artifactRegistry = this.props.contracts.ArtifactRegistry;
+  const transferArtwork = async (_: React.FormEvent): Promise<void> => {
+    const artifactRegistry = contracts.ArtifactRegistry;
     let owner = '';
-    this.setState({
-      submitted: true,
-    });
+    setSubmitted(true);
 
-    const recipientAddress = await addressFromName({}, this.state.fields.recipientName);
-    const address = await artifactRegistry.ownerOf(this.props.tokenId);
+    const recipientAddress = await addressFromName(fields.recipientName);
+    const address = await artifactRegistry.ownerOf(tokenId);
     owner = address;
-    const provenanceHash = await this.addProvenance(
-      this.state.fields.price,
+    const provenanceHash = await addProvenance(
+      fields.price,
       [recipientAddress],
       owner,
-      this.state.fields.location,
-      this.state.fields.date,
+      fields.location,
+      fields.date,
     );
 
     artifactRegistry.transfer(
       owner,
       recipientAddress,
-      this.props.tokenId,
+      tokenId,
       provenanceHash,
-      (parseFloat(this.state.fields.price) * 100).toString(),
-      this.state.fields.location,
-      this.state.fields.date,
+      (parseFloat(fields.price) * 100).toString(),
+      fields.location,
+      fields.date,
       {
-        from: this.props.accounts[0],
+        from: accounts[0],
         gasLimit: 6000000,
       },
     ).then(() => {
-      this.setState({ submitted: false });
+      setSubmitted(false);
     }).catch((err: any) => {
       // rejection, usually
       console.log(err);
-      this.setState({ submitted: false });
+      setSubmitted(false);
     });
-  }
+  };
 
-  inputChangeHandler = (event: InputChangeEvent): void => {
+  const inputChangeHandler = (event: InputChangeEvent): void => {
     const key = event.target.id;
     const val = event.target.value;
     const stateUpdate = {
-      fields: this.state.fields as Pick<TransferArtifactFormFields, keyof TransferArtifactFormFields>,
+      fields: fields as Pick<TransferArtifactFormFields, keyof TransferArtifactFormFields>,
     };
     stateUpdate.fields[key] = val;
-    this.setState(stateUpdate);
+    setFields(stateUpdate.fields);
   };
 
-  handleShow = (): void => {
-    this.setState({
-      showTransferForm: true,
-    });
-  }
+  const handleShow = (): void => {
+    setShowTransferForm(true);
+  };
 
-  handleCancel = (): void => {
-    this.setState({
-      fields: {
-        recipientName: '',
-        price: '',
-        location: LOCATIONS[0],
-        date: '',
-      },
-      showTransferForm: false,
+  const handleCancel = (): void => {
+    setFields({
+      recipientName: '',
+      price: '',
+      location: LOCATIONS[0],
+      date: '',
     });
-  }
+    setShowTransferForm(false);
+  };
 
-  render (): React.ReactNode {
-    const locationOptions = LOCATIONS.map((location, index) =>
+  const locationOptions = (): JSX.Element[] => {
+    return LOCATIONS.map((location, index) =>
       <option key={index}>{location}</option>,
     );
-    return (
-      <>
-        <Button variant="primary" onClick={this.handleShow}>
-          Register Sale
-        </Button>
-        <Modal show={this.state.showTransferForm} onHide={this.handleCancel}>
-          <Modal.Header closeButton>
-            <Modal.Title>Register Sale of Artifact</Modal.Title>
-          </Modal.Header>
-          <Modal.Body>
-            <Form.Group as={Col} controlId="recipientName">
-              <Form.Label>Recipient Name</Form.Label>
-              <Form.Control
-                required
-                type="text"
-                onChange={this.inputChangeHandler}/>
-              {GENERIC_FEEDBACK}
-            </Form.Group>
-            <Form.Group as={Col} controlId="price">
-              <Form.Label>Price (Euros)</Form.Label>
-              <Form.Control
-                required
-                type="text"
-                onChange={this.inputChangeHandler}/>
-              {GENERIC_FEEDBACK}
-            </Form.Group>
-            <Form.Group as={Col} controlId="location">
-              <Form.Label>Sale Location</Form.Label>
-              <Form.Label className="mb-2 text-muted">If you do not see your sale location listed below it
-                might be the case the artist is not eligible for ARR</Form.Label>
-              <Form.Control
-                required
-                as="select"
-                onChange={this.inputChangeHandler}>
-                {locationOptions}
-              </Form.Control>
-            </Form.Group>
-            <Form.Group as={Col} controlId="date">
-              <Form.Label>Date (YYYY-MM-DD)</Form.Label>
-              <Form.Control
-                required
-                type="text"
-                onChange={this.inputChangeHandler}/>
-              {GENERIC_FEEDBACK}
-            </Form.Group>
-          </Modal.Body>
-          <Modal.Footer>
-            <Button variant="secondary" onClick={this.handleCancel}>
-              Cancel
-            </Button>
-            <Button variant="primary" onClick={this.transferArtwork}>
-              Register Sale
-            </Button>
-          </Modal.Footer>
-        </Modal>
-        <TransactionLoadingModal
-          submitted={this.state.submitted}
-          title="Registering sale..."
-        />
-      </>
-    );
-  }
-}
+  };
+
+  return (
+    <>
+      <Button variant="primary" onClick={handleShow}>
+        Register Sale
+      </Button>
+      <Modal show={showTransferForm} onHide={handleCancel}>
+        <Modal.Header closeButton>
+          <Modal.Title>Register Sale of Artifact</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <Form.Group as={Col} controlId="recipientName">
+            <Form.Label>Recipient Name</Form.Label>
+            <Form.Control
+              required
+              type="text"
+              onChange={inputChangeHandler}/>
+            {GENERIC_FEEDBACK}
+          </Form.Group>
+          <Form.Group as={Col} controlId="price">
+            <Form.Label>Price (Euros)</Form.Label>
+            <Form.Control
+              required
+              type="text"
+              onChange={inputChangeHandler}/>
+            {GENERIC_FEEDBACK}
+          </Form.Group>
+          <Form.Group as={Col} controlId="location">
+            <Form.Label>Sale Location</Form.Label>
+            <Form.Label className="mb-2 text-muted">If you do not see your sale location listed below it
+              might be the case the artist is not eligible for ARR</Form.Label>
+            <Form.Control
+              required
+              as="select"
+              onChange={inputChangeHandler}>
+              {locationOptions()}
+            </Form.Control>
+          </Form.Group>
+          <Form.Group as={Col} controlId="date">
+            <Form.Label>Date (YYYY-MM-DD)</Form.Label>
+            <Form.Control
+              required
+              type="text"
+              onChange={inputChangeHandler}/>
+            {GENERIC_FEEDBACK}
+          </Form.Group>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={handleCancel}>
+            Cancel
+          </Button>
+          <Button variant="primary" onClick={transferArtwork}>
+            Register Sale
+          </Button>
+        </Modal.Footer>
+      </Modal>
+      <TransactionLoadingModal
+        submitted={submitted}
+        title="Registering sale..."
+      />
+    </>
+  );
+};
 
 export default TransferArtifact;

@@ -34,7 +34,7 @@ const ConsignArtifact: React.FC<ConsignArtifactProps> = ({ tokenId, contracts, a
   const [consignedAccount, setConsignedAccount] = React.useState<string>('');
   const [showConsignment, setShowConsignment] = React.useState<boolean>(false);
 
-  const { nameFromAddress, addressFromName } = useNameServiceContext();
+  const { addressFromName } = useNameServiceContext();
 
   React.useEffect(() => {
     const artifactRegistry = contracts.ArtifactRegistry;
