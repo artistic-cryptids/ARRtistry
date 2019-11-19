@@ -36,10 +36,12 @@ contract('ArrtistryRegistrar', async accounts => {
   });
 
   describe('setRootNode', async () => {
+    const rootNode = 'artistry.test';
     let instance;
 
     beforeEach(async () => {
       instance = await Contract.deployed();
+      instance.setRootNode(namehash.hash(rootNode)),
     });
 
     it('Can reset the rootnode', async () => {
