@@ -14,8 +14,6 @@ contract Governance is IGovernance, Moderated {
   event Reject(uint indexed proposalId);
   event Execute(uint indexed proposalId);
 
-  event RecordARR(uint indexed arrID, address indexed from, address indexed to, uint256 tokenId, uint price, string location, string date);
-
   Proposal[] public proposals;
   ARR[] public arrs;
 
@@ -111,23 +109,9 @@ contract Governance is IGovernance, Moderated {
     return pending;
   }
 
-  function recordARR(address from, address to, uint256 tokenId, uint price, string memory location, string memory date) public returns (uint) {
-    uint arrId = arrs.length;
-
-    // Create a new ARR
-    ARR memory arr;
-    arr.from = from;
-    arr.to = to;
-    arr.tokenId = tokenId;
-    arr.price = price;
-    arr.location = location;
-    arr.date = date;
-
+  function pushARR(ARR memory arr) public returns (uint256) {
     arrs.push(arr);
-
-    emit RecordARR(arrId, from, to, tokenId, price, location, date);
-
-    return arrId;
+    return arrs.length - 1;
   }
 
   function getARRLength() public view returns (uint) {
