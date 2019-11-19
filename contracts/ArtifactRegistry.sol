@@ -55,4 +55,15 @@ contract ArtifactRegistry is IArtifactRegistry, Ownable, ERC721Full, ERC721Appro
 
     governance.recordARR(who, recipient, tokenId, price, location, date);
   }
+
+  function getTokenIdsOfOwner(address owner) public view returns (uint[] memory) {
+    uint balance = balanceOf(owner);
+    uint[] memory tokenIds = new uint[](balance);
+
+    for (uint i = 0; i < balance; i++) {
+      tokenIds[i] = tokenOfOwnerByIndex(owner, i);
+    }
+
+    return tokenIds;
+  }
 }

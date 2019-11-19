@@ -4,10 +4,11 @@ const ENSResolver = artifacts.require('ENSResolver');
 const ensHelper = require('./helper/ENSHelper');
 
 const namehash = require('eth-ens-namehash');
-const utils = require('web3-utils');
 
 const TLD = ensHelper.tld;
 const NAME = ensHelper.name;
+
+const DOMAIN = NAME + '.' + TLD;
 
 // const ENS_MAINNET = 0x314159265dd8dbb310642f98f50c066173c1259b;
 // const ENS_ROPSTEN = 0x112234455c3a32fd11230c42e7bccd4a84e02010;
@@ -42,25 +43,21 @@ async function localMigrate (deployer, network, accounts) {
 
   await deployer.deploy(ENSResolver, ens.address);
   const resolver = await ENSResolver.deployed();
-  await setupResolver(ens, resolver, accounts);
+  await ensHelper.setupResolver(ens, resolver, accounts[0], artifacts, network);
 
   await ensHelper.deployLocalReverseRegistrar(deployer, accounts[0], artifacts, resolver);
 
   // For local net prepopulate with some records
-  const domain = NAME + '.' + TLD;
-  const domainHash = namehash.hash(domain);
-
   for (let i = 0; i < accounts.length; i++) {
     const account = accounts[i];
 
     const label = 'account' + i;
-    const name = label + '.' + domain;
+    const name = label + '.' + DOMAIN;
     console.log('Registering ' + account + ' to ' + name);
 
-    const labelHash = utils.sha3(label);
     const hash = namehash.hash(name);
 
-    await ens.setSubnodeOwner(domainHash, labelHash, account);
+    await ensHelper.registerName(label, account, artifacts, network);
     await ens.setResolver(hash, resolver.address, { from: account });
     await resolver.setAddr(hash, account, { from: account });
 
@@ -75,19 +72,9 @@ async function rinkebyDeploy (deployer, network) {
   console.log('Finding ENS contract on rinkeby network ' + ENS_RINKEBY);
   const ens = await ENS.at(ENS_RINKEBY);
 
-  await ensHelper.setupRegistrarRinkeby(artifacts, web3);
+  await ensHelper.setupRegistrarRinkeby(deployer, artifacts, web3);
 
   await deployer.deploy(ENSResolver, ens.address);
   const resolver = await ENSResolver.deployed();
-  await setupResolver(ens, resolver, [process.env.ACCOUNT_ADDRESS]);
-}
-
-async function setupResolver (ens, resolver) {
-  const resolverNode = namehash.hash(NAME + '.' + TLD);
-
-  await ens.setResolver(resolverNode, resolver.address);
-  await resolver.setAddr(resolverNode, resolver.address);
-
-  console.log(resolver.address);
-  console.log(await resolver.addr(namehash.hash(NAME + '.' + TLD)));
+  await ensHelper.setupResolver(ens, resolver, process.env.ACCOUNT_ADDRESS, artifacts, network);
 }
