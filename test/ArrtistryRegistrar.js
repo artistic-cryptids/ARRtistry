@@ -41,7 +41,7 @@ contract('ArrtistryRegistrar', async accounts => {
 
     beforeEach(async () => {
       instance = await Contract.deployed();
-      instance.setRootNode(namehash.hash(rootNode)),
+      await instance.setRootNode(namehash.hash(rootNode));
     });
 
     it('Can reset the rootnode', async () => {
