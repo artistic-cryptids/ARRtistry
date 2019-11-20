@@ -50,7 +50,7 @@ export const NameServiceProvider: React.FC = ({ children }) => {
     web3.eth.net.getId()
       .then((n) => getABIAndAddress(n, ENSRegistry as any))
       .then(({ abi, address }) => new web3.eth.Contract(abi, address))
-      .then((ens: Contract) => setEns(ens))
+      .then((ens: any) => setEns(ens))
       .catch((err: any) => console.log(err));
   }, [web3]);
 
@@ -69,7 +69,7 @@ export const NameServiceProvider: React.FC = ({ children }) => {
         };
       })
       .then(({ abi, addr }: any) => new web3.eth.Contract(abi, addr))
-      .then((resolver: any) => resolver.methods.name(hash).call())
+      .then((resolver: Contract) => resolver.methods.name(hash).call())
       .catch((err: any) => {
         console.log(err);
         return '';
