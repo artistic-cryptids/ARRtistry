@@ -54,16 +54,8 @@ class ARRItem extends React.Component<ARRItemProps, ARRItemState> {
           <Card.Subtitle className="mb-2 text-muted"></Card.Subtitle>
           <Card.Text>
             Piece: {arr.tokenId} <br />
-            From: <ENSName
-              address={arr.from}
-              contracts={this.props.contracts}
-              accounts={this.props.accounts}
-            /> <br />
-            To: <ENSName
-              address={arr.to}
-              contracts={this.props.contracts}
-              accounts={this.props.accounts}
-            /> <br />
+            From: <ENSName address={arr.from}/> <br />
+            To: <ENSName address={arr.to}/> <br />
             Price: &euro;{arr.price} <br />
             ARR: &euro;{arr.arr} <br />
             Location: {arr.location} <br />

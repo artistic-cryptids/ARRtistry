@@ -46,11 +46,7 @@ class SoldArtworkItem extends React.Component<SoldArtworkItemProps, SoldArtworkI
         <Row>
           <Col>
             <span className="text-muted text-capitalize">Sold To:</span>
-            <ENSName
-              address={this.props.soldTo}
-              contracts={this.props.contracts}
-              accounts={this.props.accounts}
-            />
+            <ENSName address={this.props.soldTo}/>
           </Col>
           <Col>
             <span className="text-muted text-capitalize">Sold For: &euro;</span>
