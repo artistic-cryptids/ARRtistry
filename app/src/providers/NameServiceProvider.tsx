@@ -34,7 +34,7 @@ const getABIAndAddress = (networkId: number, json: TruffleArtifact): { abi: any;
   const address = deployed && deployed.address;
   return {
     abi: json.abi,
-    address: address || '0x0000000000000000000000000000000000000000',
+    address: address || '0xe7410170f87102df0055eb195163a03b7f2bff4a',
   };
 };
 
