@@ -69,7 +69,7 @@ export const NameServiceProvider: React.FC = ({ children }) => {
         };
       })
       .then(({ abi, addr }: any) => new web3.eth.Contract(abi, addr))
-      .then((resolver: Contract) => resolver.methods.name(hash).call())
+      .then((resolver: any) => resolver.methods.name(hash).call())
       .catch((err: any) => {
         console.log(err);
         return '';
@@ -90,7 +90,7 @@ export const NameServiceProvider: React.FC = ({ children }) => {
         };
       })
       .then(({ abi, addr }: any) => new web3.eth.Contract(abi, addr))
-      .then((resolver: Contract) => resolver.methods.addr(hash).call())
+      .then((resolver: any) => resolver.methods.addr(hash).call())
       .catch((err: any) => {
         console.log(err);
         return '';
