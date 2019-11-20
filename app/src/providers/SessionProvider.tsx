@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { ContractListType } from '../helper/eth';
-import { nameFromAddress } from '../helper/ensResolver';
+import { useNameServiceContext } from './NameServiceProvider';
 
 const DEFAULT_USER = {
   nickname: '',
@@ -49,6 +49,9 @@ interface SessionProviderProps {
 export const SessionContext = React.createContext<Session>({} as any);
 
 export const SessionProvider: React.FC<SessionProviderProps> = ({ address, contracts, children }) => {
+  const context = useNameServiceContext();
+  console.log(context);
+
   const defaultUser = DEFAULT_USER;
   const [user, setUser] = React.useState<User>(defaultUser);
 
@@ -59,7 +62,7 @@ export const SessionProvider: React.FC<SessionProviderProps> = ({ address, contr
         newUser = DEAL_DEFAULT;
       }
       newUser.address = address;
-      return nameFromAddress({}, address);
+      return context.nameFromAddress(address);
     })
     .then((name: string) => {
       newUser.name = name;
