@@ -171,7 +171,7 @@ const Provenance: React.FC<ProvenanceProps> = ({ registry, tokenId }) => {
     });
 
     Promise.all([registration, sales])
-      .then(([regs, sales]) => seIs it worth extracting this out into a common component?tEvents(regs.concat(sales)))
+      .then(([regs, sales]) => setEvents(regs.concat(sales)))
       .catch(console.warn);
   }, [user.address, web3.eth, registry, tokenId]);
 
