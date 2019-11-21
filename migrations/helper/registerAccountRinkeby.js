@@ -14,12 +14,12 @@ const ReverseAddr = '0xBbe3fD189D18C8b73BA54e9dD01F89E6b3Ee71f0';
 const register = async (web3) => {
   const name = process.env.ENS_NAME;
   const domain = 'artistry.test';
-  const full = name + '.' + domain;
+  const username = name + '.' + domain;
 
   console.log("Registering " + name + " with account " + process.env.ACCOUNT_ADDRESS + " with private " + process.env.PRIVATE_KEY);
 
   const label = utils.sha3(name);
-  const hash = namehash.hash(full);
+  const hash = namehash.hash(username);
 
   const ens = await new web3.eth.Contract(ENS.abi, ENSAddr);
   const resolver = await new web3.eth.Contract(Resolver.abi, ResolverAddr);
@@ -46,7 +46,7 @@ const register = async (web3) => {
   console.log("Setting resolver...");
   await ens.methods.setResolver(node, ResolverAddr).send(sendInfo);
   console.log("Setting up resolver...");
-  await resolver.methods.setName(node, full).send(sendInfo);
+  await resolver.methods.setName(node, username).send(sendInfo);
   console.log("All done!!!");
 };
 
