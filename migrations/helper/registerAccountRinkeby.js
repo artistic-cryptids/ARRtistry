@@ -16,8 +16,6 @@ const register = async (web3) => {
   const domain = 'artistry.test';
   const username = name + '.' + domain;
 
-  console.log("Registering " + name + " with account " + process.env.ACCOUNT_ADDRESS + " with private " + process.env.PRIVATE_KEY);
-
   const label = utils.sha3(name);
   const hash = namehash.hash(username);
 
@@ -32,22 +30,22 @@ const register = async (web3) => {
   };
 
   // Forward
-  console.log("Beginning forward register...");
+  console.log('Beginning forward register...');
   await registrar.methods.register(label, process.env.ACCOUNT_ADDRESS).send(sendInfo);
-  console.log("Setting resolver...");
+  console.log('Setting resolver...');
   await ens.methods.setResolver(hash, ResolverAddr).send(sendInfo);
-  console.log("Setting up resolver...");
+  console.log('Setting up resolver...');
   await resolver.methods.setAddr(hash, process.env.ACCOUNT_ADDRESS).send(sendInfo);
 
   // Reverse
-  console.log("Beginning reverse register...");
+  console.log('Beginning reverse register...');
   await reverse.methods.claim(process.env.ACCOUNT_ADDRESS).send(sendInfo);
   const node = await reverse.methods.node(process.env.ACCOUNT_ADDRESS).call();
-  console.log("Setting resolver...");
+  console.log('Setting resolver...');
   await ens.methods.setResolver(node, ResolverAddr).send(sendInfo);
-  console.log("Setting up resolver...");
+  console.log('Setting up resolver...');
   await resolver.methods.setName(node, username).send(sendInfo);
-  console.log("All done!!!");
+  console.log('All done!!!');
 };
 
 module.exports = {
