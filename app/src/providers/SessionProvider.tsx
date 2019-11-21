@@ -3,11 +3,10 @@ import { ContractListType } from '../helper/eth';
 import { useNameServiceContext } from './NameServiceProvider';
 
 const DEFAULT_USER = {
-  nickname: '',
-  name: '',
+  nickname: 'John Doe',
   img: 'https://file.globalupload.io/HO8sN3I2nJ.png',
-  role: '',
-  address: '',
+  role: 'ARTIST',
+  name: 'default.artistry.test',
 };
 
 export const DACS_DEFAULT: User = {
@@ -15,24 +14,38 @@ export const DACS_DEFAULT: User = {
   img: 'https://mdbootstrap.com/img/Photos/Avatars/img%20%2820%29.jpg',
   role: 'DACS',
   address: '0xDf08F82De32B8d460adbE8D72043E3a7e25A3B39',
-  name: 'artistic.test',
+  name: 'dac.artistry.test',
 };
 
 export const DEAL_DEFAULT: User = {
-  nickname: 'John Do',
-  img: 'https://mdbootstrap.com/img/Photos/Avatars/img%20%283%29.jpg',
+  nickname: 'Gallery',
+  img: 'https://www.cavan-arts.com/uploads/1/2/2/7/122790076/img-4071_orig.jpg',
   role: 'DEAL',
-  // idk what this address is
-  // address: '0xfcf5Dc3Fe0028309Be91aba3A96c76693Bcff02A',
-  address: '',
-  name: '',
+  address: '0xdE164a54b441808DA5C448D85Ba2F0F6e271CC36',
+  name: 'gallery.artistry.test',
+};
+
+export const NATASHA: User = {
+  nickname: 'Natasha',
+  img: 'https://mdbootstrap.com/img/Photos/Avatars/img%20(17).jpg',
+  role: 'ARTIST',
+  address: '0xc70eAc1d854E51FaFC7a487086624E79cEE6e843',
+  name: 'natasha.artistry.test',
+};
+
+export const BUYER_DEFAULT: User = {
+  nickname: 'Buyer',
+  img: 'https://mdbootstrap.com/img/Photos/Avatars/img%20(9).jpg',
+  role: 'COLLECTOR',
+  address: '0x1bf078753937FB3e569C4c9724654d10cc8A7Fd7',
+  name: 'buyer.artistry.test',
 };
 
 export interface User {
   img: string;
   nickname: string;
   role: string;
-  address: string;
+  address?: string;
   name: string;
 }
 
@@ -48,27 +61,36 @@ interface SessionProviderProps {
 
 export const SessionContext = React.createContext<Session>({} as any);
 
-export const SessionProvider: React.FC<SessionProviderProps> = ({ address, contracts, children }) => {
+export const SessionProvider: React.FC<SessionProviderProps> = ({ address, children }) => {
   const context = useNameServiceContext();
-  console.log(context);
 
   const defaultUser = DEFAULT_USER;
   const [user, setUser] = React.useState<User>(defaultUser);
 
-  let newUser = DACS_DEFAULT;
-  contracts.Governance.isGovernor(address)
-    .then((isGovernor: boolean) => {
-      if (!isGovernor) {
-        newUser = DEAL_DEFAULT;
+  const users = [DACS_DEFAULT, DEAL_DEFAULT, NATASHA, BUYER_DEFAULT];
+
+  React.useEffect(() => {
+    let curUser: User = defaultUser;
+    for (const user of users) {
+      if (user.address === address) {
+        curUser = user;
+        break;
       }
-      newUser.address = address;
-      return context.nameFromAddress(address);
-    })
-    .then((name: string) => {
-      newUser.name = name;
-      setUser(newUser);
-    })
-    .catch(console.log);
+    }
+
+    curUser.address = address;
+
+    setUser(curUser);
+
+    context.nameFromAddress(address)
+      .then((name: string) => {
+        if (name !== '') {
+          curUser.name = name;
+          setUser(curUser);
+        }
+      })
+      .catch(console.log);
+  }, [address, context, defaultUser, users]);
 
   return (
     <SessionContext.Provider value={{ user: user, setUser: setUser }}>
