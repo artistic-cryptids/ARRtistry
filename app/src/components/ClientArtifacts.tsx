@@ -66,8 +66,7 @@ class ClientArtifacts extends
         accounts={this.props.accounts}
         tokenId={tokenId}
         key={tokenId}
-        isOwnedArtifact={false}
-      />,
+      />
     );
 
     return (

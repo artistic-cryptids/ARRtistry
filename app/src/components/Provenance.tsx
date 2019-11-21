@@ -20,6 +20,7 @@ import { useSessionContext } from '../providers/SessionProvider';
 import ENSName from './common/ENSName';
 import { useWeb3Context } from '../providers/Web3Provider';
 import PlaintextField from './common/PlaintextField';
+import { useRegistryContext } from '../providers/RegistryProvider';
 
 interface ProvenanceProps {
   registry: Contracts.ArtifactRegistry;
@@ -127,10 +128,10 @@ const Timeline: React.FC<{ records: ProvenanceRecord[] }> = ({ records }) => {
   );
 };
 
-const Provenance: React.FC<ProvenanceProps> = ({ registry, tokenId }) => {
-  const [show, setShow] = React.useState<boolean>(false);
-  const [events, setEvents] = React.useState<any>({});
+export const Provenance: React.FC<{tokenId: number}> = ({tokenId}) => {
+  const [records, setRecords] = React.useState<ProvenanceRecord[]>([]);
   const { web3 } = useWeb3Context();
+  const registry = useRegistryContext();
   const { user } = useSessionContext();
 
   React.useEffect(() => {
@@ -171,9 +172,15 @@ const Provenance: React.FC<ProvenanceProps> = ({ registry, tokenId }) => {
     });
 
     Promise.all([registration, sales])
-      .then(([regs, sales]) => setEvents(regs.concat(sales)))
+      .then(([regs, sales]) => setRecords(regs.concat(sales)))
       .catch(console.warn);
   }, [user.address, web3.eth, registry, tokenId]);
+
+  return <Timeline records={records}/>
+}
+
+export const ProvenanceModal: React.FC<{metaUri: string}> = (props) => {
+  const [show, setShow] = React.useState(false);
 
   return (
     <>
@@ -189,11 +196,9 @@ const Provenance: React.FC<ProvenanceProps> = ({ registry, tokenId }) => {
           <Modal.Title>Provenance</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <Timeline records={events} />
+          <Provenance {...props}/>
         </Modal.Body>
       </Modal>
     </>
   );
-};
-
-export default Provenance;
+}
