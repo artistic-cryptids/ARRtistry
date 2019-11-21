@@ -19,7 +19,7 @@ import * as Contracts from '../helper/contracts';
 import { useSessionContext } from '../providers/SessionProvider';
 import ENSName from './common/ENSName';
 import { useWeb3Context } from '../providers/Web3Provider';
-import PlaintextField from './common/PlaintextField'
+import PlaintextField from './common/PlaintextField';
 
 interface ProvenanceProps {
   registry: Contracts.ArtifactRegistry;

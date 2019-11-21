@@ -13,4 +13,4 @@ const PlaintextField: React.FC<{label: string; value: string}> = ({ label, value
   </Form.Group>;
 };
 
-export default PlaintextField
+export default PlaintextField;
