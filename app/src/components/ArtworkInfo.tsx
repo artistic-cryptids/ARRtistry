@@ -110,7 +110,6 @@ class ArtworkInfo extends React.Component<ArtworkInfoProps, ArtworkInfoState> {
 
   render (): React.ReactNode {
     const fields = this.state.fields;
-    const artist = this.state.artist;
 
     const imgSrc = fields.imageIpfsHash === ''
       ? 'https://file.globalupload.io/HO8sN3I2nJ.png'

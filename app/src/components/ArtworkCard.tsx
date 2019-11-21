@@ -36,26 +36,6 @@ export const MetadataArtworkCard: React.FC = ({children}) => {
   );
 }
 
-const Toolbar: React.FC = () => {
-  return <div className="clearfix">
-    <Dropdown alignRight>
-      <Dropdown.Toggle as={Button} variant="outline-primary" size="sm" className="float-right" id="toolbar">
-        <FontAwesomeIcon icon={faEllipsisH} />
-      </Dropdown.Toggle>
-
-      <Dropdown.Menu>
-        <Dropdown.Header>Artifact Options</Dropdown.Header>
-        <Dropdown.Item href="#/action-1">
-          <FontAwesomeIcon icon={faEuroSign} /> Register a Sale
-        </Dropdown.Item>
-        <Dropdown.Item href="#/action-2">
-          <FontAwesomeIcon icon={faExchangeAlt} /> Consignment
-        </Dropdown.Item>
-      </Dropdown.Menu>
-    </Dropdown>
-  </div>;
-}
-
 const ArtworkCard: React.FC<ArtworkCardProps> = ({
     id,
     img,
@@ -69,9 +49,6 @@ const ArtworkCard: React.FC<ArtworkCardProps> = ({
   return (
 
     <Card className="shadow">
-      {/* TODO <Card.Header>
-        <Toolbar/>
-      </Card.Header>*/}
       <Card.Body>
         {img && <Card.Img variant="top" src={img} />}
         {id && fields
