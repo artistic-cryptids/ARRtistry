@@ -9,6 +9,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   faPlus
 } from '@fortawesome/free-solid-svg-icons';
+import { Link } from 'react-router-dom';
 
 const ArtworkList: React.FC<ContractProps> = ({ contracts }) => {
   const [tokenIds, setTokenIds] = React.useState<Array<number>>([]);
@@ -62,8 +63,16 @@ const ArtworkList: React.FC<ContractProps> = ({ contracts }) => {
       {listItems}
       <MetadataArtworkCard>
         {tokenIds.length > 0
-          ? <p>You own <h1>{tokenIds.length}</h1> Artifacts!</p>
-          : <p>You don't own any artifacts, if you want to request a new artifact to be added <h1><FontAwesomeIcon icon={faPlus}/></h1> here.</p>
+          ? <>
+              <p>You own </p>
+              <h1>{tokenIds.length}</h1>
+              <p>Artifacts!</p>
+            </>
+          : <>
+            <p>You don't own any artifacts, if you want to request a new artifact to be added</p>
+            <Link to='artifact/new'><h1><FontAwesomeIcon icon={faPlus}/></h1></Link>
+            <p>here.</p>
+          </>
         }
       </MetadataArtworkCard>
     </CardColumns>

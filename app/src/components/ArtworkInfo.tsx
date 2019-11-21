@@ -1,5 +1,4 @@
 import * as React from 'react';
-import Card from 'react-bootstrap/Card';
 import { ContractProps } from '../helper/eth';
 import ArtworkCard from './ArtworkCard';
 

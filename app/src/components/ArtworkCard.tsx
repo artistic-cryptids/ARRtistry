@@ -13,6 +13,7 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import { Provenance, ProvenanceModal } from './Provenance';
 import { Documents, DocumentsModal } from './Documents';
+import { Link } from 'react-router-dom';
 
 interface ArtworkCardProps {
   id?: number;
@@ -62,16 +63,21 @@ const ArtworkCard: React.FC<ArtworkCardProps> = ({
     fullscreen,
     children
   }) => {
+    const path=`artifact/${id}`;
   return (
 
     <Card className="shadow">
-      <Card.Header>
+      {/* TODO <Card.Header>
         <Toolbar/>
-      </Card.Header>
+      </Card.Header>*/}
       <Card.Body>
         {img && <Card.Img variant="top" src={img} />}
         {id && fields
-          ? <Card.Title><span className="text-muted text-capitalize">#{id} </span>{fields.title}</Card.Title>
+          ? <Card.Title>
+              <Link to={path}>
+                <span className="text-muted text-capitalize">#{id} </span>{fields.title}
+              </Link>
+            </Card.Title>
           : <CenterSpinner/>
         }
         {artist && <Card.Subtitle className="mb-2 text-muted">{artist.name}</Card.Subtitle> }
@@ -81,19 +87,17 @@ const ArtworkCard: React.FC<ArtworkCardProps> = ({
           && <React.Fragment><Card.Text>{fields.description}</Card.Text><hr/></React.Fragment>}
         {children}
         <hr/>
-        <Card.Text>
-          {!!fields
-            ? <>
-              <span className="text-muted text-capitalize">Creation Date:</span> {fields.artifactCreationDate}
-              <br/>
-              <span className="text-muted text-capitalize">Medium:</span> {fields.medium}
-              <br/>
-              <span className="text-muted text-capitalize">Height:</span> {fields.height}
-              <span className="text-muted text-capitalize"> Width:</span> {fields.width}
-            </>
-            : <CenterSpinner />
-          }
-        </Card.Text>
+        {!!fields
+          ? <Card.Text>
+            <span className="text-muted text-capitalize">Creation Date:</span> {fields.artifactCreationDate}
+            <br/>
+            <span className="text-muted text-capitalize">Medium:</span> {fields.medium}
+            <br/>
+            <span className="text-muted text-capitalize">Height:</span> {fields.height}
+            <span className="text-muted text-capitalize"> Width:</span> {fields.width}
+          </Card.Text>
+          : <CenterSpinner />
+        }
         { !fullscreen
           ? <div className="text-center">
               <ButtonGroup>

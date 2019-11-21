@@ -1,5 +1,4 @@
 import * as React from 'react';
-import ArtworkList from '../components/ArtworkList';
 import { ContractProps } from '../helper/eth';
 import Main from '../components/Main';
 import ArtworkItem from '../components/ArtworkItem';

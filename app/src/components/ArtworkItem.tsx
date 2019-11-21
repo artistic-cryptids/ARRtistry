@@ -26,7 +26,7 @@ const ArtworkItem: React.FC<ArtworkItemProps> = ({contracts, accounts, tokenId, 
         setArtwork(artwork);
       })
       .catch((err: any) => { console.log(err); });
-  });
+  }, [registry, tokenId]);
 
   if (!artwork) {
     return <ArtworkCard img='https://file.globalupload.io/HO8sN3I2nJ.png'/>;

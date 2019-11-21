@@ -100,10 +100,19 @@ const TimelineBlock: React.FC<{type: string; subheader: string}> =
   );
 };
 
-const Timeline: React.FC<{ records: ProvenanceRecord[] }> = ({ records }) => {
+const Timeline: React.FC = ({ children }) => {
   return (
     <Col md='12'>
       <ul className={styles.timeline}>
+        {children}
+      </ul>
+    </Col>
+  );
+};
+
+const ProvenanceTimeline: React.FC<{records: ProvenanceRecord[]}> = ({ records }) => {
+  return (
+    <Timeline>
         {records.map((record: ProvenanceRecord, index: number) =>
           <TimelineBlock type={record.type} subheader={record.txDate.fromNow()} key={index}>
             {record.type === 'sale' && record.sale
@@ -123,10 +132,9 @@ const Timeline: React.FC<{ records: ProvenanceRecord[] }> = ({ records }) => {
 
           </TimelineBlock>,
         )}
-      </ul>
-    </Col>
+    </Timeline>
   );
-};
+}
 
 export const Provenance: React.FC<{tokenId: number}> = ({tokenId}) => {
   const [records, setRecords] = React.useState<ProvenanceRecord[]>([]);
@@ -176,10 +184,10 @@ export const Provenance: React.FC<{tokenId: number}> = ({tokenId}) => {
       .catch(console.warn);
   }, [user.address, web3.eth, registry, tokenId]);
 
-  return <Timeline records={records}/>
+  return <ProvenanceTimeline records={records}/>
 }
 
-export const ProvenanceModal: React.FC<{metaUri: string}> = (props) => {
+export const ProvenanceModal: React.FC<{tokenId: number}> = (props) => {
   const [show, setShow] = React.useState(false);
 
   return (
