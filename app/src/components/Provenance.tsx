@@ -16,13 +16,12 @@ import { EventData } from 'web3-eth-contract';
 
 import * as styles from './Timeline.module.scss';
 import * as Contracts from '../helper/contracts';
-import { ContractProps } from '../helper/eth';
 import { useSessionContext } from '../providers/SessionProvider';
 import ENSName from './common/ENSName';
 import { useWeb3Context } from '../providers/Web3Provider';
+import PlaintextField from './common/PlaintextField'
 
-interface ProvenanceProps extends ContractProps {
-  metaUri: string;
+interface ProvenanceProps {
   registry: Contracts.ArtifactRegistry;
   tokenId: number;
 }
@@ -57,17 +56,6 @@ const BLOCK_HEADINGS: Dictionary<BlockHeading> = {
     header: 'Sale',
     icon: faEuroSign,
   },
-};
-
-const PlaintextField: React.FC<{label: string; value: string}> = ({ label, value }) => {
-  return <Form.Group as={Form.Row}>
-    <Form.Label column sm="2">
-      {label}
-    </Form.Label>
-    <Col sm="10">
-      <Form.Control plaintext readOnly defaultValue={value} />
-    </Col>
-  </Form.Group>;
 };
 
 const AddressInfo: React.FC<{address: string; label: string}> =
@@ -183,7 +171,7 @@ const Provenance: React.FC<ProvenanceProps> = ({ registry, tokenId }) => {
     });
 
     Promise.all([registration, sales])
-      .then(([regs, sales]) => setEvents(regs.concat(sales)))
+      .then(([regs, sales]) => seIs it worth extracting this out into a common component?tEvents(regs.concat(sales)))
       .catch(console.warn);
   }, [user.address, web3.eth, registry, tokenId]);
 
