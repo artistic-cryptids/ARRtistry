@@ -61,7 +61,7 @@ interface SessionProviderProps {
 
 export const SessionContext = React.createContext<Session>({} as any);
 
-export const SessionProvider: React.FC<SessionProviderProps> = ({ address, contracts, children }) => {
+export const SessionProvider: React.FC<SessionProviderProps> = ({ address, children }) => {
   const context = useNameServiceContext();
 
   const defaultUser = DEFAULT_USER;
@@ -71,11 +71,11 @@ export const SessionProvider: React.FC<SessionProviderProps> = ({ address, contr
 
   React.useEffect(() => {
     let curUser: User = defaultUser;
-    for (let user of users) {
-        if (user.address === address) {
-          curUser = user;
-          break;
-        }
+    for (const user of users) {
+      if (user.address === address) {
+        curUser = user;
+        break;
+      }
     }
 
     curUser.address = address;
@@ -89,7 +89,7 @@ export const SessionProvider: React.FC<SessionProviderProps> = ({ address, contr
           setUser(curUser);
         }
       })
-      .catch((err: any) => {});
+      .catch(console.log);
   }, [address, context, defaultUser, users]);
 
   return (
