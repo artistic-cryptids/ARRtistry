@@ -74,10 +74,10 @@ contract('ArtifactRegistry', async accounts => {
   });
 
   describe('transfer', async () => {
-    let price = 9999;
-    let metaUri = 'new metaUri';
-    let location = 'location';
-    let date = '2019-11-11';
+    const price = 9999;
+    const metaUri = 'new metaUri';
+    const location = 'location';
+    const date = '2019-11-11';
 
     before(async () => {
       await registry.mint(tokenOwner, ARTIFACT, { from: creator });
