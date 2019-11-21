@@ -14,6 +14,8 @@ import {
 import { Provenance, ProvenanceModal } from './Provenance';
 import { Documents, DocumentsModal } from './Documents';
 import { Link } from 'react-router-dom';
+import Form from 'react-bootstrap/Form';
+import PlaintextField from './common/PlaintextField';
 
 interface ArtworkCardProps {
   id?: number;
@@ -89,12 +91,11 @@ const ArtworkCard: React.FC<ArtworkCardProps> = ({
         <hr/>
         {!!fields
           ? <Card.Text>
-            <span className="text-muted text-capitalize">Creation Date:</span> {fields.artifactCreationDate}
-            <br/>
-            <span className="text-muted text-capitalize">Medium:</span> {fields.medium}
-            <br/>
-            <span className="text-muted text-capitalize">Height:</span> {fields.height}
-            <span className="text-muted text-capitalize"> Width:</span> {fields.width}
+            <Form>
+              <PlaintextField label='Creation Date' value={fields.artifactCreationDate} />
+              <PlaintextField label='Medium' value={fields.medium}/>
+              <PlaintextField label='Size' value={fields.height + ' x ' + fields.width} />
+            </Form>
           </Card.Text>
           : <CenterSpinner />
         }
