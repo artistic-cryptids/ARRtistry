@@ -31,11 +31,11 @@ module.exports = {
     rinkeby: {
       provider: function() {
        return new HDWalletProvider(
-        process.env.WALLET_MNEMONIC,
+        process.env.PRIVATE_KEY,
         "https://rinkeby.infura.io/v3/" + process.env.INFURA_API_KEY
        );
       },
-    from: process.env.ACCOUNT_ADDRESS,
+      from: process.env.ACCOUNT_ADDRESS,
       network_id: 4,
       gas: 7000000
     }
