@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { ContractListType } from '../helper/eth';
+import * as Contracts from '../helper/contracts';
 import { useNameServiceContext } from './NameServiceProvider';
 
 const DEFAULT_USER = {
@@ -56,7 +56,7 @@ export interface Session {
 
 interface SessionProviderProps {
   address: string;
-  contracts: ContractListType;
+  contracts: Contracts.ContractListType;
 }
 
 export const SessionContext = React.createContext<Session>({} as any);
