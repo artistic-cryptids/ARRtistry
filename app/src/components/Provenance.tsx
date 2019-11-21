@@ -20,6 +20,7 @@ import { useSessionContext } from '../providers/SessionProvider';
 import ENSName from './common/ENSName';
 import { useWeb3Context } from '../providers/Web3Provider';
 import PlaintextField from './common/PlaintextField';
+import AddressField from './common/AddressField';
 import { useRegistryContext } from '../providers/RegistryProvider';
 
 interface ProvenanceProps {
@@ -57,18 +58,6 @@ const BLOCK_HEADINGS: Dictionary<BlockHeading> = {
     header: 'Sale',
     icon: faEuroSign,
   },
-};
-
-const AddressInfo: React.FC<{address: string; label: string}> =
-({ address, label }) => {
-  return <Form.Group as={Form.Row}>
-    <Form.Label column sm="2">
-      {label}
-    </Form.Label>
-    <Col sm="10">
-      <ENSName className='form-control-plaintext' address={address}/>
-    </Col>
-  </Form.Group>;
 };
 
 const TimelineBlock: React.FC<{type: string; subheader: string}> =
@@ -118,15 +107,15 @@ const ProvenanceTimeline: React.FC<{records: ProvenanceRecord[]}> = ({ records }
             {record.type === 'sale' && record.sale
               ? <Form>
                 <PlaintextField label='Date' value={record.sale.date} />
-                <AddressInfo label='Buyer' address={record.sale.buyer}/>
-                <AddressInfo label='Seller' address={record.sale.seller}/>
+                <AddressField label='Buyer' address={record.sale.buyer}/>
+                <AddressField label='Seller' address={record.sale.seller}/>
                 <PlaintextField label='Sale Location' value={record.sale.location} />
                 <PlaintextField label='Sale Price' value={'€' + (record.sale.price / 100).toString()} />
               </Form>
               : null}
             {record.type === 'mint' && record.artist
               ? <Form>
-                <AddressInfo label='Artist' address={record.artist}/>
+                <AddressField label='Artist' address={record.artist}/>
               </Form>
               : null}
 
