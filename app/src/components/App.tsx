@@ -3,9 +3,10 @@ import * as React from 'react';
 import { ContractProps } from '../helper/eth';
 
 import Web3 from 'web3';
-import { SessionProvider } from '../providers/SessionProvider';
-import { NameServiceProvider } from '../providers/NameServiceProvider';
 import { Web3Provider } from '../providers/Web3Provider';
+import { NameServiceProvider } from '../providers/NameServiceProvider';
+import { RegistryProvider } from '../providers/RegistryProvider';
+import { SessionProvider } from '../providers/SessionProvider';
 
 import Router from './Router';
 
@@ -14,15 +15,25 @@ export interface AppProps extends ContractProps {
   networkId: number;
 }
 
-const App: React.FC<AppProps> = (props) => {
+const ContractProvider: React.FC = ({ children }) => {
   return (
     <NameServiceProvider>
-      <Web3Provider networkId={props.networkId} accounts={props.accounts}>
+      <RegistryProvider>
+        {children}
+      </RegistryProvider>
+    </NameServiceProvider>
+  );
+};
+
+const App: React.FC<AppProps> = (props) => {
+  return (
+    <Web3Provider networkId={props.networkId} accounts={props.accounts}>
+      <ContractProvider>
         <SessionProvider address={props.accounts[0]} contracts={props.contracts}>
           <Router {...props}/>
         </SessionProvider>
-      </Web3Provider>
-    </NameServiceProvider>
+      </ContractProvider>
+    </Web3Provider>
   );
 };
 

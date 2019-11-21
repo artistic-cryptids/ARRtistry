@@ -1,35 +1,9 @@
-// import TruffleContract from '@truffle/contract';
-// import { ContractObject } from '@truffle/contract-schema'
-
-export interface ContractListType {
-  Governance: any;
-  ArtifactApplication: any;
-  ArtifactRegistry: any;
-  Artists: any;
-}
+import { AbiItem } from 'web3-utils';
+import * as Contracts from './contracts';
 
 export interface ContractProps {
-  contracts: ContractListType;
+  contracts: Contracts.ContractListType;
   accounts: Array<string>;
-}
-
-// keeping in case they're useful later
-/* export interface ABI {
-  constant?: boolean;
-  inputs: {
-    name: string;
-    type: string;
-    indexed?: boolean;
-  }[];
-  name?: string;
-  outputs?: {
-    name: string;
-    type: string;
-  }[];
-  payable?: boolean;
-  stateMutability?: string;
-  type: string;
-  anonymous?: boolean;
 }
 
 export interface AST {
@@ -71,9 +45,9 @@ export interface Node {
   scope?: number;
 }
 
-export interface Contract {
+export interface TruffleArtifact {
   contractName: string;
-  abi: ABI[];
+  abi: AbiItem[];
   metadata: string;
   bytecode: string;
   deployedBytecode: string;
@@ -96,4 +70,18 @@ export interface Contract {
   userdoc: {
     methods: any;
   };
-} */
+}
+
+type ABIandAddress = (
+  networkId: number,
+  json: TruffleArtifact,
+  defaultAddress: string) => { abi: any; address: string };
+
+export const getABIAndAddress: ABIandAddress = (networkId, json, defaultAddress) => {
+  const deployed = json.networks[networkId];
+  const address = deployed && deployed.address;
+  return {
+    abi: json.abi,
+    address: address || defaultAddress,
+  };
+};

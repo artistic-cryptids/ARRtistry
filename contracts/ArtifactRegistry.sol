@@ -15,6 +15,8 @@ import { ERC721ApprovalEnumerable } from "./ERC721ApprovalEnumerable.sol";
  */
 contract ArtifactRegistry is IArtifactRegistry, Ownable, ERC721Full, ERC721ApprovalEnumerable {
 
+  event RecordSale(address indexed from, address indexed to, uint256 tokenId, uint price, string location, string date);
+
   using Counters for Counters.Counter;
 
   IGovernance public governance;
@@ -47,13 +49,26 @@ contract ArtifactRegistry is IArtifactRegistry, Ownable, ERC721Full, ERC721Appro
     return (artwork.artist, artwork.metaUri);
   }
 
-  function transfer(address who, address recipient, uint256 tokenId, string memory metaUri, uint price, string memory location, string memory date) public {
+  function transfer(address who, address recipient, uint256 tokenId, string memory metaUri, uint price, string memory location, string memory date) public returns (uint256){
     safeTransferFrom(who, recipient, tokenId);
 
     Artifact storage artwork = artifacts[tokenId];
     artwork.metaUri = metaUri;
 
-    governance.recordARR(who, recipient, tokenId, price, location, date);
+    // Create a new ARR
+    IGovernance.ARR memory arr;
+    arr.from = who;
+    arr.to = recipient;
+    arr.tokenId = tokenId;
+    arr.price = price;
+    arr.location = location;
+    arr.date = date;
+
+    uint256 arrId = governance.pushARR(arr);
+
+    emit RecordSale(who, recipient, tokenId, price, location, date);
+
+    return arrId;
   }
 
   function getTokenIdsOfOwner(address owner) public view returns (uint[] memory) {

@@ -28,7 +28,7 @@ contract IGovernance {
   function getProposal(uint proposalId) public view returns (Proposal memory);
   function getProposals() public view returns (uint[] memory);
 
-  function recordARR(address from, address to, uint256 tokenId, uint price, string memory location, string memory data) public returns (uint);
   function getARRLength() public view returns (uint);
+  function pushARR(ARR memory arr) public returns (uint256);
   function getARR(uint arrId) public view returns (ARR memory);
 }
