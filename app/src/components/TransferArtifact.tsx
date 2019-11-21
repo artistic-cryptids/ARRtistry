@@ -190,6 +190,7 @@ const TransferArtifact: React.FC<TransferArtifactProps> = ({ tokenId, metaUri, c
             <Form.Control
               required
               type="text"
+              placeholder="example.artistry.test"
               onChange={inputChangeHandler}/>
             {GENERIC_FEEDBACK}
           </Form.Group>

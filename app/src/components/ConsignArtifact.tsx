@@ -107,6 +107,7 @@ const ConsignArtifact: React.FC<ConsignArtifactProps> = ({ tokenId, contracts, a
             <Form.Control
               required
               type="text"
+              placeholder="example.artistry.test"
               onChange={inputChangeHandler}/>
             {GENERIC_FEEDBACK}
           </Form.Group>
