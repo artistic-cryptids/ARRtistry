@@ -17,6 +17,14 @@ export const DACS_DEFAULT: User = {
   name: 'dac.artistry.test',
 };
 
+export const DACS_RINKEBY: User = {
+  nickname: 'Anna Doe',
+  img: 'https://mdbootstrap.com/img/Photos/Avatars/img%20%2820%29.jpg',
+  role: 'DACS',
+  address: '0x594cd738A5e99134De9DE21f253eD1Be4eb27F3e',
+  name: 'dac.artistry.test',
+};
+
 export const DEAL_DEFAULT: User = {
   nickname: 'Gallery',
   img: 'https://www.cavan-arts.com/uploads/1/2/2/7/122790076/img-4071_orig.jpg',
@@ -67,7 +75,7 @@ export const SessionProvider: React.FC<SessionProviderProps> = ({ address, child
   const defaultUser = DEFAULT_USER;
   const [user, setUser] = React.useState<User>(defaultUser);
 
-  const users = [DACS_DEFAULT, DEAL_DEFAULT, NATASHA, BUYER_DEFAULT];
+  const users = [DACS_DEFAULT, DACS_RINKEBY, DEAL_DEFAULT, NATASHA, BUYER_DEFAULT];
 
   React.useEffect(() => {
     let curUser: User = defaultUser;
