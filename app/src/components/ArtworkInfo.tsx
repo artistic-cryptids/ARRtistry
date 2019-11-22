@@ -1,20 +1,18 @@
 import * as React from 'react';
-import Card from 'react-bootstrap/Card';
 import { ContractProps } from '../helper/eth';
-import Documents from './Documents';
-import Provenance from './Provenance';
-import ButtonGroup from 'react-bootstrap/ButtonGroup';
+import ArtworkCard from './ArtworkCard';
 
-interface Artwork {
+export interface Artwork {
   metaUri: string;
 }
 
 interface ArtworkInfoProps extends ContractProps {
   artwork: Artwork;
   id: number;
+  fullscreen?: true;
 }
 
-interface Artist {
+export interface Artist {
   id: number;
   name: string;
   wallet: string;
@@ -23,7 +21,7 @@ interface Artist {
   deathYear: string;
 }
 
-interface ArtworkInfoFields {
+export interface ArtworkInfoFields {
   title: string;
   artistId: number;
   description: string;
@@ -112,7 +110,6 @@ class ArtworkInfo extends React.Component<ArtworkInfoProps, ArtworkInfoState> {
 
   render (): React.ReactNode {
     const fields = this.state.fields;
-    const artist = this.state.artist;
 
     const imgSrc = fields.imageIpfsHash === ''
       ? 'https://file.globalupload.io/HO8sN3I2nJ.png'
@@ -120,54 +117,22 @@ class ArtworkInfo extends React.Component<ArtworkInfoProps, ArtworkInfoState> {
 
     if (this.state.retrievedData) {
       return (
-        <Card className="shadow">
-          <Card.Body>
-            <Card.Img variant="top" src={imgSrc} />
-            <Card.Title><span className="text-muted text-capitalize">#{this.props.id} </span>{fields.title}</Card.Title>
-            <Card.Subtitle className="mb-2 text-muted">{artist.name}</Card.Subtitle>
-            <hr/>
-            {fields.description !== ''
-              ? <React.Fragment><Card.Text>{fields.description}</Card.Text><hr/></React.Fragment>
-              : null}
-            {this.props.children}
-            <hr/>
-            <Card.Text>
-              <span className="text-muted text-capitalize">Creation Date:</span> {fields.artifactCreationDate}
-              <br/>
-              <span className="text-muted text-capitalize">Medium:</span> {fields.medium}
-              <br/>
-              <span className="text-muted text-capitalize">Height:</span> {fields.height}
-              <span className="text-muted text-capitalize"> Width:</span> {fields.width}
-            </Card.Text>
-            <div className="text-center">
-              <ButtonGroup>
-                <Documents documents={fields.documents}/>
-                <Provenance registry={this.props.contracts.ArtifactRegistry} tokenId={this.props.id}/>
-              </ButtonGroup>
-            </div>
-
-          </Card.Body>
-          <Card.Footer>
-            <small className="text-muted">Last updated 3 mins ago</small>
-          </Card.Footer>
-        </Card>
+        <ArtworkCard
+          id={this.props.id}
+          img={imgSrc}
+          metaUri={this.props.artwork.metaUri}
+          fields={this.state.fields}
+          artist={this.state.artist}
+          fullscreen={this.props.fullscreen}
+        >
+          {this.props.children}
+        </ArtworkCard>
       );
     } else {
       return (
-        <Card className="shadow">
-          <Card.Body>
-            <Card.Title><span className="text-muted text-capitalize">#{this.props.id} </span>Loading...</Card.Title>
-            <Card.Subtitle className="mb-2 text-muted"></Card.Subtitle>
-            <Card.Text>
-              The piece&apos;s info has yet to be retrieved. If it was only just registered,
-              it&apos;ll take thirty seconds or so. Otherwise, it should be near instant.
-            </Card.Text>
-            {this.props.children}
-          </Card.Body>
-          <Card.Footer>
-            <small className="text-muted">Loading...</small>
-          </Card.Footer>
-        </Card>
+        <ArtworkCard img={imgSrc} fullscreen={this.props.fullscreen}>
+          {this.props.children}
+        </ArtworkCard>
       );
     }
   }

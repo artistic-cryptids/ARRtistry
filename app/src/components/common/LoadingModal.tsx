@@ -1,6 +1,6 @@
 import * as React from 'react';
 import Modal from 'react-bootstrap/Modal';
-import Spinner from 'react-bootstrap/Spinner';
+import CenterSpinner from './CenterSpinner';
 
 const LoadingModal = (props: {show: boolean; title: string}): JSX.Element => {
   return (
@@ -16,9 +16,7 @@ const LoadingModal = (props: {show: boolean; title: string}): JSX.Element => {
         </Modal.Title>
       </Modal.Header>
       <Modal.Body>
-        <div style={{ display: 'flex', justifyContent: 'center' }}>
-          <Spinner animation="border" />
-        </div>
+        <CenterSpinner/>
       </Modal.Body>
     </Modal>
   );

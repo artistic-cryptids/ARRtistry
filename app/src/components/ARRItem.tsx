@@ -1,7 +1,9 @@
 import * as React from 'react';
 import Card from 'react-bootstrap/Card';
 import { ContractProps } from '../helper/eth';
-import ENSName from './common/ENSName';
+import PlaintextField from './common/PlaintextField';
+import AddressField from './common/AddressField';
+import Form from 'react-bootstrap/Form';
 
 interface ARRItemProps extends ContractProps {
   id: number;
@@ -52,14 +54,14 @@ class ARRItem extends React.Component<ARRItemProps, ARRItemState> {
         <Card.Body>
           <Card.Title><span className="text-muted text-capitalize">#{this.props.id}</span></Card.Title>
           <Card.Subtitle className="mb-2 text-muted"></Card.Subtitle>
-          <Card.Text>
-            Piece: {arr.tokenId} <br />
-            From: <ENSName address={arr.from}/> <br />
-            To: <ENSName address={arr.to}/> <br />
-            Price: &euro;{arr.price} <br />
-            ARR: &euro;{arr.arr} <br />
-            Location: {arr.location} <br />
-          </Card.Text>
+          <Form>
+            <PlaintextField label='Piece' value={arr.tokenId.toString()} />
+            <AddressField label='Buyer' address={arr.to}/>
+            <AddressField label='Seller' address={arr.from}/>
+            <PlaintextField label='Sale Location' value={arr.location} />
+            <PlaintextField label='Sale Price' value={'€' + arr.price} />
+            <PlaintextField label='ARR' value={'€' + arr.arr} />
+          </Form>
         </Card.Body>
         <Card.Footer>
           <small className="text-muted">Last updated 3 mins ago</small>

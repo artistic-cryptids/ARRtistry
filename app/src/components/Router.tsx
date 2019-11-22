@@ -29,6 +29,9 @@ const Router: React.FC<AppProps> = ({ web3, accounts, contracts }) => {
         <Route path="/artifact/sold">
           <View.SoldArtifactView accounts={accounts} contracts={contracts} />
         </Route>
+        <Route path="/artifact/:id" render={({ match }) =>
+          <View.ArtifactById accounts={accounts} contracts={contracts} id={match.params.id} />
+        } />
         <Route path="/artifact">
           <View.ArtifactView accounts={accounts} contracts={contracts} />
         </Route>
