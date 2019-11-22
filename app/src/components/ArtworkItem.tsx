@@ -1,67 +1,64 @@
 import * as React from 'react';
-import ArtworkInfo from './ArtworkInfo';
+import ArtworkInfo, { Artwork } from './ArtworkInfo';
 import TransferArtifact from './TransferArtifact';
 import ConsignArtifact from './ConsignArtifact';
 import { ContractProps } from '../helper/eth';
 import ButtonGroup from 'react-bootstrap/ButtonGroup';
+import ArtworkCard from './ArtworkCard';
 
 interface ArtworkItemProps extends ContractProps {
   tokenId: number;
-  isOwnedArtifact: boolean;
+  ownedArtifact?: true;
+  fullscreen?: true;
 }
 
-type ArtworkItemState = {
-  artwork: any;
-}
+const ArtworkItem: React.FC<ArtworkItemProps> = ({ contracts, accounts, tokenId, ownedArtifact, fullscreen }) => {
+  const [artwork, setArtwork] = React.useState<Artwork>();
+  const registry = contracts.ArtifactRegistry;
 
-class ArtworkItem extends React.Component<ArtworkItemProps, ArtworkItemState> {
-  componentDidMount (): void {
-    const registry = this.props.contracts.ArtifactRegistry;
-    registry.getArtifactForToken(this.props.tokenId)
+  React.useEffect(() => {
+    registry.getArtifactForToken(tokenId)
       .then((artworkData: any) => {
         console.log(artworkData);
         const artwork = {
           metaUri: artworkData[1],
         };
-        this.setState({ artwork: artwork });
+        setArtwork(artwork);
       })
       .catch((err: any) => { console.log(err); });
+  }, [registry, tokenId]);
+
+  if (!artwork) {
+    return <ArtworkCard img='https://file.globalupload.io/HO8sN3I2nJ.png'/>;
   }
 
-  render (): React.ReactNode {
-    if (!this.state) {
-      return 'Loading...';
-    }
+  console.log('Artwork', artwork);
 
-    console.log('Artwork ' + JSON.stringify(this.state.artwork));
-
-    return (
-      <ArtworkInfo
-        contracts={this.props.contracts}
-        accounts={this.props.accounts}
-        artwork={this.state.artwork}
-        id={this.props.tokenId}
-      >
-        <div className="text-center">
-          <ButtonGroup>
-            <TransferArtifact
-              contracts={this.props.contracts}
-              accounts={this.props.accounts}
-              tokenId={this.props.tokenId}
-              metaUri={this.state.artwork.metaUri}
-            />
-            {this.props.isOwnedArtifact
-              ? <ConsignArtifact
-                contracts={this.props.contracts}
-                accounts={this.props.accounts}
-                tokenId={this.props.tokenId}
-              />
-              : null}
-          </ButtonGroup>
-        </div>
-      </ArtworkInfo>
-    );
-  }
-}
+  return (
+    <ArtworkInfo
+      contracts={contracts}
+      accounts={accounts}
+      artwork={artwork}
+      id={tokenId}
+      fullscreen={fullscreen}
+    >
+      <div className="text-center">
+        <ButtonGroup>
+          <TransferArtifact
+            contracts={contracts}
+            accounts={accounts}
+            tokenId={tokenId}
+            metaUri={artwork.metaUri}
+          />
+          {ownedArtifact && <ConsignArtifact
+            contracts={contracts}
+            accounts={accounts}
+            tokenId={tokenId}
+          />}
+        </ButtonGroup>
+      </div>
+    </ArtworkInfo>
+  );
+};
 
 export default ArtworkItem;
