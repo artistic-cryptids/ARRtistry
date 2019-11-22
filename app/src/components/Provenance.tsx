@@ -17,7 +17,6 @@ import { EventData } from 'web3-eth-contract';
 import * as styles from './Timeline.module.scss';
 import * as Contracts from '../helper/contracts';
 import { useSessionContext } from '../providers/SessionProvider';
-import ENSName from './common/ENSName';
 import { useWeb3Context } from '../providers/Web3Provider';
 import PlaintextField from './common/PlaintextField';
 import AddressField from './common/AddressField';

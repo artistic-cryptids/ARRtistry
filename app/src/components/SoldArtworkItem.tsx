@@ -1,9 +1,6 @@
 import * as React from 'react';
 import ArtworkInfo from './ArtworkInfo';
-import Row from 'react-bootstrap/Row';
 import { ContractProps } from '../helper/eth';
-import ENSName from './common/ENSName';
-import Col from 'react-bootstrap/Col';
 import Form from 'react-bootstrap/Form';
 import AddressField from './common/AddressField';
 import PlaintextField from './common/PlaintextField';

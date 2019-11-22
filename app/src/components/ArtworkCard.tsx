@@ -3,14 +3,6 @@ import Card from 'react-bootstrap/Card';
 import ButtonGroup from 'react-bootstrap/ButtonGroup';
 import { Artist, ArtworkInfoFields } from './ArtworkInfo';
 import CenterSpinner from './common/CenterSpinner';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import Dropdown from 'react-bootstrap/Dropdown';
-import Button from 'react-bootstrap/Button';
-import {
-  faEllipsisH,
-  faEuroSign,
-  faExchangeAlt
-} from '@fortawesome/free-solid-svg-icons';
 import { Provenance, ProvenanceModal } from './Provenance';
 import { Documents, DocumentsModal } from './Documents';
 import { Link } from 'react-router-dom';
