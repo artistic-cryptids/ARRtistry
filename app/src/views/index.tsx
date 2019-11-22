@@ -1,4 +1,5 @@
 import ArtifactView from './ArtifactView';
+import ArtifactById from './ArtifactById';
 import RegisterView from './RegisterView';
 import ProposalView from './ProposalView';
 import ARRView from './ARRView';
@@ -8,6 +9,7 @@ import SoldArtifactView from './SoldArtifactView';
 
 export {
   ArtifactView,
+  ArtifactById,
   RegisterView,
   ProposalView,
   ARRView,

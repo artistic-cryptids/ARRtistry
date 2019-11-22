@@ -16,52 +16,37 @@ interface DocumentsState {
   showDocuments: boolean;
 }
 
-class Documents extends React.Component<DocumentsProps, DocumentsState> {
-  constructor (props: DocumentsProps) {
-    super(props);
-    this.state = {
-      showDocuments: false,
-    };
-  }
+export const Documents: React.FC<DocumentsProps> = ({ documents }) => {
+  const provenance = documents.map((document: DocumentInfo, index: number) =>
+    <ListGroup.Item key={index}>
+      <p>Filename: {document.filename}</p>
+      <a href={document.metauri} target="_blank" rel="noopener noreferrer">Link</a>
+    </ListGroup.Item>,
+  );
 
-  handleShow = (): void => {
-    this.setState({
-      showDocuments: true,
-    });
-  }
+  return (
+    <ListGroup>
+      {provenance}
+    </ListGroup>
+  );
+};
 
-  handleClose = (): void => {
-    this.setState({
-      showDocuments: false,
-    });
-  }
+export const DocumentsModal: React.FC<DocumentsProps> = (props) => {
+  const [show, setShow] = React.useState(false);
 
-  render (): React.ReactNode {
-    const provenance = this.props.documents.map((document: DocumentInfo, index: number) =>
-      <ListGroup.Item key={index}>
-        <p>Filename: {document.filename}</p>
-        <a href={document.metauri} target="_blank" rel="noopener noreferrer">Link</a>
-      </ListGroup.Item>,
-    );
-
-    return (
-      <>
-        <Button variant="primary" onClick={this.handleShow}>
-          Documents
-        </Button>
-        <Modal show={this.state.showDocuments} onHide={this.handleClose}>
-          <Modal.Header closeButton>
-            <Modal.Title>Documents</Modal.Title>
-          </Modal.Header>
-          <Modal.Body>
-            <ListGroup>
-              {provenance}
-            </ListGroup>
-          </Modal.Body>
-        </Modal>
-      </>
-    );
-  }
-}
-
-export default Documents;
+  return (
+    <>
+      <Button variant="primary" onClick={() => setShow(true)}>
+        Documents
+      </Button>
+      <Modal show={show} onHide={() => setShow(false)}>
+        <Modal.Header closeButton>
+          <Modal.Title>Documents</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <Documents {...props}/>
+        </Modal.Body>
+      </Modal>
+    </>
+  );
+};

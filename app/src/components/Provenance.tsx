@@ -17,9 +17,10 @@ import { EventData } from 'web3-eth-contract';
 import * as styles from './Timeline.module.scss';
 import * as Contracts from '../helper/contracts';
 import { useSessionContext } from '../providers/SessionProvider';
-import ENSName from './common/ENSName';
 import { useWeb3Context } from '../providers/Web3Provider';
 import PlaintextField from './common/PlaintextField';
+import AddressField from './common/AddressField';
+import { useRegistryContext } from '../providers/RegistryProvider';
 
 interface ProvenanceProps {
   registry: Contracts.ArtifactRegistry;
@@ -58,18 +59,6 @@ const BLOCK_HEADINGS: Dictionary<BlockHeading> = {
   },
 };
 
-const AddressInfo: React.FC<{address: string; label: string}> =
-({ address, label }) => {
-  return <Form.Group as={Form.Row}>
-    <Form.Label column sm="2">
-      {label}
-    </Form.Label>
-    <Col sm="10">
-      <ENSName className='form-control-plaintext' address={address}/>
-    </Col>
-  </Form.Group>;
-};
-
 const TimelineBlock: React.FC<{type: string; subheader: string}> =
 ({ type, children, subheader }) => {
   const { header, icon } = BLOCK_HEADINGS[type];
@@ -99,38 +88,46 @@ const TimelineBlock: React.FC<{type: string; subheader: string}> =
   );
 };
 
-const Timeline: React.FC<{ records: ProvenanceRecord[] }> = ({ records }) => {
+const Timeline: React.FC = ({ children }) => {
   return (
     <Col md='12'>
       <ul className={styles.timeline}>
-        {records.map((record: ProvenanceRecord, index: number) =>
-          <TimelineBlock type={record.type} subheader={record.txDate.fromNow()} key={index}>
-            {record.type === 'sale' && record.sale
-              ? <Form>
-                <PlaintextField label='Date' value={record.sale.date} />
-                <AddressInfo label='Buyer' address={record.sale.buyer}/>
-                <AddressInfo label='Seller' address={record.sale.seller}/>
-                <PlaintextField label='Sale Location' value={record.sale.location} />
-                <PlaintextField label='Sale Price' value={'€' + (record.sale.price / 100).toString()} />
-              </Form>
-              : null}
-            {record.type === 'mint' && record.artist
-              ? <Form>
-                <AddressInfo label='Artist' address={record.artist}/>
-              </Form>
-              : null}
-
-          </TimelineBlock>,
-        )}
+        {children}
       </ul>
     </Col>
   );
 };
 
-const Provenance: React.FC<ProvenanceProps> = ({ registry, tokenId }) => {
-  const [show, setShow] = React.useState<boolean>(false);
-  const [events, setEvents] = React.useState<any>({});
+const ProvenanceTimeline: React.FC<{records: ProvenanceRecord[]}> = ({ records }) => {
+  return (
+    <Timeline>
+      {records.map((record: ProvenanceRecord, index: number) =>
+        <TimelineBlock type={record.type} subheader={record.txDate.fromNow()} key={index}>
+          {record.type === 'sale' && record.sale
+            ? <Form>
+              <PlaintextField label='Date' value={record.sale.date} />
+              <AddressField label='Buyer' address={record.sale.buyer}/>
+              <AddressField label='Seller' address={record.sale.seller}/>
+              <PlaintextField label='Sale Location' value={record.sale.location} />
+              <PlaintextField label='Sale Price' value={'€' + (record.sale.price / 100).toString()} />
+            </Form>
+            : null}
+          {record.type === 'mint' && record.artist
+            ? <Form>
+              <AddressField label='Artist' address={record.artist}/>
+            </Form>
+            : null}
+
+        </TimelineBlock>,
+      )}
+    </Timeline>
+  );
+};
+
+export const Provenance: React.FC<{tokenId: number}> = ({ tokenId }) => {
+  const [records, setRecords] = React.useState<ProvenanceRecord[]>([]);
   const { web3 } = useWeb3Context();
+  const registry = useRegistryContext();
   const { user } = useSessionContext();
 
   React.useEffect(() => {
@@ -171,9 +168,15 @@ const Provenance: React.FC<ProvenanceProps> = ({ registry, tokenId }) => {
     });
 
     Promise.all([registration, sales])
-      .then(([regs, sales]) => setEvents(regs.concat(sales)))
+      .then(([regs, sales]) => setRecords(regs.concat(sales)))
       .catch(console.warn);
   }, [user.address, web3.eth, registry, tokenId]);
+
+  return <ProvenanceTimeline records={records}/>;
+};
+
+export const ProvenanceModal: React.FC<{tokenId: number}> = (props) => {
+  const [show, setShow] = React.useState(false);
 
   return (
     <>
@@ -189,11 +192,9 @@ const Provenance: React.FC<ProvenanceProps> = ({ registry, tokenId }) => {
           <Modal.Title>Provenance</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <Timeline records={events} />
+          <Provenance {...props}/>
         </Modal.Body>
       </Modal>
     </>
   );
 };
-
-export default Provenance;

@@ -1,9 +1,9 @@
 import * as React from 'react';
 import ArtworkInfo from './ArtworkInfo';
-import Row from 'react-bootstrap/Row';
 import { ContractProps } from '../helper/eth';
-import ENSName from './common/ENSName';
-import Col from 'react-bootstrap/Col';
+import Form from 'react-bootstrap/Form';
+import AddressField from './common/AddressField';
+import PlaintextField from './common/PlaintextField';
 
 interface SoldArtworkItemProps extends ContractProps {
   soldFor: number;
@@ -43,16 +43,10 @@ class SoldArtworkItem extends React.Component<SoldArtworkItemProps, SoldArtworkI
         artwork={this.state.artwork}
         id={this.props.tokenId}
       >
-        <Row>
-          <Col>
-            <span className="text-muted text-capitalize">Sold To:</span>
-            <ENSName address={this.props.soldTo}/>
-          </Col>
-          <Col>
-            <span className="text-muted text-capitalize">Sold For: &euro;</span>
-            <p>{this.props.soldFor / 100}</p>
-          </Col>
-        </Row>
+        <Form>
+          <AddressField label='Sold to' address={this.props.soldTo} />
+          <PlaintextField label='Sold for' value={'€ ' + (this.props.soldFor / 100).toString()}/>
+        </Form>
       </ArtworkInfo>
     );
   }
