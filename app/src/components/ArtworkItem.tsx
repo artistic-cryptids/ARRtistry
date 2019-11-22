@@ -12,7 +12,7 @@ interface ArtworkItemProps extends ContractProps {
   fullscreen?: true;
 }
 
-const ArtworkItem: React.FC<ArtworkItemProps> = ({contracts, accounts, tokenId, ownedArtifact, fullscreen}) => {
+const ArtworkItem: React.FC<ArtworkItemProps> = ({ contracts, accounts, tokenId, ownedArtifact, fullscreen }) => {
   const [artwork, setArtwork] = React.useState<Artwork>();
   const registry = contracts.ArtifactRegistry;
 
@@ -59,6 +59,6 @@ const ArtworkItem: React.FC<ArtworkItemProps> = ({contracts, accounts, tokenId, 
       </div>
     </ArtworkInfo>
   );
-}
+};
 
 export default ArtworkItem;

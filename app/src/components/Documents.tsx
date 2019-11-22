@@ -16,7 +16,7 @@ interface DocumentsState {
   showDocuments: boolean;
 }
 
-export const Documents: React.FC<DocumentsProps> = ({documents}) => {
+export const Documents: React.FC<DocumentsProps> = ({ documents }) => {
   const provenance = documents.map((document: DocumentInfo, index: number) =>
     <ListGroup.Item key={index}>
       <p>Filename: {document.filename}</p>
@@ -29,7 +29,7 @@ export const Documents: React.FC<DocumentsProps> = ({documents}) => {
       {provenance}
     </ListGroup>
   );
-}
+};
 
 export const DocumentsModal: React.FC<DocumentsProps> = (props) => {
   const [show, setShow] = React.useState(false);
@@ -49,4 +49,4 @@ export const DocumentsModal: React.FC<DocumentsProps> = (props) => {
       </Modal>
     </>
   );
-}
+};

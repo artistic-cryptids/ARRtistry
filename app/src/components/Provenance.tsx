@@ -101,30 +101,30 @@ const Timeline: React.FC = ({ children }) => {
 const ProvenanceTimeline: React.FC<{records: ProvenanceRecord[]}> = ({ records }) => {
   return (
     <Timeline>
-        {records.map((record: ProvenanceRecord, index: number) =>
-          <TimelineBlock type={record.type} subheader={record.txDate.fromNow()} key={index}>
-            {record.type === 'sale' && record.sale
-              ? <Form>
-                <PlaintextField label='Date' value={record.sale.date} />
-                <AddressField label='Buyer' address={record.sale.buyer}/>
-                <AddressField label='Seller' address={record.sale.seller}/>
-                <PlaintextField label='Sale Location' value={record.sale.location} />
-                <PlaintextField label='Sale Price' value={'€' + (record.sale.price / 100).toString()} />
-              </Form>
-              : null}
-            {record.type === 'mint' && record.artist
-              ? <Form>
-                <AddressField label='Artist' address={record.artist}/>
-              </Form>
-              : null}
+      {records.map((record: ProvenanceRecord, index: number) =>
+        <TimelineBlock type={record.type} subheader={record.txDate.fromNow()} key={index}>
+          {record.type === 'sale' && record.sale
+            ? <Form>
+              <PlaintextField label='Date' value={record.sale.date} />
+              <AddressField label='Buyer' address={record.sale.buyer}/>
+              <AddressField label='Seller' address={record.sale.seller}/>
+              <PlaintextField label='Sale Location' value={record.sale.location} />
+              <PlaintextField label='Sale Price' value={'€' + (record.sale.price / 100).toString()} />
+            </Form>
+            : null}
+          {record.type === 'mint' && record.artist
+            ? <Form>
+              <AddressField label='Artist' address={record.artist}/>
+            </Form>
+            : null}
 
-          </TimelineBlock>,
-        )}
+        </TimelineBlock>,
+      )}
     </Timeline>
   );
-}
+};
 
-export const Provenance: React.FC<{tokenId: number}> = ({tokenId}) => {
+export const Provenance: React.FC<{tokenId: number}> = ({ tokenId }) => {
   const [records, setRecords] = React.useState<ProvenanceRecord[]>([]);
   const { web3 } = useWeb3Context();
   const registry = useRegistryContext();
@@ -172,8 +172,8 @@ export const Provenance: React.FC<{tokenId: number}> = ({tokenId}) => {
       .catch(console.warn);
   }, [user.address, web3.eth, registry, tokenId]);
 
-  return <ProvenanceTimeline records={records}/>
-}
+  return <ProvenanceTimeline records={records}/>;
+};
 
 export const ProvenanceModal: React.FC<{tokenId: number}> = (props) => {
   const [show, setShow] = React.useState(false);
@@ -197,4 +197,4 @@ export const ProvenanceModal: React.FC<{tokenId: number}> = (props) => {
       </Modal>
     </>
   );
-}
+};

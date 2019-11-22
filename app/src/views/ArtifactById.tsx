@@ -7,7 +7,7 @@ interface ArtifactViewProps extends ContractProps {
   id: number;
 }
 
-const ArtifactView: React.FC<ArtifactViewProps> = ({id, contracts, accounts}) => {
+const ArtifactView: React.FC<ArtifactViewProps> = ({ id, contracts, accounts }) => {
   return (
     <Main page={`#${id}`} parents={['Artifacts', 'Owned']}>
       <ArtworkItem

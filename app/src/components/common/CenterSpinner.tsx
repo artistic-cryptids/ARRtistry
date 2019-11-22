@@ -7,6 +7,6 @@ const CenterSpinner: React.FC = () => {
       <Spinner animation="grow" />
     </div>
   );
-}
+};
 
 export default CenterSpinner;

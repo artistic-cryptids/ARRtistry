@@ -18,7 +18,7 @@ interface ArtworkCardProps {
   fullscreen?: true;
 }
 
-export const MetadataArtworkCard: React.FC = ({children}) => {
+export const MetadataArtworkCard: React.FC = ({ children }) => {
   return (
     <Card bg="primary" text="white" className="text-center p-3">
       <blockquote className="blockquote mb-0 card-body">
@@ -26,18 +26,17 @@ export const MetadataArtworkCard: React.FC = ({children}) => {
       </blockquote>
     </Card>
   );
-}
+};
 
 const ArtworkCard: React.FC<ArtworkCardProps> = ({
-    id,
-    img,
-    metaUri,
-    fields,
-    artist,
-    fullscreen,
-    children
-  }) => {
-    const path=`artifact/${id}`;
+  id,
+  img,
+  fields,
+  artist,
+  fullscreen,
+  children,
+}) => {
+  const path = `artifact/${id}`;
   return (
 
     <Card className="shadow">
@@ -45,20 +44,20 @@ const ArtworkCard: React.FC<ArtworkCardProps> = ({
         {img && <Card.Img variant="top" src={img} />}
         {id && fields
           ? <Card.Title>
-              <Link to={path}>
-                <span className="text-muted text-capitalize">#{id} </span>{fields.title}
-              </Link>
-            </Card.Title>
+            <Link to={path}>
+              <span className="text-muted text-capitalize">#{id} </span>{fields.title}
+            </Link>
+          </Card.Title>
           : <CenterSpinner/>
         }
         {artist && <Card.Subtitle className="mb-2 text-muted">{artist.name}</Card.Subtitle> }
         <hr/>
-        {fields
-          && fields.description === ''
-          && <React.Fragment><Card.Text>{fields.description}</Card.Text><hr/></React.Fragment>}
+        {fields &&
+          fields.description === '' &&
+          <React.Fragment><Card.Text>{fields.description}</Card.Text><hr/></React.Fragment>}
         {children}
         <hr/>
-        {!!fields
+        {fields
           ? <Card.Text>
             <Form>
               <PlaintextField label='Creation Date' value={fields.artifactCreationDate} />
@@ -70,27 +69,27 @@ const ArtworkCard: React.FC<ArtworkCardProps> = ({
         }
         { !fullscreen
           ? <div className="text-center">
-              <ButtonGroup>
-                {fields && <DocumentsModal documents={fields.documents}/>}
-                {id && <ProvenanceModal tokenId={id} />}
-              </ButtonGroup>
-            </div>
+            <ButtonGroup>
+              {fields && <DocumentsModal documents={fields.documents}/>}
+              {id && <ProvenanceModal tokenId={id} />}
+            </ButtonGroup>
+          </div>
           : <Card.Text>
-              {fields && fields.documents &&
+            {fields && fields.documents &&
                 <>
                   <h5>Documents</h5>
                   <hr/>
                   <Documents documents={fields.documents}/>
                 </>
-              }
-              {id &&
+            }
+            {id &&
                 <>
                   <h5>Provenance</h5>
                   <hr/>
                   <Provenance tokenId={id}/>
                 </>
-              }
-            </Card.Text>
+            }
+          </Card.Text>
         }
 
       </Card.Body>
@@ -99,6 +98,6 @@ const ArtworkCard: React.FC<ArtworkCardProps> = ({
       </Card.Footer>
     </Card>
   );
-}
+};
 
 export default ArtworkCard;
