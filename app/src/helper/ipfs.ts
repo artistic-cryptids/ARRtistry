@@ -29,7 +29,6 @@ export const saveSingleToIpfs = async (files: Uploadable, callback: HashCallback
   }
 };
 
-<<<<<<< HEAD
 export const saveSingleToIPFSNoCallBack = async (files: Uploadable): Promise<string> => {
   const responseArray = await ipfs.add(files, { progress: progressMonitor });
   if (responseArray.length > 0) {
@@ -47,7 +46,8 @@ export const saveToIPFS = async (files: Uploadable[], callback: ResponseCallback
   } else {
     console.error('IPFS failed to return', responseArray);
   }
-=======
+};
+
 export const saveArtifactToIpfs = async (files: any, afterwardsFunction: ResponseCallback): Promise<void> => {
   await ipfs.add([...files], { progress: (prog: any) => console.log(`received: ${prog}`) })
     .then((response: any) => {
@@ -55,5 +55,4 @@ export const saveArtifactToIpfs = async (files: any, afterwardsFunction: Respons
     }).catch((err: any) => {
       console.log(err);
     });
->>>>>>> Merge in from master and put ipfs in helper folder
 };

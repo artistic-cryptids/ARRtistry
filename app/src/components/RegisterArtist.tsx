@@ -10,8 +10,6 @@ import Spinner from 'react-bootstrap/Spinner';
 import * as ipfs from '../helper/ipfs';
 import TransactionLoadingModal from './common/TransactionLoadingModal';
 import { ContractProps } from '../helper/eth';
-import TransactionLoadingModal from './common/TransactionLoadingModal';
-import ipfs from '../helper/ipfs';
 
 interface RegisterFormFields {
   name: string;

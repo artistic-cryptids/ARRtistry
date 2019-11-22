@@ -16,12 +16,8 @@ import DropZone from './register/DropZone';
 import FileList from './register/FileList';
 import { TextFields, ErrorMessages, DEFAULT_ERRORS } from '../providers/FormProvider';
 import { useFilesContext } from '../providers/FileProvider';
-<<<<<<< HEAD
-import { IPFS_URL_START, saveSingleToIPFSNoCallBack } from '../helper/ipfs';
-=======
-import { IPFS_URL_START, saveSingleToIpfs } from '../helper/ipfs';
+import { IPFS_URL_START, saveSingleToIPFSNoCallBack, saveSingleToIpfs } from '../helper/ipfs';
 import PrivacySelection from "./register/PrivacySelection";
->>>>>>> Add in privacy selection option
 
 const registerValidator: (textFields: TextFields) => ErrorMessages = (_fields) => {
   return DEFAULT_ERRORS;
@@ -93,21 +89,6 @@ const RegisterArtifact: React.FC<ContractProps> = ({ contracts, accounts }) => {
     };
 
     const jsonDataBuffer = Buffer.from(JSON.stringify(jsonData));
-<<<<<<< HEAD
-    const hash = await saveSingleToIPFSNoCallBack(jsonDataBuffer);
-    await contracts.ArtifactApplication.applyFor(
-      currentAccount,
-      artist,
-      IPFS_URL_START + hash,
-      {
-        from: accounts[0],
-        gasLimit: 6000000,
-      },
-    ).catch((err: any) => {
-      // rejection, usually
-      console.log('register error', err);
-    });
-=======
     saveSingleToIpfs(jsonDataBuffer, (hash: string) => {
       contracts.ArtifactApplication.applyFor(
         currentAccount,
@@ -122,7 +103,6 @@ const RegisterArtifact: React.FC<ContractProps> = ({ contracts, accounts }) => {
         console.log('register error', err);
       });
     }).catch((error) => console.log('Something went wrong... oops!')); // TODO(mm5917): handle
->>>>>>> Add in privacy selection option
   };
 
   return (
