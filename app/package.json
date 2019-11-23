@@ -21,6 +21,7 @@
     "bootstrap": "^4.3.1",
     "browserslist": "^4.7.2",
     "eth-ens-namehash": "^2.0.8",
+    "fortmatic": "^1.0.0",
     "ipfs-http-client": "^39.0.2",
     "lodash": "^4.17.15",
     "moment": "^2.24.0",
