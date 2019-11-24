@@ -131,7 +131,7 @@ const TransferArtifact: React.FC<TransferArtifactProps> = ({ tokenId, metaUri, c
       provenanceHash,
       (parseFloat(fields.price) * 100).toString(),
       fields.location,
-      fields.date
+      fields.date,
     ).send(
       {
         from: accounts[0],

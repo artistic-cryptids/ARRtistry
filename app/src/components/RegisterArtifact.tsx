@@ -91,7 +91,7 @@ const RegisterArtifact: React.FC<ContractProps> = ({ contracts, accounts }) => {
     await contracts.ArtifactApplication.methods.applyFor(
       currentAccount,
       artist,
-      IPFS_URL_START + hash
+      IPFS_URL_START + hash,
     ).send(
       {
         from: accounts[0],

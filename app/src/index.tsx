@@ -82,7 +82,6 @@ const doDapp = async (): Promise<void> => {
   }
 
   const networkId = await web3.eth.net.getId();
-  const provider = web3.currentProvider;
 
   const governanceAddr = await addressFromName('governance.artistry.test', networkId, web3);
   const applicationAddr = await addressFromName('application.artistry.test', networkId, web3);
