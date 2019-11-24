@@ -27,7 +27,7 @@ const ContractProvider: React.FC = ({ children }) => {
 
 const App: React.FC<AppProps> = (props) => {
   return (
-    <Web3Provider networkId={props.networkId} accounts={props.accounts}>
+    <Web3Provider web3={props.web3} networkId={props.networkId} accounts={props.accounts}>
       <ContractProvider>
         <SessionProvider address={props.accounts[0]} contracts={props.contracts}>
           <Router {...props}/>
