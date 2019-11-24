@@ -30,7 +30,7 @@ const SoldArtworkItem: React.FC<SoldArtworkItemProps> = ({ soldFor, soldTo, toke
   }, [ArtifactRegistry, tokenId]);
 
   if (!artwork) {
-    return <p>'Loading...'</p>;
+    return <p>Loading...</p>;
   }
 
   console.log('Artwork ' + JSON.stringify(artwork));
