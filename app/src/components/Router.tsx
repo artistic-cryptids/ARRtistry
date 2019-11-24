@@ -10,7 +10,7 @@ import * as View from '../views';
 import Main from './Main';
 import NetworkAside from './NetworkAside';
 
-const Router: React.FC<{}> = () => {
+const Router: React.FC = () => {
   const { user } = useSessionContext();
   const { web3, accounts } = useWeb3Context();
   const { contracts } = useContractContext();

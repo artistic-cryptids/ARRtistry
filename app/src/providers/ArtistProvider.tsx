@@ -17,7 +17,7 @@ export interface Artists {
 
 export const ArtistContext = React.createContext<Artists>({} as any);
 
-export const ArtistProvider: React.FC<{}> = ({ children }) => {
+export const ArtistProvider: React.FC = ({ children }) => {
   const [artists, setArtists] = React.useState<Artist[]>([]);
   const { contracts } = useContractContext();
 

@@ -36,7 +36,7 @@ async function fortmaticWeb3 (): Promise<Web3 | undefined> {
   return new Web3(fm.getProvider());
 };
 
-export const Web3Provider: React.FC<{}> = ({ children }) => {
+export const Web3Provider: React.FC = ({ children }) => {
   const [web3, setWeb3] = React.useState<Web3>();
   const [networkId, setNetworkId] = React.useState<number>();
   const [accounts, setAccounts] = React.useState<string[]>();

@@ -16,7 +16,7 @@ interface ContractInterface {
 
 const ContractContext = React.createContext<ContractInterface>({} as any);
 
-export const ContractProvider: React.FC<{}> = ({ children }) => {
+export const ContractProvider: React.FC = ({ children }) => {
   const [contracts, setContracts] = React.useState<ContractListType | undefined>(undefined);
   const { addressFromName } = useNameServiceContext();
   const { web3 } = useWeb3Context();

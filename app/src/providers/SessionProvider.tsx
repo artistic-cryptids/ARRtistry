@@ -64,7 +64,7 @@ export interface Session {
 
 export const SessionContext = React.createContext<Session>({} as any);
 
-export const SessionProvider: React.FC<{}> = ({ children }) => {
+export const SessionProvider: React.FC = ({ children }) => {
   const context = useNameServiceContext();
   const { accounts } = useWeb3Context();
   const address = accounts[0];

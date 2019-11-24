@@ -9,7 +9,7 @@ import { ArtistProvider } from '../providers/ArtistProvider';
 
 import Router from './Router';
 
-const App: React.FC<{}> = () => {
+const App: React.FC = () => {
   return (
     <Web3Provider>
       <NameServiceProvider>
