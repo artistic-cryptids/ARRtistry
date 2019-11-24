@@ -27,7 +27,8 @@ class ClientArtifacts extends
     const artifactRegistry = this.props.contracts.ArtifactRegistry;
     const currentAccount = this.props.accounts[0];
 
-    artifactRegistry.getOperatorTokenIds(currentAccount)
+    artifactRegistry.methods.getOperatorTokenIds(currentAccount)
+      .call()
       .then((tokenIdObjects: any) => {
         const tokenIds: number[] = [];
         tokenIdObjects.map((tid: any) => tokenIds.push(tid.toNumber()));

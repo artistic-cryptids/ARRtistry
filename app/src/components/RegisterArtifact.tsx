@@ -88,10 +88,11 @@ const RegisterArtifact: React.FC<ContractProps> = ({ contracts, accounts }) => {
 
     const jsonDataBuffer = Buffer.from(JSON.stringify(jsonData));
     const hash = await saveSingleToIPFSNoCallBack(jsonDataBuffer);
-    await contracts.ArtifactApplication.applyFor(
+    await contracts.ArtifactApplication.methods.applyFor(
       currentAccount,
       artist,
-      IPFS_URL_START + hash,
+      IPFS_URL_START + hash
+    ).send(
       {
         from: accounts[0],
         gasLimit: 6000000,

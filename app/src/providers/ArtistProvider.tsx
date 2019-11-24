@@ -20,12 +20,12 @@ export const ArtistProvider: React.FC<{artistContract: any}> = ({ artistContract
 
   React.useEffect(() => {
     const updateArtists = async (): Promise<void> => {
-      const total = await artistContract.getArtistsTotal();
+      const total = await artistContract.methods.getArtistsTotal().call();
       const artists = [];
 
       for (let i = 1; i <= total; i++) {
         const id = i;
-        const hash: string = await artistContract.getArtist(id);
+        const hash: string = await artistContract.methods.getArtist(id).call();
         const hashResponse = await fetch(hash);
         const artist = await hashResponse.json();
         artists.push(artist);
