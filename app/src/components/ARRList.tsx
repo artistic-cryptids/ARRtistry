@@ -22,6 +22,10 @@ const ARRList: React.FC = () => {
     loadARRs();
   }, [Governance]);
 
+  if (!ids) {
+    return null;
+  }
+
   const listItems = ids.map((id: any) =>
     <ARRItem
       id={id}

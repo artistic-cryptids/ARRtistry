@@ -41,6 +41,10 @@ const ClientArtifacts: React.FC = () => {
     );
   }
 
+  if (!tokenIds) {
+    return null;
+  }
+
   const listItems = tokenIds.map((tokenId: number) =>
     <ArtworkItem
       tokenId={tokenId}
