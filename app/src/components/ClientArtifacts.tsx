@@ -3,7 +3,7 @@ import ArtworkItem from './ArtworkItem';
 import CardColumns from 'react-bootstrap/CardColumns';
 import Container from 'react-bootstrap/Container';
 import { useContractContext } from '../providers/ContractProvider';
-import { useWeb3Context } from './Web3Provider';
+import { useWeb3Context } from '../providers/Web3Provider';
 
 interface ClientArtifactsState {
   numClientArtifacts: number;

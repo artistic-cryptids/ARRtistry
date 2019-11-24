@@ -7,7 +7,7 @@ import Accordion from 'react-bootstrap/Accordion';
 import Card from 'react-bootstrap/Card';
 import FormSubmitButton from './register/FormSubmitButton';
 import { useContractContext } from '../providers/ContractProvider';
-import { useWeb3Context } from './Web3Provider';
+import { useWeb3Context } from '../providers/Web3Provider';
 import ArtistSelection from './register/ArtistSelection';
 import RegisterFields from './register/RegisterFields';
 import Row from 'react-bootstrap/Row';

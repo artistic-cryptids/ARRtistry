@@ -7,7 +7,7 @@ import ipfs from '../helper/ipfs';
 import TransactionLoadingModal from './common/TransactionLoadingModal';
 import { useNameServiceContext } from '../providers/NameServiceProvider';
 import { useContractContext } from '../providers/ContractProvider';
-import { useWeb3Context } from './Web3Provider';
+import { useWeb3Context } from '../providers/Web3Provider';
 
 interface TransferArtifactProps {
   tokenId: number;

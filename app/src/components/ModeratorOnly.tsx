@@ -1,7 +1,7 @@
 import * as React from 'react';
 import Container from 'react-bootstrap/Container';
 import { useContractContext } from '../providers/ContractProvider';
-import { useWeb3Context } from './Web3Provider';
+import { useWeb3Context } from '../providers/Web3Provider';
 
 const Governance: React.FC = ({ children }) => {
   const [isGovernor, setIsGovernor] = React.useState<boolean>(false);

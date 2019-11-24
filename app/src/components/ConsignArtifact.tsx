@@ -5,7 +5,7 @@ import Form from 'react-bootstrap/Form';
 import Modal from 'react-bootstrap/Modal';
 import { useNameServiceContext } from '../providers/NameServiceProvider';
 import { useContractContext } from '../providers/ContractProvider';
-import { useWeb3Context } from './Web3Provider';
+import { useWeb3Context } from '../providers/Web3Provider';
 import ENSName from './common/ENSName';
 
 interface ConsignArtifactProps {

@@ -10,7 +10,7 @@ import Spinner from 'react-bootstrap/Spinner';
 import TransactionLoadingModal from './common/TransactionLoadingModal';
 import ipfs from '../helper/ipfs';
 import { useContractContext } from '../providers/ContractProvider';
-import { useWeb3Context } from './Web3Provider';
+import { useWeb3Context } from '../providers/Web3Provider';
 
 interface RegisterFormFields {
   name: string;

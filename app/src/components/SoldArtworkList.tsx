@@ -2,7 +2,7 @@ import * as React from 'react';
 import SoldArtworkItem from './SoldArtworkItem';
 import CardColumns from 'react-bootstrap/CardColumns';
 import { useContractContext } from '../providers/ContractProvider';
-import { useWeb3Context } from './Web3Provider';
+import { useWeb3Context } from '../providers/Web3Provider';
 
 interface SoldInformation {
   tokenId: number;
