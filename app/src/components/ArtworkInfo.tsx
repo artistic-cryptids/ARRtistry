@@ -67,39 +67,38 @@ const ArtworkInfo: React.FC<ArtworkInfoProps> = ({ artwork, id, fullscreen, chil
   const { Artists } = useContractContext();
 
   const hashToArtist = async (hash: string): Promise<Artist> => {
-    console.log(hash);
     const response = await fetch(hash);
     return response.json();
   };
 
-  const getArtistInfo = (): void => {
-    if (!fields.artistId && retrievedData) {
-      return;
-    }
-
-    Artists.methods.getArtist(fields.artistId)
-      .call()
-      .then((hash: string) => hashToArtist(hash))
-      .then((artist: Artist) => {
-        setRetrievedData(true);
-        setArtist(artist);
-      })
-      .catch(console.log);
-  };
-
   React.useEffect(() => {
+    const getArtistInfo = (): void => {
+      if (!fields.artistId && retrievedData) {
+        return;
+      }
+
+      Artists.methods.getArtist(fields.artistId)
+        .call()
+        .then((hash: string) => hashToArtist(hash))
+        .then((artist: Artist) => {
+          setArtist(artist);
+          setRetrievedData(true);
+        })
+        .catch(console.log);
+    };
+
     const setInfoFromJson = async (): Promise<void> => {
       const metaUri = artwork.metaUri;
 
       const response = await fetch(metaUri);
       const infoJson = await response.json();
-
+      console.log(infoJson);
       setFields(infoJson);
 
       getArtistInfo();
     };
     setInfoFromJson();
-  }, [Artists, artwork.metaUri, getArtistInfo]);
+  }, [Artists, artwork.metaUri, fields, retrievedData]);
 
   const imgSrc = fields.imageIpfsHash === ''
     ? 'https://file.globalupload.io/HO8sN3I2nJ.png'

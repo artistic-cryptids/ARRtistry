@@ -19,6 +19,7 @@ const ProposalList: React.FC = () => {
       idsAsObjects.map((val: any) => ids.push(val.toString()));
       setIds(ids);
     };
+    console.log("1");
     loadProposals();
   }, [Governance]);
 

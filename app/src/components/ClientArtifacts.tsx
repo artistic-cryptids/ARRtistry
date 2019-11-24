@@ -24,7 +24,7 @@ const ClientArtifacts: React.FC = () => {
       .call()
       .then((tokenIdObjects: any) => {
         const tokenIds: number[] = [];
-        tokenIdObjects.map((tid: any) => tokenIds.push(tid.toNumber()));
+        tokenIdObjects.map((tid: any) => tokenIds.push(tid));
         if (tokenIds.length !== numClientArtifacts) {
           setNumClientArtifacts(tokenIds.length);
           setTokenIds(tokenIds);
