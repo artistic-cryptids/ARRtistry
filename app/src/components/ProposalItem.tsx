@@ -16,7 +16,7 @@ type ProposalItemState = {
 class ProposalItem extends React.Component<ProposalItemProps, ProposalItemState> {
   rejectProposal = (_: React.MouseEvent): void => {
     console.log('Rejecting proposal ' + this.props.id);
-    this.props.contracts.Governance.reject(this.props.id, {
+    this.props.contracts.Governance.methods.reject(this.props.id).send({
       from: this.props.accounts[0],
       gasLimit: 6000000,
     });
@@ -24,14 +24,15 @@ class ProposalItem extends React.Component<ProposalItemProps, ProposalItemState>
 
   approveProposal = (_: React.MouseEvent): void => {
     console.log('Approving proposal ' + this.props.id);
-    this.props.contracts.Governance.approve(this.props.id, {
+    this.props.contracts.Governance.methods.approve(this.props.id).send({
       from: this.props.accounts[0],
       gasLimit: 6000000,
     });
   }
 
   componentDidMount (): void {
-    this.props.contracts.ArtifactApplication.getProposal(this.props.id)
+    this.props.contracts.ArtifactApplication.methods.getProposal(this.props.id)
+      .call()
       .then((proposalData: any): void => {
         const proposal = {
           metaUri: proposalData[2],

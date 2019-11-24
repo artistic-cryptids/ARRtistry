@@ -18,7 +18,8 @@ type SoldArtworkItemState = {
 class SoldArtworkItem extends React.Component<SoldArtworkItemProps, SoldArtworkItemState> {
   componentDidMount (): void {
     const registry = this.props.contracts.ArtifactRegistry;
-    registry.getArtifactForToken(this.props.tokenId)
+    registry.methods.getArtifactForToken(this.props.tokenId)
+      .call()
       .then((artworkData: any) => {
         console.log(artworkData);
         const artwork = {
