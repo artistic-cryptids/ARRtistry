@@ -54,7 +54,8 @@ class RegisterArtist extends React.Component<ContractProps, RegisterArtistState>
   };
 
   componentDidMount (): void {
-    this.props.contracts.Governance.isGovernor(this.props.accounts[0])
+    this.props.contracts.Governance.methods.isGovernor(this.props.accounts[0])
+      .call()
       .then((isGovernor: any) => {
         const fields = this.state.fields as Pick<RegisterFormFields, keyof RegisterFormFields>;
         this.setState({
@@ -89,8 +90,9 @@ class RegisterArtist extends React.Component<ContractProps, RegisterArtistState>
     await this.saveToIpfs(files, this.setMetaHash);
 
     const ipfsUrlStart = 'https://ipfs.io/ipfs/';
-    await contracts.Artists.addArtist(
+    await contracts.Artists.methods.addArtist(
       ipfsUrlStart + this.state.fields.metaIpfsHash,
+    ).send(
       {
         from: accounts[0],
         gasLimit: 6000000,

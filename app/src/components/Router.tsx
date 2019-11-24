@@ -2,15 +2,18 @@ import * as React from 'react';
 import { Route, Switch, Redirect, BrowserRouter } from 'react-router-dom';
 
 import { useSessionContext } from '../providers/SessionProvider';
+import { useWeb3Context } from '../providers/Web3Provider';
+import { useContractContext } from '../providers/ContractProvider';
 
 import * as View from '../views';
 
-import { AppProps } from './App';
 import Main from './Main';
 import NetworkAside from './NetworkAside';
 
-const Router: React.FC<AppProps> = ({ web3, accounts, contracts }) => {
+const Router: React.FC = () => {
   const { user } = useSessionContext();
+  const { web3, accounts } = useWeb3Context();
+  const { contracts } = useContractContext();
 
   return (
     <BrowserRouter>

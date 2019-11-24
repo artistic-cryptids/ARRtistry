@@ -114,7 +114,7 @@ const TransferArtifact: React.FC<TransferArtifactProps> = ({ tokenId, metaUri, c
     setSubmitted(true);
 
     const recipientAddress = await addressFromName(fields.recipientName);
-    const address = await artifactRegistry.ownerOf(tokenId);
+    const address = await artifactRegistry.methods.ownerOf(tokenId).call();
     owner = address;
     const provenanceHash = await addProvenance(
       fields.price,
@@ -124,7 +124,7 @@ const TransferArtifact: React.FC<TransferArtifactProps> = ({ tokenId, metaUri, c
       fields.date,
     );
 
-    artifactRegistry.transfer(
+    artifactRegistry.methods.transfer(
       owner,
       recipientAddress,
       tokenId,
@@ -132,6 +132,7 @@ const TransferArtifact: React.FC<TransferArtifactProps> = ({ tokenId, metaUri, c
       (parseFloat(fields.price) * 100).toString(),
       fields.location,
       fields.date,
+    ).send(
       {
         from: accounts[0],
         gasLimit: 6000000,

@@ -12,7 +12,8 @@ type GovernanceState = {
 
 class Governance extends React.Component<GovernanceProps, GovernanceState> {
   componentDidMount (): void {
-    this.props.contracts.Governance.isGovernor(this.props.accounts[0])
+    this.props.contracts.Governance.methods.isGovernor(this.props.accounts[0])
+      .call()
       .then((isGovernor: any) => this.setState({ isGovernor: isGovernor }))
       .catch(console.log);
   }

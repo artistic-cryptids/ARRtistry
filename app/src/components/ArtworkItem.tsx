@@ -17,7 +17,8 @@ const ArtworkItem: React.FC<ArtworkItemProps> = ({ contracts, accounts, tokenId,
   const registry = contracts.ArtifactRegistry;
 
   React.useEffect(() => {
-    registry.getArtifactForToken(tokenId)
+    registry.methods.getArtifactForToken(tokenId)
+      .call()
       .then((artworkData: any) => {
         console.log(artworkData);
         const artwork = {

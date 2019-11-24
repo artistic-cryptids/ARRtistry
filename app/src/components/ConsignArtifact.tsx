@@ -38,7 +38,8 @@ const ConsignArtifact: React.FC<ConsignArtifactProps> = ({ tokenId, contracts, a
   React.useEffect(() => {
     const artifactRegistry = contracts.ArtifactRegistry;
 
-    artifactRegistry.getApproved(tokenId, { from: accounts[0] })
+    artifactRegistry.methods.getApproved(tokenId)
+      .call({ from: accounts[0] })
       .then((account: string) => setConsignedAccount(account))
       .catch(console.log);
   }, [accounts, contracts, tokenId]);
@@ -46,9 +47,10 @@ const ConsignArtifact: React.FC<ConsignArtifactProps> = ({ tokenId, contracts, a
   const consign = (address: string): void => {
     const artifactRegistry = contracts.ArtifactRegistry;
 
-    artifactRegistry.approve(
+    artifactRegistry.methods.approve(
       address,
       tokenId,
+    ).send(
       {
         from: accounts[0],
         gasLimit: 6000000,
