@@ -68,9 +68,16 @@ const addressFromName = (name: string, networkId: number, web3: any): Promise<st
 };
 
 const doDapp = async (): Promise<void> => {
-  const web3 = await fortmaticWeb3();
+  console.log("Attempting to use injected web3");
+  let web3 = await retrieveWeb3();
 
   if (!web3) {
+    console.log("Attempting to use fortmatic web3");
+    web3 = await fortmaticWeb3();
+  }
+
+  if (!web3) {
+    console.log("Attempts to grab web3 have failed");
     return;
   }
 
