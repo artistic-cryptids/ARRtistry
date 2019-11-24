@@ -54,4 +54,4 @@ export const ContractProvider: React.FC = ({ children }) => {
   );
 };
 
-export const useContractContext: () => ContractInterface = () => React.useContext<ContractInterface>(ContractContext);
+export const useContractContext: () => ContractListType = () => React.useContext<ContractListType>(ContractContext);
