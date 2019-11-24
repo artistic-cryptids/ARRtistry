@@ -1,4 +1,6 @@
 import * as React from 'react';
+import Loading from '../components/common/Loading';
+import { useContractContext } from './ContractProvider';
 
 export interface Artist {
   id: number;
@@ -15,10 +17,12 @@ export interface Artists {
 
 export const ArtistContext = React.createContext<Artists>({} as any);
 
-export const ArtistProvider: React.FC<{artistContract: any}> = ({ artistContract, children }) => {
+export const ArtistProvider: React.FC<{}> = ({ children }) => {
   const [artists, setArtists] = React.useState<Artist[]>([]);
+  const { contracts } = useContractContext();
 
   React.useEffect(() => {
+    const artistContract = contracts.Artists;
     const updateArtists = async (): Promise<void> => {
       const total = await artistContract.methods.getArtistsTotal().call();
       const artists = [];
@@ -35,7 +39,11 @@ export const ArtistProvider: React.FC<{artistContract: any}> = ({ artistContract
     };
 
     updateArtists();
-  }, [artistContract]);
+  }, [contracts]);
+
+  if (!artists) {
+    return <Loading/>;
+  }
 
   return (
     <ArtistContext.Provider value={{ artists: artists }}>

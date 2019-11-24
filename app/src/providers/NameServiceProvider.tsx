@@ -3,6 +3,7 @@ import ENSRegistry from '../contracts/ENSRegistry.json';
 import ENSResolver from '../contracts/ENSResolver.json';
 import { useWeb3Context } from './Web3Provider';
 import { getABIAndAddress } from '../helper/eth';
+import Loading from '../components/common/Loading';
 
 // eslint-disable-next-line
 const namehash = require('eth-ens-namehash');
@@ -78,6 +79,12 @@ export const NameServiceProvider: React.FC = ({ children }) => {
         return '';
       });
   };
+
+  if (!ens) {
+    return <Loading/>;
+  }
+
+  console.log('Name service provided');
 
   return (
     <NameServiceContext.Provider value={{

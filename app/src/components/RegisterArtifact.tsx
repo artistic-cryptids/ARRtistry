@@ -104,7 +104,7 @@ const RegisterArtifact: React.FC<ContractProps> = ({ contracts, accounts }) => {
   };
 
   return (
-    <ArtistProvider artistContract={contracts.Artists}>
+    <ArtistProvider>
       <RegisterForm validator={registerValidator} onSubmit={onSubmit}>
         <Row>
           <Col sm={4}>
