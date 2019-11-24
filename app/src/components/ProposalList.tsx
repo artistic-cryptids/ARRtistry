@@ -23,7 +23,7 @@ class ProposalList extends React.Component<ContractProps, ProposalListState> {
   }
 
   async loadProposals (): Promise<void> {
-    const idsAsObjects = await this.props.contracts.Governance.getProposals();
+    const idsAsObjects = await this.props.contracts.Governance.methods.getProposals().call();
     const ids: string[] = [];
     idsAsObjects.map((val: any) => ids.push(val.toString()));
     if (!this.state || this.state.ids !== ids) {

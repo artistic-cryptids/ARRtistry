@@ -23,7 +23,7 @@ class ARRList extends React.Component<ContractProps, ARRListState> {
   }
 
   async loadARRs (): Promise<void> {
-    const len = await this.props.contracts.Governance.getARRLength();
+    const len = await this.props.contracts.Governance.methods.getARRLength().call();
 
     const ids = [];
     for (let i = 0; i < len; i++) {

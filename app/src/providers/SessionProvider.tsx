@@ -1,6 +1,6 @@
 import * as React from 'react';
-import * as Contracts from '../helper/contracts';
 import { useNameServiceContext } from './NameServiceProvider';
+import { useWeb3Context } from './Web3Provider';
 
 const DEFAULT_USER = {
   nickname: 'John Doe',
@@ -62,15 +62,12 @@ export interface Session {
   setUser: React.Dispatch<React.SetStateAction<User>>;
 }
 
-interface SessionProviderProps {
-  address: string;
-  contracts: Contracts.ContractListType;
-}
-
 export const SessionContext = React.createContext<Session>({} as any);
 
-export const SessionProvider: React.FC<SessionProviderProps> = ({ address, children }) => {
+export const SessionProvider: React.FC = ({ children }) => {
   const context = useNameServiceContext();
+  const { accounts } = useWeb3Context();
+  const address = accounts[0];
 
   const defaultUser = DEFAULT_USER;
   const [user, setUser] = React.useState<User>(defaultUser);
