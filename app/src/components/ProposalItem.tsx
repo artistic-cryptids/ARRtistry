@@ -42,7 +42,7 @@ const ProposalItem: React.FC<ProposalItemProps> = ({ id }) => {
         setProposal(proposal);
       })
       .catch(console.log);
-  }, []);
+  }, [ArtifactApplication, id]);
 
   if (!proposal) {
     return null;

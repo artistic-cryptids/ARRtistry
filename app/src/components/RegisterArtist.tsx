@@ -54,7 +54,7 @@ const RegisterArtist: React.FC = () => {
         setFields(newFields);
       })
       .catch(console.log);
-  }, [Governance]);
+  }, [Governance, accounts, fields]);
 
   const setMetaHash = (ipfsId: string): void => {
     setFields({ ...fields, metaIpfsHash: ipfsId });

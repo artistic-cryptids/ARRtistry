@@ -38,7 +38,7 @@ const ARRItem: React.FC<ARRItemProps> = ({ id }) => {
     };
 
     loadARR();
-  }, [ArtifactApplication]);
+  }, [ArtifactApplication, id]);
 
   if (!ARR) {
     return null;

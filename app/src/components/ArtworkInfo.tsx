@@ -99,7 +99,7 @@ const ArtworkInfo: React.FC<ArtworkInfoProps> = ({ artwork, id, fullscreen, chil
       getArtistInfo();
     };
     setInfoFromJson();
-  }, [Artists]);
+  }, [Artists, artwork.metaUri, getArtistInfo]);
 
   const imgSrc = fields.imageIpfsHash === ''
     ? 'https://file.globalupload.io/HO8sN3I2nJ.png'

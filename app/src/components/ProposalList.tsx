@@ -20,7 +20,7 @@ const ProposalList: React.FC = () => {
       setIds(ids);
     };
     loadProposals();
-  }, []);
+  }, [Governance]);
 
   const listItems = ids.map((id: any) =>
     <ProposalItem

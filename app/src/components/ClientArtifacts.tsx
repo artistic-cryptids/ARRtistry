@@ -31,7 +31,7 @@ const ClientArtifacts: React.FC = () => {
         }
       })
       .catch(console.log);
-  }, []);
+  }, [ArtifactRegistry, accounts, numClientArtifacts]);
 
   if (!numClientArtifacts) {
     return (

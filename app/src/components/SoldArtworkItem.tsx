@@ -27,7 +27,7 @@ const SoldArtworkItem: React.FC<SoldArtworkItemProps> = ({ soldFor, soldTo, toke
         setArtwork(artwork);
       })
       .catch(console.log);
-  }, [ArtifactRegistry]);
+  }, [ArtifactRegistry,, tokenId]);
 
   if (!artwork) {
     return <p>'Loading...'</p>;
