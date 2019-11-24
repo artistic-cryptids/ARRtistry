@@ -11,10 +11,6 @@ interface SoldArtworkItemProps {
   tokenId: number;
 }
 
-type SoldArtworkItemState = {
-  artwork: any;
-}
-
 const SoldArtworkItem: React.FC<SoldArtworkItemProps> = ({ soldFor, soldTo, tokenId }) => {
   const [artwork, setArtwork] = React.useState<any>();
 
@@ -34,7 +30,7 @@ const SoldArtworkItem: React.FC<SoldArtworkItemProps> = ({ soldFor, soldTo, toke
   }, [ArtifactRegistry]);
 
   if (!artwork) {
-    return 'Loading...';
+    return <p>'Loading...'</p>;
   }
 
   console.log('Artwork ' + JSON.stringify(artwork));
