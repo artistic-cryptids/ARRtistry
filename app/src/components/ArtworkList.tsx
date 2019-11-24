@@ -1,7 +1,6 @@
 import * as React from 'react';
 import ArtworkItem from './ArtworkItem';
 import CardColumns from 'react-bootstrap/CardColumns';
-import { ContractProps } from '../helper/eth';
 import { useWeb3Context } from '../providers/Web3Provider';
 import { useContractContext } from '../providers/ContractProvider';
 import { MetadataArtworkCard } from './ArtworkCard';

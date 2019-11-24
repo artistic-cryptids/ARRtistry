@@ -50,7 +50,6 @@ const ArtworkInfo: React.FC<ArtworkInfoProps> = ({ artwork, id, fullscreen, chil
     birthYear: '',
     deathYear: '',
   });
-  const [metaUri, setMetaUri] = React.useState<string>(artwork.metaUri);
   const [retrievedData, setRetrievedData] = React.useState<boolean>(false);
   const [fields, setFields] = React.useState<ArtworkInfoFields>({
     title: '',
@@ -80,7 +79,7 @@ const ArtworkInfo: React.FC<ArtworkInfoProps> = ({ artwork, id, fullscreen, chil
 
     Artists.methods.getArtist(fields.artistId)
       .call()
-      .then((hash: string) => this.hashToArtist(hash))
+      .then((hash: string) => hashToArtist(hash))
       .then((artist: Artist) => {
         setRetrievedData(true);
         setArtist(artist);
@@ -89,7 +88,7 @@ const ArtworkInfo: React.FC<ArtworkInfoProps> = ({ artwork, id, fullscreen, chil
   };
 
   React.useEffect(() => {
-    async setInfoFromJson (): Promise<void> {
+    const setInfoFromJson = async (): Promise<void> => {
       const metaUri = artwork.metaUri;
 
       const response = await fetch(metaUri);
@@ -106,7 +105,7 @@ const ArtworkInfo: React.FC<ArtworkInfoProps> = ({ artwork, id, fullscreen, chil
     ? 'https://file.globalupload.io/HO8sN3I2nJ.png'
     : 'https://ipfs.io/ipfs/' + fields.imageIpfsHash;
 
-  if (tretrievedData) {
+  if (retrievedData) {
     return (
       <ArtworkCard
         id={id}

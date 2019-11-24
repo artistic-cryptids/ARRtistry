@@ -22,7 +22,7 @@ const ProposalItem: React.FC<ProposalItemProps> = ({ id }) => {
       from: accounts[0],
       gasLimit: 6000000,
     });
-  }
+  };
 
   const approveProposal = (_: React.MouseEvent): void => {
     console.log('Approving proposal ' + id);
@@ -30,7 +30,7 @@ const ProposalItem: React.FC<ProposalItemProps> = ({ id }) => {
       from: accounts[0],
       gasLimit: 6000000,
     });
-  }
+  };
 
   React.useEffect(() => {
     ArtifactApplication.methods.getProposal(id)

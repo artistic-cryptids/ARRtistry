@@ -24,7 +24,7 @@ const ARRItem: React.FC<ARRItemProps> = ({ id }) => {
   const { ArtifactApplication } = useContractContext();
 
   React.useEffect(() => {
-    async loadARR (): Promise<void> {
+    const loadARR = async (): Promise<void> => {
       const ARRData = await ArtifactApplication.methods.getARR(id).call();
       const ARR = {
         from: ARRData[0],
@@ -34,8 +34,9 @@ const ARRItem: React.FC<ARRItemProps> = ({ id }) => {
         arr: ARRData[4] / 100,
         location: ARRData[5],
       };
-      setArr(ARR);
+      setARR(ARR);
     };
+
     loadARR();
   }, [ArtifactApplication]);
 

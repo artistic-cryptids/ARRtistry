@@ -1,5 +1,4 @@
 import { AbiItem } from 'web3-utils';
-import * as Contracts from './contracts';
 
 export interface AST {
   absolutePath: string;

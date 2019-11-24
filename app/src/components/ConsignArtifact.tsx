@@ -35,7 +35,7 @@ const ConsignArtifact: React.FC<ConsignArtifactProps> = ({ tokenId }) => {
   const [showConsignment, setShowConsignment] = React.useState<boolean>(false);
 
   const { addressFromName } = useNameServiceContext();
-  const { ArtifactRegistry} = useContractContext();
+  const { ArtifactRegistry } = useContractContext();
   const { accounts } = useWeb3Context();
 
   React.useEffect(() => {
@@ -43,7 +43,7 @@ const ConsignArtifact: React.FC<ConsignArtifactProps> = ({ tokenId }) => {
       .call({ from: accounts[0] })
       .then((account: string) => setConsignedAccount(account))
       .catch(console.log);
-  }, [accounts, contracts, tokenId, ArtifactRegistry]);
+  }, [accounts, tokenId, ArtifactRegistry]);
 
   const consign = (address: string): void => {
     ArtifactRegistry.methods.approve(

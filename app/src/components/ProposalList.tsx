@@ -13,7 +13,7 @@ const ProposalList: React.FC = () => {
   const { Governance } = useContractContext();
 
   React.useEffect(() => {
-    async loadProposals (): Promise<void> {
+    const loadProposals = async (): Promise<void> => {
       const idsAsObjects = await Governance.methods.getProposals().call();
       const ids: string[] = [];
       idsAsObjects.map((val: any) => ids.push(val.toString()));

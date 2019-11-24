@@ -126,7 +126,7 @@ const TransferArtifact: React.FC<TransferArtifactProps> = ({ tokenId, metaUri })
       fields.date,
     );
 
-    artifactRegistry.methods.transfer(
+    ArtifactRegistry.methods.transfer(
       owner,
       recipientAddress,
       tokenId,

@@ -15,7 +15,7 @@ const Router: React.FC = () => {
 
   return (
     <BrowserRouter>
-      <NetworkAside/>
+      <NetworkAside web3={web3}/>
       <Switch>
         { user.role !== 'DACS' && <Redirect from='/manage/' to='/'/> }
         {/* TODO: Needs more logic here, just depends on roles */}

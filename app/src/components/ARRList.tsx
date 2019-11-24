@@ -9,7 +9,7 @@ const ARRList: React.FC = () => {
   const { Governance } = useContractContext();
 
   React.useEffect(() => {
-    async loadARRs (): Promise<void> {
+    const loadARRs = async (): Promise<void> => {
       const len = await Governance.methods.getARRLength().call();
 
       const ids = [];
