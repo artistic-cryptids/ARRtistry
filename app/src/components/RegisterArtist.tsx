@@ -7,9 +7,10 @@ import Container from 'react-bootstrap/Container';
 import Form from 'react-bootstrap/Form';
 import Accordion from 'react-bootstrap/Accordion';
 import Spinner from 'react-bootstrap/Spinner';
-import { ContractProps } from '../helper/eth';
 import TransactionLoadingModal from './common/TransactionLoadingModal';
 import ipfs from '../helper/ipfs';
+import { useContractContext } from '../providers/ContractProvider';
+import { useWeb3Context } from './Web3Provider';
 
 interface RegisterFormFields {
   name: string;
@@ -17,13 +18,6 @@ interface RegisterFormFields {
   birthYear: string;
   deathYear: string;
   metaIpfsHash: string;
-}
-
-interface RegisterArtistState {
-  fields: RegisterFormFields;
-  validated: boolean;
-  submitted: boolean;
-  isGovernor: false;
 }
 
 type InputChangeEvent = React.FormEvent<any> &
@@ -36,198 +30,184 @@ type InputChangeEvent = React.FormEvent<any> &
 
 const GENERIC_FEEDBACK = <Form.Control.Feedback>Looks good!</Form.Control.Feedback>;
 
-class RegisterArtist extends React.Component<ContractProps, RegisterArtistState> {
-  constructor (props: ContractProps) {
-    super(props);
-    this.state = {
-      validated: false,
-      submitted: false,
-      isGovernor: false,
-      fields: {
-        name: '',
-        nationality: '',
-        birthYear: '',
-        deathYear: '',
-        metaIpfsHash: '',
-      },
-    };
-  };
-
-  componentDidMount (): void {
-    this.props.contracts.Governance.methods.isGovernor(this.props.accounts[0])
-      .call()
-      .then((isGovernor: any) => {
-        const fields = this.state.fields as Pick<RegisterFormFields, keyof RegisterFormFields>;
-        this.setState({
-          isGovernor: isGovernor,
-          fields: fields,
-        });
-      })
-      .catch((err: any) => { console.log(err); });
-  };
-
-  registerArtist = async (event: React.FormEvent<HTMLFormElement>): Promise<void> => {
-    event.stopPropagation();
-    event.preventDefault();
-
-    const form = event.currentTarget;
-    if (!form.checkValidity()) {
-      return;
-    }
-
-    this.setState({ validated: true, submitted: true });
-
-    const { contracts, accounts } = this.props;
-
-    // eslint-disable-next-line
-    const { metaIpfsHash, ...restOfTheFields } = this.state.fields;
-    const jsonData: any = restOfTheFields;
-
-    const jsonDataBuffer = Buffer.from(JSON.stringify(jsonData));
-    const files = Array(jsonDataBuffer);
-
-    // TODO: this upload takes like 5 seconds. Some kind of loading notification should display
-    await this.saveToIpfs(files, this.setMetaHash);
-
-    const ipfsUrlStart = 'https://ipfs.io/ipfs/';
-    await contracts.Artists.methods.addArtist(
-      ipfsUrlStart + this.state.fields.metaIpfsHash,
-    ).send(
-      {
-        from: accounts[0],
-        gasLimit: 6000000,
-      },
-    ).catch((err: any) => {
-      // rejection, usually
-      console.log('register artist err:');
-      console.log(err);
+const RegisterArtist: React.FC = () => {
+    const [fields, setFields] = React.useState<RegisterFormFields>({
+      name: '',
+      nationality: '',
+      birthYear: '',
+      deathYear: '',
+      metaIpfsHash: '',
     });
-    this.setState({ submitted: false });
-  };
+    const [validated, setValidated] = React.useState<boolean>(false);
+    const [submitted, setSubmitted] = React.useState<boolean>(false);
+    const [isGovernor, setIsGovernor] = React.useState<boolean>(false);
 
-  renderSubmitButton = (): React.ReactNode => {
-    if (!this.state.validated && !this.state.submitted) {
-      return <Button type="submit" className="my-2 btn-block" variant="primary">Submit</Button>;
-    } else if (this.state.submitted) {
-      return <Button type="submit" className="my-2 btn-block" variant="primary" disabled>
-        <Spinner
-          as="span"
-          animation="grow"
-          size="sm"
-          role="status"
-          aria-hidden="true"
-        />
-        Submitting...
-      </Button>;
-    }
-  }
+    const { Governance, Artists } = useContractContext();
+    const { accounts } = useWeb3Context();
 
-  setMetaHash = (ipfsId: string): void => {
-    this.setState({ fields: { ...this.state.fields, metaIpfsHash: ipfsId } });
-  };
+    React.useEffect(() => {
+      Governance.methods.isGovernor(accounts[0])
+        .call()
+        .then((isGovernor: any) => {
+          const fields = fields as Pick<RegisterFormFields, keyof RegisterFormFields>;
+          setIsGovernor(isGovernor);
+          setFields(fields);
+        })
+        .catch(console.log);
+    }, [Governance]);
 
-  async saveToIpfs (files: any, afterwardsFunction: (arg0: string) => void): Promise<void> {
-    let ipfsId: string;
-    await ipfs.add([...files], { progress: (prog: any) => console.log(`received: ${prog}`) })
-      .then((response: any) => {
-        ipfsId = response[0].hash;
-        afterwardsFunction(ipfsId);
-      }).catch((err: any) => {
-        console.log(err);
-      });
-  }
+    const registerArtist = async (event: React.FormEvent<HTMLFormElement>): Promise<void> => {
+      event.stopPropagation();
+      event.preventDefault();
 
-  // This needs to be an arrow constructor to bind `this`, which is bonkers.
-  inputChangeHandler = (event: InputChangeEvent): void => {
-    const key = event.target.id;
-    const val = event.target.value;
+      const form = event.currentTarget;
+      if (!form.checkValidity()) {
+        return;
+      }
 
-    const stateUpdate = { fields: this.state.fields as Pick<RegisterFormFields, keyof RegisterFormFields> };
-    stateUpdate.fields[key] = val;
-    this.setState(stateUpdate);
-  };
+      setValidated(true);
+      setSubmitted(true);
 
-  renderArtistInformation = (): React.ReactNode => {
-    return (
-      <Container>
-        <Form.Row>
-          <Form.Group as={Col} controlId="name">
-            <Form.Label>Artist Name</Form.Label>
-            <Form.Control
-              required
-              type="text"
-              onChange={this.inputChangeHandler}/>
-            {GENERIC_FEEDBACK}
-          </Form.Group>
-        </Form.Row>
+      // eslint-disable-next-line
+      const { metaIpfsHash, ...restOfTheFields } = fields;
+      const jsonData: any = restOfTheFields;
 
-        <Form.Row>
-          <Form.Group as={Col} controlId="nationality">
-            <Form.Label>Artist Nationality</Form.Label>
-            <Form.Control
-              required
-              type="text"
-              onChange={this.inputChangeHandler}/>
-            {GENERIC_FEEDBACK}
-          </Form.Group>
-        </Form.Row>
+      const jsonDataBuffer = Buffer.from(JSON.stringify(jsonData));
+      const files = Array(jsonDataBuffer);
 
-        <Form.Row>
-          <Form.Group as={Col} controlId="birthYear">
-            <Form.Label>Year of Artist Birth</Form.Label>
-            <Form.Control
-              required
-              type="text"
-              onChange={this.inputChangeHandler}/>
-            {GENERIC_FEEDBACK}
-          </Form.Group>
+      // TODO: this upload takes like 5 seconds. Some kind of loading notification should display
+      await saveToIpfs(files, this.setMetaHash);
 
-          <Form.Group as={Col} controlId="deathYear">
-            <Form.Label>Year of Artist Death (optional)</Form.Label>
-            <Form.Control
-              type="text"
-              onChange={this.inputChangeHandler}/>
-            {GENERIC_FEEDBACK}
-          </Form.Group>
-        </Form.Row>
-      </Container>
-    );
-  };
+      const ipfsUrlStart = 'https://ipfs.io/ipfs/';
+      await Artists.methods.addArtist(
+        ipfsUrlStart + fields.metaIpfsHash,
+      ).send(
+        {
+          from: accounts[0],
+          gasLimit: 6000000,
+        },
+      ).catch(console.log);
+      setSubmitted(false);
+    };
 
-  // TODO: Make required fields actually required
-  render (): React.ReactNode {
-    if (!this.state || this.state.isGovernor) {
+    const renderSubmitButton = (): React.ReactNode => {
+      if (!validated && !submitted) {
+        return <Button type="submit" className="my-2 btn-block" variant="primary">Submit</Button>;
+      } else if (submitted) {
+        return <Button type="submit" className="my-2 btn-block" variant="primary" disabled>
+          <Spinner
+            as="span"
+            animation="grow"
+            size="sm"
+            role="status"
+            aria-hidden="true"
+          />
+          Submitting...
+        </Button>;
+      }
+    };
+
+    const setMetaHash = (ipfsId: string): void => {
+      setFields({ ...fields, metaIpfsHash: ipfsId });
+    };
+
+    const async saveToIpfs (files: any, afterwardsFunction: (arg0: string) => void): Promise<void> {
+      let ipfsId: string;
+      await ipfs.add([...files], { progress: (prog: any) => console.log(`received: ${prog}`) })
+        .then((response: any) => {
+          ipfsId = response[0].hash;
+          afterwardsFunction(ipfsId);
+        }).catch(console.log);
+    };
+
+    const inputChangeHandler = (event: InputChangeEvent): void => {
+      const key = event.target.id;
+      const val = event.target.value;
+
+      const stateUpdate = { fields: fields as Pick<RegisterFormFields, keyof RegisterFormFields> };
+      stateUpdate.fields[key] = val;
+      setFields(stateUpdate.fields);
+    };
+
+    const renderArtistInformation = (): React.ReactNode => {
+      return (
+        <Container>
+          <Form.Row>
+            <Form.Group as={Col} controlId="name">
+              <Form.Label>Artist Name</Form.Label>
+              <Form.Control
+                required
+                type="text"
+                onChange={inputChangeHandler}/>
+              {GENERIC_FEEDBACK}
+            </Form.Group>
+          </Form.Row>
+
+          <Form.Row>
+            <Form.Group as={Col} controlId="nationality">
+              <Form.Label>Artist Nationality</Form.Label>
+              <Form.Control
+                required
+                type="text"
+                onChange={inputChangeHandler}/>
+              {GENERIC_FEEDBACK}
+            </Form.Group>
+          </Form.Row>
+
+          <Form.Row>
+            <Form.Group as={Col} controlId="birthYear">
+              <Form.Label>Year of Artist Birth</Form.Label>
+              <Form.Control
+                required
+                type="text"
+                onChange={inputChangeHandler}/>
+              {GENERIC_FEEDBACK}
+            </Form.Group>
+
+            <Form.Group as={Col} controlId="deathYear">
+              <Form.Label>Year of Artist Death (optional)</Form.Label>
+              <Form.Control
+                type="text"
+                onChange={inputChangeHandler}/>
+              {GENERIC_FEEDBACK}
+            </Form.Group>
+          </Form.Row>
+        </Container>
+      );
+    };
+
+    if (isGovernor) {
       return (
         <Container>
           <h5>
             Register a new Artist
-          </h5>
-          <hr/>
-          <Row>
+            </h5>
+            <hr/>
+            <Row>
             <Col sm={8}>
               <Form
                 noValidate
-                validated={this.state.validated}
-                onSubmit={this.registerArtist}
-              >
+                validated={validated}
+                onSubmit={registerArtist}
+                >
                 <Accordion defaultActiveKey="0">
                   <Card>
                     <Accordion.Toggle as={Card.Header} eventKey="0">
                       Artist Information
-                    </Accordion.Toggle>
-                    <Accordion.Collapse eventKey="0">
-                      <Card.Body>
-                        {this.renderArtistInformation()}
-                      </Card.Body>
-                    </Accordion.Collapse>
+                      </Accordion.Toggle>
+                      <Accordion.Collapse eventKey="0">
+                        <Card.Body>
+                          {renderArtistInformation()}
+                        </Card.Body>
+                      </Accordion.Collapse>
                   </Card>
                 </Accordion>
-                {this.renderSubmitButton()}
+                {renderSubmitButton()}
               </Form>
             </Col>
-          </Row>
-          <TransactionLoadingModal
-            submitted={this.state.submitted}
+            </Row>
+            <TransactionLoadingModal
+            submitted={submitted}
             title="Submitting this new artist..."
           />
         </Container>
@@ -237,7 +217,6 @@ class RegisterArtist extends React.Component<ContractProps, RegisterArtistState>
     return (
       <span>You are not an approved moderator</span>
     );
-  }
-}
+};
 
 export default RegisterArtist;

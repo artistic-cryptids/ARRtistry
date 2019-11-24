@@ -1,11 +1,11 @@
 import * as React from 'react';
 import Card from 'react-bootstrap/Card';
-import { ContractProps } from '../helper/eth';
 import PlaintextField from './common/PlaintextField';
 import AddressField from './common/AddressField';
 import Form from 'react-bootstrap/Form';
+import { useContractContext } from '../providers/ContractProvider';
 
-interface ARRItemProps extends ContractProps {
+interface ARRItemProps {
   id: number;
 }
 
@@ -18,54 +18,50 @@ interface ARRItemType {
   location: string;
 }
 
-interface ARRItemState {
-  ARR: ARRItemType;
-}
+const ARRItem: React.FC<ARRItemProps> = ({ id }) => {
+  const [ARR, setARR] = React.useState<ARRItemType>();
 
-class ARRItem extends React.Component<ARRItemProps, ARRItemState> {
-  componentDidMount (): void {
-    this.loadARR();
-  }
+  const { ArtifactApplication } = useContractContext();
 
-  async loadARR (): Promise<void> {
-    const ARRData = await this.props.contracts.ArtifactApplication.methods.getARR(this.props.id).call();
-    const ARR = {
-      from: ARRData[0],
-      to: ARRData[1],
-      tokenId: ARRData[2],
-      price: ARRData[3] / 100,
-      arr: ARRData[4] / 100,
-      location: ARRData[5],
+  React.useEffect(() => {
+    async loadARR (): Promise<void> {
+      const ARRData = await ArtifactApplication.methods.getARR(id).call();
+      const ARR = {
+        from: ARRData[0],
+        to: ARRData[1],
+        tokenId: ARRData[2],
+        price: ARRData[3] / 100,
+        arr: ARRData[4] / 100,
+        location: ARRData[5],
+      };
+      setArr(ARR);
     };
-    this.setState({ ARR: ARR });
+    loadARR();
+  }, [ArtifactApplication]);
+
+  if (!ARR) {
+    return null;
   }
 
-  render (): React.ReactNode {
-    if (!this.state) {
-      return null;
-    }
-
-    const arr = this.state.ARR;
-    return (
-      <Card>
-        <Card.Body>
-          <Card.Title><span className="text-muted text-capitalize">#{this.props.id}</span></Card.Title>
-          <Card.Subtitle className="mb-2 text-muted"></Card.Subtitle>
-          <Form>
-            <PlaintextField label='Piece' value={arr.tokenId.toString()} />
-            <AddressField label='Buyer' address={arr.to}/>
-            <AddressField label='Seller' address={arr.from}/>
-            <PlaintextField label='Sale Location' value={arr.location} />
-            <PlaintextField label='Sale Price' value={'€' + arr.price} />
-            <PlaintextField label='ARR' value={'€' + arr.arr} />
-          </Form>
-        </Card.Body>
-        <Card.Footer>
-          <small className="text-muted">Last updated 3 mins ago</small>
-        </Card.Footer>
-      </Card>
-    );
-  }
-}
+  return (
+    <Card>
+      <Card.Body>
+        <Card.Title><span className="text-muted text-capitalize">#{id}</span></Card.Title>
+        <Card.Subtitle className="mb-2 text-muted"></Card.Subtitle>
+        <Form>
+          <PlaintextField label='Piece' value={ARR.tokenId.toString()} />
+          <AddressField label='Buyer' address={ARR.to}/>
+          <AddressField label='Seller' address={ARR.from}/>
+          <PlaintextField label='Sale Location' value={ARR.location} />
+          <PlaintextField label='Sale Price' value={'€' + ARR.price} />
+          <PlaintextField label='ARR' value={'€' + ARR.arr} />
+        </Form>
+      </Card.Body>
+      <Card.Footer>
+        <small className="text-muted">Last updated 3 mins ago</small>
+      </Card.Footer>
+    </Card>
+  );
+};
 
 export default ARRItem;

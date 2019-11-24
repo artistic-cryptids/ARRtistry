@@ -1,53 +1,37 @@
 import * as React from 'react';
 import ARRItem from './ARRItem';
 import CardColumns from 'react-bootstrap/CardColumns';
-import { ContractProps } from '../helper/eth';
+import { useContractContext } from '../providers/ContractProvider';
 
-interface ARRListState {
-  ids: string[];
-}
+const ARRList: React.FC = () => {
+  const [ids, setIds] = React.useState<string[]>();
 
-class ARRList extends React.Component<ContractProps, ARRListState> {
-  constructor (props: ContractProps) {
-    super(props);
-    this.state = { ids: [] };
-  }
+  const { Governance } = useContractContext();
 
-  componentDidMount (): void {
-    this.loadARRs();
-  }
+  React.useEffect(() => {
+    async loadARRs (): Promise<void> {
+      const len = await Governance.methods.getARRLength().call();
 
-  shouldComponentUpdate (): boolean {
-    this.loadARRs();
-    return true;
-  }
+      const ids = [];
+      for (let i = 0; i < len; i++) {
+        ids.push(i.toString());
+      }
 
-  async loadARRs (): Promise<void> {
-    const len = await this.props.contracts.Governance.methods.getARRLength().call();
+      setIds(ids);
+    };
+    loadARRs();
+  }, [Governance]);
 
-    const ids = [];
-    for (let i = 0; i < len; i++) {
-      ids.push(i.toString());
-    }
-    if (!this.state || this.state.ids !== ids) {
-      this.setState({ ids: ids });
-    }
-  }
+  const listItems = ids.map((id: any) =>
+    <ARRItem
+      id={id}
+      key={id}
+    />,
+  );
 
-  render (): React.ReactNode {
-    const listItems = this.state.ids.map((id: any) =>
-      <ARRItem
-        contracts={this.props.contracts}
-        accounts={this.props.accounts}
-        id={id}
-        key={id}
-      />,
-    );
-
-    return (
-      <CardColumns>{listItems}</CardColumns>
-    );
-  }
-}
+  return (
+    <CardColumns>{listItems}</CardColumns>
+  );
+};
 
 export default ARRList;
