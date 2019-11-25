@@ -1,7 +1,8 @@
 import * as React from 'react';
 import SoldArtworkItem from './SoldArtworkItem';
 import CardColumns from 'react-bootstrap/CardColumns';
-import { ContractProps } from '../helper/eth';
+import { useContractContext } from '../providers/ContractProvider';
+import { useWeb3Context } from '../providers/Web3Provider';
 
 interface SoldInformation {
   tokenId: number;
@@ -9,16 +10,18 @@ interface SoldInformation {
   newOwner: string;
 }
 
-const SoldArtworkList: React.FC<ContractProps> = ({ contracts, accounts }) => {
+const SoldArtworkList: React.FC = () => {
   const [balance, setBalance] = React.useState<number>(0);
   const [soldList, setSoldList] = React.useState<SoldInformation[]>([]);
 
+  const { ArtifactRegistry } = useContractContext();
+  const { accounts } = useWeb3Context();
+
   const loadSales: VoidFunction = () => {
-    const registry = contracts.ArtifactRegistry;
     const currentAccount = accounts[0];
     const options = { fromBlock: 0 };
 
-    registry.getPastEvents('RecordSale', options).then((events: any[]) => {
+    ArtifactRegistry.getPastEvents('RecordSale', options).then((events: any[]) => {
       const soldMap = events.filter(event => event.returnValues.from === currentAccount)
         .map((event) => {
           return {
@@ -26,8 +29,7 @@ const SoldArtworkList: React.FC<ContractProps> = ({ contracts, accounts }) => {
             price: event.returnValues.price,
             newOwner: event.returnValues.to,
           };
-        },
-        );
+        });
       setSoldList(soldMap);
       setBalance(soldMap.length);
     }).catch(console.log);
@@ -43,8 +45,6 @@ const SoldArtworkList: React.FC<ContractProps> = ({ contracts, accounts }) => {
 
   const listItems = soldList.map((sold, index) => {
     return <SoldArtworkItem
-      contracts={contracts}
-      accounts={accounts}
       soldFor={sold.price}
       soldTo={sold.newOwner}
       tokenId={sold.tokenId}

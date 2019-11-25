@@ -2,7 +2,7 @@ import ArtifactView from './ArtifactView';
 import ArtifactById from './ArtifactById';
 import RegisterView from './RegisterView';
 import ProposalView from './ProposalView';
-import ARRView from './ARRView';
+import ArrView from './ArrView';
 import ClientArtifactView from './ClientArtifactView';
 import RegisterArtistView from './RegisterArtistView';
 import SoldArtifactView from './SoldArtifactView';
@@ -12,7 +12,7 @@ export {
   ArtifactById,
   RegisterView,
   ProposalView,
-  ARRView,
+  ArrView,
   ClientArtifactView,
   RegisterArtistView,
   SoldArtifactView,

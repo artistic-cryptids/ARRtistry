@@ -3,7 +3,6 @@ import { Route, Switch, Redirect, BrowserRouter } from 'react-router-dom';
 
 import { useSessionContext } from '../providers/SessionProvider';
 import { useWeb3Context } from '../providers/Web3Provider';
-import { useContractContext } from '../providers/ContractProvider';
 
 import * as View from '../views';
 
@@ -12,8 +11,7 @@ import NetworkAside from './NetworkAside';
 
 const Router: React.FC = () => {
   const { user } = useSessionContext();
-  const { web3, accounts } = useWeb3Context();
-  const { contracts } = useContractContext();
+  const { web3 } = useWeb3Context();
 
   return (
     <BrowserRouter>
@@ -27,28 +25,28 @@ const Router: React.FC = () => {
           </Main>
         </Route>
         <Route path="/artifact/new">
-          <View.RegisterView accounts={accounts} contracts={contracts} />
+          <View.RegisterView/>
         </Route>
         <Route path="/artifact/sold">
-          <View.SoldArtifactView accounts={accounts} contracts={contracts} />
+          <View.SoldArtifactView/>
         </Route>
         <Route path="/artifact/:id" render={({ match }) =>
-          <View.ArtifactById accounts={accounts} contracts={contracts} id={match.params.id} />
+          <View.ArtifactById id={match.params.id} />
         } />
         <Route path="/artifact">
-          <View.ArtifactView accounts={accounts} contracts={contracts} />
+          <View.ArtifactView/>
         </Route>
         <Route path="/manage/proposal">
-          <View.ProposalView accounts={accounts} contracts={contracts} />
+          <View.ProposalView/>
         </Route>
         <Route path="/manage/arr">
-          <View.ARRView accounts={accounts} contracts={contracts} />
+          <View.ArrView/>
         </Route>
         <Route path ="/artist/new">
-          <View.RegisterArtistView accounts={accounts} contracts={contracts} />
+          <View.RegisterArtistView/>
         </Route>
         <Route path="/client/all/artifact">
-          <View.ClientArtifactView accounts={accounts} contracts={contracts} />
+          <View.ClientArtifactView/>
         </Route>
       </Switch>
     </BrowserRouter>

@@ -3,11 +3,12 @@ import Button from 'react-bootstrap/Button';
 import Col from 'react-bootstrap/Col';
 import Form from 'react-bootstrap/Form';
 import Modal from 'react-bootstrap/Modal';
-import { ContractProps } from '../helper/eth';
 import { useNameServiceContext } from '../providers/NameServiceProvider';
+import { useContractContext } from '../providers/ContractProvider';
+import { useWeb3Context } from '../providers/Web3Provider';
 import ENSName from './common/ENSName';
 
-interface ConsignArtifactProps extends ContractProps {
+interface ConsignArtifactProps {
   tokenId: number;
 }
 
@@ -26,7 +27,7 @@ type InputChangeEvent = React.FormEvent<any> &
 const GENERIC_FEEDBACK = <Form.Control.Feedback>Looks good!</Form.Control.Feedback>;
 const ZERO_ADDR = '0x0000000000000000000000000000000000000000';
 
-const ConsignArtifact: React.FC<ConsignArtifactProps> = ({ tokenId, contracts, accounts }) => {
+const ConsignArtifact: React.FC<ConsignArtifactProps> = ({ tokenId }) => {
   const [fields, setFields] = React.useState<ConsignArtifactFormFields>({
     recipientName: '',
   });
@@ -34,20 +35,18 @@ const ConsignArtifact: React.FC<ConsignArtifactProps> = ({ tokenId, contracts, a
   const [showConsignment, setShowConsignment] = React.useState<boolean>(false);
 
   const { addressFromName } = useNameServiceContext();
+  const { ArtifactRegistry } = useContractContext();
+  const { accounts } = useWeb3Context();
 
   React.useEffect(() => {
-    const artifactRegistry = contracts.ArtifactRegistry;
-
-    artifactRegistry.methods.getApproved(tokenId)
+    ArtifactRegistry.methods.getApproved(tokenId)
       .call({ from: accounts[0] })
       .then((account: string) => setConsignedAccount(account))
       .catch(console.log);
-  }, [accounts, contracts, tokenId]);
+  }, [accounts, tokenId, ArtifactRegistry]);
 
   const consign = (address: string): void => {
-    const artifactRegistry = contracts.ArtifactRegistry;
-
-    artifactRegistry.methods.approve(
+    ArtifactRegistry.methods.approve(
       address,
       tokenId,
     ).send(

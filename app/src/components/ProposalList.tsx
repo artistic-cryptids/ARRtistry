@@ -1,50 +1,38 @@
 import * as React from 'react';
 import ProposalItem from './ProposalItem';
 import CardColumns from 'react-bootstrap/CardColumns';
-import { ContractProps } from '../helper/eth';
+import { useContractContext } from '../providers/ContractProvider';
 
 interface ProposalListState {
   ids: string[];
 }
 
-class ProposalList extends React.Component<ContractProps, ProposalListState> {
-  constructor (props: ContractProps) {
-    super(props);
-    this.state = { ids: [] };
-  }
+const ProposalList: React.FC = () => {
+  const [ids, setIds] = React.useState<string[]>([]);
 
-  componentDidMount (): void {
-    this.loadProposals();
-  }
+  const { Governance } = useContractContext();
 
-  shouldComponentUpdate (): boolean {
-    this.loadProposals();
-    return true;
-  }
+  React.useEffect(() => {
+    const loadProposals = async (): Promise<void> => {
+      const idsAsObjects = await Governance.methods.getProposals().call();
+      const ids: string[] = [];
+      idsAsObjects.map((val: any) => ids.push(val.toString()));
+      setIds(ids);
+    };
+    console.log('1');
+    loadProposals();
+  }, [Governance]);
 
-  async loadProposals (): Promise<void> {
-    const idsAsObjects = await this.props.contracts.Governance.methods.getProposals().call();
-    const ids: string[] = [];
-    idsAsObjects.map((val: any) => ids.push(val.toString()));
-    if (!this.state || this.state.ids !== ids) {
-      this.setState({ ids: ids });
-    }
-  }
+  const listItems = ids.map((id: any) =>
+    <ProposalItem
+      id={id}
+      key={id}
+    />,
+  );
 
-  render (): React.ReactNode {
-    const listItems = this.state.ids.map((id: any) =>
-      <ProposalItem
-        contracts={this.props.contracts}
-        accounts={this.props.accounts}
-        id={id}
-        key={id}
-      />,
-    );
-
-    return (
-      <CardColumns>{listItems}</CardColumns>
-    );
-  }
-}
+  return (
+    <CardColumns>{listItems}</CardColumns>
+  );
+};
 
 export default ProposalList;

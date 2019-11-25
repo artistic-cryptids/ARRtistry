@@ -1,9 +1,8 @@
 import * as React from 'react';
 import ArtworkItem from './ArtworkItem';
 import CardColumns from 'react-bootstrap/CardColumns';
-import { ContractProps } from '../helper/eth';
 import { useWeb3Context } from '../providers/Web3Provider';
-import { useRegistryContext } from '../providers/RegistryProvider';
+import { useContractContext } from '../providers/ContractProvider';
 import { MetadataArtworkCard } from './ArtworkCard';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
@@ -11,16 +10,16 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import { Link } from 'react-router-dom';
 
-const ArtworkList: React.FC<ContractProps> = ({ contracts }) => {
+const ArtworkList: React.FC = () => {
   const [tokenIds, setTokenIds] = React.useState<Array<number>>([]);
   const { accounts } = useWeb3Context();
-  const registry = useRegistryContext();
+  const { ArtifactRegistry } = useContractContext();
 
   React.useEffect(() => {
     const subscribeToTransfer: VoidFunction = () => {
       const currentAccount = accounts[0];
       const updateTokenIds = (currentAccount: string): void => {
-        registry.methods.getTokenIdsOfOwner(currentAccount)
+        ArtifactRegistry.methods.getTokenIdsOfOwner(currentAccount)
           .call()
           .then((tokenIds: Array<number>) => {
             setTokenIds(tokenIds);
@@ -30,7 +29,7 @@ const ArtworkList: React.FC<ContractProps> = ({ contracts }) => {
 
       updateTokenIds(currentAccount);
 
-      const transferSubscription = registry.events.Transfer({
+      const transferSubscription = ArtifactRegistry.events.Transfer({
         filter: { from: currentAccount },
       })
         .on('data', (_: any) => {
@@ -43,15 +42,13 @@ const ArtworkList: React.FC<ContractProps> = ({ contracts }) => {
       };
     };
 
-    if (registry && accounts.length > 0) {
+    if (ArtifactRegistry && accounts.length > 0) {
       subscribeToTransfer();
     }
-  }, [registry, accounts]);
+  }, [ArtifactRegistry, accounts]);
 
   const listItems = tokenIds.map((tokenId: number) =>
     <ArtworkItem
-      contracts={contracts}
-      accounts={accounts}
       tokenId={tokenId}
       key={tokenId}
       ownedArtifact

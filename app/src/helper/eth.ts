@@ -1,10 +1,4 @@
 import { AbiItem } from 'web3-utils';
-import * as Contracts from './contracts';
-
-export interface ContractProps {
-  contracts: Contracts.ContractListType;
-  accounts: Array<string>;
-}
 
 export interface AST {
   absolutePath: string;

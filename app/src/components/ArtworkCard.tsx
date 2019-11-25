@@ -38,7 +38,6 @@ const ArtworkCard: React.FC<ArtworkCardProps> = ({
 }) => {
   const path = `artifact/${id}`;
   return (
-
     <Card className="shadow">
       <Card.Body>
         {img && <Card.Img variant="top" src={img} />}
