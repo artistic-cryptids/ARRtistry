@@ -17,10 +17,10 @@ import { EventData } from 'web3-eth-contract';
 import * as styles from './Timeline.module.scss';
 import * as Contracts from '../helper/contracts';
 import { useSessionContext } from '../providers/SessionProvider';
+import { useContractContext } from '../providers/ContractProvider';
 import { useWeb3Context } from '../providers/Web3Provider';
 import PlaintextField from './common/PlaintextField';
 import AddressField from './common/AddressField';
-import { useRegistryContext } from '../providers/RegistryProvider';
 
 interface ProvenanceProps {
   registry: Contracts.ArtifactRegistry;
@@ -127,13 +127,13 @@ const ProvenanceTimeline: React.FC<{records: ProvenanceRecord[]}> = ({ records }
 export const Provenance: React.FC<{tokenId: number}> = ({ tokenId }) => {
   const [records, setRecords] = React.useState<ProvenanceRecord[]>([]);
   const { web3 } = useWeb3Context();
-  const registry = useRegistryContext();
+  const { ArtifactRegistry } = useContractContext();
   const { user } = useSessionContext();
 
   React.useEffect(() => {
     const options = { fromBlock: 0 };
 
-    const registration = registry.getPastEvents('Transfer', options)
+    const registration = ArtifactRegistry.getPastEvents('Transfer', options)
       .then((events: EventData[]) => events.filter(e => e.returnValues.tokenId === tokenId.toString())
         .filter(e => e.returnValues.from === '0x0000000000000000000000000000000000000000'),
       )
@@ -148,7 +148,7 @@ export const Provenance: React.FC<{tokenId: number}> = ({ tokenId }) => {
       )
       .then((records: ProvenanceRecord[]) => Promise.all(records));
 
-    const sales = registry.getPastEvents('RecordSale', options).then(async function (events: EventData[]) {
+    const sales = ArtifactRegistry.getPastEvents('RecordSale', options).then(async function (events: EventData[]) {
       const tokenRelevantEvents = events.filter(event => event.returnValues.tokenId === tokenId.toString());
       return Promise.all(tokenRelevantEvents.map(async (event) => {
         const timestamp = await web3.eth.getBlock(event.blockNumber).then((block) => block.timestamp);
@@ -170,7 +170,7 @@ export const Provenance: React.FC<{tokenId: number}> = ({ tokenId }) => {
     Promise.all([registration, sales])
       .then(([regs, sales]) => setRecords(regs.concat(sales)))
       .catch(console.warn);
-  }, [user.address, web3.eth, registry, tokenId]);
+  }, [user.address, web3.eth, ArtifactRegistry, tokenId]);
 
   return <ProvenanceTimeline records={records}/>;
 };
