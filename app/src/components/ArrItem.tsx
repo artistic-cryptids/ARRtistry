@@ -5,11 +5,11 @@ import AddressField from './common/AddressField';
 import Form from 'react-bootstrap/Form';
 import { useContractContext } from '../providers/ContractProvider';
 
-interface ARRItemProps {
+interface ArrItemProps {
   id: number;
 }
 
-interface ARRItemType {
+interface ArrItemType {
   from: string;
   to: string;
   tokenId: number;
@@ -18,29 +18,29 @@ interface ARRItemType {
   location: string;
 }
 
-const ARRItem: React.FC<ARRItemProps> = ({ id }) => {
-  const [ARR, setARR] = React.useState<ARRItemType>();
+const ArrItem: React.FC<ArrItemProps> = ({ id }) => {
+  const [arr, setArr] = React.useState<ArrItemType>();
 
   const { ArtifactApplication } = useContractContext();
 
   React.useEffect(() => {
-    const loadARR = async (): Promise<void> => {
-      const ARRData = await ArtifactApplication.methods.getARR(id).call();
-      const ARR = {
-        from: ARRData[0],
-        to: ARRData[1],
-        tokenId: ARRData[2],
-        price: ARRData[3] / 100,
-        arr: ARRData[4] / 100,
-        location: ARRData[5],
+    const loadArr = async (): Promise<void> => {
+      const arrData = await ArtifactApplication.methods.getARR(id).call();
+      const arr = {
+        from: arrData[0],
+        to: arrData[1],
+        tokenId: arrData[2],
+        price: arrData[3] / 100,
+        arr: arrData[4] / 100,
+        location: arrData[5],
       };
-      setARR(ARR);
+      setArr(arr);
     };
 
     loadARR();
   }, [ArtifactApplication, id]);
 
-  if (!ARR) {
+  if (!arr) {
     return null;
   }
 
@@ -50,12 +50,12 @@ const ARRItem: React.FC<ARRItemProps> = ({ id }) => {
         <Card.Title><span className="text-muted text-capitalize">#{id}</span></Card.Title>
         <Card.Subtitle className="mb-2 text-muted"></Card.Subtitle>
         <Form>
-          <PlaintextField label='Piece' value={ARR.tokenId.toString()} />
-          <AddressField label='Buyer' address={ARR.to}/>
-          <AddressField label='Seller' address={ARR.from}/>
-          <PlaintextField label='Sale Location' value={ARR.location} />
-          <PlaintextField label='Sale Price' value={'€' + ARR.price} />
-          <PlaintextField label='ARR' value={'€' + ARR.arr} />
+          <PlaintextField label='Piece' value={arr.tokenId.toString()} />
+          <AddressField label='Buyer' address={arr.to}/>
+          <AddressField label='Seller' address={arr.from}/>
+          <PlaintextField label='Sale Location' value={arr.location} />
+          <PlaintextField label='Sale Price' value={'€' + arr.price} />
+          <PlaintextField label='ARR' value={'€' + arr.arr} />
         </Form>
       </Card.Body>
       <Card.Footer>

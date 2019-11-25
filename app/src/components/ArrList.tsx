@@ -1,15 +1,15 @@
 import * as React from 'react';
-import ARRItem from './ARRItem';
+import ArrItem from './ArrItem';
 import CardColumns from 'react-bootstrap/CardColumns';
 import { useContractContext } from '../providers/ContractProvider';
 
-const ARRList: React.FC = () => {
+const ArrList: React.FC = () => {
   const [ids, setIds] = React.useState<string[]>();
 
   const { Governance } = useContractContext();
 
   React.useEffect(() => {
-    const loadARRs = async (): Promise<void> => {
+    const loadArrs = async (): Promise<void> => {
       const len = await Governance.methods.getARRLength().call();
 
       const ids = [];
@@ -19,7 +19,7 @@ const ARRList: React.FC = () => {
 
       setIds(ids);
     };
-    loadARRs();
+    loadArrs();
   }, [Governance]);
 
   if (!ids) {
@@ -27,7 +27,7 @@ const ARRList: React.FC = () => {
   }
 
   const listItems = ids.map((id: any) =>
-    <ARRItem
+    <ArrItem
       id={id}
       key={id}
     />,
@@ -38,4 +38,4 @@ const ARRList: React.FC = () => {
   );
 };
 
-export default ARRList;
+export default ArrList;

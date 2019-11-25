@@ -1,17 +1,17 @@
 import * as React from 'react';
 
-import ARRList from '../components/ARRList';
+import ArrList from '../components/ArrList';
 import ModeratorOnly from '../components/ModeratorOnly';
 import Main from '../components/Main';
 
-const ARRView: React.FC = () => {
+const ArrView: React.FC = () => {
   return (
     <Main page="ARR" parents={['Management']}>
       <ModeratorOnly>
-        <ARRList/>
+        <ArrList/>
       </ModeratorOnly>
     </Main>
   );
 };
 
-export default ARRView;
+export default ArrView;

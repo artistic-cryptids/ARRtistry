@@ -40,7 +40,7 @@ const Router: React.FC = () => {
           <View.ProposalView/>
         </Route>
         <Route path="/manage/arr">
-          <View.ARRView/>
+          <View.ArrView/>
         </Route>
         <Route path ="/artist/new">
           <View.RegisterArtistView/>
