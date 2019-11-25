@@ -1,8 +1,10 @@
 import * as React from 'react';
 import ArtworkInfo from './ArtworkInfo';
 import Row from 'react-bootstrap/Row';
+import Col from 'react-bootstrap/Col';
 import Button from 'react-bootstrap/Button';
 import ButtonGroup from 'react-bootstrap/ButtonGroup';
+import ENSName from './common/ENSName';
 import { useContractContext } from '../providers/ContractProvider';
 import { useWeb3Context } from '../providers/Web3Provider';
 
@@ -12,6 +14,7 @@ interface ProposalItemProps {
 
 const ProposalItem: React.FC<ProposalItemProps> = ({ id }) => {
   const [proposal, setProposal] = React.useState<any>();
+  const [proposer, setProposer] = React.useState<string>();
 
   const { Governance, ArtifactApplication } = useContractContext();
   const { accounts } = useWeb3Context();
@@ -40,11 +43,12 @@ const ProposalItem: React.FC<ProposalItemProps> = ({ id }) => {
           metaUri: proposalData[2],
         };
         setProposal(proposal);
+        setProposer(proposalData[1]);
       })
       .catch(console.log);
   }, [ArtifactApplication, id]);
 
-  if (!proposal) {
+  if (!proposal || !proposer) {
     return null;
   }
 
@@ -53,12 +57,22 @@ const ProposalItem: React.FC<ProposalItemProps> = ({ id }) => {
       artwork={proposal}
       id={id}
     >
-      <Row>
-        <ButtonGroup aria-label="Actionbar" className="mx-auto">
-          <Button variant="outline-success" onClick={approveProposal}>Approve</Button>
-          <Button variant="outline-danger" onClick={rejectProposal}>Deny</Button>
-        </ButtonGroup>
-      </Row>
+      <Col>
+        <Row>
+          <Col xs={4}>
+            <p className="mb-2 text-muted">Proposer </p>
+          </Col>
+          <Col xs={8}>
+            <ENSName address={proposer}/>
+          </Col>
+        </Row>
+        <Row>
+          <ButtonGroup aria-label="Actionbar" className="mx-auto">
+            <Button variant="outline-success" onClick={approveProposal}>Approve</Button>
+            <Button variant="outline-danger" onClick={rejectProposal}>Deny</Button>
+          </ButtonGroup>
+        </Row>
+      </Col>
     </ArtworkInfo>
   );
 };
