@@ -10,14 +10,10 @@ import Artists from '../contracts/Artists.json';
 
 import { ContractListType } from '../helper/contracts';
 
-interface ContractInterface {
-  contracts: ContractListType;
-}
-
-const ContractContext = React.createContext<ContractInterface>({} as any);
+const ContractContext = React.createContext<ContractListType>({} as any);
 
 export const ContractProvider: React.FC = ({ children }) => {
-  const [contracts, setContracts] = React.useState<ContractListType | undefined>(undefined);
+  const [contracts, setContracts] = React.useState<ContractListType>();
   const { addressFromName } = useNameServiceContext();
   const { web3 } = useWeb3Context();
 
@@ -40,7 +36,6 @@ export const ContractProvider: React.FC = ({ children }) => {
         Artists: artists,
       };
 
-      console.log('Setting contracts');
       setContracts(contracts);
     };
     getContracts();
@@ -53,10 +48,10 @@ export const ContractProvider: React.FC = ({ children }) => {
   console.log('Contracts provided');
 
   return (
-    <ContractContext.Provider value={{ contracts: contracts }}>
+    <ContractContext.Provider value={contracts}>
       { children }
     </ContractContext.Provider>
   );
 };
 
-export const useContractContext: () => ContractInterface = () => React.useContext<ContractInterface>(ContractContext);
+export const useContractContext: () => ContractListType = () => React.useContext<ContractListType>(ContractContext);

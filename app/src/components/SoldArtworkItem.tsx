@@ -1,56 +1,51 @@
 import * as React from 'react';
 import ArtworkInfo from './ArtworkInfo';
-import { ContractProps } from '../helper/eth';
 import Form from 'react-bootstrap/Form';
 import AddressField from './common/AddressField';
 import PlaintextField from './common/PlaintextField';
+import { useContractContext } from '../providers/ContractProvider';
 
-interface SoldArtworkItemProps extends ContractProps {
+interface SoldArtworkItemProps {
   soldFor: number;
   soldTo: string;
   tokenId: number;
 }
 
-type SoldArtworkItemState = {
-  artwork: any;
-}
+const SoldArtworkItem: React.FC<SoldArtworkItemProps> = ({ soldFor, soldTo, tokenId }) => {
+  const [artwork, setArtwork] = React.useState<any>();
 
-class SoldArtworkItem extends React.Component<SoldArtworkItemProps, SoldArtworkItemState> {
-  componentDidMount (): void {
-    const registry = this.props.contracts.ArtifactRegistry;
-    registry.methods.getArtifactForToken(this.props.tokenId)
+  const { ArtifactRegistry } = useContractContext();
+
+  React.useEffect(() => {
+    ArtifactRegistry.methods.getArtifactForToken(tokenId)
       .call()
       .then((artworkData: any) => {
         console.log(artworkData);
         const artwork = {
           metaUri: artworkData[1],
         };
-        this.setState({ artwork: artwork });
+        setArtwork(artwork);
       })
-      .catch((err: any) => { console.log(err); });
+      .catch(console.log);
+  }, [ArtifactRegistry, tokenId]);
+
+  if (!artwork) {
+    return <p>Loading...</p>;
   }
 
-  render (): React.ReactNode {
-    if (!this.state) {
-      return 'Loading...';
-    }
+  console.log('Artwork ' + JSON.stringify(artwork));
 
-    console.log('Artwork ' + JSON.stringify(this.state.artwork));
-
-    return (
-      <ArtworkInfo
-        contracts={this.props.contracts}
-        accounts={this.props.accounts}
-        artwork={this.state.artwork}
-        id={this.props.tokenId}
-      >
-        <Form>
-          <AddressField label='Sold to' address={this.props.soldTo} />
-          <PlaintextField label='Sold for' value={'€ ' + (this.props.soldFor / 100).toString()}/>
-        </Form>
-      </ArtworkInfo>
-    );
-  }
-}
+  return (
+    <ArtworkInfo
+      artwork={artwork}
+      id={tokenId}
+    >
+      <Form>
+        <AddressField label='Sold to' address={soldTo} />
+        <PlaintextField label='Sold for' value={'€ ' + (soldFor / 100).toString()}/>
+      </Form>
+    </ArtworkInfo>
+  );
+};
 
 export default SoldArtworkItem;

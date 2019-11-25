@@ -6,8 +6,8 @@ import * as React from 'react';
 import Accordion from 'react-bootstrap/Accordion';
 import Card from 'react-bootstrap/Card';
 import FormSubmitButton from './register/FormSubmitButton';
-import { ArtistProvider } from '../providers/ArtistProvider';
-import { ContractProps } from '../helper/eth';
+import { useContractContext } from '../providers/ContractProvider';
+import { useWeb3Context } from '../providers/Web3Provider';
 import ArtistSelection from './register/ArtistSelection';
 import RegisterFields from './register/RegisterFields';
 import Row from 'react-bootstrap/Row';
@@ -68,7 +68,10 @@ interface ArtifactMetadata {
   documents: ArtifactDocument[];
 }
 
-const RegisterArtifact: React.FC<ContractProps> = ({ contracts, accounts }) => {
+const RegisterArtifact: React.FC = () => {
+  const { ArtifactApplication } = useContractContext();
+  const { accounts } = useWeb3Context();
+
   const onSubmit: RegisterOnSubmit = async ({ files, fields }): Promise<void> => {
     const currentAccount = accounts[0];
     const artist = accounts[0];
@@ -88,7 +91,7 @@ const RegisterArtifact: React.FC<ContractProps> = ({ contracts, accounts }) => {
 
     const jsonDataBuffer = Buffer.from(JSON.stringify(jsonData));
     const hash = await saveSingleToIPFSNoCallBack(jsonDataBuffer);
-    await contracts.ArtifactApplication.methods.applyFor(
+    await ArtifactApplication.methods.applyFor(
       currentAccount,
       artist,
       IPFS_URL_START + hash,
@@ -104,20 +107,18 @@ const RegisterArtifact: React.FC<ContractProps> = ({ contracts, accounts }) => {
   };
 
   return (
-    <ArtistProvider>
-      <RegisterForm validator={registerValidator} onSubmit={onSubmit}>
-        <Row>
-          <Col sm={4}>
-            <ImageDropZone/>
-            <hr/>
-            <FileList/>
-          </Col>
-          <Col sm={8}>
-            <RegisterFieldLayout/>
-          </Col>
-        </Row>
-      </RegisterForm>
-    </ArtistProvider>
+    <RegisterForm validator={registerValidator} onSubmit={onSubmit}>
+      <Row>
+        <Col sm={4}>
+          <ImageDropZone/>
+          <hr/>
+          <FileList/>
+        </Col>
+        <Col sm={8}>
+          <RegisterFieldLayout/>
+        </Col>
+      </Row>
+    </RegisterForm>
   );
 };
 

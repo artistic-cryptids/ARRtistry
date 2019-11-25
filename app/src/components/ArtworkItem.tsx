@@ -2,22 +2,22 @@ import * as React from 'react';
 import ArtworkInfo, { Artwork } from './ArtworkInfo';
 import TransferArtifact from './TransferArtifact';
 import ConsignArtifact from './ConsignArtifact';
-import { ContractProps } from '../helper/eth';
 import ButtonGroup from 'react-bootstrap/ButtonGroup';
 import ArtworkCard from './ArtworkCard';
+import { useContractContext } from '../providers/ContractProvider';
 
-interface ArtworkItemProps extends ContractProps {
+interface ArtworkItemProps {
   tokenId: number;
   ownedArtifact?: true;
   fullscreen?: true;
 }
 
-const ArtworkItem: React.FC<ArtworkItemProps> = ({ contracts, accounts, tokenId, ownedArtifact, fullscreen }) => {
+const ArtworkItem: React.FC<ArtworkItemProps> = ({ tokenId, ownedArtifact, fullscreen }) => {
   const [artwork, setArtwork] = React.useState<Artwork>();
-  const registry = contracts.ArtifactRegistry;
+  const { ArtifactRegistry } = useContractContext();
 
   React.useEffect(() => {
-    registry.methods.getArtifactForToken(tokenId)
+    ArtifactRegistry.methods.getArtifactForToken(tokenId)
       .call()
       .then((artworkData: any) => {
         console.log(artworkData);
@@ -26,8 +26,8 @@ const ArtworkItem: React.FC<ArtworkItemProps> = ({ contracts, accounts, tokenId,
         };
         setArtwork(artwork);
       })
-      .catch((err: any) => { console.log(err); });
-  }, [registry, tokenId]);
+      .catch(console.log);
+  }, [ArtifactRegistry, tokenId]);
 
   if (!artwork) {
     return <ArtworkCard img='https://file.globalupload.io/HO8sN3I2nJ.png'/>;
@@ -37,8 +37,6 @@ const ArtworkItem: React.FC<ArtworkItemProps> = ({ contracts, accounts, tokenId,
 
   return (
     <ArtworkInfo
-      contracts={contracts}
-      accounts={accounts}
       artwork={artwork}
       id={tokenId}
       fullscreen={fullscreen}
@@ -46,14 +44,10 @@ const ArtworkItem: React.FC<ArtworkItemProps> = ({ contracts, accounts, tokenId,
       <div className="text-center">
         <ButtonGroup>
           <TransferArtifact
-            contracts={contracts}
-            accounts={accounts}
             tokenId={tokenId}
             metaUri={artwork.metaUri}
           />
           {ownedArtifact && <ConsignArtifact
-            contracts={contracts}
-            accounts={accounts}
             tokenId={tokenId}
           />}
         </ButtonGroup>

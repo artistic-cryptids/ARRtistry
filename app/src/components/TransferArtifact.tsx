@@ -5,10 +5,11 @@ import Form from 'react-bootstrap/Form';
 import Modal from 'react-bootstrap/Modal';
 import ipfs from '../helper/ipfs';
 import TransactionLoadingModal from './common/TransactionLoadingModal';
-import { ContractProps } from '../helper/eth';
 import { useNameServiceContext } from '../providers/NameServiceProvider';
+import { useContractContext } from '../providers/ContractProvider';
+import { useWeb3Context } from '../providers/Web3Provider';
 
-interface TransferArtifactProps extends ContractProps {
+interface TransferArtifactProps {
   tokenId: number;
   metaUri: string;
 }
@@ -70,7 +71,7 @@ const LOCATIONS = [
   'United Kingdom',
 ];
 
-const TransferArtifact: React.FC<TransferArtifactProps> = ({ tokenId, metaUri, contracts, accounts }) => {
+const TransferArtifact: React.FC<TransferArtifactProps> = ({ tokenId, metaUri }) => {
   const [fields, setFields] = React.useState<TransferArtifactFormFields>({
     recipientName: '',
     price: '',
@@ -81,6 +82,8 @@ const TransferArtifact: React.FC<TransferArtifactProps> = ({ tokenId, metaUri, c
   const [submitted, setSubmitted] = React.useState<boolean>(false);
 
   const { addressFromName } = useNameServiceContext();
+  const { ArtifactRegistry } = useContractContext();
+  const { accounts } = useWeb3Context();
 
   const saveMetaData = (jsonData: string): Promise<string> => {
     const jsonDataBuffer = Buffer.from(JSON.stringify(jsonData));
@@ -109,12 +112,11 @@ const TransferArtifact: React.FC<TransferArtifactProps> = ({ tokenId, metaUri, c
   };
 
   const transferArtwork = async (_: React.FormEvent): Promise<void> => {
-    const artifactRegistry = contracts.ArtifactRegistry;
     let owner = '';
     setSubmitted(true);
 
     const recipientAddress = await addressFromName(fields.recipientName);
-    const address = await artifactRegistry.methods.ownerOf(tokenId).call();
+    const address = await ArtifactRegistry.methods.ownerOf(tokenId).call();
     owner = address;
     const provenanceHash = await addProvenance(
       fields.price,
@@ -124,7 +126,7 @@ const TransferArtifact: React.FC<TransferArtifactProps> = ({ tokenId, metaUri, c
       fields.date,
     );
 
-    artifactRegistry.methods.transfer(
+    ArtifactRegistry.methods.transfer(
       owner,
       recipientAddress,
       tokenId,

@@ -1,12 +1,12 @@
 import * as React from 'react';
-import { ContractProps } from '../helper/eth';
 import ArtworkCard from './ArtworkCard';
+import { useContractContext } from '../providers/ContractProvider';
 
 export interface Artwork {
   metaUri: string;
 }
 
-interface ArtworkInfoProps extends ContractProps {
+interface ArtworkInfoProps {
   artwork: Artwork;
   id: number;
   fullscreen?: true;
@@ -41,102 +41,89 @@ interface ArtworkInfoState {
   fields: ArtworkInfoFields;
 }
 
-class ArtworkInfo extends React.Component<ArtworkInfoProps, ArtworkInfoState> {
-  constructor (props: any) {
-    super(props);
+const ArtworkInfo: React.FC<ArtworkInfoProps> = ({ artwork, id, fullscreen, children }) => {
+  const [artist, setArtist] = React.useState<Artist>({
+    id: 0,
+    name: '',
+    wallet: '',
+    nationality: '',
+    birthYear: '',
+    deathYear: '',
+  });
+  const [retrievedData, setRetrievedData] = React.useState<boolean>(false);
+  const [fields, setFields] = React.useState<ArtworkInfoFields>({
+    title: '',
+    artistId: 0,
+    description: '',
+    edition: '',
+    artifactCreationDate: '',
+    medium: '',
+    width: '',
+    height: '',
+    imageIpfsHash: '',
+    documents: [],
+  });
 
-    this.state = {
-      artist: {
-        id: 0,
-        name: '',
-        wallet: '',
-        nationality: '',
-        birthYear: '',
-        deathYear: '',
-      },
-      metaUri: this.props.artwork.metaUri,
-      retrievedData: false,
-      fields: {
-        title: '',
-        artistId: 0,
-        description: '',
-        edition: '',
-        artifactCreationDate: '',
-        medium: '',
-        width: '',
-        height: '',
-        imageIpfsHash: '',
-        documents: [],
-      },
-    };
-  }
+  const { Artists } = useContractContext();
 
-  componentDidMount (): void {
-    this.setInfoFromJson();
-  }
-
-  async setInfoFromJson (): Promise<void> {
-    const metaUri = this.props.artwork.metaUri;
-
-    const response = await fetch(metaUri);
-    const infoJson = await response.json();
-
-    this.setState({
-      fields: infoJson,
-    });
-
-    this.getArtistInfo();
-  }
-
-  hashToArtist = async (hash: string): Promise<Artist> => {
-    console.log(hash);
+  const hashToArtist = async (hash: string): Promise<Artist> => {
     const response = await fetch(hash);
     return response.json();
   };
 
-  getArtistInfo = (): void => {
-    if (!this.state.fields.artistId && this.state.retrievedData) {
-      return;
-    }
+  React.useEffect(() => {
+    const getArtistInfo = (): void => {
+      if (!fields.artistId && retrievedData) {
+        return;
+      }
 
-    this.props.contracts.Artists.methods.getArtist(this.state.fields.artistId)
-      .call()
-      .then((hash: string) => this.hashToArtist(hash))
-      .then((artist: Artist) => this.setState({
-        retrievedData: true,
-        artist: artist,
-      }))
-      .catch((err: any) => console.log(err));
-  };
+      Artists.methods.getArtist(fields.artistId)
+        .call()
+        .then((hash: string) => hashToArtist(hash))
+        .then((artist: Artist) => {
+          setArtist(artist);
+          setRetrievedData(true);
+        })
+        .catch(console.log);
+    };
 
-  render (): React.ReactNode {
-    const fields = this.state.fields;
+    const setInfoFromJson = async (): Promise<void> => {
+      const metaUri = artwork.metaUri;
 
-    const imgSrc = fields.imageIpfsHash === ''
-      ? 'https://file.globalupload.io/HO8sN3I2nJ.png'
-      : 'https://ipfs.io/ipfs/' + fields.imageIpfsHash;
+      const response = await fetch(metaUri);
+      const infoJson = await response.json();
+      console.log(infoJson);
+      setFields(infoJson);
 
-    if (this.state.retrievedData) {
-      return (
-        <ArtworkCard
-          id={this.props.id}
-          img={imgSrc}
-          metaUri={this.props.artwork.metaUri}
-          fields={this.state.fields}
-          artist={this.state.artist}
-          fullscreen={this.props.fullscreen}
-        >
-          {this.props.children}
-        </ArtworkCard>
-      );
-    } else {
-      return (
-        <ArtworkCard img={imgSrc} fullscreen={this.props.fullscreen}>
-          {this.props.children}
-        </ArtworkCard>
-      );
-    }
+      getArtistInfo();
+    };
+    setInfoFromJson();
+  }, [Artists, artwork.metaUri, fields, retrievedData]);
+
+  const imgSrc = fields.imageIpfsHash === ''
+    ? 'https://file.globalupload.io/HO8sN3I2nJ.png'
+    : 'https://ipfs.io/ipfs/' + fields.imageIpfsHash;
+
+  if (retrievedData) {
+    return (
+      <ArtworkCard
+        id={id}
+        img={imgSrc}
+        metaUri={artwork.metaUri}
+        fields={fields}
+        artist={artist}
+        fullscreen={fullscreen}
+      >
+        {children}
+      </ArtworkCard>
+    );
   }
-}
+
+  return (
+    <ArtworkCard img={imgSrc} fullscreen={fullscreen}>
+      {children}
+    </ArtworkCard>
+  );
+};
 
 export default ArtworkInfo;

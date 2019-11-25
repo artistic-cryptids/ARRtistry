@@ -1,38 +1,33 @@
 import * as React from 'react';
 import Container from 'react-bootstrap/Container';
-import { ContractProps } from '../helper/eth';
+import { useContractContext } from '../providers/ContractProvider';
+import { useWeb3Context } from '../providers/Web3Provider';
 
-interface GovernanceProps extends ContractProps {
-  children: React.ReactNode | React.ReactNode[];
-}
+const Governance: React.FC = ({ children }) => {
+  const [isGovernor, setIsGovernor] = React.useState<boolean>(false);
+  const { Governance } = useContractContext();
+  const { accounts } = useWeb3Context();
 
-type GovernanceState = {
-  isGovernor: false;
-}
-
-class Governance extends React.Component<GovernanceProps, GovernanceState> {
-  componentDidMount (): void {
-    this.props.contracts.Governance.methods.isGovernor(this.props.accounts[0])
+  React.useEffect(() => {
+    Governance.methods.isGovernor(accounts[0])
       .call()
-      .then((isGovernor: any) => this.setState({ isGovernor: isGovernor }))
+      .then((isGovernor: any) => setIsGovernor(isGovernor))
       .catch(console.log);
-  }
+  }, [Governance, accounts]);
 
-  render (): React.ReactNode {
-    if (!this.state || this.state.isGovernor) {
-      return (
-        <Container>
-          {this.props.children}
-        </Container>
-      );
-    }
-
+  if (isGovernor) {
     return (
       <Container>
-        <h1>You are not an approved moderator</h1>
+        { children }
       </Container>
     );
   }
-}
+
+  return (
+    <Container>
+      <h1>You are not an approved moderator</h1>
+    </Container>
+  );
+};
 
 export default Governance;
