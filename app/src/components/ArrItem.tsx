@@ -65,4 +65,4 @@ const ArrItem: React.FC<ArrItemProps> = ({ id }) => {
   );
 };
 
-export default ARRItem;
+export default ArrItem;
