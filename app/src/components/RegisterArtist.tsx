@@ -82,7 +82,7 @@ const RegisterArtist: React.FC = () => {
     setSubmitted(true);
 
     // eslint-disable-next-line
-      const { metaIpfsHash, ...restOfTheFields } = fields;
+    const { metaIpfsHash, ...restOfTheFields } = fields;
     const jsonData: any = restOfTheFields;
 
     const jsonDataBuffer = Buffer.from(JSON.stringify(jsonData));
