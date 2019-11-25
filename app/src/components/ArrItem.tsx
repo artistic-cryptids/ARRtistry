@@ -37,7 +37,7 @@ const ArrItem: React.FC<ArrItemProps> = ({ id }) => {
       setArr(arr);
     };
 
-    loadARR();
+    loadArr();
   }, [ArtifactApplication, id]);
 
   if (!arr) {
