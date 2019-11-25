@@ -117,13 +117,13 @@ const ArtworkInfo: React.FC<ArtworkInfoProps> = ({ artwork, id, fullscreen, chil
         {children}
       </ArtworkCard>
     );
-  } else {
-    return (
-      <ArtworkCard img={imgSrc} fullscreen={fullscreen}>
-        {children}
-      </ArtworkCard>
-    );
-  };
+  }
+
+  return (
+    <ArtworkCard img={imgSrc} fullscreen={fullscreen}>
+      {children}
+    </ArtworkCard>
+  );
 };
 
 export default ArtworkInfo;
