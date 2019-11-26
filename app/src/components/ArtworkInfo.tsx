@@ -72,30 +72,30 @@ const ArtworkInfo: React.FC<ArtworkInfoProps> = ({ artwork, id, fullscreen, chil
   };
 
   React.useEffect(() => {
-    const getArtistInfo = (): void => {
-      if (!fields.artistId && retrievedData) {
-        return;
-      }
-
-      Artists.methods.getArtist(fields.artistId)
+    const getArtistInfo = async (): Promise<void> => {
+      return Artists.methods.getArtist(fields.artistId)
         .call()
         .then((hash: string) => hashToArtist(hash))
         .then((artist: Artist) => {
           setArtist(artist);
           setRetrievedData(true);
         })
-        .catch(console.log);
+
     };
 
     const setInfoFromJson = async (): Promise<void> => {
+      if (retrievedData) {
+        return;
+      }
+
       const metaUri = artwork.metaUri;
 
       const response = await fetch(metaUri);
       const infoJson = await response.json();
-      console.log(infoJson);
-      setFields(infoJson);
 
-      getArtistInfo();
+      getArtistInfo()
+        .then(() => setFields(infoJson))
+        .catch(console.log);
     };
     setInfoFromJson();
   }, [Artists, artwork.metaUri, fields, retrievedData]);
@@ -118,6 +118,8 @@ const ArtworkInfo: React.FC<ArtworkInfoProps> = ({ artwork, id, fullscreen, chil
       </ArtworkCard>
     );
   }
+
+  console.log("Info");
 
   return (
     <ArtworkCard img={imgSrc} fullscreen={fullscreen}>

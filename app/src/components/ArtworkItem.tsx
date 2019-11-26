@@ -33,8 +33,6 @@ const ArtworkItem: React.FC<ArtworkItemProps> = ({ tokenId, ownedArtifact, fulls
     return <ArtworkCard img='https://file.globalupload.io/HO8sN3I2nJ.png'/>;
   }
 
-  console.log('Artwork', artwork);
-
   return (
     <ArtworkInfo
       artwork={artwork}
