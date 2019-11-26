@@ -27,7 +27,7 @@ const ArtworkItem: React.FC<ArtworkItemProps> = ({ tokenId, ownedArtifact, fulls
         setArtwork(artwork);
       })
       .catch(console.log);
-  }, [ArtifactRegistry, tokenId]);
+  }, [ArtifactRegistry.methods, tokenId]);
 
   if (!artwork) {
     return <ArtworkCard img='https://file.globalupload.io/HO8sN3I2nJ.png'/>;
