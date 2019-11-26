@@ -88,7 +88,6 @@ const RegisterArtifact: React.FC = () => {
   });
   const [retrievedData, setRetrievedData] = React.useState<boolean>(false);
 
-
   const { ArtifactApplication } = useContractContext();
   const { Artists } = useContractContext();
   const { accounts } = useWeb3Context();
@@ -117,7 +116,7 @@ const RegisterArtifact: React.FC = () => {
     const currentAccount = accounts[0];
     getArtistInfo();
     let artistAddr = artist.wallet;
-    if (artistAddr === "") {
+    if (artistAddr === '') {
       artistAddr = '0x0000000000000000000000000000000000000000';
     }
 
