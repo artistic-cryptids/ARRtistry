@@ -79,8 +79,7 @@ const ArtworkInfo: React.FC<ArtworkInfoProps> = ({ artwork, id, fullscreen, chil
         .then((artist: Artist) => {
           setArtist(artist);
           setRetrievedData(true);
-        })
-
+        });
     };
 
     const setInfoFromJson = async (): Promise<void> => {
@@ -119,7 +118,7 @@ const ArtworkInfo: React.FC<ArtworkInfoProps> = ({ artwork, id, fullscreen, chil
     );
   }
 
-  console.log("Info");
+  console.log('Info');
 
   return (
     <ArtworkCard img={imgSrc} fullscreen={fullscreen}>
