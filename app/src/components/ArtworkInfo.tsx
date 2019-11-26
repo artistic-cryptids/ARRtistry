@@ -118,8 +118,6 @@ const ArtworkInfo: React.FC<ArtworkInfoProps> = ({ artwork, id, fullscreen, chil
     );
   }
 
-  console.log('Info');
-
   return (
     <ArtworkCard img={imgSrc} fullscreen={fullscreen}>
       {children}
