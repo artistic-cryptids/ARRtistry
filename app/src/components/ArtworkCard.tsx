@@ -8,6 +8,10 @@ import { Documents, DocumentsModal } from './Documents';
 import { Link } from 'react-router-dom';
 import Form from 'react-bootstrap/Form';
 import PlaintextField from './common/PlaintextField';
+import { useContractContext } from '../providers/ContractProvider';
+import { EventData } from 'web3-eth-contract';
+import { useWeb3Context } from '../providers/Web3Provider';
+import * as moment from 'moment';
 
 interface ArtworkCardProps {
   id?: number;
@@ -36,6 +40,22 @@ const ArtworkCard: React.FC<ArtworkCardProps> = ({
   fullscreen,
   children,
 }) => {
+
+  const { web3 } = useWeb3Context();
+  const { ArtifactRegistry } = useContractContext();
+
+  const options = { fromBlock: 0 };
+  const events = ArtifactRegistry.getPastEvents('Transfer', options)
+    .then((es: EventData[]) => es.filter(e => e.returnValues.tokenId === '1'));
+  if (events.length > 0) {
+    console.log('Found an event in ArtworkCard');
+    const mostRecentEvent = events[events.length-1];
+    const timestamp = web3.eth.getBlock(mostRecentEvent.blockNumber)
+    .then((block) => block.timestamp);
+    const txDate = moment.unix(Number(timestamp));
+    console.log(txDate);
+  }
+
   const path = `artifact/${id}`;
   return (
     <Card className="shadow">
