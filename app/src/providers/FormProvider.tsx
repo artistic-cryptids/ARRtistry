@@ -24,7 +24,7 @@ export type ErrorMessages = {
 
 export const DEFAULT_TEXT_FIELDS: TextFields = {
   title: '',
-  artistId: '',
+  artistId: '1',
   description: '',
   edition: '',
   artifactCreationDate: '',
