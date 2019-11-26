@@ -111,7 +111,7 @@ contract('ArtifactApplication', async accounts => {
           ARTIFACT.metaUri,
         );
         await governance.approve(0);
-        await registry.transfer(from, to, tokenId, metaUri, price, location, date);
+        await registry.transfer(from, to, tokenId, metaUri, price, location, date, true);
 
         const result = await artifactApplication.getARR(0);
         const actualARR = {
@@ -135,6 +135,21 @@ contract('ArtifactApplication', async accounts => {
         ARREquality(actualARR, expectedARR);
       });
 
+      it('cannot retrieve ARR for a transfer that does not log arr', async () => {
+        const price = toBN(1001);
+        await artifactApplication.applyFor(
+          accounts[0],
+          ARTIFACT.artist,
+          ARTIFACT.metaUri,
+        );
+        await governance.approve(0);
+        await registry.transfer(from, to, tokenId, metaUri, price, location, date, false);
+
+        const result = await governance.getARRLength();
+
+        expect(result.toNumber()).to.be.eql(0);
+      });
+
       describe('ARR calculation', async () => {
         const assertARRCalculationCorrectForPrice = function (price, expectedARR) {
           it('calculates ARR correctly for €' + price / 100, async () => {
@@ -144,7 +159,7 @@ contract('ArtifactApplication', async accounts => {
               ARTIFACT.metaUri,
             );
             await governance.approve(0);
-            await registry.transfer(from, to, tokenId, metaUri, toBN(price), location, date);
+            await registry.transfer(from, to, tokenId, metaUri, toBN(price), location, date, true);
             const result = await artifactApplication.getARR(0);
             const actualARR = result[4];
             expect(actualARR.toNumber()).to.be.eql(expectedARR);
