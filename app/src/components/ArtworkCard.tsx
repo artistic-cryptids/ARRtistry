@@ -40,7 +40,6 @@ const ArtworkCard: React.FC<ArtworkCardProps> = ({
   fullscreen,
   children,
 }) => {
-
   const { web3 } = useWeb3Context();
   const { ArtifactRegistry } = useContractContext();
 
@@ -49,9 +48,9 @@ const ArtworkCard: React.FC<ArtworkCardProps> = ({
     .then((es: EventData[]) => es.filter(e => e.returnValues.tokenId === '1'));
   if (events.length > 0) {
     console.log('Found an event in ArtworkCard');
-    const mostRecentEvent = events[events.length-1];
+    const mostRecentEvent = events[events.length - 1];
     const timestamp = web3.eth.getBlock(mostRecentEvent.blockNumber)
-    .then((block) => block.timestamp);
+      .then((block) => block.timestamp);
     const txDate = moment.unix(Number(timestamp));
     console.log(txDate);
   }
