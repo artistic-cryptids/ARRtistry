@@ -88,8 +88,7 @@ const RegisterArtifact: React.FC = () => {
   });
   const [retrievedData, setRetrievedData] = React.useState<boolean>(false);
 
-  const { ArtifactApplication } = useContractContext();
-  const { Artists } = useContractContext();
+  const { ArtifactApplication, Artists } = useContractContext();
   const { accounts } = useWeb3Context();
 
   const hashToArtist = async (hash: string): Promise<Artist> => {
