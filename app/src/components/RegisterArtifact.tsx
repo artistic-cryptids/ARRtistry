@@ -78,46 +78,12 @@ interface Artist {
 }
 
 const RegisterArtifact: React.FC = () => {
-  const [artist, setArtist] = React.useState<Artist>({
-    id: 0,
-    name: '',
-    wallet: '',
-    nationality: '',
-    birthYear: '',
-    deathYear: '',
-  });
-  const [retrievedData, setRetrievedData] = React.useState<boolean>(false);
-
-  const { ArtifactApplication, Artists } = useContractContext();
+  const { ArtifactApplication } = useContractContext();
   const { accounts } = useWeb3Context();
 
-  const hashToArtist = async (hash: string): Promise<Artist> => {
-    const response = await fetch(hash);
-    return response.json();
-  };
-
   const onSubmit: RegisterOnSubmit = async ({ files, fields }): Promise<void> => {
-    const getArtistInfo = (): void => {
-      if (!fields.artistId && retrievedData) {
-        return;
-      }
-
-      Artists.methods.getArtist(fields.artistId)
-        .call()
-        .then((hash: string) => hashToArtist(hash))
-        .then((artist: Artist) => {
-          setArtist(artist);
-          setRetrievedData(true);
-        })
-        .catch(console.log);
-    };
-
     const currentAccount = accounts[0];
-    getArtistInfo();
-    let artistAddr = artist.wallet;
-    if (artistAddr === '') {
-      artistAddr = '0x0000000000000000000000000000000000000000';
-    }
+    const artistAddr = fields.artistWallet;
 
     const jsonData: ArtifactMetadata = {
       ...fields,

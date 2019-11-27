@@ -33,6 +33,7 @@ const ArtistSelection: React.FC = () => {
 
   const onArtistChange = (event: React.FormEvent<HTMLSelectElement & any>): void => {
     setField('artistId', event.currentTarget.value.toString());
+    setField('artistWallet', artists[event.currentTarget.value].wallet);
   };
 
   return (
