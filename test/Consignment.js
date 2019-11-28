@@ -24,8 +24,6 @@ contract('Consignment', async accounts => {
       await registry.mint(tokenOwner, ARTIFACT, { from: tokenOwner });
       const balance = await registry.balanceOf(tokenOwner);
       tokenId = await registry.tokenOfOwnerByIndex(tokenOwner, balance - 1);
-
-      registry.approve(instance.address, tokenId);
     });
 
     it('token owner can consign', async () => {
@@ -56,8 +54,6 @@ contract('Consignment', async accounts => {
       await registry.mint(tokenOwner, ARTIFACT, { from: tokenOwner });
       const balance = await registry.balanceOf(tokenOwner);
       tokenId = await registry.tokenOfOwnerByIndex(tokenOwner, balance - 1);
-
-      registry.approve(instance.address, tokenId);
     });
 
     it('token owner is consigned', async () => {
@@ -91,8 +87,6 @@ contract('Consignment', async accounts => {
       await registry.mint(tokenOwner, ARTIFACT, { from: tokenOwner });
       const balance = await registry.balanceOf(tokenOwner);
       tokenId = await registry.tokenOfOwnerByIndex(tokenOwner, balance - 1);
-
-      registry.approve(instance.address, tokenId);
     });
 
     it('initially have zero consigned tokens', async () => {
