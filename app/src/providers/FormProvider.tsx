@@ -5,6 +5,7 @@ import * as _ from 'lodash';
 export interface TextFields {
   title: string;
   artistId: string;
+  artistWallet: string;
   description: string;
   edition: string;
   artifactCreationDate: string;
@@ -24,7 +25,8 @@ export type ErrorMessages = {
 
 export const DEFAULT_TEXT_FIELDS: TextFields = {
   title: '',
-  artistId: '',
+  artistId: '1',
+  artistWallet: '0xEF1728245cBB4E908a72f92AC2074175609fA6c9',
   description: '',
   edition: '',
   artifactCreationDate: '',
@@ -36,6 +38,7 @@ export const DEFAULT_TEXT_FIELDS: TextFields = {
 export const DEFAULT_ERRORS: ErrorMessages = {
   title: null,
   artistId: null,
+  artistWallet: null,
   description: null,
   edition: null,
   artifactCreationDate: null,
