@@ -19,7 +19,7 @@ contract('Consignment', async accounts => {
     instance = await Consignment.new(registry.address);
   });
 
-  describe('authorize', async () => {
+  describe('consign', async () => {
     beforeEach(async () => {
       await registry.mint(tokenOwner, ARTIFACT, { from: tokenOwner });
       const balance = await registry.balanceOf(tokenOwner);
@@ -48,6 +48,41 @@ contract('Consignment', async accounts => {
         instance.consign(tokenId, accounts[4], commission, { from: accounts[5] }),
         'Consignment::authorized: Account not authorized'
       );
+    });
+  });
+
+  describe('consigned', async () => {
+    beforeEach(async () => {
+      await registry.mint(tokenOwner, ARTIFACT, { from: tokenOwner });
+      const balance = await registry.balanceOf(tokenOwner);
+      tokenId = await registry.tokenOfOwnerByIndex(tokenOwner, balance - 1);
+
+      registry.approve(instance.address, tokenId);
+    });
+
+    it('token owner is consigned', async () => {
+      const result = await instance.isConsigned(tokenId, tokenOwner);
+      expect(result).be.eql(true);
+    });
+
+    it('if consigned then isConsigned', async () => {
+      await instance.consign(tokenId, accounts[1], commission, { from: tokenOwner });
+
+      const result = await instance.isConsigned(tokenId, accounts[1]);
+      expect(result).be.eql(true);
+    });
+
+    it('chained consigned account is consigned', async () => {
+      await instance.consign(tokenId, accounts[1], commission, { from: tokenOwner });
+      await instance.consign(tokenId, accounts[2], commission, { from: accounts[1] });
+
+      const result = await instance.isConsigned(tokenId, accounts[2]);
+      expect(result).be.eql(true);
+    });
+
+    it('non-consigned account is not consigned', async () => {
+      const result = await instance.isConsigned(tokenId, accounts[5]);
+      expect(result).be.eql(false);
     });
   });
 
