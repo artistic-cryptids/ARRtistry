@@ -106,19 +106,21 @@ const ArtworkCard: React.FC<ArtworkCardProps> = ({
             </ButtonGroup>
           </div>
           : <Card.Text>
-            {fields && fields.documents &&
-                <>
-                  <h5>Documents</h5>
-                  <hr/>
-                  <Documents documents={fields.documents}/>
-                </>
+            {fields
+              && fields.documents 
+              && fields.documents.length > 0 &&
+              <>
+                <h5>Documents</h5>
+                <hr/>
+                <Documents documents={fields.documents}/>
+              </>
             }
             {id &&
-                <>
-                  <h5>Provenance</h5>
-                  <hr/>
-                  <Provenance tokenId={id}/>
-                </>
+              <>
+                <h5>Provenance</h5>
+                <hr/>
+                <Provenance tokenId={id}/>
+              </>
             }
           </Card.Text>
         }
