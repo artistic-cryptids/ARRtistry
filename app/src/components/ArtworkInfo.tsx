@@ -73,13 +73,19 @@ const ArtworkInfo: React.FC<ArtworkInfoProps> = ({ artwork, id, fullscreen, chil
 
   React.useEffect(() => {
     const getArtistInfo = async (): Promise<void> => {
+      /* Do not try to get the artist info until the artist id has been retrieved */
+      if (fields.artistId === 0) {
+        return;
+      }
+
       return Artists.methods.getArtist(fields.artistId)
         .call()
         .then((hash: string) => hashToArtist(hash))
         .then((artist: Artist) => {
           setArtist(artist);
           setRetrievedData(true);
-        });
+        })
+        .catch(console.log);
     };
 
     const setInfoFromJson = async (): Promise<void> => {
@@ -93,9 +99,7 @@ const ArtworkInfo: React.FC<ArtworkInfoProps> = ({ artwork, id, fullscreen, chil
       const infoJson = await response.json();
 
       setFields(infoJson);
-      getArtistInfo()
-        .then(() => setRetrievedData(true))
-        .catch(console.log);
+      getArtistInfo();
     };
     setInfoFromJson();
   }, [Artists, artwork.metaUri, fields, retrievedData]);
