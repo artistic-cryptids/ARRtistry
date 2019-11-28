@@ -120,7 +120,7 @@ const ArtworkInfo: React.FC<ArtworkInfoProps> = ({ artwork, id, fullscreen, chil
   }
 
   return (
-    <ArtworkCard img={imgSrc} fullscreen={fullscreen}>
+    <ArtworkCard id={id} img={imgSrc} fullscreen={fullscreen}>
       {children}
     </ArtworkCard>
   );

@@ -14,7 +14,7 @@ import { useWeb3Context } from '../providers/Web3Provider';
 import * as moment from 'moment';
 
 interface ArtworkCardProps {
-  id?: number;
+  id: number;
   img?: string;
   metaUri?: string;
   fields?: ArtworkInfoFields;
@@ -51,15 +51,15 @@ const ArtworkCard: React.FC<ArtworkCardProps> = ({
     const getLastUpdated = async () => {
       const options = { fromBlock: 0 };
       const events = await ArtifactRegistry.getPastEvents('Transfer', options)
-        .then((es: EventData[]) => es.filter(e => e.returnValues.tokenId === '1'));
+        .then((es: EventData[]) => es.filter(e => e.returnValues.tokenId === id!.toString()));
       const event = events[events.length-1];
       const timestamp = await web3.eth.getBlock(event.blockNumber)
         .then((block) => block.timestamp);
-        
+
       const txDate = moment.unix(Number(timestamp));
       setUpdateTime('Last Updated ' + txDate.fromNow());
     };
-    getLastUpdated()
+      getLastUpdated();
   }, []);
 
   const path = `artifact/${id}`;
