@@ -104,8 +104,8 @@ const TransferArtifact: React.FC<TransferArtifactProps> = ({ tokenId, metaUri })
       .then((events: EventData[]) => {
         return events.filter(event => event.returnValues.tokenId === tokenId.toString());
       }).then((relevantEvents: EventData[]) => {
-        // only take ARR in country that takes it, or if no sales with this token have occurred
-        // no sales with this token → current user is the one who registered it → they're the artist
+        // only take ARR in country that takes it, and if no sales with this token have occurred
+        // no sales → user is the one who registered it → they're the artist, or a gallery representing them
         const takesArr = ARR_LOCATIONS.includes(fields.location) && relevantEvents.length > 0;
         return ArtifactRegistry.methods.transfer(
           owner,
