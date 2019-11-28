@@ -9,6 +9,7 @@ module.exports = async (deployer, network, accounts) => {
 
   const registry = await ArtifactRegistry.deployed();
   await deployer.deploy(Consignment, registry.address);
+  await registry.setConsignment(Consignment.address);
 
   await newLabel(
     'consignment',
