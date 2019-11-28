@@ -22,6 +22,8 @@ interface ArtworkCardProps {
   fullscreen?: true;
 }
 
+
+
 export const MetadataArtworkCard: React.FC = ({ children }) => {
   return (
     <Card bg="primary" text="white" className="text-center p-3">
@@ -40,20 +42,25 @@ const ArtworkCard: React.FC<ArtworkCardProps> = ({
   fullscreen,
   children,
 }) => {
+  const [lastUpdateTime, setUpdateTime] = React.useState<String>('Checking');
+
   const { web3 } = useWeb3Context();
   const { ArtifactRegistry } = useContractContext();
 
-  const options = { fromBlock: 0 };
-  const events = ArtifactRegistry.getPastEvents('Transfer', options)
-    .then((es: EventData[]) => es.filter(e => e.returnValues.tokenId === '1'));
-  if (events.length > 0) {
-    console.log('Found an event in ArtworkCard');
-    const mostRecentEvent = events[events.length - 1];
-    const timestamp = web3.eth.getBlock(mostRecentEvent.blockNumber)
-      .then((block) => block.timestamp);
-    const txDate = moment.unix(Number(timestamp));
-    console.log(txDate);
-  }
+  React.useEffect(() => {
+    const getLastUpdated = async () => {
+      const options = { fromBlock: 0 };
+      const events = await ArtifactRegistry.getPastEvents('Transfer', options)
+        .then((es: EventData[]) => es.filter(e => e.returnValues.tokenId === '1'));
+      const event = events[events.length-1];
+      const timestamp = await web3.eth.getBlock(event.blockNumber)
+        .then((block) => block.timestamp);
+        
+      const txDate = moment.unix(Number(timestamp));
+      setUpdateTime('Last Updated ' + txDate.fromNow());
+    };
+    getLastUpdated()
+  }, []);
 
   const path = `artifact/${id}`;
   return (
@@ -112,7 +119,8 @@ const ArtworkCard: React.FC<ArtworkCardProps> = ({
 
       </Card.Body>
       <Card.Footer>
-        <small className="text-muted">Last updated 3 mins ago</small>
+
+        <small className="text-muted"> {lastUpdateTime} </small>
       </Card.Footer>
     </Card>
   );
