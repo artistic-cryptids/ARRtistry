@@ -16,6 +16,7 @@ import { ERC721ApprovalEnumerable } from "./ERC721ApprovalEnumerable.sol";
 contract ArtifactRegistry is IArtifactRegistry, Ownable, ERC721Full, ERC721ApprovalEnumerable {
 
   event RecordSale(address indexed from, address indexed to, uint256 tokenId, uint price, string location, string date);
+  event ProvenanceDetail(uint256 tokenId, string detailTitle, string detailInfo, string date);
 
   using Counters for Counters.Counter;
 
@@ -47,6 +48,26 @@ contract ArtifactRegistry is IArtifactRegistry, Ownable, ERC721Full, ERC721Appro
     Artifact memory artwork = artifacts[tokenId];
 
     return (artwork.artist, artwork.metaUri);
+  }
+
+  function pieceStolen(uint256 tokenId, string memory info, string memory date) public {
+    emit ProvenanceDetail(tokenId, 'Piece was stolen', info, date);
+  }
+
+  function pieceRecovered(uint256 tokenId, string memory info, string memory date) public {
+    emit ProvenanceDetail(tokenId, 'Piece was recovered', info, date);
+  }
+
+  function pieceDamaged(uint256 tokenId, string memory info, string memory date) public {
+    emit ProvenanceDetail(tokenId, 'Piece was damaged', info, date);
+  }
+
+  function pieceRestored(uint256 tokenId, string memory info, string memory date) public {
+    emit ProvenanceDetail(tokenId, 'Piece was restored', info, date);
+  }
+
+  function pieceArtistFoundToBeRacist(uint256 tokenId, string memory info, string memory date) public {
+    emit ProvenanceDetail(tokenId, 'The artist for this piece was found to be a racist', info, date);
   }
 
   function transfer(address who, address recipient, uint256 tokenId, string memory metaUri, uint price, string memory location, string memory date, bool arr) public {
