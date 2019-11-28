@@ -12,7 +12,6 @@ import { IPFS_URL_START, saveSingleToIPFS } from '../helper/ipfs';
 import { useContractContext } from '../providers/ContractProvider';
 import { useWeb3Context } from '../providers/Web3Provider';
 
-
 interface RegisterFormFields {
   name: string;
   nationality: string;
