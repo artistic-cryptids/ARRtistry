@@ -82,7 +82,10 @@ const ArtworkCard: React.FC<ArtworkCardProps> = ({
         <hr/>
         {fields &&
           fields.description !== '' &&
-          <React.Fragment><Card.Text>{fields.description}</Card.Text><hr/></React.Fragment>}
+          <>
+            <Card.Text>{fields.description}</Card.Text>
+            <hr/>
+          </>}
         {children}
         <hr/>
         {fields
