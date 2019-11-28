@@ -21,6 +21,7 @@ contract Consignment {
   }
 
   mapping (address => ConsignmentInfo) public consignments;
+  mapping (address => uint256[]) public consigned;
 
   modifier authorized(uint256 tokenId) {
     address tokenOwner = registry.ownerOf(tokenId);
@@ -57,9 +58,11 @@ contract Consignment {
     consignmentInfo.commission = commission;
 
     consignments[who] = consignmentInfo;
+
+    consigned[who].push(tokenId);
   }
 
-  function isConsigned(uint256 tokenId, address who) public view returns(bool) {
+  function isConsigned(uint256 tokenId, address who) public view returns (bool) {
     address tokenOwner = registry.ownerOf(tokenId);
 
     ConsignmentInfo memory consignmentInfo;
@@ -70,5 +73,9 @@ contract Consignment {
     }
 
     return who == tokenOwner;
+  }
+
+  function consignedTokenIds() public view returns (uint256[] memory) {
+    return consigned[msg.sender];
   }
 }
