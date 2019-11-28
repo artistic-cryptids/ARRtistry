@@ -11,6 +11,7 @@ import TransactionLoadingModal from './common/TransactionLoadingModal';
 import ipfs from '../helper/ipfs';
 import { useContractContext } from '../providers/ContractProvider';
 import { useWeb3Context } from '../providers/Web3Provider';
+import { IPFS_URL_START, saveToIPFS } from '../helper/ipfs';
 
 interface RegisterFormFields {
   name: string;
@@ -62,15 +63,6 @@ const RegisterArtist: React.FC = () => {
     setFields(newFields);
   };
 
-  const saveToIpfs = async (files: any, afterwardsFunction: (arg0: string) => void): Promise<void> => {
-    let ipfsId: string;
-    await ipfs.add([...files], { progress: (prog: any) => console.log(`received: ${prog}`) })
-      .then((response: any) => {
-        ipfsId = response[0].hash;
-        afterwardsFunction(ipfsId);
-      }).catch(console.log);
-  };
-
   const registerArtist = async (event: React.FormEvent<HTMLFormElement>): Promise<void> => {
     event.stopPropagation();
     event.preventDefault();
@@ -90,10 +82,9 @@ const RegisterArtist: React.FC = () => {
     const jsonDataBuffer = Buffer.from(JSON.stringify(jsonData));
     const files = Array(jsonDataBuffer);
 
-    // TODO: this upload takes like 5 seconds. Some kind of loading notification should display
     await saveToIpfs(files, setMetaHash);
 
-    const ipfsUrlStart = 'https://ipfs.io/ipfs/';
+    const ipfsUrlStart = IPFS_URL_START;
     await Artists.methods.addArtist(
       ipfsUrlStart + fields.metaIpfsHash,
     ).send(
