@@ -5,6 +5,7 @@ import Form from 'react-bootstrap/Form';
 import Modal from 'react-bootstrap/Modal';
 import ipfs from '../helper/ipfs';
 import TransactionLoadingModal from './common/TransactionLoadingModal';
+import { EventData } from 'web3-eth-contract';
 import { useNameServiceContext } from '../providers/NameServiceProvider';
 import { useContractContext } from '../providers/ContractProvider';
 import { useWeb3Context } from '../providers/Web3Provider';
@@ -97,29 +98,37 @@ const TransferArtifact: React.FC<TransferArtifactProps> = ({ tokenId, metaUri })
       fields.date,
     );
 
-    const takesArr = ARR_LOCATIONS.includes(fields.location);
+    const eventOptions = { fromBlock: 0 };
 
-    ArtifactRegistry.methods.transfer(
-      owner,
-      recipientAddress,
-      tokenId,
-      provenanceHash,
-      (parseFloat(fields.price) * 100).toString(),
-      fields.location,
-      fields.date,
-      takesArr,
-    ).send(
-      {
-        from: accounts[0],
-        gasLimit: 6000000,
-      },
-    ).then(() => {
-      setSubmitted(false);
-    }).catch((err: any) => {
-      // rejection, usually
-      console.log(err);
-      setSubmitted(false);
-    });
+    ArtifactRegistry.getPastEvents('RecordSale', eventOptions)
+      .then((events: EventData[]) => {
+        return events.filter(event => event.returnValues.tokenId === tokenId.toString());
+      }).then((relevantEvents: EventData[]) => {
+        // only take ARR in country that takes it, and if no sales with this token have occurred
+        // no sales → user is the one who registered it → they're the artist, or a gallery representing them
+        const takesArr = ARR_LOCATIONS.includes(fields.location) && relevantEvents.length > 0;
+        return ArtifactRegistry.methods.transfer(
+          owner,
+          recipientAddress,
+          tokenId,
+          provenanceHash,
+          (parseFloat(fields.price) * 100).toString(),
+          fields.location,
+          fields.date,
+          takesArr,
+        ).send(
+          {
+            from: accounts[0],
+            gasLimit: 6000000,
+          },
+        );
+      }).then(() => {
+        setSubmitted(false);
+      }).catch((err: any) => {
+        // rejection, usually
+        console.log(err);
+        setSubmitted(false);
+      });
   };
 
   const inputChangeHandler = (event: InputChangeEvent): void => {
