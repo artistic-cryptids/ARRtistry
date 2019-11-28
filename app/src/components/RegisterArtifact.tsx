@@ -68,13 +68,22 @@ interface ArtifactMetadata {
   documents: ArtifactDocument[];
 }
 
+interface Artist {
+  id: number;
+  name: string;
+  wallet: string;
+  nationality: string;
+  birthYear: string;
+  deathYear: string;
+}
+
 const RegisterArtifact: React.FC = () => {
   const { ArtifactApplication } = useContractContext();
   const { accounts } = useWeb3Context();
 
   const onSubmit: RegisterOnSubmit = async ({ files, fields }): Promise<void> => {
     const currentAccount = accounts[0];
-    const artist = accounts[0];
+    const artistAddr = fields.artistWallet;
 
     const jsonData: ArtifactMetadata = {
       ...fields,
@@ -93,7 +102,7 @@ const RegisterArtifact: React.FC = () => {
     const hash = await saveSingleToIPFSNoCallBack(jsonDataBuffer);
     await ArtifactApplication.methods.applyFor(
       currentAccount,
-      artist,
+      artistAddr,
       IPFS_URL_START + hash,
     ).send(
       {

@@ -43,7 +43,7 @@ const ProposalItem: React.FC<ProposalItemProps> = ({ id }) => {
           metaUri: proposalData[2],
         };
         setProposal(proposal);
-        setProposer(proposalData[1]);
+        setProposer(proposalData[0]);
       })
       .catch(console.log);
   }, [ArtifactApplication, id]);
