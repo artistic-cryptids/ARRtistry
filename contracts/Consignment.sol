@@ -58,4 +58,17 @@ contract Consignment {
 
     consignments[who] = consignmentInfo;
   }
+
+  function isConsigned(uint256 tokenId, address who) public view returns(bool) {
+    address tokenOwner = registry.ownerOf(tokenId);
+
+    ConsignmentInfo memory consignmentInfo;
+
+    while (who != address(0) && who != tokenOwner) {
+      consignmentInfo = consignments[who];
+      who = consignmentInfo.consigner;
+    }
+
+    return who == tokenOwner;
+  }
 }
