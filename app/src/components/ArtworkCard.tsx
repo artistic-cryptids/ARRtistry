@@ -43,17 +43,23 @@ const ArtworkCard: React.FC<ArtworkCardProps> = ({
   const [lastUpdateTime, setUpdateTime] = React.useState<string>('Checking');
 
   const { web3 } = useWeb3Context();
-  const { ArtifactRegistry } = useContractContext();
+  const { ArtifactRegistry, Governance } = useContractContext();
 
   React.useEffect(() => {
     const getLastUpdated = async () => {
       const options = { fromBlock: 0 };
-      const events = await ArtifactRegistry.getPastEvents('Transfer', options)
-        .then((es: EventData[]) => es.filter(e => e.returnValues.tokenId === id!.toString()));
+      let events = await ArtifactRegistry.getPastEvents('Transfer', options)
+        .then((es: EventData[]) =>
+        es.filter(e => e.returnValues.tokenId === id!.toString()));
+      if (events.length === 0) {
+        console.log('found no events');
+        events = await Governance.getPastEvents('Propose', options)
+        .then((es:EventData[]) =>
+          es.filter(e => e.returnValues.proposalId === id!.toString()));
+      }
       const event = events[events.length - 1];
       const timestamp = await web3.eth.getBlock(event.blockNumber)
         .then((block) => block.timestamp);
-
       const txDate = moment.unix(Number(timestamp));
       setUpdateTime('Last Updated ' + txDate.fromNow());
     };
