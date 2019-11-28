@@ -31,24 +31,17 @@ const ConsignArtifact: React.FC<ConsignArtifactProps> = ({ tokenId }) => {
   const [fields, setFields] = React.useState<ConsignArtifactFormFields>({
     recipientName: '',
   });
-  const [consignedAccount, setConsignedAccount] = React.useState<string>('');
   const [showConsignment, setShowConsignment] = React.useState<boolean>(false);
 
   const { addressFromName } = useNameServiceContext();
-  const { ArtifactRegistry } = useContractContext();
+  const { Consignment } = useContractContext();
   const { accounts } = useWeb3Context();
 
-  React.useEffect(() => {
-    ArtifactRegistry.methods.getApproved(tokenId)
-      .call({ from: accounts[0] })
-      .then((account: string) => setConsignedAccount(account))
-      .catch(console.log);
-  }, [accounts, tokenId, ArtifactRegistry]);
-
   const consign = (address: string): void => {
-    ArtifactRegistry.methods.approve(
-      address,
+    Consignment.methods.consign(
       tokenId,
+      address,
+      30,
     ).send(
       {
         from: accounts[0],
@@ -97,11 +90,6 @@ const ConsignArtifact: React.FC<ConsignArtifactProps> = ({ tokenId }) => {
           <Modal.Title>Consignment</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          {consignedAccount !== ZERO_ADDR
-            ? <React.Fragment><p>Consigned to <ENSName address={consignedAccount}/> <br/>
-            You may still register a sale yourself, but doing so will revoke consignment.
-            </p><hr/></React.Fragment>
-            : null}
           <p>Consign Account to Sell</p>
           <Form.Group as={Col} controlId="recipientName">
             <Form.Label>Recipient Name</Form.Label>
@@ -120,9 +108,6 @@ const ConsignArtifact: React.FC<ConsignArtifactProps> = ({ tokenId }) => {
           <Button variant="primary" onClick={() => consignArtifactForArtwork()}>
             Consign for Sale
           </Button>
-          {consignedAccount !== ZERO_ADDR
-            ? <Button variant="primary" onClick={revokeConsignment}>Revoke Consignment</Button>
-            : null}
         </Modal.Footer>
       </Modal>
     </>
