@@ -23,17 +23,17 @@ contract Consignment {
   mapping (address => ConsignmentInfo) public consignments;
 
   modifier authorized(uint256 tokenId) {
-    address who = msg.sender;
-    ConsignmentInfo memory consignmentInfo = consignments[who];
-    address consigner = consignmentInfo.consigner;
+    address tokenOwner = registry.ownerOf(tokenId);
 
-    while (consigner != address(0)) {
-      who = consigner;
+    address who = msg.sender;
+    ConsignmentInfo memory consignmentInfo;
+
+    while (who != address(0) && who != tokenOwner) {
       consignmentInfo = consignments[who];
-      consigner = consignmentInfo.consigner;
+      who = consignmentInfo.consigner;
     }
 
-    require(registry.ownerOf(tokenId) == consigner);
+    require(tokenOwner == who, "Consignment::authorized: Account not authorized");
     _;
   }
 
