@@ -6,9 +6,11 @@ import "@openzeppelin/contracts/token/ERC721/ERC721Full.sol";
 import "@openzeppelin/contracts/drafts/Counters.sol";
 
 import { IArtifactRegistry } from "./interfaces/IArtifactRegistry.sol";
+import { IRoyaltyDistributor } from "./interfaces/IRoyaltyDistributor.sol";
 import { IGovernance } from "./interfaces/IGovernance.sol";
 import { Consignment } from "./Consignment.sol";
 import { ERC721ApprovalEnumerable } from "./ERC721ApprovalEnumerable.sol";
+import { ARRCalculator } from "./ARRCalculator.sol";
 
 /**
  * @title ArtifactRegistry
@@ -27,14 +29,16 @@ contract ArtifactRegistry is IArtifactRegistry, Ownable, ERC721Full, ERC721Appro
   using Counters for Counters.Counter;
 
   IGovernance public governance;
+  IRoyaltyDistributor public royalty;
   Consignment public consignment;
 
   Counters.Counter public _tokenId;
   mapping (uint256 => Artifact) public artifacts;
 
-  constructor(address owner, IGovernance _governance) public ERC721Full("Artifact", "ART") {
+  constructor(address owner, IGovernance _governance, IRoyaltyDistributor _royalty) public ERC721Full("Artifact", "ART") {
     _transferOwnership(owner);
     governance = _governance;
+    royalty = _royalty;
   }
 
   function setConsignment(Consignment _consignment) public {
@@ -89,13 +93,20 @@ contract ArtifactRegistry is IArtifactRegistry, Ownable, ERC721Full, ERC721Appro
     emit RecordFilm(tokenId, info, date);
   }
 
-  function transfer(address who, address recipient, uint256 tokenId, string memory metaUri, uint price, string memory location, string memory date, bool arr) public {
-    safeTransferFrom(who, recipient, tokenId);
-
+  function transfer(
+    address who,
+    address recipient,
+    uint256 tokenId,
+    string memory metaUri,
+    uint price,
+    string memory location,
+    string memory date,
+    bool incursARR
+  ) public {
     Artifact storage artwork = artifacts[tokenId];
     artwork.metaUri = metaUri;
 
-    if (arr) {
+    if (incursARR) {
       // Create a new ARR
       IGovernance.ARR memory arr;
       arr.from = who;
@@ -109,6 +120,10 @@ contract ArtifactRegistry is IArtifactRegistry, Ownable, ERC721Full, ERC721Appro
     }
 
     emit RecordSale(who, recipient, tokenId, price, location, date);
+
+    royalty.distribute(artwork.artist, price);
+
+    safeTransferFrom(who, recipient, tokenId);
   }
 
   function getTokenIdsOfOwner(address owner) public view returns (uint[] memory) {

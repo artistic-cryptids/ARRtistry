@@ -4,7 +4,6 @@ import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Button from 'react-bootstrap/Button';
 import ButtonGroup from 'react-bootstrap/ButtonGroup';
-import ENSName from './common/ENSName';
 import { useContractContext } from '../providers/ContractProvider';
 import { useWeb3Context } from '../providers/Web3Provider';
 import Form from 'react-bootstrap/Form';
