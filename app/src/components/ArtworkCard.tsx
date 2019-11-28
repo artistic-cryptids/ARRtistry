@@ -60,7 +60,7 @@ const ArtworkCard: React.FC<ArtworkCardProps> = ({
       setUpdateTime('Last Updated ' + txDate.fromNow());
     };
       getLastUpdated();
-  }, []);
+  }, [ArtifactRegistry, id]);
 
   const path = `artifact/${id}`;
   return (
