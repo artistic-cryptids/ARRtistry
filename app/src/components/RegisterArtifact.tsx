@@ -68,15 +68,6 @@ interface ArtifactMetadata {
   documents: ArtifactDocument[];
 }
 
-interface Artist {
-  id: number;
-  name: string;
-  wallet: string;
-  nationality: string;
-  birthYear: string;
-  deathYear: string;
-}
-
 const RegisterArtifact: React.FC = () => {
   const { ArtifactApplication } = useContractContext();
   const { accounts } = useWeb3Context();
