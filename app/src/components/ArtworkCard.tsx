@@ -22,8 +22,6 @@ interface ArtworkCardProps {
   fullscreen?: true;
 }
 
-
-
 export const MetadataArtworkCard: React.FC = ({ children }) => {
   return (
     <Card bg="primary" text="white" className="text-center p-3">
@@ -42,7 +40,7 @@ const ArtworkCard: React.FC<ArtworkCardProps> = ({
   fullscreen,
   children,
 }) => {
-  const [lastUpdateTime, setUpdateTime] = React.useState<String>('Checking');
+  const [lastUpdateTime, setUpdateTime] = React.useState<string>('Checking');
 
   const { web3 } = useWeb3Context();
   const { ArtifactRegistry } = useContractContext();
@@ -52,14 +50,14 @@ const ArtworkCard: React.FC<ArtworkCardProps> = ({
       const options = { fromBlock: 0 };
       const events = await ArtifactRegistry.getPastEvents('Transfer', options)
         .then((es: EventData[]) => es.filter(e => e.returnValues.tokenId === id!.toString()));
-      const event = events[events.length-1];
+      const event = events[events.length - 1];
       const timestamp = await web3.eth.getBlock(event.blockNumber)
         .then((block) => block.timestamp);
 
       const txDate = moment.unix(Number(timestamp));
       setUpdateTime('Last Updated ' + txDate.fromNow());
     };
-      getLastUpdated();
+    getLastUpdated();
   }, [ArtifactRegistry, id]);
 
   const path = `artifact/${id}`;
