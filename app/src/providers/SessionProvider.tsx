@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { useNameServiceContext } from './NameServiceProvider';
 import { useWeb3Context } from './Web3Provider';
+import Loading from '../components/common/Loading';
 
 const DEFAULT_USER = {
   nickname: 'John Doe',
@@ -71,6 +72,7 @@ export const SessionProvider: React.FC = ({ children }) => {
 
   const defaultUser = DEFAULT_USER;
   const [user, setUser] = React.useState<User>(defaultUser);
+  const [gotUser, setGotUser] = React.useState<boolean>(false);
 
   const users = [DACS_DEFAULT, DACS_RINKEBY, DEAL_DEFAULT, NATASHA, BUYER_DEFAULT];
 
@@ -93,9 +95,14 @@ export const SessionProvider: React.FC = ({ children }) => {
           curUser.name = name;
           setUser(curUser);
         }
+        setGotUser(true);
       })
       .catch(console.log);
   }, [address, context, defaultUser, users]);
+
+  if (!gotUser) {
+    return <Loading/>;
+  }
 
   return (
     <SessionContext.Provider value={{ user: user, setUser: setUser }}>
