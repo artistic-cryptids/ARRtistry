@@ -50,12 +50,12 @@ const ArtworkCard: React.FC<ArtworkCardProps> = ({
       const options = { fromBlock: 0 };
       let events = await ArtifactRegistry.getPastEvents('Transfer', options)
         .then((es: EventData[]) =>
-        es.filter(e => e.returnValues.tokenId === id!.toString()));
+          es.filter(e => e.returnValues.tokenId === id!.toString()));
       if (events.length === 0) {
         console.log('found no events');
         events = await Governance.getPastEvents('Propose', options)
-        .then((es:EventData[]) =>
-          es.filter(e => e.returnValues.proposalId === id!.toString()));
+          .then((es: EventData[]) =>
+            es.filter(e => e.returnValues.proposalId === id!.toString()));
       }
       const event = events[events.length - 1];
       const timestamp = await web3.eth.getBlock(event.blockNumber)
