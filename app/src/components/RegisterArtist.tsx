@@ -8,10 +8,10 @@ import Form from 'react-bootstrap/Form';
 import Accordion from 'react-bootstrap/Accordion';
 import Spinner from 'react-bootstrap/Spinner';
 import TransactionLoadingModal from './common/TransactionLoadingModal';
-import ipfs from '../helper/ipfs';
+import { IPFS_URL_START, saveSingleToIPFS } from '../helper/ipfs';
 import { useContractContext } from '../providers/ContractProvider';
 import { useWeb3Context } from '../providers/Web3Provider';
-import { IPFS_URL_START, saveToIPFS } from '../helper/ipfs';
+
 
 interface RegisterFormFields {
   name: string;
@@ -80,9 +80,8 @@ const RegisterArtist: React.FC = () => {
     const jsonData: any = restOfTheFields;
 
     const jsonDataBuffer = Buffer.from(JSON.stringify(jsonData));
-    const files = Array(jsonDataBuffer);
 
-    await saveToIpfs(files, setMetaHash);
+    await saveSingleToIPFS(jsonDataBuffer, setMetaHash);
 
     const ipfsUrlStart = IPFS_URL_START;
     await Artists.methods.addArtist(

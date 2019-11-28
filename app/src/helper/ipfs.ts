@@ -30,8 +30,8 @@ export const saveSingleToIPFS = async (files: Uploadable, callback: HashCallback
 };
 
 export const saveSingleToIPFSNoCallBack = async (files: Uploadable): Promise<string> => {
-  let responseArray = []
-  while (responseArray.length == 0) {
+  let responseArray = [];
+  while (responseArray.length === 0) {
     responseArray = await ipfs.add(files, { progress: progressMonitor });
   }
 
@@ -44,8 +44,8 @@ export const saveSingleToIPFSNoCallBack = async (files: Uploadable): Promise<str
 };
 
 export const saveToIPFS = async (files: Uploadable[], callback: ResponseCallback): Promise<void> => {
-  let responseArray = []
-  while (responseArray.length == 0) {
+  let responseArray = [];
+  while (responseArray.length === 0) {
     responseArray = await ipfs.add(files, { progress: progressMonitor });
   }
 
