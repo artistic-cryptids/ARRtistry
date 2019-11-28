@@ -5,6 +5,7 @@ import { FormProvider, TextFields } from '../../providers/FormProvider';
 export interface RegisterFields {
   title: string;
   artistId: string;
+  artistWallet: string;
   description: string;
   edition: string;
   artifactCreationDate: string;
