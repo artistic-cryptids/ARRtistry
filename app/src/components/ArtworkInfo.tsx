@@ -92,7 +92,7 @@ const ArtworkInfo: React.FC<ArtworkInfoProps> = ({ artwork, id, fullscreen, chil
       const response = await fetch(metaUri);
       const infoJson = await response.json();
 
-      setFields(infoJson)
+      setFields(infoJson);
       getArtistInfo()
         .then(() => setRetrievedData(true))
         .catch(console.log);
