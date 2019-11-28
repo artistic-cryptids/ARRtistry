@@ -49,26 +49,26 @@ contract ArtifactRegistry is IArtifactRegistry, Ownable, ERC721Full, ERC721Appro
     return (artwork.artist, artwork.metaUri);
   }
 
-  function transfer(address who, address recipient, uint256 tokenId, string memory metaUri, uint price, string memory location, string memory date) public returns (uint256){
+  function transfer(address who, address recipient, uint256 tokenId, string memory metaUri, uint price, string memory location, string memory date, bool arr) public {
     safeTransferFrom(who, recipient, tokenId);
 
     Artifact storage artwork = artifacts[tokenId];
     artwork.metaUri = metaUri;
 
-    // Create a new ARR
-    IGovernance.ARR memory arr;
-    arr.from = who;
-    arr.to = recipient;
-    arr.tokenId = tokenId;
-    arr.price = price;
-    arr.location = location;
-    arr.date = date;
+    if (arr) {
+      // Create a new ARR
+      IGovernance.ARR memory arr;
+      arr.from = who;
+      arr.to = recipient;
+      arr.tokenId = tokenId;
+      arr.price = price;
+      arr.location = location;
+      arr.date = date;
 
-    uint256 arrId = governance.pushARR(arr);
+      governance.pushARR(arr);
+    }
 
     emit RecordSale(who, recipient, tokenId, price, location, date);
-
-    return arrId;
   }
 
   function getTokenIdsOfOwner(address owner) public view returns (uint[] memory) {

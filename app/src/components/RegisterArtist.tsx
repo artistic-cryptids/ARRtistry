@@ -57,7 +57,9 @@ const RegisterArtist: React.FC = () => {
   }, [Governance, accounts, fields]);
 
   const setMetaHash = (ipfsId: string): void => {
-    setFields({ ...fields, metaIpfsHash: ipfsId });
+    const newFields = fields;
+    newFields.metaIpfsHash = ipfsId;
+    setFields(newFields);
   };
 
   const saveToIpfs = async (files: any, afterwardsFunction: (arg0: string) => void): Promise<void> => {
