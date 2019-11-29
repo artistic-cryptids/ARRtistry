@@ -111,20 +111,38 @@ contract('Consignment', async accounts => {
     });
   });
 
-  describe('get consignment info', async () => {
+  describe('get consignment addresses', async () => {
     beforeEach(async () => {
       await registry.mint(tokenOwner, ARTIFACT, { from: tokenOwner });
       const balance = await registry.balanceOf(tokenOwner);
       tokenId = await registry.tokenOfOwnerByIndex(tokenOwner, balance - 1);
     });
 
-    it('can grab consigned info for a tokenId', async () => {
+    it('can grab single consigned address for a tokenId', async () => {
       await instance.consign(tokenId, accounts[8], commission, { from: tokenOwner });
 
-      const result = await instance.getConsignmentInfo(tokenId, { from: accounts[8] });
+      const result = await instance.getConsignmentAddresses(tokenId, { from: tokenOwner });
 
-      expect(result[0]).be.eql(accounts[0]);
-      expect(result[1].toNumber()).be.eql(commission);
+      expect(result[0]).be.eql(accounts[8]);
+    });
+
+    it('can grab multiple consigned address for a tokenId', async () => {
+      await instance.consign(tokenId, accounts[8], commission, { from: tokenOwner });
+      await instance.consign(tokenId, accounts[7], commission, { from: tokenOwner });
+
+      const result = await instance.getConsignmentAddresses(tokenId, { from: tokenOwner });
+
+      expect(result[0]).be.eql(accounts[8]);
+      expect(result[1]).be.eql(accounts[7]);
+    });
+
+    it('can only grab consigned addresses for sender', async () => {
+      await instance.consign(tokenId, accounts[8], commission, { from: tokenOwner });
+      await instance.consign(tokenId, accounts[7], commission, { from: accounts[8] });
+
+      const result = await instance.getConsignmentAddresses(tokenId, { from: tokenOwner });
+
+      expect(result[0]).be.eql(accounts[8]);
     });
   });
 
