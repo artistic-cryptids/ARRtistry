@@ -48,6 +48,17 @@ contract('Consignment', async accounts => {
         'Consignment::authorized: Account not authorized'
       );
     });
+
+    it('cannot consign to consigned account', async () => {
+      await instance.consign(tokenId, accounts[1], commission, { from: tokenOwner });
+      await instance.consign(tokenId, accounts[2], commission, { from: accounts[1] });
+      await instance.consign(tokenId, accounts[3], commission, { from: accounts[2] });
+
+      await expectRevert(
+        instance.consign(tokenId, tokenOwner, commission, { from: accounts[3] }),
+        'Consignment::consign: Account is already authorized'
+      );
+    });
   });
 
   describe('consigned', async () => {

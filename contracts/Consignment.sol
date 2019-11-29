@@ -42,6 +42,8 @@ contract Consignment {
   }
 
   function consign(uint256 tokenId, address who, uint8 commission) public authorized(tokenId) {
+    require(!isConsigned(tokenId, who), "Consignment::consign: Account is already authorized");
+
     ConsignmentInfo memory consignmentInfo;
 
     consignmentInfo.consigner = msg.sender;
