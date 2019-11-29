@@ -18,8 +18,6 @@ const ClientArtifacts: React.FC = () => {
   const { accounts } = useWeb3Context();
 
   React.useEffect(() => {
-    const currentAccount = accounts[0];
-
     Consignment.methods.consignedTokenIds()
       .call({
         from: accounts[0],

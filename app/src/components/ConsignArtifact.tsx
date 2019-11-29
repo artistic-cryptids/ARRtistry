@@ -25,17 +25,26 @@ type InputChangeEvent = React.FormEvent<any> &
   }
 
 const GENERIC_FEEDBACK = <Form.Control.Feedback>Looks good!</Form.Control.Feedback>;
-const ZERO_ADDR = '0x0000000000000000000000000000000000000000';
+//const ZERO_ADDR = '0x0000000000000000000000000000000000000000';
 
 const ConsignArtifact: React.FC<ConsignArtifactProps> = ({ tokenId }) => {
   const [fields, setFields] = React.useState<ConsignArtifactFormFields>({
     recipientName: '',
   });
+  const [consignedAccounts, setConsignedAccounts] = React.useState<string[]>([]);
   const [showConsignment, setShowConsignment] = React.useState<boolean>(false);
 
   const { addressFromName } = useNameServiceContext();
   const { Consignment, ArtifactRegistry } = useContractContext();
   const { accounts } = useWeb3Context();
+
+  React.useEffect(() => {
+    Consignment.methods.getConsignmentAddresses(tokenId, accounts[0])
+      .call({
+        from: accounts[0]
+      })
+      .then(setConsignedAccounts);
+  }, [Consignment, accounts, tokenId]);
 
   const consign = async (address: string): Promise<void> => {
     const approved = await ArtifactRegistry.methods.getApproved(tokenId)
@@ -43,7 +52,8 @@ const ConsignArtifact: React.FC<ConsignArtifactProps> = ({ tokenId }) => {
         from: accounts[0]
       });
 
-    if (approved == Consignment._address) {
+    if (approved === Consignment._address) {
+      console.log("Consignment");
       await Consignment.methods.consign(
         tokenId,
         address,
@@ -55,7 +65,7 @@ const ConsignArtifact: React.FC<ConsignArtifactProps> = ({ tokenId }) => {
         },
       );
     } else {
-      console.log("Initial Consignment");
+      console.log("Init consignment");
       await ArtifactRegistry.methods.initConsign(
         tokenId,
         address,
@@ -74,9 +84,9 @@ const ConsignArtifact: React.FC<ConsignArtifactProps> = ({ tokenId }) => {
     await consign(recipientAddress);
   };
 
-  const revokeConsignment = async (): Promise<void> => {
-    await consign(ZERO_ADDR);
-  };
+  // const revokeConsignment = async (): Promise<void> => {
+  //   await consign(ZERO_ADDR);
+  // };
 
   const inputChangeHandler = (event: InputChangeEvent): void => {
     const key = event.target.id;
@@ -99,6 +109,13 @@ const ConsignArtifact: React.FC<ConsignArtifactProps> = ({ tokenId }) => {
     });
   };
 
+  const listItems = consignedAccounts.map((account) => {
+    return <>
+      <ENSName address={account}/>
+      <br/>
+    </>
+  });
+
   return (
     <>
       <Button variant="primary" onClick={handleShow}>
@@ -109,6 +126,9 @@ const ConsignArtifact: React.FC<ConsignArtifactProps> = ({ tokenId }) => {
           <Modal.Title>Consignment</Modal.Title>
         </Modal.Header>
         <Modal.Body>
+          <p>Directly Consigned to:</p>
+          {listItems}
+          <hr/>
           <p>Consign Account to Sell</p>
           <Form.Group as={Col} controlId="recipientName">
             <Form.Label>Recipient Name</Form.Label>
