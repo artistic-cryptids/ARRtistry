@@ -225,7 +225,7 @@ contract('Consignment', async accounts => {
       await transfer(accounts[6]);
 
       const result = await instance.consignedTokenIds({ from: accounts[6] });
-      expect(result).to.be.eql([])
+      expect(result).to.be.eql([]);
     });
   });
 });
