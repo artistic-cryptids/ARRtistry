@@ -105,6 +105,18 @@ contract Consignment {
     return addresses;
   }
 
+  function getConsignmentInfo(uint256 tokenId, address consigner, address consignee) public view authorized(tokenId) returns (uint8 commission) {
+    ConsignmentInfo[] memory consignmentInfos = consignments[tokenId];
+
+    for (uint i = 0; i < consignmentInfos.length; i++) {
+      if (consignmentInfos[i].consigner == consigner && consignmentInfos[i].consignee == consignee) {
+        return consignmentInfos[i].commission;
+      }
+    }
+
+    return 0;
+  }
+
   function isConsigned(uint256 tokenId, address who) public view returns (bool) {
     address tokenOwner = registry.ownerOf(tokenId);
     ConsignmentInfo[] memory consignmentInfos = consignments[tokenId];
