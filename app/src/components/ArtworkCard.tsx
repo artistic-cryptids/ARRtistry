@@ -8,9 +8,13 @@ import { Documents, DocumentsModal } from './Documents';
 import { Link } from 'react-router-dom';
 import Form from 'react-bootstrap/Form';
 import PlaintextField from './common/PlaintextField';
+import { useContractContext } from '../providers/ContractProvider';
+import { EventData } from 'web3-eth-contract';
+import { useWeb3Context } from '../providers/Web3Provider';
+import * as moment from 'moment';
 
 interface ArtworkCardProps {
-  id?: number;
+  id: number;
   img?: string;
   metaUri?: string;
   fields?: ArtworkInfoFields;
@@ -36,6 +40,31 @@ const ArtworkCard: React.FC<ArtworkCardProps> = ({
   fullscreen,
   children,
 }) => {
+  const [lastUpdateTime, setUpdateTime] = React.useState<string>('Checking');
+
+  const { web3 } = useWeb3Context();
+  const { ArtifactRegistry, Governance } = useContractContext();
+
+  React.useEffect(() => {
+    const getLastUpdated = async (): Promise<void> => {
+      const options = { fromBlock: 0 };
+      let events = await ArtifactRegistry.getPastEvents('Transfer', options)
+        .then((es: EventData[]) =>
+          es.filter(e => e.returnValues.tokenId === id.toString()));
+      if (events.length === 0) {
+        events = await Governance.getPastEvents('Propose', options)
+          .then((es: EventData[]) =>
+            es.filter(e => e.returnValues.proposalId === id.toString()));
+      }
+      const event = events[events.length - 1];
+      const timestamp = await web3.eth.getBlock(event.blockNumber)
+        .then((block) => block.timestamp);
+      const txDate = moment.unix(Number(timestamp));
+      setUpdateTime('Last Updated ' + txDate.fromNow());
+    };
+    getLastUpdated();
+  }, [ArtifactRegistry, id, web3, Governance]);
+
   const path = `artifact/${id}`;
   return (
     <Card className="shadow">
@@ -93,7 +122,8 @@ const ArtworkCard: React.FC<ArtworkCardProps> = ({
 
       </Card.Body>
       <Card.Footer>
-        <small className="text-muted">Last updated 3 mins ago</small>
+
+        <small className="text-muted"> {lastUpdateTime} </small>
       </Card.Footer>
     </Card>
   );

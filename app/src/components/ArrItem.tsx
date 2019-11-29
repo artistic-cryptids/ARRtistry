@@ -4,6 +4,9 @@ import PlaintextField from './common/PlaintextField';
 import AddressField from './common/AddressField';
 import Form from 'react-bootstrap/Form';
 import { useContractContext } from '../providers/ContractProvider';
+import { useWeb3Context } from '../providers/Web3Provider';
+import { EventData } from 'web3-eth-contract';
+import * as moment from 'moment';
 
 interface ArrItemProps {
   id: number;
@@ -20,8 +23,10 @@ interface ArrItemType {
 
 const ArrItem: React.FC<ArrItemProps> = ({ id }) => {
   const [arr, setArr] = React.useState<ArrItemType>();
+  const [lastUpdateTime, setUpdateTime] = React.useState<string>('Checking');
 
-  const { ArtifactApplication } = useContractContext();
+  const { web3 } = useWeb3Context();
+  const { ArtifactApplication, ArtifactRegistry } = useContractContext();
 
   React.useEffect(() => {
     const loadArr = async (): Promise<void> => {
@@ -37,8 +42,21 @@ const ArrItem: React.FC<ArrItemProps> = ({ id }) => {
       setArr(arr);
     };
 
+    const getLastUpdated = async (): Promise<void> => {
+      const options = { fromBlock: 0 };
+      const events = await ArtifactRegistry.getPastEvents('Propose', options)
+        .then((es: EventData[]) => es.filter(e => e.returnValues.proposalId === id.toString()));
+      const event = events[events.length - 1];
+      const timestamp = await web3.eth.getBlock(event.blockNumber)
+        .then((block) => block.timestamp);
+
+      const txDate = moment.unix(Number(timestamp));
+      setUpdateTime('Last Updated ' + txDate.fromNow());
+    };
+
     loadArr();
-  }, [ArtifactApplication, id]);
+    getLastUpdated();
+  }, [ArtifactApplication, id, ArtifactRegistry, web3]);
 
   if (!arr) {
     return null;
@@ -59,7 +77,7 @@ const ArrItem: React.FC<ArrItemProps> = ({ id }) => {
         </Form>
       </Card.Body>
       <Card.Footer>
-        <small className="text-muted">Last updated 3 mins ago</small>
+        <small className="text-muted"> {lastUpdateTime} </small>
       </Card.Footer>
     </Card>
   );
