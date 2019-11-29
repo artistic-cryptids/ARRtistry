@@ -133,7 +133,13 @@ const ConsignArtifact: React.FC<ConsignArtifactProps> = ({ tokenId }) => {
   };
 
   const revokeConsignment = async (address: string): Promise<void> => {
-
+    await Consignment.emthods.revoke(tokenId, address)
+      .send(
+        {
+          from: accounts[0],
+          gasLimit: 6000000,
+        },
+      );
   };
 
   const inputChangeHandler = (event: InputChangeEvent): void => {
