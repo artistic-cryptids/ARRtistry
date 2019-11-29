@@ -72,7 +72,7 @@ const RegisterArtist: React.FC = () => {
     event.stopPropagation();
     event.preventDefault();
 
-    if(fields.wallet === '') {
+    if (fields.wallet === '') {
       const account = web3.eth.accounts.create();
       account.privateKey = '';
       fields.wallet = account.address;
@@ -92,7 +92,6 @@ const RegisterArtist: React.FC = () => {
     }
 
     setSubmitted(true);
-
 
     // eslint-disable-next-line
     const { metaIpfsHash, ...restOfTheFields } = fields;
@@ -141,8 +140,7 @@ const RegisterArtist: React.FC = () => {
   };
 
   const renderArtistInformation = (): React.ReactNode => {
-
-    const handleClose = () => setInvalidENS(false);
+    const handleClose = (): void => setInvalidENS(false);
 
     return (
       <Container>
@@ -195,7 +193,7 @@ const RegisterArtist: React.FC = () => {
           </Form.Group>
         </Form.Row>
         <Modal
-          { ...{show: invalidENS, title:'Invalid Username entered', animation: false}}
+          { ...{ show: invalidENS, title: 'Invalid Username entered', animation: false }}
           size="lg"
           aria-labelledby="contained-modal-title-vcenter"
           centered

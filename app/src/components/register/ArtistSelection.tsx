@@ -18,8 +18,8 @@ const ArtistSelection: React.FC = () => {
       for (let i = 1; i <= total; i++) {
         const hash: string = await Artists.methods.getArtist(i).call();
         const hashResponse = await fetch(hash);
-        let artist = await hashResponse.json();
-        artist['id'] = i;
+        const artist = await hashResponse.json();
+        artist.id = i;
         artists.push(artist);
       }
 
