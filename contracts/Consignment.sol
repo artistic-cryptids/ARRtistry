@@ -39,6 +39,26 @@ contract Consignment {
     bool arr
   ) public authorized(tokenId) {
     registry.transfer(who, recipient, tokenId, metaUri, price, location, date, arr);
+
+    ConsignmentInfo[] memory consignmentInfos = consignments[tokenId];
+
+    for (uint i = 0; i < consignmentInfos.length; i++) {
+      ConsignmentInfo memory consignmentInfo = consignmentInfos[i];
+
+      address consignee = consignmentInfo.consignee;
+      uint256[] memory consignedTokens = consigned[consignee];
+
+      for (uint j = 0; j < consignedTokens.length; j++) {
+        if (consignedTokens[j] == tokenId) {
+          delete consignedTokens[j];
+          break;
+        }
+      }
+
+      consigned[consignee] = consignedTokens;
+    }
+
+    delete consignments[tokenId];
   }
 
   function consign(uint256 tokenId, address who, uint8 commission) public authorized(tokenId) {
@@ -107,6 +127,26 @@ contract Consignment {
   }
 
   function consignedTokenIds() public view returns (uint256[] memory) {
-    return consigned[msg.sender];
+    uint256[] memory ids = consigned[msg.sender];
+
+    uint count = 0;
+
+    for (uint i = 0; i < ids.length; i++) {
+      if (ids[i] != 0) {
+        count = count + 1;
+      }
+    }
+
+    uint256[] memory validIds = new uint256[](count);
+    count = 0;
+
+    for (uint i = 0; i < ids.length; i++) {
+      if (ids[i] != 0) {
+        validIds[count] = ids[i];
+        count = count + 1;
+      }
+    }
+
+    return validIds;
   }
 }

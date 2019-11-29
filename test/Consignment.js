@@ -217,5 +217,15 @@ contract('Consignment', async accounts => {
         'Consignment::authorized: Account not authorized'
       );
     });
+
+    it('transfer removes consignment', async () => {
+      await instance.consign(tokenId, accounts[1], commission, { from: tokenOwner });
+      await instance.consign(tokenId, accounts[6], commission, { from: accounts[1] });
+
+      await transfer(accounts[6]);
+
+      const result = await instance.consignedTokenIds({ from: accounts[6] });
+      expect(result).to.be.eql([])
+    });
   });
 });
