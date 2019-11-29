@@ -13,29 +13,20 @@ contract Consignment {
 
   struct ConsignmentInfo {
     address consigner;
+    uint256 tokenId;
     uint8 commission;
+  }
+
+  mapping (address => ConsignmentInfo[]) public consignments;
+  mapping (address => uint256[]) public consigned;
+
+  modifier authorized(uint256 tokenId) {
+    require(isConsigned(tokenId, msg.sender), "Consignment::authorized: Account not authorized");
+    _;
   }
 
   constructor(IArtifactRegistry _registry) public {
     registry = _registry;
-  }
-
-  mapping (address => ConsignmentInfo) public consignments;
-  mapping (address => uint256[]) public consigned;
-
-  modifier authorized(uint256 tokenId) {
-    address tokenOwner = registry.ownerOf(tokenId);
-
-    address who = msg.sender;
-    ConsignmentInfo memory consignmentInfo;
-
-    while (who != address(0) && who != tokenOwner && who != address(registry)) {
-      consignmentInfo = consignments[who];
-      who = consignmentInfo.consigner;
-    }
-
-    require(tokenOwner == who || address(registry) == who, "Consignment::authorized: Account not authorized");
-    _;
   }
 
   function transfer(
@@ -55,11 +46,24 @@ contract Consignment {
     ConsignmentInfo memory consignmentInfo;
 
     consignmentInfo.consigner = msg.sender;
+    consignmentInfo.tokenId = tokenId;
     consignmentInfo.commission = commission;
 
-    consignments[who] = consignmentInfo;
+    consignments[who].push(consignmentInfo);
 
     consigned[who].push(tokenId);
+  }
+
+  function getConsignmentInfo(uint256 tokenId) public view returns (address, uint8) {
+    ConsignmentInfo[] memory consignmentInfos = consignments[msg.sender];
+
+    for (uint i = 0; i < consignmentInfos.length; i++) {
+      if (consignmentInfos[i].tokenId == tokenId) {
+        return (consignmentInfos[i].consigner, consignmentInfos[i].commission);
+      }
+    }
+
+    return (address(0), 0);
   }
 
   function isConsigned(uint256 tokenId, address who) public view returns (bool) {
@@ -67,12 +71,21 @@ contract Consignment {
 
     ConsignmentInfo memory consignmentInfo;
 
-    while (who != address(0) && who != tokenOwner) {
-      consignmentInfo = consignments[who];
+    while (who != address(0) && who != tokenOwner && who != address(registry)) {
+      ConsignmentInfo[] memory consignmentInfos = consignments[who];
+
+      consignmentInfo.consigner = address(0);
+
+      for (uint i = 0; i < consignmentInfos.length; i++) {
+        if (consignmentInfos[i].tokenId == tokenId) {
+          consignmentInfo = consignmentInfos[i];
+        }
+      }
+
       who = consignmentInfo.consigner;
     }
 
-    return who == tokenOwner;
+    return who == tokenOwner || address(registry) == who;
   }
 
   function consignedTokenIds() public view returns (uint256[] memory) {
