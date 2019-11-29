@@ -129,7 +129,7 @@ contract('Consignment', async accounts => {
         false,
         { from: account }
       );
-    }
+    };
 
     beforeEach(async () => {
       await registry.mint(tokenOwner, ARTIFACT, { from: tokenOwner });
