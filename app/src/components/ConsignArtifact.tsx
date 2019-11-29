@@ -34,29 +34,48 @@ const ConsignArtifact: React.FC<ConsignArtifactProps> = ({ tokenId }) => {
   const [showConsignment, setShowConsignment] = React.useState<boolean>(false);
 
   const { addressFromName } = useNameServiceContext();
-  const { Consignment } = useContractContext();
+  const { Consignment, ArtifactRegistry } = useContractContext();
   const { accounts } = useWeb3Context();
 
-  const consign = (address: string): void => {
-    Consignment.methods.consign(
-      tokenId,
-      address,
-      30,
-    ).send(
-      {
-        from: accounts[0],
-        gasLimit: 6000000,
-      },
-    );
+  const consign = async (address: string): Promise<void> => {
+    const approved = await ArtifactRegistry.methods.getApproved(tokenId)
+      .call({
+        from: accounts[0]
+      });
+
+    if (approved == Consignment._address) {
+      await Consignment.methods.consign(
+        tokenId,
+        address,
+        30,
+      ).send(
+        {
+          from: accounts[0],
+          gasLimit: 6000000,
+        },
+      );
+    } else {
+      console.log("Initial Consignment");
+      await ArtifactRegistry.methods.initConsign(
+        tokenId,
+        address,
+        30
+      ).send(
+        {
+          from: accounts[0],
+          gasLimit: 6000000,
+        }
+      )
+    }
   };
 
   const consignArtifactForArtwork = async (): Promise<void> => {
     const recipientAddress = await addressFromName(fields.recipientName);
-    consign(recipientAddress);
+    await consign(recipientAddress);
   };
 
-  const revokeConsignment = (_: React.FormEvent): void => {
-    consign(ZERO_ADDR);
+  const revokeConsignment = async (): Promise<void> => {
+    await consign(ZERO_ADDR);
   };
 
   const inputChangeHandler = (event: InputChangeEvent): void => {
