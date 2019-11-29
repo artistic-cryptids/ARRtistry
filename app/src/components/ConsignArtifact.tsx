@@ -40,6 +40,7 @@ const ConsignArtifact: React.FC<ConsignArtifactProps> = ({ tokenId }) => {
     commission: '',
   });
   const [consigned, setConsigned] = React.useState<ConsignmentInfo[]>([]);
+  const [indirectConsigned, setIndirectConsigned] = React.useState<string[]>([]);
   const [showConsignment, setShowConsignment] = React.useState<boolean>(false);
 
   const { addressFromName } = useNameServiceContext();
@@ -47,6 +48,22 @@ const ConsignArtifact: React.FC<ConsignArtifactProps> = ({ tokenId }) => {
   const { accounts } = useWeb3Context();
 
   React.useEffect(() => {
+    const getIndirectAccounts = async (account: string): Promise<string[]> => {
+      console.log("getting indirect for " + account);
+      const addresses =  await Consignment.methods.getConsignmentAddresses(tokenId, account)
+        .call({
+          from: accounts[0],
+        });
+
+      let indirect = addresses;
+
+      for (let address of addresses) {
+        indirect = indirect.concat(await getIndirectAccounts(address));
+      }
+
+      return indirect;
+    };
+
     const setConsignedInfo = async (): Promise<void> => {
       const consignedAccounts = await Consignment.methods.getConsignmentAddresses(tokenId, accounts[0])
         .call({
@@ -54,12 +71,15 @@ const ConsignArtifact: React.FC<ConsignArtifactProps> = ({ tokenId }) => {
         });
 
       const info = [];
+      let indirect: string[] = [];
 
-      for (const consignedAccount of consignedAccounts) {
+      for (let consignedAccount of consignedAccounts) {
         const commission = await Consignment.methods.getConsignmentInfo(tokenId, accounts[0], consignedAccount)
           .call({
             from: accounts[0],
           });
+
+        indirect = indirect.concat(await getIndirectAccounts(consignedAccount));
 
         info.push({
           account: consignedAccount,
@@ -68,7 +88,9 @@ const ConsignArtifact: React.FC<ConsignArtifactProps> = ({ tokenId }) => {
       }
 
       setConsigned(info);
+      setIndirectConsigned(indirect);
     };
+
     setConsignedInfo();
   }, [Consignment, accounts, tokenId]);
 
@@ -136,10 +158,17 @@ const ConsignArtifact: React.FC<ConsignArtifactProps> = ({ tokenId }) => {
     });
   };
 
-  const listItems = consigned.map((info) => {
+  const directInfo = consigned.map((info) => {
     return <Row key={info.account}>
       <ENSName address={info.account}/>
       <p>: Commission: {info.commission}%</p>
+      <br/>
+    </Row>;
+  });
+
+  const indirectInfo = indirectConsigned.map((account) => {
+    return <Row key={account}>
+      <ENSName address={account}/>
       <br/>
     </Row>;
   });
@@ -154,11 +183,24 @@ const ConsignArtifact: React.FC<ConsignArtifactProps> = ({ tokenId }) => {
           <Modal.Title>Consignment</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <p>Directly Consigned to:</p>
-          <Col>
-            {listItems}
-          </Col>
-          <hr/>
+          {consigned.length !== 0
+            ? <React.Fragment>
+                <p>Directly Consigned to:</p>
+                <Col>
+                  {directInfo}
+                </Col>
+                <hr/>
+              </React.Fragment>
+            : null}
+          {indirectConsigned.length !== 0
+            ? <React.Fragment>
+                <p>Indirectly Consigned to:</p>
+                <Col>
+                  {indirectInfo}
+                </Col>
+                <hr/>
+              </React.Fragment>
+            : null}
           <p>Consign Account to Sell</p>
           <Form.Group as={Col} controlId="recipientName">
             <Form.Label>Recipient Name</Form.Label>
