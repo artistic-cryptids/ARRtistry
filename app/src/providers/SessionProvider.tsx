@@ -16,7 +16,7 @@ export const DACS_DEFAULT: User = {
   role: 'DACS',
   address: [
     '0xDf08F82De32B8d460adbE8D72043E3a7e25A3B39',
-    '0x594cd738A5e99134De9DE21f253eD1Be4eb27F3e'
+    '0x594cd738A5e99134De9DE21f253eD1Be4eb27F3e',
   ],
   name: 'dac.artistry.test',
 };

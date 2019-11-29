@@ -32,7 +32,7 @@ type InputChangeEvent = React.FormEvent<any> &
   }
 
 const GENERIC_FEEDBACK = <Form.Control.Feedback>Looks good!</Form.Control.Feedback>;
-//const ZERO_ADDR = '0x0000000000000000000000000000000000000000';
+// const ZERO_ADDR = '0x0000000000000000000000000000000000000000';
 
 const ConsignArtifact: React.FC<ConsignArtifactProps> = ({ tokenId }) => {
   const [fields, setFields] = React.useState<ConsignArtifactFormFields>({
@@ -47,18 +47,18 @@ const ConsignArtifact: React.FC<ConsignArtifactProps> = ({ tokenId }) => {
   const { accounts } = useWeb3Context();
 
   React.useEffect(() => {
-    const setConsignedInfo = async () => {
+    const setConsignedInfo = async (): Promise<void> => {
       const consignedAccounts = await Consignment.methods.getConsignmentAddresses(tokenId, accounts[0])
         .call({
-          from: accounts[0]
+          from: accounts[0],
         });
 
       const info = [];
 
-      for (let consignedAccount of consignedAccounts) {
+      for (const consignedAccount of consignedAccounts) {
         const commission = await Consignment.methods.getConsignmentInfo(tokenId, accounts[0], consignedAccount)
           .call({
-            from: accounts[0]
+            from: accounts[0],
           });
 
         info.push({
@@ -75,11 +75,11 @@ const ConsignArtifact: React.FC<ConsignArtifactProps> = ({ tokenId }) => {
   const consign = async (address: string, commission: string): Promise<void> => {
     const approved = await ArtifactRegistry.methods.getApproved(tokenId)
       .call({
-        from: accounts[0]
+        from: accounts[0],
       });
 
     if (approved === Consignment._address) {
-      console.log("Consignment");
+      console.log('Consignment');
       await Consignment.methods.consign(
         tokenId,
         address,
@@ -91,7 +91,7 @@ const ConsignArtifact: React.FC<ConsignArtifactProps> = ({ tokenId }) => {
         },
       );
     } else {
-      console.log("Init consignment");
+      console.log('Init consignment');
       await ArtifactRegistry.methods.initConsign(
         tokenId,
         address,
@@ -100,8 +100,8 @@ const ConsignArtifact: React.FC<ConsignArtifactProps> = ({ tokenId }) => {
         {
           from: accounts[0],
           gasLimit: 6000000,
-        }
-      )
+        },
+      );
     }
   };
 
@@ -137,11 +137,11 @@ const ConsignArtifact: React.FC<ConsignArtifactProps> = ({ tokenId }) => {
   };
 
   const listItems = consigned.map((info) => {
-    return <Row>
+    return <Row key={info.account}>
       <ENSName address={info.account}/>
       <p>: Commission: {info.commission}%</p>
       <br/>
-    </Row>
+    </Row>;
   });
 
   return (
