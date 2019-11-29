@@ -9,13 +9,14 @@ module.exports = async (deployer, network, accounts) => {
 
   const registry = await ArtifactRegistry.deployed();
   await deployer.deploy(Consignment, registry.address);
-  await registry.setConsignment(Consignment.address);
+  const instance = await Consignment.deployed();
+  await registry.setConsignment(instance.address);
 
   await newLabel(
     'consignment',
     owner,
     await ENSResolver.deployed(),
-    await Consignment.deployed(),
+    instance,
     network,
     artifacts,
     web3,
