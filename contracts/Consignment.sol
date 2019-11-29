@@ -14,6 +14,7 @@ contract Consignment {
     address consignee;
     address consigner;
     uint8 commission;
+    bool valid;
   }
 
   mapping (uint256 => ConsignmentInfo[]) public consignments;
@@ -75,10 +76,47 @@ contract Consignment {
     consignmentInfo.consignee = who;
     consignmentInfo.consigner = consigner;
     consignmentInfo.commission = commission;
+    consignmentInfo.valid = true;
 
     consignments[tokenId].push(consignmentInfo);
 
     consigned[who].push(tokenId);
+  }
+
+  function revoke(uint256 tokenId, address who) public authorized(tokenId) {
+    ConsignmentInfo[] storage consignmentInfos = consignments[tokenId];
+    
+    for (uint i = 0; i < consignmentInfos.length; i++) {
+      ConsignmentInfo storage info = consignmentInfos[i];
+      if (info.valid && info.consignee == who) {
+        info.valid = false;
+      }
+    }
+
+    revokeHelper(tokenId, who);
+  }
+
+  function revokeHelper(uint256 tokenId, address who) private {
+    ConsignmentInfo[] storage consignmentInfos = consignments[tokenId];
+
+    for (uint i = 0; i < consignmentInfos.length; i++) {
+      ConsignmentInfo storage info = consignmentInfos[i];
+      if (info.valid && info.consigner == who) {
+        info.valid = false;
+        revokeHelper(tokenId, info.consignee);
+      }
+
+      uint256[] memory consignedTokens = consigned[who];
+
+      for (uint j = 0; j < consignedTokens.length; j++) {
+        if (consignedTokens[j] == tokenId) {
+          delete consignedTokens[j];
+          break;
+        }
+      }
+
+      consigned[who] = consignedTokens;
+    }
   }
 
   function getConsignmentAddresses(uint256 tokenId, address who) public view authorized(tokenId) returns (address[] memory) {
@@ -87,7 +125,7 @@ contract Consignment {
     uint count = 0;
 
     for (uint i = 0; i < consignmentInfos.length; i++) {
-      if (consignmentInfos[i].consigner == who) {
+      if (consignmentInfos[i].consigner == who && consignmentInfos[i].valid) {
         count = count + 1;
       }
     }
@@ -96,7 +134,7 @@ contract Consignment {
     count = 0;
 
     for (uint i = 0; i < consignmentInfos.length; i++) {
-      if (consignmentInfos[i].consigner == who) {
+      if (consignmentInfos[i].consigner == who && consignmentInfos[i].valid) {
         addresses[count] = consignmentInfos[i].consignee;
         count = count + 1;
       }
@@ -109,7 +147,7 @@ contract Consignment {
     ConsignmentInfo[] memory consignmentInfos = consignments[tokenId];
 
     for (uint i = 0; i < consignmentInfos.length; i++) {
-      if (consignmentInfos[i].consigner == consigner && consignmentInfos[i].consignee == consignee) {
+      if (consignmentInfos[i].consigner == consigner && consignmentInfos[i].consignee == consignee && consignmentInfos[i].valid) {
         return consignmentInfos[i].commission;
       }
     }
@@ -127,7 +165,7 @@ contract Consignment {
       consignmentInfo.consigner = address(0);
 
       for (uint i = 0; i < consignmentInfos.length; i++) {
-        if (consignmentInfos[i].consignee == who) {
+        if (consignmentInfos[i].consignee == who && consignmentInfos[i].valid) {
           consignmentInfo = consignmentInfos[i];
         }
       }
@@ -135,7 +173,7 @@ contract Consignment {
       who = consignmentInfo.consigner;
     }
 
-    return who == tokenOwner || address(registry) == who;
+    return who == tokenOwner || who == address(registry);
   }
 
   function consignedTokenIds() public view returns (uint256[] memory) {

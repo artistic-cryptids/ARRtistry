@@ -173,6 +173,61 @@ contract('Consignment', async accounts => {
     });
   });
 
+  describe('revoke', async () => {
+    beforeEach(async () => {
+      await registry.mint(tokenOwner, ARTIFACT, { from: tokenOwner });
+      const balance = await registry.balanceOf(tokenOwner);
+      tokenId = await registry.tokenOfOwnerByIndex(tokenOwner, balance - 1);
+    });
+
+    it('can revoke a simple consignment', async () => {
+      await instance.consign(tokenId, accounts[1], commission, { from: tokenOwner });
+
+      await instance.revoke(tokenId, accounts[1]);
+
+      const result = await instance.isConsigned(tokenId, accounts[1]);
+      expect(result).to.be.eql(false);
+    });
+
+    it('only revokes one consignment out of many', async () => {
+      await instance.consign(tokenId, accounts[1], commission, { from: tokenOwner });
+      await instance.consign(tokenId, accounts[2], commission, { from: tokenOwner });
+
+      await instance.revoke(tokenId, accounts[1]);
+
+      let result = await instance.isConsigned(tokenId, accounts[1]);
+      expect(result).to.be.eql(false);
+
+      result = await instance.isConsigned(tokenId, accounts[2]);
+      expect(result).to.be.eql(true);
+    });
+
+    it('can revoke a complicated consignment tree', async () => {
+      await instance.consign(tokenId, accounts[1], commission, { from: tokenOwner });
+      await instance.consign(tokenId, accounts[2], commission, { from: accounts[1] });
+      await instance.consign(tokenId, accounts[3], commission, { from: accounts[1] });
+      await instance.consign(tokenId, accounts[4], commission, { from: accounts[3] });
+      await instance.consign(tokenId, accounts[5], commission, { from: accounts[3] });
+
+      await instance.revoke(tokenId, accounts[3], { from: accounts[1] });
+
+      let result = await instance.isConsigned(tokenId, accounts[1]);
+      expect(result).to.be.eql(true);
+
+      result = await instance.isConsigned(tokenId, accounts[2]);
+      expect(result).to.be.eql(true);
+
+      result = await instance.isConsigned(tokenId, accounts[3]);
+      expect(result).to.be.eql(false);
+
+      result = await instance.isConsigned(tokenId, accounts[4]);
+      expect(result).to.be.eql(false);
+
+      result = await instance.isConsigned(tokenId, accounts[5]);
+      expect(result).to.be.eql(false);
+    });
+  });
+
   describe('transfer', async () => {
     const buyer = accounts[7];
     const metaUri = 'metaUri';
