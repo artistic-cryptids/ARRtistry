@@ -111,6 +111,23 @@ contract('Consignment', async accounts => {
     });
   });
 
+  describe('get consignment info', async () => {
+    beforeEach(async () => {
+      await registry.mint(tokenOwner, ARTIFACT, { from: tokenOwner });
+      const balance = await registry.balanceOf(tokenOwner);
+      tokenId = await registry.tokenOfOwnerByIndex(tokenOwner, balance - 1);
+    });
+
+    it('can grab consigned info for a tokenId', async () => {
+      await instance.consign(tokenId, accounts[8], commission, { from: tokenOwner });
+
+      const result = await instance.getConsignmentInfo(tokenId, { from: accounts[8] });
+
+      expect(result[0]).be.eql(accounts[0]);
+      expect(result[1].toNumber()).be.eql(commission);
+    });
+  });
+
   describe('transfer', async () => {
     const buyer = accounts[7];
     const metaUri = 'metaUri';
