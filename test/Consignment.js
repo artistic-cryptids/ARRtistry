@@ -17,6 +17,7 @@ contract('Consignment', async accounts => {
     const governance = await Governance.deployed();
     registry = await ArtifactRegistry.new(tokenOwner, governance.address, { from: tokenOwner });
     instance = await Consignment.new(registry.address);
+    await registry.setConsignment(instance.address);
   });
 
   describe('consign', async () => {
@@ -98,6 +99,14 @@ contract('Consignment', async accounts => {
       await instance.consign(tokenId, accounts[8], commission, { from: tokenOwner });
 
       const result = await instance.consignedTokenIds({ from: accounts[8] });
+      expect(result).be.eql([tokenId]);
+    });
+
+    it('will show all consigned tokens for chained account', async () => {
+      await instance.consign(tokenId, accounts[8], commission, { from: tokenOwner });
+      await instance.consign(tokenId, accounts[7], commission, { from: accounts[8] });
+
+      const result = await instance.consignedTokenIds({ from: accounts[7] });
       expect(result).be.eql([tokenId]);
     });
   });
