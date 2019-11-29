@@ -6,11 +6,11 @@ import { useContractContext } from '../providers/ContractProvider';
 const ArrList: React.FC = () => {
   const [ids, setIds] = React.useState<string[]>();
 
-  const { Governance } = useContractContext();
+  const { ArrRegistry } = useContractContext();
 
   React.useEffect(() => {
     const loadArrs = async (): Promise<void> => {
-      const len = await Governance.methods.getARRLength().call();
+      const len = await ArrRegistry.methods.totalRecords().call();
 
       const ids = [];
       for (let i = 0; i < len; i++) {
@@ -20,7 +20,7 @@ const ArrList: React.FC = () => {
       setIds(ids);
     };
     loadArrs();
-  }, [Governance]);
+  }, [ArrRegistry]);
 
   if (!ids) {
     return null;

@@ -6,7 +6,7 @@ import "@openzeppelin/contracts/token/ERC721/ERC721Full.sol";
 import "@openzeppelin/contracts/drafts/Counters.sol";
 
 import { IArtifactRegistry } from "./interfaces/IArtifactRegistry.sol";
-import { IRoyaltyDistributor } from "./interfaces/IRoyaltyDistributor.sol";
+import { IARRRegistry } from "./interfaces/IARRRegistry.sol";
 import { IGovernance } from "./interfaces/IGovernance.sol";
 import { Consignment } from "./Consignment.sol";
 import { ERC721ApprovalEnumerable } from "./ERC721ApprovalEnumerable.sol";
@@ -29,16 +29,16 @@ contract ArtifactRegistry is IArtifactRegistry, Ownable, ERC721Full, ERC721Appro
   using Counters for Counters.Counter;
 
   IGovernance public governance;
-  IRoyaltyDistributor public royalty;
   Consignment public consignment;
+  IARRRegistry public arrRegistry;
 
   Counters.Counter public _tokenId;
   mapping (uint256 => Artifact) public artifacts;
 
-  constructor(address owner, IGovernance _governance, IRoyaltyDistributor _royalty) public ERC721Full("Artifact", "ART") {
+  constructor(address owner, IGovernance _governance, IARRRegistry _arrRegistry) public ERC721Full("Artifact", "ART") {
     _transferOwnership(owner);
     governance = _governance;
-    royalty = _royalty;
+    arrRegistry = _arrRegistry;
   }
 
   function setConsignment(Consignment _consignment) public {
@@ -107,21 +107,20 @@ contract ArtifactRegistry is IArtifactRegistry, Ownable, ERC721Full, ERC721Appro
     artwork.metaUri = metaUri;
 
     if (incursARR) {
-      // Create a new ARR
-      IGovernance.ARR memory arr;
-      arr.from = who;
-      arr.to = recipient;
-      arr.tokenId = tokenId;
-      arr.price = price;
-      arr.location = location;
-      arr.date = date;
+      IARRRegistry.ARR memory arr = IARRRegistry.ARR({
+        from: who,
+        to: recipient,
+        tokenId: tokenId,
+        price: price,
+        location: location,
+        date: date,
+        paid: false
+      });
 
-      governance.pushARR(arr);
+      arrRegistry.record(arr);
     }
 
     emit RecordSale(who, recipient, tokenId, price, location, date);
-
-    royalty.distribute(artwork.artist, price);
 
     safeTransferFrom(who, recipient, tokenId);
   }

@@ -4,6 +4,7 @@ export type ArtifactRegistry = any;
 export type Artists = any;
 export type Ens = any;
 export type Consignment = any;
+export type ArrRegistry = any;
 
 export interface ContractListType {
   Governance: Governance;
@@ -11,4 +12,5 @@ export interface ContractListType {
   ArtifactRegistry: ArtifactRegistry;
   Artists: Artists;
   Consignment: Consignment;
+  ArrRegistry: ArrRegistry;
 }

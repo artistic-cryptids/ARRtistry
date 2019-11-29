@@ -26,11 +26,11 @@ const ArrItem: React.FC<ArrItemProps> = ({ id }) => {
   const [lastUpdateTime, setUpdateTime] = React.useState<string>('Checking');
 
   const { web3 } = useWeb3Context();
-  const { ArtifactApplication, ArtifactRegistry } = useContractContext();
+  const { ArtifactApplication, ArtifactRegistry, ArrRegistry } = useContractContext();
 
   React.useEffect(() => {
     const loadArr = async (): Promise<void> => {
-      const arrData = await ArtifactApplication.methods.getARR(id).call();
+      const arrData = await ArrRegistry.methods.retrieve(id).call();
       const arr = {
         from: arrData[0],
         to: arrData[1],
@@ -43,7 +43,7 @@ const ArrItem: React.FC<ArrItemProps> = ({ id }) => {
     };
 
     loadArr();
-  }, [ArtifactApplication, id]);
+  }, [ArrRegistry, id]);
 
   React.useEffect(() => {
     const getLastUpdated = async (): Promise<void> => {

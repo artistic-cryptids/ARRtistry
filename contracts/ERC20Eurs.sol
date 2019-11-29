@@ -5,7 +5,7 @@ import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 
 contract ERC20Eurs is ERC20, ERC20Detailed {
 
-  constructor() public ERC20Detailed("StasisEurs", "EURS", 2) {
+  constructor() public ERC20Detailed("StasisEurs", "TEURS", 2) {
     _mint(msg.sender, 1000000 * (uint256(10) ** 2));
   }
 

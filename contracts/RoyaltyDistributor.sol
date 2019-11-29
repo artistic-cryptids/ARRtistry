@@ -1,11 +1,12 @@
 pragma solidity 0.5.12;
+pragma experimental ABIEncoderV2;
 
 import { SafeMath } from "@openzeppelin/contracts/math/SafeMath.sol";
 
 import { IERC20 } from "./interfaces/IERC20.sol";
 import { IRoyaltyDistributor } from "./interfaces/IRoyaltyDistributor.sol";
+import { IARRRegistry } from "./interfaces/IARRRegistry.sol";
 import { ARRCalculator } from "./ARRCalculator.sol";
-
 /**
  * @title RoyaltyDistributor
  * @dev Convenient interface for distributing royalties
@@ -14,29 +15,41 @@ contract RoyaltyDistributor is IRoyaltyDistributor {
   using SafeMath for uint;
 
   IERC20 public _token;
+  IARRRegistry public _arrRegistry;
+
+  uint constant private DACS_RATE = 100;
 
   event Distribute(address indexed from, address indexed to, uint price);
+  event RequestTransfer(uint balance, uint arr);
 
-  constructor(IERC20 token) public {
+  constructor(IERC20 token, IARRRegistry arrRegistry) public {
     _token = token;
+    _arrRegistry = arrRegistry;
   }
 
   function token() public view returns (IERC20) {
     return _token;
   }
 
-  function distribute(address beneficiary, uint salePrice) public {
-    require(beneficiary != address(0), "RoyaltyDistributor :: Beneficiary is 0x0 address");
-    require(salePrice != 0, "RoyaltyDistributor :: Amount is zero");
-
-    uint arr = ARRCalculator.calculateARR(salePrice);
-
-    token().transfer(beneficiary, arr);
-    emit Distribute(msg.sender, beneficiary, arr);
+  function arrRegistry() public view returns (IARRRegistry) {
+    return _arrRegistry;
   }
 
-  function _preValidatePurchase(address beneficiary, uint256 amount) internal view {
-    
-  }
+  function receiveApproval(address from, uint256 tokens, address fromToken, bytes memory data) public {
+    (uint arrId) = abi.decode(data, (uint));
+    IARRRegistry.ARR memory arr = arrRegistry().retrieve(arrId);
 
+    require(arr.to != address(0), "RoyaltyDistributor :: Beneficiary is 0x0 address");
+    require(arr.price != 0, "RoyaltyDistributor :: Amount is zero");
+
+    uint256 tokensDue = ARRCalculator.calculateARR(arr.price);
+    require(tokensDue <= tokens, "RoyaltyDistributor :: Not enough tokens provided");
+
+    IERC20 instanceContract = IERC20(fromToken);
+    instanceContract.transferFrom(from, arr.to, tokensDue.mul(2).div(10)); //TODO: Hardcode DACS?
+    instanceContract.transferFrom(from, arr.to, tokensDue.mul(8).div(10));
+
+    emit Distribute(msg.sender, arr.to, tokensDue);
+    arrRegistry().markPaid(arrId);
+  }
 }
