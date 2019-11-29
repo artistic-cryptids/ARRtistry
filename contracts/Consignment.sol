@@ -46,8 +46,14 @@ contract Consignment {
 
     ConsignmentInfo memory consignmentInfo;
 
-    consignmentInfo.consigner = msg.sender;
+    address consigner = msg.sender;
+
+    if (consigner == address(registry)) {
+      consigner = address(registry.ownerOf(tokenId));
+    }
+
     consignmentInfo.consignee = who;
+    consignmentInfo.consigner = consigner;
     consignmentInfo.commission = commission;
 
     consignments[tokenId].push(consignmentInfo);
@@ -71,10 +77,9 @@ contract Consignment {
 
     for (uint i = 0; i < consignmentInfos.length; i++) {
       if (consignmentInfos[i].consigner == who) {
-        addresses[count] = consignmentInfos[count].consignee;
+        addresses[count] = consignmentInfos[i].consignee;
         count = count + 1;
       }
-
     }
 
     return addresses;
