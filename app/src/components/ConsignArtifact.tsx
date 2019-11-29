@@ -1,6 +1,7 @@
 import * as React from 'react';
 import Button from 'react-bootstrap/Button';
 import Col from 'react-bootstrap/Col';
+import Row from 'react-bootstrap/Row';
 import Form from 'react-bootstrap/Form';
 import Modal from 'react-bootstrap/Modal';
 import { useNameServiceContext } from '../providers/NameServiceProvider';
@@ -14,6 +15,12 @@ interface ConsignArtifactProps {
 
 interface ConsignArtifactFormFields {
   recipientName: string;
+  commission: string;
+}
+
+interface ConsignmentInfo {
+  account: string;
+  commission: string;
 }
 
 type InputChangeEvent = React.FormEvent<any> &
@@ -30,8 +37,9 @@ const GENERIC_FEEDBACK = <Form.Control.Feedback>Looks good!</Form.Control.Feedba
 const ConsignArtifact: React.FC<ConsignArtifactProps> = ({ tokenId }) => {
   const [fields, setFields] = React.useState<ConsignArtifactFormFields>({
     recipientName: '',
+    commission: '',
   });
-  const [consignedAccounts, setConsignedAccounts] = React.useState<string[]>([]);
+  const [consigned, setConsigned] = React.useState<ConsignmentInfo[]>([]);
   const [showConsignment, setShowConsignment] = React.useState<boolean>(false);
 
   const { addressFromName } = useNameServiceContext();
@@ -39,14 +47,32 @@ const ConsignArtifact: React.FC<ConsignArtifactProps> = ({ tokenId }) => {
   const { accounts } = useWeb3Context();
 
   React.useEffect(() => {
-    Consignment.methods.getConsignmentAddresses(tokenId, accounts[0])
-      .call({
-        from: accounts[0]
-      })
-      .then(setConsignedAccounts);
+    const setConsignedInfo = async () => {
+      const consignedAccounts = await Consignment.methods.getConsignmentAddresses(tokenId, accounts[0])
+        .call({
+          from: accounts[0]
+        });
+
+      const info = [];
+
+      for (let consignedAccount of consignedAccounts) {
+        const commission = await Consignment.methods.getConsignmentInfo(tokenId, accounts[0], consignedAccount)
+          .call({
+            from: accounts[0]
+          });
+
+        info.push({
+          account: consignedAccount,
+          commission: commission,
+        });
+      }
+
+      setConsigned(info);
+    };
+    setConsignedInfo();
   }, [Consignment, accounts, tokenId]);
 
-  const consign = async (address: string): Promise<void> => {
+  const consign = async (address: string, commission: string): Promise<void> => {
     const approved = await ArtifactRegistry.methods.getApproved(tokenId)
       .call({
         from: accounts[0]
@@ -57,7 +83,7 @@ const ConsignArtifact: React.FC<ConsignArtifactProps> = ({ tokenId }) => {
       await Consignment.methods.consign(
         tokenId,
         address,
-        30,
+        commission,
       ).send(
         {
           from: accounts[0],
@@ -69,7 +95,7 @@ const ConsignArtifact: React.FC<ConsignArtifactProps> = ({ tokenId }) => {
       await ArtifactRegistry.methods.initConsign(
         tokenId,
         address,
-        30
+        commission,
       ).send(
         {
           from: accounts[0],
@@ -81,7 +107,7 @@ const ConsignArtifact: React.FC<ConsignArtifactProps> = ({ tokenId }) => {
 
   const consignArtifactForArtwork = async (): Promise<void> => {
     const recipientAddress = await addressFromName(fields.recipientName);
-    await consign(recipientAddress);
+    await consign(recipientAddress, fields.commission);
   };
 
   // const revokeConsignment = async (): Promise<void> => {
@@ -106,14 +132,16 @@ const ConsignArtifact: React.FC<ConsignArtifactProps> = ({ tokenId }) => {
     setShowConsignment(false);
     setFields({
       recipientName: '',
+      commission: '',
     });
   };
 
-  const listItems = consignedAccounts.map((account) => {
-    return <>
-      <ENSName address={account}/>
+  const listItems = consigned.map((info) => {
+    return <Row>
+      <ENSName address={info.account}/>
+      <p>: Commission: {info.commission}%</p>
       <br/>
-    </>
+    </Row>
   });
 
   return (
@@ -127,7 +155,9 @@ const ConsignArtifact: React.FC<ConsignArtifactProps> = ({ tokenId }) => {
         </Modal.Header>
         <Modal.Body>
           <p>Directly Consigned to:</p>
-          {listItems}
+          <Col>
+            {listItems}
+          </Col>
           <hr/>
           <p>Consign Account to Sell</p>
           <Form.Group as={Col} controlId="recipientName">
@@ -136,6 +166,15 @@ const ConsignArtifact: React.FC<ConsignArtifactProps> = ({ tokenId }) => {
               required
               type="text"
               placeholder="example.artistry.test"
+              onChange={inputChangeHandler}/>
+            {GENERIC_FEEDBACK}
+          </Form.Group>
+          <Form.Group as={Col} controlId="commission">
+            <Form.Label>Commission (%)</Form.Label>
+            <Form.Control
+              required
+              type="text"
+              placeholder="30"
               onChange={inputChangeHandler}/>
             {GENERIC_FEEDBACK}
           </Form.Group>
