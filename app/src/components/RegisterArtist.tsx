@@ -50,12 +50,6 @@ const RegisterArtist: React.FC = () => {
   const { addressFromName } = useNameServiceContext();
 
   React.useEffect(() => {
-    const account = web3.eth.accounts.create();
-    account.privateKey = '';
-    fields.wallet = account.address;
-  });
-
-  React.useEffect(() => {
     Governance.methods.isGovernor(accounts[0])
       .call()
       .then((isGovernor: any) => {
@@ -76,20 +70,26 @@ const RegisterArtist: React.FC = () => {
     event.stopPropagation();
     event.preventDefault();
 
-    const form = event.currentTarget;
-    if (!form.checkValidity()) {
+    if(fields.wallet === '') {
+      const account = web3.eth.accounts.create();
+      account.privateKey = '';
+      fields.wallet = account.address;
+      setValidated(true);
+    } else {
+      const accountAddress = await addressFromName(fields.wallet);
+      if (accountAddress !== '') {
+        const newFields = fields;
+        newFields.wallet = accountAddress;
+        setFields(newFields);
+        setValidated(true);
+      }
+    }
+    if (!validated) {
       return;
     }
 
-    setValidated(true);
     setSubmitted(true);
 
-    const accountAddress = await addressFromName(fields.wallet);
-    if (accountAddress !== '') {
-      const newFields = fields;
-      newFields.wallet = accountAddress;
-      setFields(newFields);
-    }
 
     // eslint-disable-next-line
     const { metaIpfsHash, ...restOfTheFields } = fields;
@@ -164,7 +164,6 @@ const RegisterArtist: React.FC = () => {
           <Form.Group as={Col} controlId="wallet">
             <Form.Label>Artist&apos;s ARRtistry Username (optional)</Form.Label>
             <Form.Control
-              required
               type="text"
               onChange={inputChangeHandler}/>
             {GENERIC_FEEDBACK}
