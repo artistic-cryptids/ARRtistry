@@ -30,7 +30,7 @@ const ArtworkItem: React.FC<ArtworkItemProps> = ({ tokenId, ownedArtifact, fulls
   }, [ArtifactRegistry.methods, tokenId]);
 
   if (!artwork) {
-    return <ArtworkCard img='https://file.globalupload.io/HO8sN3I2nJ.png'/>;
+    return <ArtworkCard id={tokenId} img='https://file.globalupload.io/HO8sN3I2nJ.png'/>;
   }
 
   return (
