@@ -8,16 +8,15 @@ import { IArtifactRegistry } from "./interfaces/IArtifactRegistry.sol";
  * @dev The contract in charge of delegating consignment to dealers
  */
 contract Consignment {
-
   IArtifactRegistry public registry;
 
   struct ConsignmentInfo {
+    address consignee;
     address consigner;
-    uint256 tokenId;
     uint8 commission;
   }
 
-  mapping (address => ConsignmentInfo[]) public consignments;
+  mapping (uint256 => ConsignmentInfo[]) public consignments;
   mapping (address => uint256[]) public consigned;
 
   modifier authorized(uint256 tokenId) {
@@ -46,38 +45,50 @@ contract Consignment {
     ConsignmentInfo memory consignmentInfo;
 
     consignmentInfo.consigner = msg.sender;
-    consignmentInfo.tokenId = tokenId;
+    consignmentInfo.consignee = who;
     consignmentInfo.commission = commission;
 
-    consignments[who].push(consignmentInfo);
+    consignments[tokenId].push(consignmentInfo);
 
     consigned[who].push(tokenId);
   }
 
-  function getConsignmentInfo(uint256 tokenId) public view returns (address, uint8) {
-    ConsignmentInfo[] memory consignmentInfos = consignments[msg.sender];
+  function getConsignmentAddresses(uint256 tokenId) public view authorized(tokenId) returns (address[] memory) {
+    ConsignmentInfo[] memory consignmentInfos = consignments[tokenId];
+
+    uint count = 0;
 
     for (uint i = 0; i < consignmentInfos.length; i++) {
-      if (consignmentInfos[i].tokenId == tokenId) {
-        return (consignmentInfos[i].consigner, consignmentInfos[i].commission);
+      if (consignmentInfos[i].consigner == msg.sender) {
+        count = count + 1;
       }
     }
 
-    return (address(0), 0);
+    address[] memory addresses = new address[](count);
+    count = 0;
+
+    for (uint i = 0; i < consignmentInfos.length; i++) {
+      if (consignmentInfos[i].consigner == msg.sender) {
+        addresses[count] = consignmentInfos[count].consignee;
+        count = count + 1;
+      }
+
+    }
+
+    return addresses;
   }
 
   function isConsigned(uint256 tokenId, address who) public view returns (bool) {
     address tokenOwner = registry.ownerOf(tokenId);
+    ConsignmentInfo[] memory consignmentInfos = consignments[tokenId];
 
     ConsignmentInfo memory consignmentInfo;
 
     while (who != address(0) && who != tokenOwner && who != address(registry)) {
-      ConsignmentInfo[] memory consignmentInfos = consignments[who];
-
       consignmentInfo.consigner = address(0);
 
       for (uint i = 0; i < consignmentInfos.length; i++) {
-        if (consignmentInfos[i].tokenId == tokenId) {
+        if (consignmentInfos[i].consignee == who) {
           consignmentInfo = consignmentInfos[i];
         }
       }
