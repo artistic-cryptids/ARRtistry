@@ -12,6 +12,7 @@ import { IPFS_URL_START, saveSingleToIPFS } from '../helper/ipfs';
 import { useContractContext } from '../providers/ContractProvider';
 import { useWeb3Context } from '../providers/Web3Provider';
 import { useNameServiceContext } from '../providers/NameServiceProvider';
+import Modal from 'react-bootstrap/Modal';
 
 interface RegisterFormFields {
   name: string;
@@ -44,6 +45,7 @@ const RegisterArtist: React.FC = () => {
   const [validated, setValidated] = React.useState<boolean>(false);
   const [submitted, setSubmitted] = React.useState<boolean>(false);
   const [isGovernor, setIsGovernor] = React.useState<boolean>(false);
+  const [invalidENS, setInvalidENS] = React.useState<boolean>(false);
 
   const { Governance, Artists } = useContractContext();
   const { web3, accounts } = useWeb3Context();
@@ -85,6 +87,7 @@ const RegisterArtist: React.FC = () => {
       }
     }
     if (!validated) {
+      setInvalidENS(true);
       return;
     }
 
@@ -138,6 +141,9 @@ const RegisterArtist: React.FC = () => {
   };
 
   const renderArtistInformation = (): React.ReactNode => {
+
+    const handleClose = () => setInvalidENS(false);
+
     return (
       <Container>
         <Form.Row>
@@ -188,6 +194,24 @@ const RegisterArtist: React.FC = () => {
             {GENERIC_FEEDBACK}
           </Form.Group>
         </Form.Row>
+        <Modal
+          { ...{show: invalidENS, title:'Invalid Username entered', animation: false}}
+          size="lg"
+          aria-labelledby="contained-modal-title-vcenter"
+          centered
+        >
+          <Modal.Header>
+            <Modal.Title id="contained-modal-title-vcenter">
+              {'Invalid Username entered'}
+            </Modal.Title>
+          </Modal.Header>
+          <Modal.Body>Sorry, we couldn&apos;t find an account with that Username</Modal.Body>
+          <Modal.Footer>
+            <Button variant="secondary" onClick={handleClose}>
+              Close
+            </Button>
+          </Modal.Footer>
+        </Modal>
       </Container>
     );
   };
