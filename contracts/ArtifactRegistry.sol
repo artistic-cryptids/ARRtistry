@@ -21,7 +21,7 @@ contract ArtifactRegistry is IArtifactRegistry, Ownable, ERC721Full, ERC721Appro
   using Counters for Counters.Counter;
 
   IGovernance public governance;
-  address public consignmentAddress;
+  Consignment public consignment;
 
   Counters.Counter public _tokenId;
   mapping (uint256 => Artifact) public artifacts;
@@ -31,8 +31,8 @@ contract ArtifactRegistry is IArtifactRegistry, Ownable, ERC721Full, ERC721Appro
     governance = _governance;
   }
 
-  function setConsignment(address _consignmentAddress) public {
-    consignmentAddress = _consignmentAddress;
+  function setConsignment(Consignment _consignment) public {
+    consignment = _consignment;
   }
 
   function mint(address who, Artifact memory _artifact) public returns (uint256) {
@@ -46,9 +46,13 @@ contract ArtifactRegistry is IArtifactRegistry, Ownable, ERC721Full, ERC721Appro
     _mint(who, newTokenId);
     _setTokenURI(newTokenId, _artifact.metaUri);
 
-    approve(consignmentAddress, newTokenId);
-
     return newTokenId;
+  }
+
+  function initConsign(uint256 tokenId, address who, uint8 commission) public {
+    approve(address(consignment), tokenId);
+
+    consignment.consign(tokenId, who, commission);
   }
 
   function getArtifactForToken(uint256 tokenId) public view returns (address, string memory) {

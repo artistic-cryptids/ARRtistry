@@ -29,12 +29,12 @@ contract Consignment {
     address who = msg.sender;
     ConsignmentInfo memory consignmentInfo;
 
-    while (who != address(0) && who != tokenOwner) {
+    while (who != address(0) && who != tokenOwner && who != address(registry)) {
       consignmentInfo = consignments[who];
       who = consignmentInfo.consigner;
     }
 
-    require(tokenOwner == who, "Consignment::authorized: Account not authorized");
+    require(tokenOwner == who || address(registry) == who, "Consignment::authorized: Account not authorized");
     _;
   }
 
