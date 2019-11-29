@@ -132,7 +132,7 @@ contract('Consignment', async accounts => {
     it('can grab single consigned address for a tokenId', async () => {
       await instance.consign(tokenId, accounts[8], commission, { from: tokenOwner });
 
-      const result = await instance.getConsignmentAddresses(tokenId, { from: tokenOwner });
+      const result = await instance.getConsignmentAddresses(tokenId, tokenOwner);
 
       expect(result[0]).be.eql(accounts[8]);
     });
@@ -141,7 +141,7 @@ contract('Consignment', async accounts => {
       await instance.consign(tokenId, accounts[8], commission, { from: tokenOwner });
       await instance.consign(tokenId, accounts[7], commission, { from: tokenOwner });
 
-      const result = await instance.getConsignmentAddresses(tokenId, { from: tokenOwner });
+      const result = await instance.getConsignmentAddresses(tokenId, tokenOwner);
 
       expect(result[0]).be.eql(accounts[8]);
       expect(result[1]).be.eql(accounts[7]);
@@ -151,7 +151,7 @@ contract('Consignment', async accounts => {
       await instance.consign(tokenId, accounts[8], commission, { from: tokenOwner });
       await instance.consign(tokenId, accounts[7], commission, { from: accounts[8] });
 
-      const result = await instance.getConsignmentAddresses(tokenId, { from: tokenOwner });
+      const result = await instance.getConsignmentAddresses(tokenId, tokenOwner);
 
       expect(result[0]).be.eql(accounts[8]);
     });

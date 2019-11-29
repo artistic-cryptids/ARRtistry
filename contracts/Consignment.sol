@@ -55,13 +55,13 @@ contract Consignment {
     consigned[who].push(tokenId);
   }
 
-  function getConsignmentAddresses(uint256 tokenId) public view authorized(tokenId) returns (address[] memory) {
+  function getConsignmentAddresses(uint256 tokenId, address who) public view authorized(tokenId) returns (address[] memory) {
     ConsignmentInfo[] memory consignmentInfos = consignments[tokenId];
 
     uint count = 0;
 
     for (uint i = 0; i < consignmentInfos.length; i++) {
-      if (consignmentInfos[i].consigner == msg.sender) {
+      if (consignmentInfos[i].consigner == who) {
         count = count + 1;
       }
     }
@@ -70,7 +70,7 @@ contract Consignment {
     count = 0;
 
     for (uint i = 0; i < consignmentInfos.length; i++) {
-      if (consignmentInfos[i].consigner == msg.sender) {
+      if (consignmentInfos[i].consigner == who) {
         addresses[count] = consignmentInfos[count].consignee;
         count = count + 1;
       }
