@@ -11,12 +11,14 @@ import TransactionLoadingModal from './common/TransactionLoadingModal';
 import { IPFS_URL_START, saveSingleToIPFS } from '../helper/ipfs';
 import { useContractContext } from '../providers/ContractProvider';
 import { useWeb3Context } from '../providers/Web3Provider';
+import { useNameServiceContext } from '../providers/NameServiceProvider';
 
 interface RegisterFormFields {
   name: string;
   nationality: string;
   birthYear: string;
   deathYear: string;
+  wallet: string;
   metaIpfsHash: string;
 }
 
@@ -36,6 +38,7 @@ const RegisterArtist: React.FC = () => {
     nationality: '',
     birthYear: '',
     deathYear: '',
+    wallet: '',
     metaIpfsHash: '',
   });
   const [validated, setValidated] = React.useState<boolean>(false);
@@ -43,7 +46,14 @@ const RegisterArtist: React.FC = () => {
   const [isGovernor, setIsGovernor] = React.useState<boolean>(false);
 
   const { Governance, Artists } = useContractContext();
-  const { accounts } = useWeb3Context();
+  const { web3, accounts } = useWeb3Context();
+  const { addressFromName } = useNameServiceContext();
+
+  React.useEffect(() => {
+    const account = web3.eth.accounts.create();
+    account.privateKey = '';
+    fields.wallet = account.address;
+  });
 
   React.useEffect(() => {
     Governance.methods.isGovernor(accounts[0])
@@ -73,6 +83,13 @@ const RegisterArtist: React.FC = () => {
 
     setValidated(true);
     setSubmitted(true);
+
+    const accountAddress = await addressFromName(fields.wallet);
+    if (accountAddress !== '') {
+      const newFields = fields;
+      newFields.wallet = accountAddress;
+      setFields(newFields);
+    }
 
     // eslint-disable-next-line
     const { metaIpfsHash, ...restOfTheFields } = fields;
@@ -137,6 +154,15 @@ const RegisterArtist: React.FC = () => {
         <Form.Row>
           <Form.Group as={Col} controlId="nationality">
             <Form.Label>Artist Nationality</Form.Label>
+            <Form.Control
+              required
+              type="text"
+              onChange={inputChangeHandler}/>
+            {GENERIC_FEEDBACK}
+          </Form.Group>
+
+          <Form.Group as={Col} controlId="wallet">
+            <Form.Label>Artist&apos;s ARRtistry Username (optional)</Form.Label>
             <Form.Control
               required
               type="text"
