@@ -13,7 +13,7 @@ const ArrList: React.FC = () => {
       const len = await ArrRegistry.methods.totalRecords().call();
 
       const ids = [];
-      for (let i = 0; i < len; i++) {
+      for (let i = 1; i <= len; i++) {
         ids.push(i.toString());
       }
 
