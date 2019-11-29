@@ -132,9 +132,9 @@ const ConsignArtifact: React.FC<ConsignArtifactProps> = ({ tokenId }) => {
     await consign(recipientAddress, fields.commission);
   };
 
-  // const revokeConsignment = async (): Promise<void> => {
-  //   await consign(ZERO_ADDR);
-  // };
+  const revokeConsignment = async (address: string): Promise<void> => {
+
+  };
 
   const inputChangeHandler = (event: InputChangeEvent): void => {
     const key = event.target.id;
@@ -159,11 +159,18 @@ const ConsignArtifact: React.FC<ConsignArtifactProps> = ({ tokenId }) => {
   };
 
   const directInfo = consigned.map((info) => {
-    return <Row key={info.account}>
-      <ENSName address={info.account}/>
-      <p>: Commission: {info.commission}%</p>
-      <br/>
-    </Row>;
+    return <>
+      <Row key={info.account}>
+        <ENSName address={info.account}/>
+        <p>: Commission: {info.commission}%</p>
+      </Row>
+      <Row>
+        <Button variant="danger" size="sm" onClick={() => revokeConsignment(info.account)}>
+          Revoke
+        </Button>
+      </Row>
+      <hr/>
+    </>
   });
 
   const indirectInfo = indirectConsigned.map((account) => {
