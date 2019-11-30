@@ -193,7 +193,16 @@ export const Provenance: React.FC<{tokenId: number}> = ({ tokenId }) => {
       ));
     });
 
-    const otherRecordTypes = ['Stolen', 'Recovered', 'Damaged', 'Restored', 'Film'];
+    //console.log(ArtifactRegistry.events.allEvents());
+
+    ArtifactRegistry.getPastEvents('RecordSale', options).then(console.log)
+    //ArtifactRegistry.getPastEvents('RecordDamaged', options).then(console.log)
+    ArtifactRegistry.getPastEvents('allEvents', options).then(console.log);
+
+
+    //ArtifactRegistry.getPastEvents('RecordSale', options).then(console.log);
+
+    /*const otherRecordTypes = ['Stolen', 'Recovered', 'Damaged', 'Restored', 'Film'];
     const otherRecords: Promise<ProvenanceRecord[]> = Promise.all(otherRecordTypes
       .map(async (type: string): Promise<ProvenanceRecord[]> => {
         const pastEvents = await ArtifactRegistry.getPastEvents('Record' + type, options);
@@ -215,12 +224,12 @@ export const Provenance: React.FC<{tokenId: number}> = ({ tokenId }) => {
         }
         return resultRecords;
       }))
-      .then((listOfLists: Array<ProvenanceRecord[]>) => listOfLists.flat());
+      .then((listOfLists: any) => listOfLists.flat());*/
 
-    // otherRecords.flat() somehow
-
-    Promise.all([registration, sales, otherRecords])
-      .then(([regs, sales, others]) => setRecords(regs.concat(sales).concat(others)))
+    Promise.all([registration, sales])
+      .then(([regs, sales]) => {
+        setRecords(regs.concat(sales)); 
+      })
       .catch(console.warn);
   }, [user.address, web3.eth, ArtifactRegistry, tokenId]);
 

@@ -13,6 +13,8 @@ import { EventData } from 'web3-eth-contract';
 import { useWeb3Context } from '../providers/Web3Provider';
 import * as moment from 'moment';
 
+import Button from 'react-bootstrap/Button'
+
 interface ArtworkCardProps {
   id: number;
   img?: string;
@@ -42,8 +44,14 @@ const ArtworkCard: React.FC<ArtworkCardProps> = ({
 }) => {
   const [lastUpdateTime, setUpdateTime] = React.useState<string>('Checking');
 
-  const { web3 } = useWeb3Context();
+  const { web3, accounts } = useWeb3Context();
   const { ArtifactRegistry, Governance } = useContractContext();
+
+  const cucky = async () => {
+    console.log('cukcy')
+    ArtifactRegistry.methods.pieceDamaged(1, 'Piece was damaged in big fire', '2019-03-03').call({from: accounts[0]})
+      .then(console.log('ooop'));
+  }
 
   React.useEffect(() => {
     const getLastUpdated = async (): Promise<void> => {
@@ -69,6 +77,7 @@ const ArtworkCard: React.FC<ArtworkCardProps> = ({
   return (
     <Card className="shadow">
       <Card.Body>
+        <Button variant="outline-primary" onClick={cucky}>Cocker</Button>
         {img && <Card.Img variant="top" src={img} />}
         {id && fields
           ? <Card.Title>
