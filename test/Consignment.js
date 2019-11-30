@@ -252,8 +252,6 @@ contract('Consignment', async accounts => {
       await registry.mint(tokenOwner, ARTIFACT, { from: tokenOwner });
       const balance = await registry.balanceOf(tokenOwner);
       tokenId = await registry.tokenOfOwnerByIndex(tokenOwner, balance - 1);
-
-      registry.approve(instance.address, tokenId);
     });
 
     it('token owner can transfer', async () => {
@@ -264,7 +262,7 @@ contract('Consignment', async accounts => {
     });
 
     it('authorized account can transfer', async () => {
-      await instance.consign(tokenId, accounts[1], commission, { from: tokenOwner });
+      await registry.initConsign(tokenId, accounts[1], commission, { from: tokenOwner });
 
       await transfer(accounts[1]);
 
@@ -273,7 +271,7 @@ contract('Consignment', async accounts => {
     });
 
     it('chained authorized account can transfer', async () => {
-      await instance.consign(tokenId, accounts[1], commission, { from: tokenOwner });
+      await registry.initConsign(tokenId, accounts[1], commission, { from: tokenOwner });
       await instance.consign(tokenId, accounts[2], commission, { from: accounts[1] });
 
       await transfer(accounts[2]);
@@ -290,7 +288,7 @@ contract('Consignment', async accounts => {
     });
 
     it('transfer removes consignment', async () => {
-      await instance.consign(tokenId, accounts[1], commission, { from: tokenOwner });
+      await registry.initConsign(tokenId, accounts[1], commission, { from: tokenOwner });
       await instance.consign(tokenId, accounts[6], commission, { from: accounts[1] });
 
       await transfer(accounts[6]);
