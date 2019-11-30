@@ -72,25 +72,26 @@ const RegisterArtist: React.FC = () => {
     event.stopPropagation();
     event.preventDefault();
 
+    let walletValid = false;
     if (fields.wallet === '') {
       const account = web3.eth.accounts.create();
       account.privateKey = '';
       fields.wallet = account.address;
-      setValidated(true);
+      walletValid = true;
     } else {
       const accountAddress = await addressFromName(fields.wallet);
       if (accountAddress !== '') {
-        const newFields = fields;
-        newFields.wallet = accountAddress;
-        setFields(newFields);
-        setValidated(true);
+        fields.wallet = accountAddress;
+        walletValid = true;
       }
     }
-    if (!validated) {
+
+    if (!walletValid) {
       setInvalidENS(true);
       return;
     }
 
+    setValidated(true);
     setSubmitted(true);
 
     // eslint-disable-next-line
