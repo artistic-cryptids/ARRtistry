@@ -81,7 +81,7 @@ const ArtworkCard: React.FC<ArtworkCardProps> = ({
         {artist && <Card.Subtitle className="mb-2 text-muted">{artist.name}</Card.Subtitle> }
         <hr/>
         {fields &&
-          fields.description === '' &&
+          fields.description !== '' &&
           <React.Fragment><Card.Text>{fields.description}</Card.Text><hr/></React.Fragment>}
         {children}
         <hr/>
