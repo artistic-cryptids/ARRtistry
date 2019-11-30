@@ -35,12 +35,18 @@ interface SaleRecord {
   date: string;
 }
 
+interface DetailRecord {
+  date: string;
+  detailInfo: string;
+}
+
 interface ProvenanceRecord {
   type: string;
   txDate: moment.Moment;
 
   artist?: string;
   sale?: SaleRecord;
+  detail?: DetailRecord;
 }
 
 interface BlockHeading {
@@ -55,6 +61,26 @@ const BLOCK_HEADINGS: Dictionary<BlockHeading> = {
   },
   'sale': {
     header: 'Sale',
+    icon: faEuroSign,
+  },
+  'stolen': {
+    header: 'Stolen',
+    icon: faEuroSign,
+  },
+  'recovered': {
+    header: 'Recovered',
+    icon: faEuroSign,
+  },
+  'damaged': {
+    header: 'Damaged',
+    icon: faEuroSign,
+  },
+  'restored': {
+    header: 'Restored',
+    icon: faEuroSign,
+  },
+  'film': {
+    header: 'Film',
     icon: faEuroSign,
   },
 };
@@ -167,8 +193,34 @@ export const Provenance: React.FC<{tokenId: number}> = ({ tokenId }) => {
       ));
     });
 
-    Promise.all([registration, sales])
-      .then(([regs, sales]) => setRecords(regs.concat(sales)))
+    const otherRecordTypes = ['Stolen', 'Recovered', 'Damaged', 'Restored', 'Film'];
+    const otherRecords: Promise<ProvenanceRecord[]> = Promise.all(otherRecordTypes
+      .map(async (type: string): Promise<ProvenanceRecord[]> => {
+        const pastEvents = await ArtifactRegistry.getPastEvents('Record' + type, options);
+        const tokenRelevantEvents = pastEvents.filter((event: any) =>
+          event.returnValues.tokenId === tokenId.toString());
+
+        const resultRecords: ProvenanceRecord[] = [];
+        for (const event of tokenRelevantEvents) {
+          const timestamp = await web3.eth.getBlock(event.blockNumber).then((block) => block.timestamp);
+          const provRec = {
+            type: type.toLowerCase(),
+            txDate: moment.unix(Number(timestamp)),
+            detail: {
+              detailInfo: event.returnValues.detailInfo,
+              date: event.returnValues.date,
+            },
+          };
+          resultRecords.push(provRec);
+        }
+        return resultRecords;
+      }))
+      .then((listOfLists: Array<ProvenanceRecord[]>) => listOfLists.flat());
+
+    // otherRecords.flat() somehow
+
+    Promise.all([registration, sales, otherRecords])
+      .then(([regs, sales, others]) => setRecords(regs.concat(sales).concat(others)))
       .catch(console.warn);
   }, [user.address, web3.eth, ArtifactRegistry, tokenId]);
 
