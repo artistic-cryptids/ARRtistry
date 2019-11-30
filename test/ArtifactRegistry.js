@@ -13,10 +13,10 @@ const ArtifactRegistryMock = artifacts.require('./ArtifactRegistryMock.sol');
 contract('ArtifactRegistry', async accounts => {
   const creator = accounts[0];
   const tokenOwner = accounts[1];
-  const approvedArtist = '0xcdaE5bE724930fffDAE6E30B9067f063483B6F08';
+  const approvedArtist = accounts[2];
   const artifactCreatedByApprovedArtist = {
     artist: approvedArtist,
-    metaUri: 'https://ipfs.io/ipfs/QmWYgZDLgA8ZSEF3pzoEuHSDNoLq1geN4z9oBhHkeNYPUH',
+    metaUri: 'https://ipfs.globalupload.io/QmdXUTHyWMFg55t215tCnRWLCh5VnEwuVEEeG3i9DuyAwm',
   };
   const TOKEN_ID = 1;
 
