@@ -45,7 +45,7 @@ contract('Consignment', async accounts => {
     it('non-consigned account cannot consign', async () => {
       await expectRevert(
         instance.consign(tokenId, accounts[4], commission, { from: accounts[5] }),
-        'Consignment::authorized: Account not authorized'
+        'Consignment::authorized: Account not authorized',
       );
     });
 
@@ -56,7 +56,7 @@ contract('Consignment', async accounts => {
 
       await expectRevert(
         instance.consign(tokenId, tokenOwner, commission, { from: accounts[3] }),
-        'Consignment::consign: Account is already authorized'
+        'Consignment::consign: Account is already authorized',
       );
     });
   });
@@ -244,7 +244,7 @@ contract('Consignment', async accounts => {
         location,
         date,
         false,
-        { from: account }
+        { from: account },
       );
     };
 
@@ -284,7 +284,7 @@ contract('Consignment', async accounts => {
     it('non-authorized account cannot transfer', async () => {
       await expectRevert(
         transfer(accounts[5]),
-        'Consignment::authorized: Account not authorized'
+        'Consignment::authorized: Account not authorized',
       );
     });
 
