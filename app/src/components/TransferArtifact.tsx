@@ -105,8 +105,6 @@ const TransferArtifact: React.FC<TransferArtifactProps> = ({ tokenId, metaUri })
         from: accounts[0],
       });
 
-
-
     ArtifactRegistry.getPastEvents('RecordSale', eventOptions)
       .then((events: EventData[]) => {
         return events.filter(event => event.returnValues.tokenId === tokenId.toString());

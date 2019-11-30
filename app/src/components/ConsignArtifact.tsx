@@ -49,15 +49,15 @@ const ConsignArtifact: React.FC<ConsignArtifactProps> = ({ tokenId }) => {
 
   React.useEffect(() => {
     const getIndirectAccounts = async (account: string): Promise<string[]> => {
-      console.log("getting indirect for " + account);
-      const addresses =  await Consignment.methods.getConsignmentAddresses(tokenId, account)
+      console.log('getting indirect for ' + account);
+      const addresses = await Consignment.methods.getConsignmentAddresses(tokenId, account)
         .call({
           from: accounts[0],
         });
 
       let indirect = addresses;
 
-      for (let address of addresses) {
+      for (const address of addresses) {
         indirect = indirect.concat(await getIndirectAccounts(address));
       }
 
@@ -73,7 +73,7 @@ const ConsignArtifact: React.FC<ConsignArtifactProps> = ({ tokenId }) => {
       const info = [];
       let indirect: string[] = [];
 
-      for (let consignedAccount of consignedAccounts) {
+      for (const consignedAccount of consignedAccounts) {
         const commission = await Consignment.methods.getConsignmentInfo(tokenId, accounts[0], consignedAccount)
           .call({
             from: accounts[0],
@@ -176,7 +176,7 @@ const ConsignArtifact: React.FC<ConsignArtifactProps> = ({ tokenId }) => {
         </Button>
       </Row>
       <hr/>
-    </>
+    </>;
   });
 
   const indirectInfo = indirectConsigned.map((account) => {
@@ -198,21 +198,21 @@ const ConsignArtifact: React.FC<ConsignArtifactProps> = ({ tokenId }) => {
         <Modal.Body>
           {consigned.length !== 0
             ? <React.Fragment>
-                <p>Directly Consigned to:</p>
-                <Col>
-                  {directInfo}
-                </Col>
-                <hr/>
-              </React.Fragment>
+              <p>Directly Consigned to:</p>
+              <Col>
+                {directInfo}
+              </Col>
+              <hr/>
+            </React.Fragment>
             : null}
           {indirectConsigned.length !== 0
             ? <React.Fragment>
-                <p>Indirectly Consigned to:</p>
-                <Col>
-                  {indirectInfo}
-                </Col>
-                <hr/>
-              </React.Fragment>
+              <p>Indirectly Consigned to:</p>
+              <Col>
+                {indirectInfo}
+              </Col>
+              <hr/>
+            </React.Fragment>
             : null}
           <p>Consign Account to Sell</p>
           <Form.Group as={Col} controlId="recipientName">
