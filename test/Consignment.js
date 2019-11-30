@@ -171,6 +171,12 @@ contract('Consignment', async accounts => {
 
       expect(result.toNumber()).be.eql(15);
     });
+
+    it('returns 0 for invalid params', async () => {
+      const result = await instance.getConsignmentInfo(99999, tokenOwner, accounts[8]);
+
+      expect(result.toNumber()).be.eql(0);
+    });
   });
 
   describe('revoke', async () => {
