@@ -254,7 +254,8 @@ contract('Consignment', async accounts => {
       tokenId = await registry.tokenOfOwnerByIndex(tokenOwner, balance - 1);
     });
 
-    it('token owner can transfer', async () => {
+    it('token owner can transfer if consignment is approved', async () => {
+      await registry.approve(instance.address, tokenId);
       await transfer(tokenOwner);
 
       const owner = await registry.ownerOf(tokenId);
