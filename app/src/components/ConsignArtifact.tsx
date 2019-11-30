@@ -100,8 +100,9 @@ const ConsignArtifact: React.FC<ConsignArtifactProps> = ({ tokenId }) => {
         from: accounts[0],
       });
 
+    // If the consignment contract is not approved we need to approve
+    // the contract and call the appropriate consignment functions.
     if (approved === Consignment._address) {
-      console.log('Consignment');
       await Consignment.methods.consign(
         tokenId,
         address,
@@ -113,7 +114,6 @@ const ConsignArtifact: React.FC<ConsignArtifactProps> = ({ tokenId }) => {
         },
       );
     } else {
-      console.log('Init consignment');
       await ArtifactRegistry.methods.initConsign(
         tokenId,
         address,
