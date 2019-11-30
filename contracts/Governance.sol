@@ -20,6 +20,8 @@ contract Governance is IGovernance, Moderated {
   // Maps the proposal id to the proposer of the artifact.
   mapping (uint => address) public proposalToProposer;
 
+  mapping (address => bool) private approvedArtists;
+
   function propose(address target, bytes memory data) public returns (uint) {
     require(msg.sender != address(this), "Governance::propose: Governance cannot submit proposal");
     // require(token.transferFrom(msg.sender, address(this), proposalFee), "Governance::propose: Transfer failed");
@@ -120,5 +122,13 @@ contract Governance is IGovernance, Moderated {
 
   function getARR(uint arrId) public view returns (ARR memory) {
     return arrs[arrId];
+  }
+
+  function isApprovedArtist(address _artist) public view returns (bool) {
+    return approvedArtists[_artist];
+  }
+
+  function approveArtist(address _artist) public onlyModerator {
+    approvedArtists[_artist] = true;
   }
 }

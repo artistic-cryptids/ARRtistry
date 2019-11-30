@@ -9,6 +9,7 @@ contract('Governance', async accounts => {
   const moderator = accounts[1];
   const proposer = accounts[2];
   const notProposerOrModerator = accounts[3];
+  const artist = accounts[4];
 
   const PROPOSAL_ID = toBN(0);
 
@@ -189,6 +190,25 @@ contract('Governance', async accounts => {
         const arrLen = await governance.getARRLength();
         expect(arrLen).to.eql(toBN(0));
       });
+    });
+  });
+
+  describe('isApprovedArtist', async () => {
+    it('should return false if account is not an approved artist', async () => {
+      expect(await governance.isApprovedArtist(moderator)).to.equal(false);
+    });
+  });
+
+  describe('approveArtist', async () => {
+    it('should revert if not moderator', async () => {
+      return expectRevert(governance.approveArtist(artist, { from: notProposerOrModerator }),
+        'Only a moderator can do this',
+      );
+    });
+
+    it('should approve artist if requested by moderator', async () => {
+      await governance.approveArtist(artist, { from: moderator });
+      expect(await governance.isApprovedArtist(artist)).to.equal(true);
     });
   });
 }); // end Registry contract
