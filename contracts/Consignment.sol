@@ -47,7 +47,7 @@ contract Consignment {
       ConsignmentInfo memory consignmentInfo = consignmentInfos[i];
 
       address consignee = consignmentInfo.consignee;
-      uint256[] memory consignedTokens = consigned[consignee];
+      uint256[] storage consignedTokens = consigned[consignee];
 
       for (uint j = 0; j < consignedTokens.length; j++) {
         if (consignedTokens[j] == tokenId) {
@@ -55,8 +55,6 @@ contract Consignment {
           break;
         }
       }
-
-      consigned[consignee] = consignedTokens;
     }
 
     delete consignments[tokenId];
@@ -85,7 +83,7 @@ contract Consignment {
 
   function revoke(uint256 tokenId, address who) public authorized(tokenId) {
     ConsignmentInfo[] storage consignmentInfos = consignments[tokenId];
-    
+
     for (uint i = 0; i < consignmentInfos.length; i++) {
       ConsignmentInfo storage info = consignmentInfos[i];
       if (info.valid && info.consignee == who) {
