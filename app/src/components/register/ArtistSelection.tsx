@@ -8,7 +8,7 @@ const ArtistSelection: React.FC = () => {
   const [artists, setArtists] = React.useState<any[]>([]);
 
   const { Artists } = useContractContext();
-  const { setField } = useFormControlContext();
+  const { setFields } = useFormControlContext();
 
   React.useEffect(() => {
     const updateArtists = async (): Promise<void> => {
@@ -32,8 +32,10 @@ const ArtistSelection: React.FC = () => {
   });
 
   const onArtistChange = (event: React.FormEvent<HTMLSelectElement & any>): void => {
-    setField('artistId', event.currentTarget.value.toString());
-    setField('artistWallet', artists[event.currentTarget.value - 1].wallet);
+    setFields({
+      'artistId': event.currentTarget.value.toString(),
+      'artistWallet': artists[event.currentTarget.value - 1].wallet,
+    });
   };
 
   return (
