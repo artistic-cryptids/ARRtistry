@@ -173,7 +173,7 @@ contract('Consignment', async accounts => {
     });
 
     it('returns 0 for invalid params', async () => {
-      const result = await instance.getConsignmentInfo(tokenId tokenOwner, accounts[8]);
+      const result = await instance.getConsignmentInfo(tokenId, tokenOwner, accounts[8]);
 
       expect(result.toNumber()).be.eql(0);
     });
