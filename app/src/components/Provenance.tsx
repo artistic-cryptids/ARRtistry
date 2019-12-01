@@ -10,7 +10,7 @@ import {
   faSearch,
   faVideo,
   faFireAlt,
-  faWrench
+  faWrench,
 } from '@fortawesome/free-solid-svg-icons';
 import { IconProp } from '@fortawesome/fontawesome-svg-core';
 import Form from 'react-bootstrap/Form';
@@ -232,7 +232,7 @@ export const Provenance: React.FC<{tokenId: number}> = ({ tokenId }) => {
         console.log('others: ');
         console.log(others);
         const completeRecords = regs.concat(sales).concat(others);
-        setRecords(completeRecords); 
+        setRecords(completeRecords);
       })
       .catch(console.warn);
   }, [user.address, web3.eth, ArtifactRegistry, tokenId]);
