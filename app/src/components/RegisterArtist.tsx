@@ -11,12 +11,15 @@ import TransactionLoadingModal from './common/TransactionLoadingModal';
 import { IPFS_URL_START, saveSingleToIPFS } from '../helper/ipfs';
 import { useContractContext } from '../providers/ContractProvider';
 import { useWeb3Context } from '../providers/Web3Provider';
+import { useNameServiceContext } from '../providers/NameServiceProvider';
+import Modal from 'react-bootstrap/Modal';
 
 interface RegisterFormFields {
   name: string;
   nationality: string;
   birthYear: string;
   deathYear: string;
+  wallet: string;
   metaIpfsHash: string;
 }
 
@@ -36,14 +39,17 @@ const RegisterArtist: React.FC = () => {
     nationality: '',
     birthYear: '',
     deathYear: '',
+    wallet: '',
     metaIpfsHash: '',
   });
   const [validated, setValidated] = React.useState<boolean>(false);
   const [submitted, setSubmitted] = React.useState<boolean>(false);
   const [isGovernor, setIsGovernor] = React.useState<boolean>(false);
+  const [invalidENS, setInvalidENS] = React.useState<boolean>(false);
 
   const { Governance, Artists } = useContractContext();
-  const { accounts } = useWeb3Context();
+  const { web3, accounts } = useWeb3Context();
+  const { addressFromName } = useNameServiceContext();
 
   React.useEffect(() => {
     Governance.methods.isGovernor(accounts[0])
@@ -66,8 +72,22 @@ const RegisterArtist: React.FC = () => {
     event.stopPropagation();
     event.preventDefault();
 
-    const form = event.currentTarget;
-    if (!form.checkValidity()) {
+    let walletValid = false;
+    if (fields.wallet === '') {
+      const account = web3.eth.accounts.create();
+      account.privateKey = '';
+      fields.wallet = account.address;
+      walletValid = true;
+    } else {
+      const accountAddress = await addressFromName(fields.wallet);
+      if (accountAddress !== '') {
+        fields.wallet = accountAddress;
+        walletValid = true;
+      }
+    }
+
+    if (!walletValid) {
+      setInvalidENS(true);
       return;
     }
 
@@ -121,6 +141,8 @@ const RegisterArtist: React.FC = () => {
   };
 
   const renderArtistInformation = (): React.ReactNode => {
+    const handleClose = (): void => setInvalidENS(false);
+
     return (
       <Container>
         <Form.Row>
@@ -139,6 +161,14 @@ const RegisterArtist: React.FC = () => {
             <Form.Label>Artist Nationality</Form.Label>
             <Form.Control
               required
+              type="text"
+              onChange={inputChangeHandler}/>
+            {GENERIC_FEEDBACK}
+          </Form.Group>
+
+          <Form.Group as={Col} controlId="wallet">
+            <Form.Label>Artist&apos;s ARRtistry Username (optional)</Form.Label>
+            <Form.Control
               type="text"
               onChange={inputChangeHandler}/>
             {GENERIC_FEEDBACK}
@@ -163,6 +193,24 @@ const RegisterArtist: React.FC = () => {
             {GENERIC_FEEDBACK}
           </Form.Group>
         </Form.Row>
+        <Modal
+          { ...{ show: invalidENS, title: 'Invalid Username entered', animation: false }}
+          size="lg"
+          aria-labelledby="contained-modal-title-vcenter"
+          centered
+        >
+          <Modal.Header>
+            <Modal.Title id="contained-modal-title-vcenter">
+              {'Invalid Username entered'}
+            </Modal.Title>
+          </Modal.Header>
+          <Modal.Body>Sorry, we couldn&apos;t find an account with that Username</Modal.Body>
+          <Modal.Footer>
+            <Button variant="secondary" onClick={handleClose}>
+              Close
+            </Button>
+          </Modal.Footer>
+        </Modal>
       </Container>
     );
   };
