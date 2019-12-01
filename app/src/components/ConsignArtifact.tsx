@@ -197,23 +197,21 @@ const ConsignArtifact: React.FC<ConsignArtifactProps> = ({ tokenId }) => {
         </Modal.Header>
         <Modal.Body>
           {consigned.length !== 0
-            ? <React.Fragment>
+            && <React.Fragment>
               <p>Directly Consigned to:</p>
               <Col>
                 {directInfo}
               </Col>
               <hr/>
-            </React.Fragment>
-            : null}
+            </React.Fragment>}
           {indirectConsigned.length !== 0
-            ? <React.Fragment>
+            && <React.Fragment>
               <p>Indirectly Consigned to:</p>
               <Col>
                 {indirectInfo}
               </Col>
               <hr/>
-            </React.Fragment>
-            : null}
+            </React.Fragment>}
           <p>Consign Account to Sell</p>
           <Form.Group as={Col} controlId="recipientName">
             <Form.Label>Recipient Name</Form.Label>
