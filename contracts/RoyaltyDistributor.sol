@@ -4,14 +4,14 @@ pragma experimental ABIEncoderV2;
 import { SafeMath } from "@openzeppelin/contracts/math/SafeMath.sol";
 
 import { IERC20 } from "./interfaces/IERC20.sol";
-import { IRoyaltyDistributor } from "./interfaces/IRoyaltyDistributor.sol";
+import { ITokenRecipient } from "./interfaces/ITokenRecipient.sol";
 import { IARRRegistry } from "./interfaces/IARRRegistry.sol";
 import { ARRCalculator } from "./ARRCalculator.sol";
 /**
  * @title RoyaltyDistributor
  * @dev Convenient interface for distributing royalties
  */
-contract RoyaltyDistributor is IRoyaltyDistributor {
+contract RoyaltyDistributor is ITokenRecipient {
   using SafeMath for uint;
 
   IERC20 public _token;
@@ -35,14 +35,19 @@ contract RoyaltyDistributor is IRoyaltyDistributor {
     return _arrRegistry;
   }
 
+  function calculateARR(uint256 salePrice) public pure returns (uint256) {
+    return ARRCalculator.calculateARR(salePrice);
+  }
+
   function receiveApproval(address from, uint256 tokens, address fromToken, bytes memory data) public {
     (uint arrId) = abi.decode(data, (uint));
+
     IARRRegistry.ARR memory arr = arrRegistry().retrieve(arrId);
 
     require(arr.to != address(0), "RoyaltyDistributor :: Beneficiary is 0x0 address");
     require(arr.price != 0, "RoyaltyDistributor :: Amount is zero");
 
-    uint256 tokensDue = ARRCalculator.calculateARR(arr.price);
+    uint256 tokensDue = calculateARR(arr.price);
     require(tokensDue <= tokens, "RoyaltyDistributor :: Not enough tokens provided");
 
     IERC20 instanceContract = IERC20(fromToken);
@@ -52,4 +57,6 @@ contract RoyaltyDistributor is IRoyaltyDistributor {
     emit Distribute(msg.sender, arr.to, tokensDue);
     arrRegistry().markPaid(arrId);
   }
+
+
 }

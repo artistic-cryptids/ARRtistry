@@ -1,9 +1,11 @@
 import * as React from 'react';
 import { Container, Navbar, Nav, Dropdown, NavItem, Card } from 'react-bootstrap';
+import { ToastContainer } from 'react-toastify';
 import { User, useSessionContext } from '../providers/SessionProvider';
 import * as styles from './Header.module.scss';
 import NavLink from 'react-bootstrap/NavLink';
 import LeftSidebar from './LeftSidebar';
+import 'react-toastify/scss/main.scss';
 
 const BreadCrumb: React.FC<{crumbs: string[]}> = ({ crumbs }) => {
   return <div className={styles.breadcrumb}>
@@ -69,12 +71,15 @@ const Header: React.FC<{page: string; parents: string[]}> = ({ page, parents }) 
 
 const Main: React.FC<{page: string; parents: string[]}> = ({ page, parents, children }) => {
   return (
-    <LeftSidebar>
-      <Header page={page} parents={parents}/>
-      <Container>
-        {children}
-      </Container>
-    </LeftSidebar>
+    <>
+      <LeftSidebar>
+        <Header page={page} parents={parents}/>
+        <Container>
+          {children}
+        </Container>
+      </LeftSidebar>
+      <ToastContainer />
+    </>
   );
 };
 

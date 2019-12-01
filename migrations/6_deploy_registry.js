@@ -10,9 +10,8 @@ module.exports = async (deployer, network, accounts) => {
   const governance = await Governance.deployed();
   const arrs = await ARRRegistry.deployed();
 
-  await deployer.deploy(ArtifactRegistry, governance.address, governance.address, arrs.address);
+  await deployer.deploy(ArtifactRegistry, getOwner(network, accounts), governance.address, arrs.address);
   const registry = await ArtifactRegistry.deployed();
-
   await arrs.transferOwnership(registry.address);
 
   await newLabel(

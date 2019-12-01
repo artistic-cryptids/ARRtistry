@@ -1,4 +1,5 @@
 const Governance = artifacts.require('Governance');
+const ArtifactRegistry = artifacts.require('ArtifactRegistry');
 
 module.exports = async (deployer, network, accounts) => {
   deployer
@@ -32,6 +33,10 @@ module.exports = async (deployer, network, accounts) => {
 
       console.log('Adding governance moderatorship for', newModerator);
       await governance.addModerator(newModerator, { from: oldModerator });
+
+      console.log('Setting Registry ownership to governance');
+      const registry = await ArtifactRegistry.deployed();
+      await registry.transferOwnership(governance.address);
     })
     .catch((error) => {
       console.error(error);

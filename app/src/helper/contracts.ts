@@ -5,6 +5,8 @@ export type Artists = any;
 export type Ens = any;
 export type Consignment = any;
 export type ArrRegistry = any;
+export type ERC20 = any;
+export type RoyaltyDistributor = any;
 
 export interface ContractListType {
   Governance: Governance;
@@ -13,4 +15,6 @@ export interface ContractListType {
   Artists: Artists;
   Consignment: Consignment;
   ArrRegistry: ArrRegistry;
+  RoyaltyDistributor: RoyaltyDistributor;
+  Eurs: ERC20;
 }
