@@ -6,6 +6,11 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   faEuroSign,
   faFingerprint,
+  faMask,
+  faSearch,
+  faVideo,
+  faFireAlt,
+  faWrench,
 } from '@fortawesome/free-solid-svg-icons';
 import { IconProp } from '@fortawesome/fontawesome-svg-core';
 import Form from 'react-bootstrap/Form';
@@ -35,12 +40,18 @@ interface SaleRecord {
   date: string;
 }
 
+interface DetailRecord {
+  date: string;
+  detailInfo: string;
+}
+
 interface ProvenanceRecord {
   type: string;
   txDate: moment.Moment;
 
   artist?: string;
   sale?: SaleRecord;
+  detail?: DetailRecord;
 }
 
 interface BlockHeading {
@@ -56,6 +67,26 @@ const BLOCK_HEADINGS: Dictionary<BlockHeading> = {
   'sale': {
     header: 'Sale',
     icon: faEuroSign,
+  },
+  'stolen': {
+    header: 'Stolen',
+    icon: faMask,
+  },
+  'recovered': {
+    header: 'Recovered',
+    icon: faSearch,
+  },
+  'damaged': {
+    header: 'Damaged',
+    icon: faFireAlt,
+  },
+  'restored': {
+    header: 'Restored',
+    icon: faWrench,
+  },
+  'film': {
+    header: 'Film',
+    icon: faVideo,
   },
 };
 
@@ -103,21 +134,23 @@ const ProvenanceTimeline: React.FC<{records: ProvenanceRecord[]}> = ({ records }
     <Timeline>
       {records.map((record: ProvenanceRecord, index: number) =>
         <TimelineBlock type={record.type} subheader={record.txDate.fromNow()} key={index}>
-          {record.type === 'sale' && record.sale
-            ? <Form>
+          {record.type === 'sale' && record.sale &&
+            <Form>
               <PlaintextField label='Date' value={record.sale.date} />
               <AddressField label='Buyer' address={record.sale.buyer}/>
               <AddressField label='Seller' address={record.sale.seller}/>
               <PlaintextField label='Sale Location' value={record.sale.location} />
               <PlaintextField label='Sale Price' value={'€' + (record.sale.price / 100).toString()} />
-            </Form>
-            : null}
-          {record.type === 'mint' && record.artist
-            ? <Form>
+            </Form>}
+          {record.type === 'mint' && record.artist &&
+            <Form>
               <AddressField label='Artist' address={record.artist}/>
-            </Form>
-            : null}
-
+            </Form>}
+          {record.type !== 'mint' && record.type !== 'sale' && record.detail &&
+            <Form>
+              <PlaintextField label='Date' value={record.detail.date} />
+              <PlaintextField label='Detail' value={record.detail.detailInfo} />
+            </Form>}
         </TimelineBlock>,
       )}
     </Timeline>
@@ -148,27 +181,84 @@ export const Provenance: React.FC<{tokenId: number}> = ({ tokenId }) => {
       )
       .then((records: ProvenanceRecord[]) => Promise.all(records));
 
-    const sales = ArtifactRegistry.getPastEvents('RecordSale', options).then(async function (events: EventData[]) {
-      const tokenRelevantEvents = events.filter(event => event.returnValues.tokenId === tokenId.toString());
-      return Promise.all(tokenRelevantEvents.map(async (event) => {
-        const timestamp = await web3.eth.getBlock(event.blockNumber).then((block) => block.timestamp);
-        return {
-          type: 'sale',
-          txDate: moment.unix(Number(timestamp)),
-          sale: {
-            seller: event.returnValues.from,
-            price: event.returnValues.price,
-            buyer: event.returnValues.to,
-            location: event.returnValues.location,
-            date: event.returnValues.date,
-          },
-        };
-      },
-      ));
-    });
+    const otherRecordTypes = ['Sale', 'Stolen', 'Recovered', 'Damaged', 'Restored', 'Film'];
+    const otherRecords: Promise<ProvenanceRecord[]> = Promise.all(otherRecordTypes
+      .map(async (type: string): Promise<ProvenanceRecord[]> => {
+        const pastEvents = await ArtifactRegistry.getPastEvents('Record' + type, options);
+        const tokenRelevantEvents = pastEvents.filter((event: any) =>
+          event.returnValues.tokenId === tokenId.toString());
+        const resultRecords: ProvenanceRecord[] = [];
+        for (const event of tokenRelevantEvents) {
+          const timestamp = await web3.eth.getBlock(event.blockNumber).then((block) => block.timestamp);
+          const typeLowerCase = type.toLowerCase();
+          const timestampMoment = moment.unix(Number(timestamp));
+          resultRecords.push(typeLowerCase === 'sale'
+            ? {
+              type: typeLowerCase,
+              txDate: timestampMoment,
+              sale: {
+                seller: event.returnValues.from,
+                price: event.returnValues.price,
+                buyer: event.returnValues.to,
+                location: event.returnValues.location,
+                date: event.returnValues.date,
+              },
+            }
+            : {
+              type: typeLowerCase,
+              txDate: timestampMoment,
+              detail: {
+                detailInfo: event.returnValues.detailInfo,
+                date: event.returnValues.date,
+              },
+            });
+        }
+        return resultRecords;
+      }))
+      // list of lists flattened to one big list
+      .then((listOfLists: any) => listOfLists.flat());
 
-    Promise.all([registration, sales])
-      .then(([regs, sales]) => setRecords(regs.concat(sales)))
+    const recordComparator = (a: ProvenanceRecord, b: ProvenanceRecord): number => {
+      if (a.artist && b.artist) {
+        return 0;
+      }
+      if (a.artist && !b.artist) {
+        return -1;
+      }
+      if (!a.artist && b.artist) {
+        return 1;
+      }
+      if (!a.artist && !b.artist) {
+        let aDate: string | null = null;
+        let bDate: string | null = null;
+        if (a.detail) {
+          aDate = a.detail.date;
+        } else if (a.sale) {
+          aDate = a.sale.date;
+        }
+        if (b.detail) {
+          bDate = b.detail.date;
+        } else if (b.sale) {
+          bDate = b.sale.date;
+        }
+        if (!aDate && !bDate) {
+          return 0;
+        }
+        if (aDate && !bDate) {
+          return -1;
+        }
+        if (!aDate && bDate) {
+          return 1;
+        }
+        if (aDate && bDate) {
+          return aDate.localeCompare(bDate);
+        }
+      }
+      return -1;
+    };
+
+    Promise.all([registration, otherRecords])
+      .then(([regs, others]) => setRecords(regs.concat(others).sort(recordComparator)))
       .catch(console.warn);
   }, [user.address, web3.eth, ArtifactRegistry, tokenId]);
 
