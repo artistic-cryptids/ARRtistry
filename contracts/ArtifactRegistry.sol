@@ -36,7 +36,9 @@ contract ArtifactRegistry is IArtifactRegistry, Ownable, ERC721Full, ERC721Appro
   }
 
   function mint(address who, Artifact memory _artifact) public returns (uint256) {
-    require(msg.sender == owner(), "ArtifactRegistry::mint: Not minted by the owner");
+    // TODO: Require artist info at metaUri to be the approved artist minting this artifact
+    require(msg.sender == owner() || (governance.isApprovedArtist(who) && msg.sender == who && msg.sender == _artifact.artist),
+      "ArtifactRegistry::mint: Not minted by the owner or approved artist");
 
     _tokenId.increment();
     uint256 newTokenId = _tokenId.current();

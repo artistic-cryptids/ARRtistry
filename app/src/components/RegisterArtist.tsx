@@ -111,6 +111,16 @@ const RegisterArtist: React.FC = () => {
         gasLimit: 6000000,
       },
     ).catch(console.log);
+
+    // Approve any artist registered by DACS
+    await Governance.methods.approveArtist(
+      fields.wallet,
+    ).send(
+      {
+        from: accounts[0],
+        gasLimit: 6000000,
+      },
+    ).catch(console.log);
     setSubmitted(false);
   };
 

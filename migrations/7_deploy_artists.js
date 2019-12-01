@@ -13,13 +13,21 @@ module.exports = async (deployer, network, accounts) => {
 
   // Some prefiled in files with artist infos
   await artists.addArtist('https://ipfs.globalupload.io/QmcSJUtkFPad6DvsM7TQMF2GP9mnCg1heshGEMPk9rmURb');
+  await governance.approveArtist('0xEF1728245cBB4E908a72f92AC2074175609fA6c9');
   await artists.addArtist('https://ipfs.globalupload.io/QmdBkQ31t6MBKZAFAq56mbQf3bb1qdjdssqjVVNXZK5SJv');
+  await governance.approveArtist('0xcdaE5bE724930fffDAE6E30B9067f063483B6F08');
   await artists.addArtist('https://ipfs.globalupload.io/QmRT1LTLJKQpd5xDYUXCdpXos5x1Wj2tFQLgBsXU6BkyQV');
+  await governance.approveArtist('0xb0f11dac7DE16b4f84E6c0471709bD34f8C9542D');
   await artists.addArtist('https://ipfs.globalupload.io/QmcFDXonNo9LqJR1wBFWWPN2HUKeoQ5YNDmKo5pY3xWgu1');
+  await governance.approveArtist('0xD8Af8Ae9252c66E71c3e30f32E5bAB9a33A3e146');
   await artists.addArtist('https://ipfs.globalupload.io/Qmd5Hd5G4tM28ErZr1VvdgV7oYebyavZ5jCn593JwWhuud');
+  await governance.approveArtist('0x95931D65b9Ec9fD12f41c15B2a5E669d92E72d31');
   await artists.addArtist('https://ipfs.globalupload.io/Qmb2vvBVvGaXoqYEECYmyKbxpCgSbFVAPy6kCPrRCdLRPK');
+  await governance.approveArtist('0xD1a018dff3c06a6717AadC5A09B4f90ff5B8Ce5d');
   await artists.addArtist('https://ipfs.globalupload.io/QmXiWt1yjfmLDLAHUNyoFNiPf3BfpXWqUWR2iawE9Mrsds');
+  await governance.approveArtist('0x315E6D0445101ff912677797F5D301Daf22DB54d');
   await artists.addArtist('https://ipfs.globalupload.io/QmUtqRy5FUokety8mpTivmhFqZ8D5ZRd9FFhp63qZKN5uv');
+  await governance.approveArtist('0x54D9dd30D3a407c214680A5Ef4De649a8e59a105');
 
   await newLabel(
     'artists',

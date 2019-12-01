@@ -69,7 +69,7 @@ interface ArtifactMetadata {
 }
 
 const RegisterArtifact: React.FC = () => {
-  const { ArtifactApplication } = useContractContext();
+  const { ArtifactApplication, ArtifactRegistry } = useContractContext();
   const { accounts } = useWeb3Context();
 
   const onSubmit: RegisterOnSubmit = async ({ files, fields }): Promise<void> => {
@@ -91,19 +91,36 @@ const RegisterArtifact: React.FC = () => {
 
     const jsonDataBuffer = Buffer.from(JSON.stringify(jsonData));
     const hash = await saveSingleToIPFSNoCallBack(jsonDataBuffer);
-    await ArtifactApplication.methods.applyFor(
-      currentAccount,
-      artistAddr,
-      IPFS_URL_START + hash,
-    ).send(
-      {
-        from: accounts[0],
-        gasLimit: 6000000,
-      },
-    ).catch((err: any) => {
-      // rejection, usually
-      console.log('register error', err);
-    });
+    if (currentAccount === artistAddr) {
+      // TODO: also check that the artist is approved once this is differentiated
+      // No need for approval by DACS if the artist is approved
+      await ArtifactRegistry.methods.mint(
+        artistAddr,
+        [artistAddr, IPFS_URL_START + hash],
+      ).send(
+        {
+          from: currentAccount,
+          gasLimit: 6000000,
+        },
+      ).catch((err: any) => {
+        // rejection, usually
+        console.log('register error', err);
+      });
+    } else {
+      await ArtifactApplication.methods.applyFor(
+        currentAccount,
+        artistAddr,
+        IPFS_URL_START + hash,
+      ).send(
+        {
+          from: accounts[0],
+          gasLimit: 6000000,
+        },
+      ).catch((err: any) => {
+        // rejection, usually
+        console.log('register error', err);
+      });
+    }
   };
 
   return (
