@@ -18,11 +18,11 @@ contract ArtifactRegistry is IArtifactRegistry, Ownable, ERC721Full, ERC721Appro
 
   event RecordSale(address indexed from, address indexed to, uint256 tokenId, uint price, string location, string date);
 
-  event RecordDamaged(uint256 indexed tokenId, string detailInfo, string indexed date);
-  event RecordRestored(uint256 indexed tokenId, string detailInfo, string indexed date);
-  event RecordStolen(uint256 indexed tokenId, string detailInfo, string indexed date);
-  event RecordRecovered(uint256 indexed tokenId, string detailInfo, string indexed date);
-  event RecordFilm(uint256 indexed tokenId, string detailInfo, string indexed date);
+  event RecordDamaged(uint256 indexed tokenId, string detailInfo, string date);
+  event RecordRestored(uint256 indexed tokenId, string detailInfo, string date);
+  event RecordStolen(uint256 indexed tokenId, string detailInfo, string date);
+  event RecordRecovered(uint256 indexed tokenId, string detailInfo, string date);
+  event RecordFilm(uint256 indexed tokenId, string detailInfo, string date);
 
   using Counters for Counters.Counter;
 

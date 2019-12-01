@@ -6,6 +6,11 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   faEuroSign,
   faFingerprint,
+  faMask,
+  faSearch,
+  faVideo,
+  faFireAlt,
+  faWrench
 } from '@fortawesome/free-solid-svg-icons';
 import { IconProp } from '@fortawesome/fontawesome-svg-core';
 import Form from 'react-bootstrap/Form';
@@ -65,23 +70,23 @@ const BLOCK_HEADINGS: Dictionary<BlockHeading> = {
   },
   'stolen': {
     header: 'Stolen',
-    icon: faEuroSign,
+    icon: faMask,
   },
   'recovered': {
     header: 'Recovered',
-    icon: faEuroSign,
+    icon: faSearch,
   },
   'damaged': {
     header: 'Damaged',
-    icon: faEuroSign,
+    icon: faFireAlt,
   },
   'restored': {
     header: 'Restored',
-    icon: faEuroSign,
+    icon: faWrench,
   },
   'film': {
     header: 'Film',
-    icon: faEuroSign,
+    icon: faVideo,
   },
 };
 
@@ -143,7 +148,12 @@ const ProvenanceTimeline: React.FC<{records: ProvenanceRecord[]}> = ({ records }
               <AddressField label='Artist' address={record.artist}/>
             </Form>
             : null}
-
+          {record.type !== 'mint' && record.type !== 'sale' && record.detail
+            ? <Form>
+              <PlaintextField label='Date' value={record.detail.date} />
+              <PlaintextField label='Detail' value={record.detail.detailInfo} />
+            </Form>
+            : null}
         </TimelineBlock>,
       )}
     </Timeline>
@@ -193,22 +203,12 @@ export const Provenance: React.FC<{tokenId: number}> = ({ tokenId }) => {
       ));
     });
 
-    //console.log(ArtifactRegistry.events.allEvents());
-
-    ArtifactRegistry.getPastEvents('RecordSale', options).then(console.log)
-    //ArtifactRegistry.getPastEvents('RecordDamaged', options).then(console.log)
-    ArtifactRegistry.getPastEvents('allEvents', options).then(console.log);
-
-
-    //ArtifactRegistry.getPastEvents('RecordSale', options).then(console.log);
-
-    /*const otherRecordTypes = ['Stolen', 'Recovered', 'Damaged', 'Restored', 'Film'];
+    const otherRecordTypes = ['Stolen', 'Recovered', 'Damaged', 'Restored', 'Film'];
     const otherRecords: Promise<ProvenanceRecord[]> = Promise.all(otherRecordTypes
       .map(async (type: string): Promise<ProvenanceRecord[]> => {
         const pastEvents = await ArtifactRegistry.getPastEvents('Record' + type, options);
         const tokenRelevantEvents = pastEvents.filter((event: any) =>
           event.returnValues.tokenId === tokenId.toString());
-
         const resultRecords: ProvenanceRecord[] = [];
         for (const event of tokenRelevantEvents) {
           const timestamp = await web3.eth.getBlock(event.blockNumber).then((block) => block.timestamp);
@@ -224,11 +224,15 @@ export const Provenance: React.FC<{tokenId: number}> = ({ tokenId }) => {
         }
         return resultRecords;
       }))
-      .then((listOfLists: any) => listOfLists.flat());*/
+      // list of lists flattened to one big list
+      .then((listOfLists: any) => listOfLists.flat());
 
-    Promise.all([registration, sales])
-      .then(([regs, sales]) => {
-        setRecords(regs.concat(sales)); 
+    Promise.all([registration, sales, otherRecords])
+      .then(([regs, sales, others]) => {
+        console.log('others: ');
+        console.log(others);
+        const completeRecords = regs.concat(sales).concat(others);
+        setRecords(completeRecords); 
       })
       .catch(console.warn);
   }, [user.address, web3.eth, ArtifactRegistry, tokenId]);
