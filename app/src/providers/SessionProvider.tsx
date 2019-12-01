@@ -14,15 +14,10 @@ export const DACS_DEFAULT: User = {
   nickname: 'Anna Doe',
   img: 'https://mdbootstrap.com/img/Photos/Avatars/img%20%2820%29.jpg',
   role: 'DACS',
-  address: '0xDf08F82De32B8d460adbE8D72043E3a7e25A3B39',
-  name: 'dac.artistry.test',
-};
-
-export const DACS_RINKEBY: User = {
-  nickname: 'Anna Doe',
-  img: 'https://mdbootstrap.com/img/Photos/Avatars/img%20%2820%29.jpg',
-  role: 'DACS',
-  address: '0x594cd738A5e99134De9DE21f253eD1Be4eb27F3e',
+  address: [
+    '0xDf08F82De32B8d460adbE8D72043E3a7e25A3B39',
+    '0x594cd738A5e99134De9DE21f253eD1Be4eb27F3e',
+  ],
   name: 'dac.artistry.test',
 };
 
@@ -30,7 +25,11 @@ export const DEAL_DEFAULT: User = {
   nickname: 'Gallery',
   img: 'https://www.cavan-arts.com/uploads/1/2/2/7/122790076/img-4071_orig.jpg',
   role: 'DEAL',
-  address: '0xdE164a54b441808DA5C448D85Ba2F0F6e271CC36',
+  address: [
+    '0xdE164a54b441808DA5C448D85Ba2F0F6e271CC36',
+    '0x97A3FC5Ee46852C1Cf92A97B7BaD42F2622267cC',
+    '0xce42bdB34189a93c55De250E011c68FaeE374Dd3',
+  ],
   name: 'gallery.artistry.test',
 };
 
@@ -38,7 +37,7 @@ export const NATASHA: User = {
   nickname: 'Natasha',
   img: 'https://mdbootstrap.com/img/Photos/Avatars/img%20(17).jpg',
   role: 'ARTIST',
-  address: '0xc70eAc1d854E51FaFC7a487086624E79cEE6e843',
+  address: ['0xc70eAc1d854E51FaFC7a487086624E79cEE6e843'],
   name: 'natasha.artistry.test',
 };
 
@@ -46,7 +45,7 @@ export const BUYER_DEFAULT: User = {
   nickname: 'Buyer',
   img: 'https://mdbootstrap.com/img/Photos/Avatars/img%20(9).jpg',
   role: 'COLLECTOR',
-  address: '0x1bf078753937FB3e569C4c9724654d10cc8A7Fd7',
+  address: ['0x1bf078753937FB3e569C4c9724654d10cc8A7Fd7'],
   name: 'buyer.artistry.test',
 };
 
@@ -54,7 +53,7 @@ export interface User {
   img: string;
   nickname: string;
   role: string;
-  address?: string;
+  address?: string[];
   name: string;
 }
 
@@ -74,18 +73,18 @@ export const SessionProvider: React.FC = ({ children }) => {
   const [user, setUser] = React.useState<User>(defaultUser);
   const [gotUser, setGotUser] = React.useState<boolean>(false);
 
-  const users = [DACS_DEFAULT, DACS_RINKEBY, DEAL_DEFAULT, NATASHA, BUYER_DEFAULT];
+  const users = [DACS_DEFAULT, DEAL_DEFAULT, NATASHA, BUYER_DEFAULT];
 
   React.useEffect(() => {
     let curUser: User = defaultUser;
     for (const user of users) {
-      if (user.address === address) {
+      if (user.address && user.address.includes(address)) {
         curUser = user;
         break;
       }
     }
 
-    curUser.address = address;
+    curUser.address = [address];
 
     setUser(curUser);
 
