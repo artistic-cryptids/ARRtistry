@@ -1,6 +1,7 @@
 import * as React from 'react';
 import Button from 'react-bootstrap/Button';
 import Col from 'react-bootstrap/Col';
+import Row from 'react-bootstrap/Row';
 import Form from 'react-bootstrap/Form';
 import Modal from 'react-bootstrap/Modal';
 import { useNameServiceContext } from '../providers/NameServiceProvider';
@@ -14,6 +15,12 @@ interface ConsignArtifactProps {
 
 interface ConsignArtifactFormFields {
   recipientName: string;
+  commission: string;
+}
+
+interface ConsignmentInfo {
+  account: string;
+  commission: string;
 }
 
 type InputChangeEvent = React.FormEvent<any> &
@@ -25,45 +32,114 @@ type InputChangeEvent = React.FormEvent<any> &
   }
 
 const GENERIC_FEEDBACK = <Form.Control.Feedback>Looks good!</Form.Control.Feedback>;
-const ZERO_ADDR = '0x0000000000000000000000000000000000000000';
+// const ZERO_ADDR = '0x0000000000000000000000000000000000000000';
 
 const ConsignArtifact: React.FC<ConsignArtifactProps> = ({ tokenId }) => {
   const [fields, setFields] = React.useState<ConsignArtifactFormFields>({
     recipientName: '',
+    commission: '',
   });
-  const [consignedAccount, setConsignedAccount] = React.useState<string>('');
+  const [consigned, setConsigned] = React.useState<ConsignmentInfo[]>([]);
+  const [indirectConsigned, setIndirectConsigned] = React.useState<string[]>([]);
   const [showConsignment, setShowConsignment] = React.useState<boolean>(false);
 
   const { addressFromName } = useNameServiceContext();
-  const { ArtifactRegistry } = useContractContext();
+  const { Consignment, ArtifactRegistry } = useContractContext();
   const { accounts } = useWeb3Context();
 
   React.useEffect(() => {
-    ArtifactRegistry.methods.getApproved(tokenId)
-      .call({ from: accounts[0] })
-      .then((account: string) => setConsignedAccount(account))
-      .catch(console.log);
-  }, [accounts, tokenId, ArtifactRegistry]);
+    const getIndirectAccounts = async (account: string): Promise<string[]> => {
+      console.log('getting indirect for ' + account);
+      const addresses = await Consignment.methods.getConsignmentAddresses(tokenId, account)
+        .call({
+          from: accounts[0],
+        });
 
-  const consign = (address: string): void => {
-    ArtifactRegistry.methods.approve(
-      address,
-      tokenId,
-    ).send(
-      {
+      let indirect = addresses;
+
+      for (const address of addresses) {
+        indirect = indirect.concat(await getIndirectAccounts(address));
+      }
+
+      return indirect;
+    };
+
+    const setConsignedInfo = async (): Promise<void> => {
+      const consignedAccounts = await Consignment.methods.getConsignmentAddresses(tokenId, accounts[0])
+        .call({
+          from: accounts[0],
+        });
+
+      const info = [];
+      let indirect: string[] = [];
+
+      for (const consignedAccount of consignedAccounts) {
+        const commission = await Consignment.methods.getConsignmentInfo(tokenId, accounts[0], consignedAccount)
+          .call({
+            from: accounts[0],
+          });
+
+        indirect = indirect.concat(await getIndirectAccounts(consignedAccount));
+
+        info.push({
+          account: consignedAccount,
+          commission: commission,
+        });
+      }
+
+      setConsigned(info);
+      setIndirectConsigned(indirect);
+    };
+
+    setConsignedInfo();
+  }, [Consignment, accounts, tokenId]);
+
+  const consign = async (address: string, commission: string): Promise<void> => {
+    const approved = await ArtifactRegistry.methods.getApproved(tokenId)
+      .call({
         from: accounts[0],
-        gasLimit: 6000000,
-      },
-    );
+      });
+
+    // If the consignment contract is not approved we need to approve
+    // the contract and call the appropriate consignment functions.
+    if (approved === Consignment._address) {
+      await Consignment.methods.consign(
+        tokenId,
+        address,
+        commission,
+      ).send(
+        {
+          from: accounts[0],
+          gasLimit: 6000000,
+        },
+      );
+    } else {
+      await ArtifactRegistry.methods.initConsign(
+        tokenId,
+        address,
+        commission,
+      ).send(
+        {
+          from: accounts[0],
+          gasLimit: 6000000,
+        },
+      );
+    }
   };
 
   const consignArtifactForArtwork = async (): Promise<void> => {
     const recipientAddress = await addressFromName(fields.recipientName);
-    consign(recipientAddress);
+    await consign(recipientAddress, fields.commission);
   };
 
-  const revokeConsignment = (_: React.FormEvent): void => {
-    consign(ZERO_ADDR);
+  const revokeConsignment = async (address: string): Promise<void> => {
+    await Consignment.methods.revoke(tokenId, address)
+      .send(
+        {
+          from: accounts[0],
+          gasLimit: 6000000,
+        },
+      );
   };
 
   const inputChangeHandler = (event: InputChangeEvent): void => {
@@ -84,8 +160,31 @@ const ConsignArtifact: React.FC<ConsignArtifactProps> = ({ tokenId }) => {
     setShowConsignment(false);
     setFields({
       recipientName: '',
+      commission: '',
     });
   };
+
+  const directInfo = consigned.map((info) => {
+    return <>
+      <Row key={info.account}>
+        <ENSName address={info.account}/>
+        <p>: Commission: {info.commission}%</p>
+      </Row>
+      <Row>
+        <Button variant="danger" size="sm" onClick={() => revokeConsignment(info.account)}>
+          Revoke
+        </Button>
+      </Row>
+      <hr/>
+    </>;
+  });
+
+  const indirectInfo = indirectConsigned.map((account) => {
+    return <Row key={account}>
+      <ENSName address={account}/>
+      <br/>
+    </Row>;
+  });
 
   return (
     <>
@@ -97,11 +196,22 @@ const ConsignArtifact: React.FC<ConsignArtifactProps> = ({ tokenId }) => {
           <Modal.Title>Consignment</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          {consignedAccount !== ZERO_ADDR
-            ? <React.Fragment><p>Consigned to <ENSName address={consignedAccount}/> <br/>
-            You may still register a sale yourself, but doing so will revoke consignment.
-            </p><hr/></React.Fragment>
-            : null}
+          {consigned.length !== 0 &&
+            <React.Fragment>
+              <p>Directly Consigned to:</p>
+              <Col>
+                {directInfo}
+              </Col>
+              <hr/>
+            </React.Fragment>}
+          {indirectConsigned.length !== 0 &&
+            <React.Fragment>
+              <p>Indirectly Consigned to:</p>
+              <Col>
+                {indirectInfo}
+              </Col>
+              <hr/>
+            </React.Fragment>}
           <p>Consign Account to Sell</p>
           <Form.Group as={Col} controlId="recipientName">
             <Form.Label>Recipient Name</Form.Label>
@@ -109,6 +219,15 @@ const ConsignArtifact: React.FC<ConsignArtifactProps> = ({ tokenId }) => {
               required
               type="text"
               placeholder="example.artistry.test"
+              onChange={inputChangeHandler}/>
+            {GENERIC_FEEDBACK}
+          </Form.Group>
+          <Form.Group as={Col} controlId="commission">
+            <Form.Label>Commission (%)</Form.Label>
+            <Form.Control
+              required
+              type="text"
+              placeholder="30"
               onChange={inputChangeHandler}/>
             {GENERIC_FEEDBACK}
           </Form.Group>
@@ -120,9 +239,6 @@ const ConsignArtifact: React.FC<ConsignArtifactProps> = ({ tokenId }) => {
           <Button variant="primary" onClick={() => consignArtifactForArtwork()}>
             Consign for Sale
           </Button>
-          {consignedAccount !== ZERO_ADDR
-            ? <Button variant="primary" onClick={revokeConsignment}>Revoke Consignment</Button>
-            : null}
         </Modal.Footer>
       </Modal>
     </>

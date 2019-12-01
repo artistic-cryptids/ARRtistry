@@ -14,14 +14,14 @@ const ClientArtifacts: React.FC = () => {
   const [numClientArtifacts, setNumClientArtifacts] = React.useState<number>();
   const [tokenIds, setTokenIds] = React.useState<number[]>();
 
-  const { ArtifactRegistry } = useContractContext();
+  const { Consignment } = useContractContext();
   const { accounts } = useWeb3Context();
 
   React.useEffect(() => {
-    const currentAccount = accounts[0];
-
-    ArtifactRegistry.methods.getOperatorTokenIds(currentAccount)
-      .call()
+    Consignment.methods.consignedTokenIds()
+      .call({
+        from: accounts[0],
+      })
       .then((tokenIdObjects: any) => {
         const tokenIds: number[] = [];
         tokenIdObjects.map((tid: any) => tokenIds.push(tid));
@@ -31,7 +31,7 @@ const ClientArtifacts: React.FC = () => {
         }
       })
       .catch(console.log);
-  }, [ArtifactRegistry, accounts, numClientArtifacts]);
+  }, [Consignment, accounts, numClientArtifacts]);
 
   if (!numClientArtifacts) {
     return (
@@ -48,6 +48,7 @@ const ClientArtifacts: React.FC = () => {
   const listItems = tokenIds.map((tokenId: number) =>
     <ArtworkItem
       tokenId={tokenId}
+      ownedArtifact={true}
       key={tokenId}
     />,
   );
