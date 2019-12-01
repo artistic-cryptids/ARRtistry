@@ -184,26 +184,7 @@ export const Provenance: React.FC<{tokenId: number}> = ({ tokenId }) => {
       )
       .then((records: ProvenanceRecord[]) => Promise.all(records));
 
-    const sales = ArtifactRegistry.getPastEvents('RecordSale', options).then(async function (events: EventData[]) {
-      const tokenRelevantEvents = events.filter(event => event.returnValues.tokenId === tokenId.toString());
-      return Promise.all(tokenRelevantEvents.map(async (event) => {
-        const timestamp = await web3.eth.getBlock(event.blockNumber).then((block) => block.timestamp);
-        return {
-          type: 'sale',
-          txDate: moment.unix(Number(timestamp)),
-          sale: {
-            seller: event.returnValues.from,
-            price: event.returnValues.price,
-            buyer: event.returnValues.to,
-            location: event.returnValues.location,
-            date: event.returnValues.date,
-          },
-        };
-      },
-      ));
-    });
-
-    const otherRecordTypes = ['Stolen', 'Recovered', 'Damaged', 'Restored', 'Film'];
+    const otherRecordTypes = ['Sale', 'Stolen', 'Recovered', 'Damaged', 'Restored', 'Film'];
     const otherRecords: Promise<ProvenanceRecord[]> = Promise.all(otherRecordTypes
       .map(async (type: string): Promise<ProvenanceRecord[]> => {
         const pastEvents = await ArtifactRegistry.getPastEvents('Record' + type, options);
@@ -212,28 +193,75 @@ export const Provenance: React.FC<{tokenId: number}> = ({ tokenId }) => {
         const resultRecords: ProvenanceRecord[] = [];
         for (const event of tokenRelevantEvents) {
           const timestamp = await web3.eth.getBlock(event.blockNumber).then((block) => block.timestamp);
-          const provRec = {
-            type: type.toLowerCase(),
-            txDate: moment.unix(Number(timestamp)),
-            detail: {
-              detailInfo: event.returnValues.detailInfo,
-              date: event.returnValues.date,
-            },
-          };
-          resultRecords.push(provRec);
+          const typeLowerCase = type.toLowerCase();
+          const timestampMoment = moment.unix(Number(timestamp));
+          resultRecords.push(typeLowerCase === 'sale'
+            ? {
+              type: typeLowerCase,
+              txDate: timestampMoment,
+              sale: {
+                seller: event.returnValues.from,
+                price: event.returnValues.price,
+                buyer: event.returnValues.to,
+                location: event.returnValues.location,
+                date: event.returnValues.date,
+              },
+            }
+            : {
+              type: typeLowerCase,
+              txDate: timestampMoment,
+              detail: {
+                detailInfo: event.returnValues.detailInfo,
+                date: event.returnValues.date,
+              },
+            });
         }
         return resultRecords;
       }))
       // list of lists flattened to one big list
       .then((listOfLists: any) => listOfLists.flat());
 
-    Promise.all([registration, sales, otherRecords])
-      .then(([regs, sales, others]) => {
-        console.log('others: ');
-        console.log(others);
-        const completeRecords = regs.concat(sales).concat(others);
-        setRecords(completeRecords);
-      })
+    const recordComparator = (a: ProvenanceRecord, b: ProvenanceRecord): number => {
+      if (a.artist && b.artist) {
+        return 0;
+      }
+      if (a.artist && !b.artist) {
+        return -1;
+      }
+      if (!a.artist && b.artist) {
+        return 1;
+      }
+      if (!a.artist && !b.artist) {
+        let aDate: string | null = null;
+        let bDate: string | null = null;
+        if (a.detail) {
+          aDate = a.detail.date;
+        } else if (a.sale) {
+          aDate = a.sale.date;
+        }
+        if (b.detail) {
+          bDate = b.detail.date;
+        } else if (b.sale) {
+          bDate = b.sale.date;
+        }
+        if (!aDate && !bDate) {
+          return 0;
+        }
+        if (aDate && !bDate) {
+          return -1;
+        }
+        if (!aDate && bDate) {
+          return 1;
+        }
+        if (aDate && bDate) {
+          return aDate.localeCompare(bDate);
+        }
+      }
+      return -1;
+    };
+
+    Promise.all([registration, otherRecords])
+      .then(([regs, others]) => setRecords(regs.concat(others).sort(recordComparator)))
       .catch(console.warn);
   }, [user.address, web3.eth, ArtifactRegistry, tokenId]);
 
