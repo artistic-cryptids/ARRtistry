@@ -7,6 +7,7 @@ import "@openzeppelin/contracts/drafts/Counters.sol";
 
 import { IArtifactRegistry } from "./interfaces/IArtifactRegistry.sol";
 import { IGovernance } from "./interfaces/IGovernance.sol";
+import { Consignment } from "./Consignment.sol";
 import { ERC721ApprovalEnumerable } from "./ERC721ApprovalEnumerable.sol";
 
 /**
@@ -26,6 +27,7 @@ contract ArtifactRegistry is IArtifactRegistry, Ownable, ERC721Full, ERC721Appro
   using Counters for Counters.Counter;
 
   IGovernance public governance;
+  Consignment public consignment;
 
   Counters.Counter public _tokenId;
   mapping (uint256 => Artifact) public artifacts;
@@ -35,8 +37,14 @@ contract ArtifactRegistry is IArtifactRegistry, Ownable, ERC721Full, ERC721Appro
     governance = _governance;
   }
 
+  function setConsignment(Consignment _consignment) public {
+    consignment = _consignment;
+  }
+
   function mint(address who, Artifact memory _artifact) public returns (uint256) {
-    require(msg.sender == owner(), "ArtifactRegistry::mint: Not minted by the owner");
+    // TODO: Require artist info at metaUri to be the approved artist minting this artifact
+    require(msg.sender == owner() || (governance.isApprovedArtist(who) && msg.sender == who && msg.sender == _artifact.artist),
+      "ArtifactRegistry::mint: Not minted by the owner or approved artist");
 
     _tokenId.increment();
     uint256 newTokenId = _tokenId.current();
@@ -47,6 +55,12 @@ contract ArtifactRegistry is IArtifactRegistry, Ownable, ERC721Full, ERC721Appro
     _setTokenURI(newTokenId, _artifact.metaUri);
 
     return newTokenId;
+  }
+
+  function initConsign(uint256 tokenId, address who, uint8 commission) public {
+    approve(address(consignment), tokenId);
+
+    consignment.consign(tokenId, who, commission);
   }
 
   function getArtifactForToken(uint256 tokenId) public view returns (address, string memory) {

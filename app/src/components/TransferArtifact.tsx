@@ -54,7 +54,7 @@ const TransferArtifact: React.FC<TransferArtifactProps> = ({ tokenId, metaUri })
   const [submitted, setSubmitted] = React.useState<boolean>(false);
 
   const { addressFromName } = useNameServiceContext();
-  const { ArtifactRegistry } = useContractContext();
+  const { ArtifactRegistry, Consignment } = useContractContext();
   const { accounts } = useWeb3Context();
 
   const saveMetaData = (jsonData: string): Promise<string> => {
@@ -100,6 +100,11 @@ const TransferArtifact: React.FC<TransferArtifactProps> = ({ tokenId, metaUri })
 
     const eventOptions = { fromBlock: 0 };
 
+    const approved = await ArtifactRegistry.methods.getApproved(tokenId)
+      .call({
+        from: accounts[0],
+      });
+
     ArtifactRegistry.getPastEvents('RecordSale', eventOptions)
       .then((events: EventData[]) => {
         return events.filter(event => event.returnValues.tokenId === tokenId.toString());
@@ -107,7 +112,10 @@ const TransferArtifact: React.FC<TransferArtifactProps> = ({ tokenId, metaUri })
         // only take ARR in country that takes it, and if no sales with this token have occurred
         // no sales → user is the one who registered it → they're the artist, or a gallery representing them
         const takesArr = ARR_LOCATIONS.includes(fields.location) && relevantEvents.length > 0;
-        return ArtifactRegistry.methods.transfer(
+
+        const contract = approved === Consignment._address ? Consignment : ArtifactRegistry;
+
+        return contract.methods.transfer(
           owner,
           recipientAddress,
           tokenId,
