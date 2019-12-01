@@ -101,7 +101,7 @@ contract Consignment {
       ConsignmentInfo storage info = consignmentInfos[i];
       if (info.valid && info.consigner == who) {
         info.valid = false;
-        revokeHelper(tokenId, info.consignee);
+        revokeChildren(tokenId, info.consignee);
       }
 
       uint256[] memory consignedTokens = consigned[who];
