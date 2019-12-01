@@ -91,10 +91,10 @@ contract Consignment {
       }
     }
 
-    revokeHelper(tokenId, who);
+    revokeChildren(tokenId, who);
   }
 
-  function revokeHelper(uint256 tokenId, address who) private {
+  function revokeChildren(uint256 tokenId, address who) private {
     ConsignmentInfo[] storage consignmentInfos = consignments[tokenId];
 
     for (uint i = 0; i < consignmentInfos.length; i++) {
