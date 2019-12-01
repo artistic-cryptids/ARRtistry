@@ -13,6 +13,11 @@ const ArtifactRegistryMock = artifacts.require('./ArtifactRegistryMock.sol');
 contract('ArtifactRegistry', async accounts => {
   const creator = accounts[0];
   const tokenOwner = accounts[1];
+  const approvedArtist = accounts[2];
+  const artifactCreatedByApprovedArtist = {
+    artist: approvedArtist,
+    metaUri: 'https://ipfs.globalupload.io/QmdXUTHyWMFg55t215tCnRWLCh5VnEwuVEEeG3i9DuyAwm',
+  };
   const TOKEN_ID = 1;
 
   let governance;
@@ -27,15 +32,30 @@ contract('ArtifactRegistry', async accounts => {
 
   let registry;
 
-  before(async () => {
-    governance = await Governance.new({ from: creator });
-    registry = await ArtifactRegistry.new(creator, governance.address, { from: creator });
-  });
-
   describe('mint', async () => {
-    it('should not allow anyone but owner to mint tokens', async () => {
+    before(async () => {
+      governance = await Governance.new({ from: creator });
+      registry = await ArtifactRegistry.new(creator, governance.address, { from: creator });
+      await governance.approveArtist(approvedArtist, { from: creator });
+    });
+
+    it('should not allow anyone but owner or approved artists to mint tokens', async () => {
       await expectRevert(
         registry.mint(tokenOwner, ARTIFACT, { from: tokenOwner }),
+        'ArtifactRegistry::mint: Not minted by the owner',
+      );
+    });
+
+    it('should not allow approved artists to mint artifacts they have not created', async () => {
+      await expectRevert(
+        registry.mint(approvedArtist, ARTIFACT, { from: approvedArtist }),
+        'ArtifactRegistry::mint: Not minted by the owner',
+      );
+    });
+
+    it('should not allow approved artists to mint artifacts to accounts other than themselves', async () => {
+      await expectRevert(
+        registry.mint(tokenOwner, artifactCreatedByApprovedArtist, { from: approvedArtist }),
         'ArtifactRegistry::mint: Not minted by the owner',
       );
     });
@@ -60,10 +80,15 @@ contract('ArtifactRegistry', async accounts => {
     it('should set the token metauri', async () => {
       expect(await registry.tokenURI.call(TOKEN_ID)).to.be.equal(ARTIFACT.metaUri);
     });
+
+    it('should allow approved artists to mint artifacts they have created to themselves', async () => {
+      await registry.mint(approvedArtist, artifactCreatedByApprovedArtist, { from: approvedArtist });
+    });
   });
 
   describe('getArtifact', async () => {
     before(async () => {
+      registry = await ArtifactRegistry.new(creator, governance.address, { from: creator });
       await registry.mint(tokenOwner, ARTIFACT, { from: creator });
     });
 
@@ -80,6 +105,7 @@ contract('ArtifactRegistry', async accounts => {
     const date = '2019-11-11';
 
     before(async () => {
+      registry = await ArtifactRegistry.new(creator, governance.address, { from: creator });
       await registry.mint(tokenOwner, ARTIFACT, { from: creator });
     });
 
@@ -96,6 +122,10 @@ contract('ArtifactRegistry', async accounts => {
   describe('getTokenIdsOfOwner', async () => {
     const accountStartingWithNoTokens = accounts[2];
 
+    before(async () => {
+      registry = await ArtifactRegistry.new(creator, governance.address, { from: creator });
+    });
+
     it('should retrieve no token ids if no artifacts minted', async () => {
       const tokenIds = await registry.getTokenIdsOfOwner(accountStartingWithNoTokens);
       expect(tokenIds).to.eql([]);
@@ -105,7 +135,7 @@ contract('ArtifactRegistry', async accounts => {
       await registry.mint(accountStartingWithNoTokens, ARTIFACT, { from: creator });
       await registry.mint(accountStartingWithNoTokens, ARTIFACT, { from: creator });
       const tokenIds = await registry.getTokenIdsOfOwner(accountStartingWithNoTokens);
-      expect(tokenIds).to.eql([toBN(4), toBN(5)]);
+      expect(tokenIds).to.eql([toBN(1), toBN(2)]);
     });
   });
 }); // end Registry contract

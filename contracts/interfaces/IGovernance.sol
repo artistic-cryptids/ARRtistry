@@ -31,4 +31,8 @@ contract IGovernance {
   function getARRLength() public view returns (uint);
   function pushARR(ARR memory arr) public returns (uint256);
   function getARR(uint arrId) public view returns (ARR memory);
+
+  function isApprovedArtist(address _artist) public view returns (bool);
+  function approveArtist(address _artist) public;
+
 }
