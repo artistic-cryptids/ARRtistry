@@ -1,4 +1,4 @@
-const { expectRevert } = require('@openzeppelin/test-helpers');
+const { expectEvent, expectRevert } = require('@openzeppelin/test-helpers');
 const { ARTIFACT, artifactEquality } = require('./constants/artifact');
 const { expect } = require('chai');
 const { toBN } = web3.utils;
@@ -136,6 +136,68 @@ contract('ArtifactRegistry', async accounts => {
       await registry.mint(accountStartingWithNoTokens, ARTIFACT, { from: creator });
       const tokenIds = await registry.getTokenIdsOfOwner(accountStartingWithNoTokens);
       expect(tokenIds).to.eql([toBN(1), toBN(2)]);
+    });
+  });
+
+  describe('provenance events', async () => {
+    const info = 'infonfkjd';
+    const date = '2019-11-11';
+    let logs = null;
+    let result = null;
+
+    before(async () => {
+      registry = await ArtifactRegistry.new(creator, governance.address, { from: creator });
+      await registry.mint(tokenOwner, ARTIFACT, { from: creator });
+    });
+
+    it('emits a stolen event', async function () {
+      result = await registry.pieceStolen(TOKEN_ID, info, date, { from: tokenOwner });
+      logs = result.logs;
+      expectEvent.inLogs(logs, 'RecordStolen', {
+        tokenId: toBN(TOKEN_ID),
+        detailInfo: info,
+        date: date,
+      });
+    });
+
+    it('emits a recovered event', async function () {
+      result = await registry.pieceRecovered(TOKEN_ID, info, date, { from: tokenOwner });
+      logs = result.logs;
+      expectEvent.inLogs(logs, 'RecordRecovered', {
+        tokenId: toBN(TOKEN_ID),
+        detailInfo: info,
+        date: date,
+      });
+    });
+
+    it('emits a damaged event', async function () {
+      result = await registry.pieceDamaged(TOKEN_ID, info, date, { from: tokenOwner });
+      logs = result.logs;
+      expectEvent.inLogs(logs, 'RecordDamaged', {
+        tokenId: toBN(TOKEN_ID),
+        detailInfo: info,
+        date: date,
+      });
+    });
+
+    it('emits a restored event', async function () {
+      result = await registry.pieceRestored(TOKEN_ID, info, date, { from: tokenOwner });
+      logs = result.logs;
+      expectEvent.inLogs(logs, 'RecordRestored', {
+        tokenId: toBN(TOKEN_ID),
+        detailInfo: info,
+        date: date,
+      });
+    });
+
+    it('emits a film event', async function () {
+      result = await registry.pieceFilm(TOKEN_ID, info, date, { from: tokenOwner });
+      logs = result.logs;
+      expectEvent.inLogs(logs, 'RecordFilm', {
+        tokenId: toBN(TOKEN_ID),
+        detailInfo: info,
+        date: date,
+      });
     });
   });
 }); // end Registry contract

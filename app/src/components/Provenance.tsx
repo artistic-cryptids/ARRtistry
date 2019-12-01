@@ -134,26 +134,23 @@ const ProvenanceTimeline: React.FC<{records: ProvenanceRecord[]}> = ({ records }
     <Timeline>
       {records.map((record: ProvenanceRecord, index: number) =>
         <TimelineBlock type={record.type} subheader={record.txDate.fromNow()} key={index}>
-          {record.type === 'sale' && record.sale
-            ? <Form>
+          {record.type === 'sale' && record.sale &&
+            <Form>
               <PlaintextField label='Date' value={record.sale.date} />
               <AddressField label='Buyer' address={record.sale.buyer}/>
               <AddressField label='Seller' address={record.sale.seller}/>
               <PlaintextField label='Sale Location' value={record.sale.location} />
               <PlaintextField label='Sale Price' value={'€' + (record.sale.price / 100).toString()} />
-            </Form>
-            : null}
-          {record.type === 'mint' && record.artist
-            ? <Form>
+            </Form>}
+          {record.type === 'mint' && record.artist &&
+            <Form>
               <AddressField label='Artist' address={record.artist}/>
-            </Form>
-            : null}
-          {record.type !== 'mint' && record.type !== 'sale' && record.detail
-            ? <Form>
+            </Form>}
+          {record.type !== 'mint' && record.type !== 'sale' && record.detail &&
+            <Form>
               <PlaintextField label='Date' value={record.detail.date} />
               <PlaintextField label='Detail' value={record.detail.detailInfo} />
-            </Form>
-            : null}
+            </Form>}
         </TimelineBlock>,
       )}
     </Timeline>
