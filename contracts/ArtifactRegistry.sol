@@ -18,6 +18,12 @@ contract ArtifactRegistry is IArtifactRegistry, Ownable, ERC721Full, ERC721Appro
 
   event RecordSale(address indexed from, address indexed to, uint256 tokenId, uint price, string location, string date);
 
+  event RecordDamaged(uint256 indexed tokenId, string detailInfo, string date);
+  event RecordRestored(uint256 indexed tokenId, string detailInfo, string date);
+  event RecordStolen(uint256 indexed tokenId, string detailInfo, string date);
+  event RecordRecovered(uint256 indexed tokenId, string detailInfo, string date);
+  event RecordFilm(uint256 indexed tokenId, string detailInfo, string date);
+
   using Counters for Counters.Counter;
 
   IGovernance public governance;
@@ -61,6 +67,26 @@ contract ArtifactRegistry is IArtifactRegistry, Ownable, ERC721Full, ERC721Appro
     Artifact memory artwork = artifacts[tokenId];
 
     return (artwork.artist, artwork.metaUri);
+  }
+
+  function pieceDamaged(uint256 tokenId, string memory info, string memory date) public {
+    emit RecordDamaged(tokenId, info, date);
+  }
+
+  function pieceRestored(uint256 tokenId, string memory info, string memory date) public {
+    emit RecordRestored(tokenId, info, date);
+  }
+
+  function pieceStolen(uint256 tokenId, string memory info, string memory date) public {
+    emit RecordStolen(tokenId, info, date);
+  }
+
+  function pieceRecovered(uint256 tokenId, string memory info, string memory date) public {
+    emit RecordRecovered(tokenId, info, date);
+  }
+
+  function pieceFilm(uint256 tokenId, string memory info, string memory date) public {
+    emit RecordFilm(tokenId, info, date);
   }
 
   function transfer(address who, address recipient, uint256 tokenId, string memory metaUri, uint price, string memory location, string memory date, bool arr) public {
