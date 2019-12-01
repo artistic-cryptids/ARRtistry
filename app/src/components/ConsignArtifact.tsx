@@ -196,16 +196,16 @@ const ConsignArtifact: React.FC<ConsignArtifactProps> = ({ tokenId }) => {
           <Modal.Title>Consignment</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          {consigned.length !== 0
-            && <React.Fragment>
+          {consigned.length !== 0 &&
+            <React.Fragment>
               <p>Directly Consigned to:</p>
               <Col>
                 {directInfo}
               </Col>
               <hr/>
             </React.Fragment>}
-          {indirectConsigned.length !== 0
-            && <React.Fragment>
+          {indirectConsigned.length !== 0 &&
+            <React.Fragment>
               <p>Indirectly Consigned to:</p>
               <Col>
                 {indirectInfo}
