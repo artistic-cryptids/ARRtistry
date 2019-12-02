@@ -105,9 +105,9 @@ const ArtworkCard: React.FC<ArtworkCardProps> = ({
             </ButtonGroup>
           </div>
           : <Card.Text>
-            {fields
-              && fields.documents 
-              && fields.documents.length > 0 &&
+            {fields &&
+              fields.documents &&
+              fields.documents.length > 0 &&
               <>
                 <h5>Documents</h5>
                 <hr/>

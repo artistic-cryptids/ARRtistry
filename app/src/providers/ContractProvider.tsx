@@ -44,8 +44,8 @@ export const ContractProvider: React.FC = ({ children }) => {
       const eurs = new web3.eth.Contract(ERC20Eurs.abi as AbiItem[], eursAddr);
 
       console.log('Contracts provided:', {
-        governance: governanceAddr, 
-        application: applicationAddr, 
+        governance: governanceAddr,
+        application: applicationAddr,
         registry: registryAddr,
         artists: artistsAddr,
         consignment: consignmentAddr,

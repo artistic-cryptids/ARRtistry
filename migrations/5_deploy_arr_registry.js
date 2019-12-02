@@ -2,7 +2,6 @@ const newLabel = require('./helper/LoggedRegistration');
 const { getOwner } = require('./helper/Accounts');
 
 const Governance = artifacts.require('Governance');
-const ArtifactRegistry = artifacts.require('ArtifactRegistry');
 const ARRRegistry = artifacts.require('ARRRegistry');
 const ENSResolver = artifacts.require('ENSResolver');
 

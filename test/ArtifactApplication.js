@@ -1,7 +1,7 @@
-const { toBN } = web3.utils;
+// const { toBN } = web3.utils;
 const { expectRevert } = require('@openzeppelin/test-helpers');
 
-const { ARTIFACT, proposalEquality, ARREquality } = require('./constants/artifact');
+const { ARTIFACT, proposalEquality } = require('./constants/artifact');
 
 const Governance = artifacts.require('./Governance.sol');
 const ArtifactRegistry = artifacts.require('./ArtifactRegistry.sol');

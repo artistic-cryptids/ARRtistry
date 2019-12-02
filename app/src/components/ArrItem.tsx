@@ -39,7 +39,7 @@ const ArrItem: React.FC<ArrItemProps> = ({ id }) => {
         price: arrData.price / 100,
         arr: arrData[4] / 100,
         location: arrData.location,
-        paid: arrData.paid
+        paid: arrData.paid,
       };
       console.log(arrData);
       setArr(arr);
@@ -74,7 +74,11 @@ const ArrItem: React.FC<ArrItemProps> = ({ id }) => {
   return (
     <Card>
       <Card.Body>
-  <Card.Title><span className="text-muted text-capitalize">#{id} {arr.paid ? 'Paid' : 'Outstanding'}</span></Card.Title>
+        <Card.Title>
+          <span className="text-muted text-capitalize">
+            #{id} {arr.paid ? 'Paid' : 'Outstanding'}
+          </span>
+        </Card.Title>
         <Card.Subtitle className="mb-2 text-muted"></Card.Subtitle>
         <Form>
           <PlaintextField label='Piece' value={arr.tokenId.toString()} />
