@@ -19,6 +19,7 @@ import { ARRCalculator } from "./ARRCalculator.sol";
 contract ArtifactRegistry is IArtifactRegistry, Ownable, ERC721Full, ERC721ApprovalEnumerable {
 
   event RecordSale(address indexed from, address indexed to, uint256 tokenId, uint price, string location, string date);
+  event RecordARR(uint arrId);
 
   event RecordDamaged(uint256 indexed tokenId, string detailInfo, string date);
   event RecordRestored(uint256 indexed tokenId, string detailInfo, string date);
@@ -117,7 +118,8 @@ contract ArtifactRegistry is IArtifactRegistry, Ownable, ERC721Full, ERC721Appro
         paid: false
       });
 
-      arrRegistry.record(arr);
+      uint arrId = arrRegistry.record(arr);
+      emit RecordARR(arrId);
     }
 
     emit RecordSale(who, recipient, tokenId, price, location, date);

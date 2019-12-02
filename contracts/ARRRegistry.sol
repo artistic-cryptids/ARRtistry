@@ -45,6 +45,7 @@ contract ARRRegistry is IARRRegistry, Ownable {
     arrs[newId] = arr;
 
     emit Recorded(newId, arr);
+    return newId;
   }
 
   function retrieve(uint id) public view returns (ARR memory) {

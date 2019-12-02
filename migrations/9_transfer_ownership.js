@@ -1,5 +1,6 @@
 const Governance = artifacts.require('Governance');
 const ArtifactRegistry = artifacts.require('ArtifactRegistry');
+const RoyaltyDistributor = artifacts.require('RoyaltyDistributor');
 
 module.exports = async (deployer, network, accounts) => {
   deployer
@@ -37,6 +38,10 @@ module.exports = async (deployer, network, accounts) => {
       console.log('Setting Registry ownership to governance');
       const registry = await ArtifactRegistry.deployed();
       await registry.transferOwnership(governance.address);
+
+      const royalty = await RoyaltyDistributor.deployed();
+      console.log('Adding Royalty Distributor as ARR Governer', royalty.address);
+      await governance.addModerator(royalty.address, { from: oldModerator });
     })
     .catch((error) => {
       console.error(error);
