@@ -27,7 +27,7 @@ const ArrItem: React.FC<ArrItemProps> = ({ id }) => {
   const [lastUpdateTime, setUpdateTime] = React.useState<string>('Checking');
 
   const { web3 } = useWeb3Context();
-  const { ArtifactApplication, ArtifactRegistry, ArrRegistry } = useContractContext();
+  const { ArtifactRegistry, ArrRegistry } = useContractContext();
 
   React.useEffect(() => {
     const loadArr = async (): Promise<void> => {
