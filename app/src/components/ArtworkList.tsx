@@ -63,7 +63,7 @@ const ArtworkList: React.FC = () => {
           ? <>
             <p>You own </p>
             <h1>{tokenIds.length}</h1>
-            <p>Artifacts!</p>
+            <p>Artifact{tokenIds.length > 1 && 's'}!</p>
           </>
           : <>
             <p>You do not own any artifacts, if you want to request a new artifact to be added</p>
