@@ -208,7 +208,8 @@ contract('ArtifactRegistry', async accounts => {
 
     it('should retrieve the current token id', async () => {
       const tokenId = await registry.getCurrentTokenId();
-      expect(tokenId).to.eql(registry._tokenId.call());
+      const _tokenId = await registry._tokenId.call();
+      expect(tokenId.toString()).to.eql(_tokenId.toString());
     });
   });
 }); // end Registry contract
