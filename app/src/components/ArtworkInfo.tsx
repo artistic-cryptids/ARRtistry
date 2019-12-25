@@ -34,13 +34,6 @@ export interface ArtworkInfoFields {
   documents: any;
 }
 
-interface ArtworkInfoState {
-  artist: Artist;
-  metaUri: string;
-  retrievedData: boolean;
-  fields: ArtworkInfoFields;
-}
-
 const ArtworkInfo: React.FC<ArtworkInfoProps> = ({ artwork, id, fullscreen, children }) => {
   const [artist, setArtist] = React.useState<Artist>({
     id: 0,

@@ -6,7 +6,6 @@ import { useWeb3Context } from '../providers/Web3Provider';
 
 import * as View from '../views';
 
-import Main from './Main';
 import NetworkAside from './NetworkAside';
 
 const Router: React.FC = () => {
@@ -20,9 +19,7 @@ const Router: React.FC = () => {
         { user.role !== 'DACS' && <Redirect from='/manage/' to='/'/> }
         {/* TODO: Needs more logic here, just depends on roles */}
         <Route exact path="/">
-          <Main page="Home" parents={['Dashboards']}>
-            <h1>Welcome back!</h1>
-          </Main>
+          <View.DashboardView/>
         </Route>
         <Route path="/artifact/new">
           <View.RegisterView/>
