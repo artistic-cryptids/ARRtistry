@@ -48,7 +48,7 @@ const ArrItem: React.FC<ArrItemProps> = ({ id }) => {
     };
 
     loadArr();
-  }, [ArrRegistry, id]);
+  }, [ArrRegistry, id, RoyaltyDistributor]);
 
   React.useEffect(() => {
     const getLastUpdated = async (): Promise<void> => {
