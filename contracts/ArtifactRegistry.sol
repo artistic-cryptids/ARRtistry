@@ -62,6 +62,10 @@ contract ArtifactRegistry is IArtifactRegistry, Ownable, ERC721Full, ERC721Appro
     return newTokenId;
   }
 
+  function getCurrentTokenId() public view returns (uint256) {
+    return _tokenId.current();
+  }
+
   function initConsign(uint256 tokenId, address who, uint8 commission) public {
     approve(address(consignment), tokenId);
 
