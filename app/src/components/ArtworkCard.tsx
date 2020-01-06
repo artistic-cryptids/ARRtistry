@@ -66,7 +66,7 @@ const ArtworkCard: React.FC<ArtworkCardProps> = ({
   }, [ArtifactRegistry, id, web3, Governance]);
 
   const path = `/artifact/${id}`;
-  
+
   return (
     <Card className="shadow">
       <Card.Body>

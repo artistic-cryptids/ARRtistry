@@ -51,7 +51,7 @@ export const ContractProvider: React.FC = ({ children }) => {
         consignment: consignmentAddr,
         arr: arrAddr,
         eurs: eursAddr,
-        royalty: royaltyAddr
+        royalty: royaltyAddr,
       });
 
       const contracts = {

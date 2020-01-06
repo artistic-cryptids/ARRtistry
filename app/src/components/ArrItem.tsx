@@ -83,7 +83,7 @@ const ArrItem: React.FC<ArrItemProps> = ({ id }) => {
         </Card.Title>
         <Card.Subtitle className="mb-2 text-muted"></Card.Subtitle>
         <Form>
-          <Link to={"/artifact/" + arr.tokenId.toString() }>
+          <Link to={'/artifact/' + arr.tokenId.toString() }>
             <PlaintextField label='Piece' value={arr.tokenId.toString()} />
           </Link>
           <AddressField label='Buyer' address={arr.to}/>
