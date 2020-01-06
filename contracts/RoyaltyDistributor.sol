@@ -51,7 +51,7 @@ contract RoyaltyDistributor is ITokenRecipient {
     require(tokensDue <= tokens, "RoyaltyDistributor :: Not enough tokens provided");
 
     IERC20 instanceContract = IERC20(fromToken);
-    instanceContract.transferFrom(from, arr.to, tokensDue.mul(2).div(10)); //TODO: Hardcode DACS?
+    instanceContract.transferFrom(from, arrRegistry().collectingSociety(), tokensDue.mul(2).div(10));
     instanceContract.transferFrom(from, arr.to, tokensDue.mul(8).div(10));
 
     emit Distribute(msg.sender, arr.to, tokensDue);

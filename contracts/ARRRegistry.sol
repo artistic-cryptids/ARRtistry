@@ -19,6 +19,7 @@ contract ARRRegistry is IARRRegistry, Ownable {
   event Recorded(uint id, ARR arr);
 
   IGovernance public _governance;
+  address public _collectingSociety;
 
   Counters.Counter public _id;
   mapping (uint256 => ARR) public arrs;
@@ -26,14 +27,25 @@ contract ARRRegistry is IARRRegistry, Ownable {
   constructor(address owner, IGovernance governance) public {
     _transferOwnership(owner);
     _governance = governance;
+    _collectingSociety = owner;
   }
 
   function governance() public view returns (IGovernance) {
     return _governance;
   }
 
+  function collectingSociety() public view returns (address) {
+    return _collectingSociety;
+  }
+
   function totalRecords() public view returns (uint) {
     return _id.current();
+  }
+
+  function setCollectingSociety(address society) public {
+    require(governance().isGovernor(msg.sender) || msg.sender == owner(), "ARRRegistry::setCollectingSociety: Collecting Society is not set by a governor");
+
+    _collectingSociety = society;
   }
 
   function record(ARR memory arr) public returns (uint) {
