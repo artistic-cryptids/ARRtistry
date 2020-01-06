@@ -10,7 +10,7 @@ import { Math } from "@openzeppelin/contracts/math/Math.sol";
  */
 library ARRCalculator {
   using SafeMath for uint;
-    
+
   uint constant private DECIMAL_FACTOR = 100;
   uint constant private BAND_ONE_UPPER_BOUND = 50000 * DECIMAL_FACTOR;
   uint constant private BAND_TWO_UPPER_BOUND = 200000 * DECIMAL_FACTOR;
@@ -33,8 +33,8 @@ library ARRCalculator {
     uint totalARR = fixedPointDiv(Math.min(salePrice, BAND_ONE_UPPER_BOUND).mul(4), 100);
 
     if (salePrice > BAND_ONE_UPPER_BOUND) {
-       uint amountInBand = Math.min(BAND_TWO_UPPER_BOUND, salePrice).sub(BAND_ONE_UPPER_BOUND);
-       totalARR = totalARR.add(fixedPointDiv(amountInBand.mul(3), 100));
+      uint amountInBand = Math.min(BAND_TWO_UPPER_BOUND, salePrice).sub(BAND_ONE_UPPER_BOUND);
+      totalARR = totalARR.add(fixedPointDiv(amountInBand.mul(3), 100));
     }
 
     if (salePrice > BAND_TWO_UPPER_BOUND) {
