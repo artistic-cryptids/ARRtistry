@@ -21,7 +21,7 @@ library ARRCalculator {
   /*
    * Calculates ARR given a price in cents (euros)
    */
-  function calculateARR(uint salePrice) pure internal returns (uint) {
+  function calculateARR(uint salePrice) internal pure returns (uint) {
     // TODO: Take into account location of sale
     // TODO: Take into account nationality of artist
     // TODO: Take into account "bought as stock" exception
