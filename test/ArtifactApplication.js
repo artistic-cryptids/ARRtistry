@@ -6,6 +6,7 @@ const { ARTIFACT, proposalEquality } = require('./constants/artifact');
 const Governance = artifacts.require('./Governance.sol');
 const ArtifactRegistry = artifacts.require('./ArtifactRegistry.sol');
 const ArtifactApplication = artifacts.require('./ArtifactApplication.sol');
+const ArrRegistry = artifacts.require('./ARRRegistry.sol');
 
 contract('ArtifactApplication', async accounts => {
   const creator = accounts[0];
@@ -17,7 +18,8 @@ contract('ArtifactApplication', async accounts => {
 
     beforeEach(async () => {
       governance = await Governance.new({ from: creator });
-      registry = await ArtifactRegistry.new(governance.address, governance.address, { from: creator });
+      arrRegistry = await ArrRegistry.new(governance.address, governance.address, { from: creator });
+      registry = await ArtifactRegistry.new(governance.address, governance.address, arrRegistry.address,{ from: creator });
       artifactApplication = await ArtifactApplication.new(governance.address, registry.address, { from: creator });
     });
 
@@ -40,7 +42,8 @@ contract('ArtifactApplication', async accounts => {
 
     beforeEach(async () => {
       governance = await Governance.new({ from: creator });
-      registry = await ArtifactRegistry.new(governance.address, governance.address, { from: creator });
+      arrRegistry = await ArrRegistry.new(governance.address, governance.address, { from: creator });
+      registry = await ArtifactRegistry.new(governance.address, governance.address, arrRegistry.address,{ from: creator });
       artifactApplication = await ArtifactApplication.new(governance.address, registry.address, { from: creator });
     });
 
