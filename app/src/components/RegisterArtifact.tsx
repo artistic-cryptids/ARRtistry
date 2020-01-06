@@ -54,7 +54,7 @@ interface ArtifactDocument {
 }
 
 interface ArtifactMetadata {
-  title: string;
+  name: string;
   artistId: string;
   description: string;
   edition: string;
@@ -63,7 +63,9 @@ interface ArtifactMetadata {
   width: string;
   height: string;
   previousSalePrice: number;
-  imageIpfsHash: string;
+  image: string;
+  // eslint-disable-next-line
+  external_url: string;
   saleProvenance: string[];
   documents: ArtifactDocument[];
 }
@@ -80,7 +82,9 @@ const RegisterArtifact: React.FC = () => {
       ...fields,
       previousSalePrice: 0,
       saleProvenance: [],
-      imageIpfsHash: files.image,
+      // eslint-disable-next-line
+      external_url: 'https://arrtistry.herokuapp.com/artifact',
+      image: '/ipfs/' + files.image,
       documents: files.documents.map((ipfsDocument) => {
         return {
           filename: ipfsDocument.filename,
