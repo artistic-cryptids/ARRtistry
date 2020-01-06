@@ -10,6 +10,9 @@ import { useNameServiceContext } from '../providers/NameServiceProvider';
 import { useContractContext } from '../providers/ContractProvider';
 import { useWeb3Context } from '../providers/Web3Provider';
 
+import { toast } from 'react-toastify';
+import { promisify } from 'util';
+
 interface TransferArtifactProps {
   tokenId: number;
   metaUri: string;
@@ -39,7 +42,7 @@ type InputChangeEvent = React.FormEvent<any> &
 const GENERIC_FEEDBACK = <Form.Control.Feedback>Looks good!</Form.Control.Feedback>;
 
 // eslint-disable-next-line
-const LOCATIONS = ['United States', 'Canada', 'Afghanistan', 'Albania', 'Algeria', 'American Samoa', 'Andorra', 'Angola', 'Anguilla', 'Antarctica', 'Antigua and/or Barbuda', 'Argentina', 'Armenia', 'Aruba', 'Australia', 'Austria', 'Azerbaijan', 'Bahamas', 'Bahrain', 'Bangladesh', 'Barbados', 'Belarus', 'Belgium', 'Belize', 'Benin', 'Bermuda', 'Bhutan', 'Bolivia', 'Bosnia and Herzegovina', 'Botswana', 'Bouvet Island', 'Brazil', 'British Indian Ocean Territory', 'Brunei Darussalam', 'Bulgaria', 'Burkina Faso', 'Burundi', 'Cambodia', 'Cameroon', 'Cape Verde', 'Cayman Islands', 'Central African Republic', 'Chad', 'Chile', 'China', 'Christmas Island', 'Cocos (Keeling) Islands', 'Colombia', 'Comoros', 'Congo', 'Cook Islands', 'Costa Rica', 'Croatia (Hrvatska)', 'Cuba', 'Cyprus', 'Czech Republic', 'Denmark', 'Djibouti', 'Dominica', 'Dominican Republic', 'East Timor', 'Ecudaor', 'Egypt', 'El Salvador', 'Equatorial Guinea', 'Eritrea', 'Estonia', 'Ethiopia', 'Falkland Islands (Malvinas)', 'Faroe Islands', 'Fiji', 'Finland', 'France', 'France, Metropolitan', 'French Guiana', 'French Polynesia', 'French Southern Territories', 'Gabon', 'Gambia', 'Georgia', 'Germany', 'Ghana', 'Gibraltar', 'Greece', 'Greenland', 'Grenada', 'Guadeloupe', 'Guam', 'Guatemala', 'Guinea', 'Guinea-Bissau', 'Guyana', 'Haiti', 'Heard and Mc Donald Islands', 'Honduras', 'Hong Kong', 'Hungary', 'Iceland', 'India', 'Indonesia', 'Iran (Islamic Republic of)', 'Iraq', 'Ireland', 'Israel', 'Italy', 'Ivory Coast', 'Jamaica', 'Japan', 'Jordan', 'Kazakhstan', 'Kenya', 'Kiribati', "Korea, Democratic People's Republic of", 'Korea, Republic of', 'Kosovo', 'Kuwait', 'Kyrgyzstan', "Lao People's Democratic Republic", 'Latvia', 'Lebanon', 'Lesotho', 'Liberia', 'Libyan Arab Jamahiriya', 'Liechtenstein', 'Lithuania', 'Luxembourg', 'Macau', 'Macedonia', 'Madagascar', 'Malawi', 'Malaysia', 'Maldives', 'Mali', 'Malta', 'Marshall Islands', 'Martinique', 'Mauritania', 'Mauritius', 'Mayotte', 'Mexico', 'Micronesia, Federated States of', 'Moldova, Republic of', 'Monaco', 'Mongolia', 'Montserrat', 'Morocco', 'Mozambique', 'Myanmar', 'Namibia', 'Nauru', 'Nepal', 'Netherlands', 'Netherlands Antilles', 'New Caledonia', 'New Zealand', 'Nicaragua', 'Niger', 'Nigeria', 'Niue', 'Norfork Island', 'Northern Mariana Islands', 'Norway', 'Oman', 'Pakistan', 'Palau', 'Panama', 'Papua New Guinea', 'Paraguay', 'Peru', 'Philippines', 'Pitcairn', 'Poland', 'Portugal', 'Puerto Rico', 'Qatar', 'Reunion', 'Romania', 'Russian Federation', 'Rwanda', 'Saint Kitts and Nevis', 'Saint Lucia', 'Saint Vincent and the Grenadines', 'Samoa', 'San Marino', 'Sao Tome and Principe', 'Saudi Arabia', 'Senegal', 'Seychelles', 'Sierra Leone', 'Singapore', 'Slovakia', 'Slovenia', 'Slovak Republic', 'Solomon Islands', 'Somalia', 'South Africa', 'South Georgia South Sandwich Islands', 'South Sudan', 'Spain', 'Sri Lanka', 'St. Helena', 'St. Pierre and Miquelon', 'Sudan', 'Suriname', 'Svalbarn and Jan Mayen Islands', 'Swaziland', 'Sweden', 'Switzerland', 'Syrian Arab Republic', 'Taiwan', 'Tajikistan', 'Tanzania, United Republic of', 'Thailand', 'Togo', 'Tokelau', 'Tonga', 'Trinidad and Tobago', 'Tunisia', 'Turkey', 'Turkmenistan', 'Turks and Caicos Islands', 'Tuvalu', 'Uganda', 'Ukraine', 'United Arab Emirates', 'United Kingdom', 'United States minor outlying islands', 'Uruguay', 'Uzbekistan', 'Vanuatu', 'Vatican City State', 'Venezuela', 'Vietnam', 'Virigan Islands (British)', 'Virgin Islands (U.S.)', 'Wallis and Futuna Islands', 'Western Sahara', 'Yemen', 'Yugoslavia', 'Zaire', 'Zambia', 'Zimbabwe']
+const LOCATIONS = ['United Kingdom', 'Canada', 'Afghanistan', 'Albania', 'Algeria', 'American Samoa', 'Andorra', 'Angola', 'Anguilla', 'Antarctica', 'Antigua and/or Barbuda', 'Argentina', 'Armenia', 'Aruba', 'Australia', 'Austria', 'Azerbaijan', 'Bahamas', 'Bahrain', 'Bangladesh', 'Barbados', 'Belarus', 'Belgium', 'Belize', 'Benin', 'Bermuda', 'Bhutan', 'Bolivia', 'Bosnia and Herzegovina', 'Botswana', 'Bouvet Island', 'Brazil', 'British Indian Ocean Territory', 'Brunei Darussalam', 'Bulgaria', 'Burkina Faso', 'Burundi', 'Cambodia', 'Cameroon', 'Cape Verde', 'Cayman Islands', 'Central African Republic', 'Chad', 'Chile', 'China', 'Christmas Island', 'Cocos (Keeling) Islands', 'Colombia', 'Comoros', 'Congo', 'Cook Islands', 'Costa Rica', 'Croatia (Hrvatska)', 'Cuba', 'Cyprus', 'Czech Republic', 'Denmark', 'Djibouti', 'Dominica', 'Dominican Republic', 'East Timor', 'Ecudaor', 'Egypt', 'El Salvador', 'Equatorial Guinea', 'Eritrea', 'Estonia', 'Ethiopia', 'Falkland Islands (Malvinas)', 'Faroe Islands', 'Fiji', 'Finland', 'France', 'France, Metropolitan', 'French Guiana', 'French Polynesia', 'French Southern Territories', 'Gabon', 'Gambia', 'Georgia', 'Germany', 'Ghana', 'Gibraltar', 'Greece', 'Greenland', 'Grenada', 'Guadeloupe', 'Guam', 'Guatemala', 'Guinea', 'Guinea-Bissau', 'Guyana', 'Haiti', 'Heard and Mc Donald Islands', 'Honduras', 'Hong Kong', 'Hungary', 'Iceland', 'India', 'Indonesia', 'Iran (Islamic Republic of)', 'Iraq', 'Ireland', 'Israel', 'Italy', 'Ivory Coast', 'Jamaica', 'Japan', 'Jordan', 'Kazakhstan', 'Kenya', 'Kiribati', "Korea, Democratic People's Republic of", 'Korea, Republic of', 'Kosovo', 'Kuwait', 'Kyrgyzstan', "Lao People's Democratic Republic", 'Latvia', 'Lebanon', 'Lesotho', 'Liberia', 'Libyan Arab Jamahiriya', 'Liechtenstein', 'Lithuania', 'Luxembourg', 'Macau', 'Macedonia', 'Madagascar', 'Malawi', 'Malaysia', 'Maldives', 'Mali', 'Malta', 'Marshall Islands', 'Martinique', 'Mauritania', 'Mauritius', 'Mayotte', 'Mexico', 'Micronesia, Federated States of', 'Moldova, Republic of', 'Monaco', 'Mongolia', 'Montserrat', 'Morocco', 'Mozambique', 'Myanmar', 'Namibia', 'Nauru', 'Nepal', 'Netherlands', 'Netherlands Antilles', 'New Caledonia', 'New Zealand', 'Nicaragua', 'Niger', 'Nigeria', 'Niue', 'Norfork Island', 'Northern Mariana Islands', 'Norway', 'Oman', 'Pakistan', 'Palau', 'Panama', 'Papua New Guinea', 'Paraguay', 'Peru', 'Philippines', 'Pitcairn', 'Poland', 'Portugal', 'Puerto Rico', 'Qatar', 'Reunion', 'Romania', 'Russian Federation', 'Rwanda', 'Saint Kitts and Nevis', 'Saint Lucia', 'Saint Vincent and the Grenadines', 'Samoa', 'San Marino', 'Sao Tome and Principe', 'Saudi Arabia', 'Senegal', 'Seychelles', 'Sierra Leone', 'Singapore', 'Slovakia', 'Slovenia', 'Slovak Republic', 'Solomon Islands', 'Somalia', 'South Africa', 'South Georgia South Sandwich Islands', 'South Sudan', 'Spain', 'Sri Lanka', 'St. Helena', 'St. Pierre and Miquelon', 'Sudan', 'Suriname', 'Svalbarn and Jan Mayen Islands', 'Swaziland', 'Sweden', 'Switzerland', 'Syrian Arab Republic', 'Taiwan', 'Tajikistan', 'Tanzania, United Republic of', 'Thailand', 'Togo', 'Tokelau', 'Tonga', 'Trinidad and Tobago', 'Tunisia', 'Turkey', 'Turkmenistan', 'Turks and Caicos Islands', 'Tuvalu', 'Uganda', 'Ukraine', 'United Arab Emirates', 'United States', 'United States minor outlying islands', 'Uruguay', 'Uzbekistan', 'Vanuatu', 'Vatican City State', 'Venezuela', 'Vietnam', 'Virigan Islands (British)', 'Virgin Islands (U.S.)', 'Wallis and Futuna Islands', 'Western Sahara', 'Yemen', 'Yugoslavia', 'Zaire', 'Zambia', 'Zimbabwe']
 // eslint-disable-next-line
 const ARR_LOCATIONS = ['Austria', 'Belgium', 'Bulgaria', 'Croatia', 'Cyprus', 'Czech Republic', 'Denmark', 'Estonia', 'Finland', 'France', 'Germany', 'Greece', 'Hungary', 'Iceland', 'Ireland', 'Italy', 'Latvia', 'Liechtenstein', 'Lithuania', 'Luxembourg', 'Malta', 'Netherlands', 'Norway', 'Poland', 'Portugal', 'Romania', 'Slovak Republic', 'Slovenia', 'Spain', 'Sweden', 'United Kingdom'];
 
@@ -54,8 +57,8 @@ const TransferArtifact: React.FC<TransferArtifactProps> = ({ tokenId, metaUri })
   const [submitted, setSubmitted] = React.useState<boolean>(false);
 
   const { addressFromName } = useNameServiceContext();
-  const { ArtifactRegistry, Consignment } = useContractContext();
-  const { accounts } = useWeb3Context();
+  const { ArtifactRegistry, Eurs, RoyaltyDistributor, Consignment } = useContractContext();
+  const { web3, accounts } = useWeb3Context();
 
   const saveMetaData = (jsonData: string): Promise<string> => {
     const jsonDataBuffer = Buffer.from(JSON.stringify(jsonData));
@@ -83,6 +86,35 @@ const TransferArtifact: React.FC<TransferArtifactProps> = ({ tokenId, metaUri })
       });
   };
 
+  const takeArr = (arrToast: React.ReactText, arrId: Promise<number>, arrDue: Promise<number>): void => {
+    Promise.all([arrId, arrDue]).then(([arrId, arrDue]) => {
+      console.log(arrDue, arrId, web3.eth.abi.encodeParameter('uint', arrId));
+      return Eurs.methods.approveAndCall(
+        RoyaltyDistributor.options.address,
+        arrDue,
+        web3.eth.abi.encodeParameter('uint', arrId),
+      )
+        .send({ from: accounts[0] })
+        .once('transactionHash',
+          (hash: any) => { toast.update(arrToast, { render: `ARR accepted #${hash}`, type: toast.TYPE.INFO }); })
+        .once('receipt',
+          (_: any) => { toast.update(arrToast, { render: 'ARR recieved', type: toast.TYPE.INFO }); })
+        .on('confirmation',
+          (confNumber: any, receipt: any) => { console.log(confNumber, receipt); })
+        .on('error', (error: any) => {
+          console.log(error);
+          toast.update(arrToast, { render: 'ARR failed', type: toast.TYPE.ERROR, autoClose: 5000 });
+          setSubmitted(false);
+        })
+        .then((receipt: any) => {
+          toast.update(arrToast, { render: 'ARR Transfer successful', type: toast.TYPE.SUCCESS, autoClose: 5000 });
+          console.log('Mined: ', receipt);
+          setSubmitted(false);
+        });
+    })
+      .catch(console.warn);
+  };
+
   const transferArtwork = async (_: React.FormEvent): Promise<void> => {
     let owner = '';
     setSubmitted(true);
@@ -90,6 +122,8 @@ const TransferArtifact: React.FC<TransferArtifactProps> = ({ tokenId, metaUri })
     const recipientAddress = await addressFromName(fields.recipientName);
     const address = await ArtifactRegistry.methods.ownerOf(tokenId).call();
     owner = address;
+    console.log('Getting owner:', owner);
+    const provenanceToast = toast('Adding Provenance Record to IPFS', { autoClose: false });
     const provenanceHash = await addProvenance(
       fields.price,
       [recipientAddress],
@@ -97,46 +131,74 @@ const TransferArtifact: React.FC<TransferArtifactProps> = ({ tokenId, metaUri })
       fields.location,
       fields.date,
     );
-
-    const eventOptions = { fromBlock: 0 };
+    toast.update(provenanceToast, {
+      render: `Provenance added @${provenanceHash}`,
+      type: toast.TYPE.SUCCESS,
+      autoClose: 5000,
+    });
 
     const approved = await ArtifactRegistry.methods.getApproved(tokenId)
       .call({
         from: accounts[0],
       });
 
-    ArtifactRegistry.getPastEvents('RecordSale', eventOptions)
-      .then((events: EventData[]) => {
-        return events.filter(event => event.returnValues.tokenId === tokenId.toString());
-      }).then((relevantEvents: EventData[]) => {
-        // only take ARR in country that takes it, and if no sales with this token have occurred
-        // no sales → user is the one who registered it → they're the artist, or a gallery representing them
-        const takesArr = ARR_LOCATIONS.includes(fields.location) && relevantEvents.length > 0;
+    const eventOptions = { fromBlock: 0 };
+    const events: EventData[] = await ArtifactRegistry.getPastEvents('RecordSale', eventOptions);
+    const relevantEvents: EventData[] = events.filter(event => event.returnValues.tokenId === tokenId.toString());
 
-        const contract = approved === Consignment._address ? Consignment : ArtifactRegistry;
+    // only take ARR in country that takes it, and if no sales with this token have occurred
+    // no sales → user is the one who registered it → they're the artist, or a gallery representing them
+    const takesArr = ARR_LOCATIONS.includes(fields.location) && relevantEvents.length > 0;
 
-        return contract.methods.transfer(
-          owner,
-          recipientAddress,
-          tokenId,
-          provenanceHash,
-          (parseFloat(fields.price) * 100).toString(),
-          fields.location,
-          fields.date,
-          takesArr,
-        ).send(
-          {
-            from: accounts[0],
-            gasLimit: 6000000,
-          },
-        );
-      }).then(() => {
-        setSubmitted(false);
-      }).catch((err: any) => {
-        // rejection, usually
-        console.log(err);
+    const contract = approved === Consignment._address ? Consignment : ArtifactRegistry;
+    const salePrice = parseFloat(fields.price) * 100; // Sale price in cents.
+
+    const transferToast = toast('Starting transfer', { autoClose: false });
+    const transferPromise = contract.methods.transfer(
+      owner,
+      recipientAddress,
+      tokenId,
+      provenanceHash,
+      salePrice.toString(),
+      fields.location,
+      fields.date,
+      takesArr,
+    ).send(
+      {
+        from: accounts[0],
+        gasLimit: 6000000,
+      },
+    )
+      .once('transactionHash',
+        (hash: any) => {
+          toast.update(transferToast, { render: `Transfer accepted #${hash}`, type: toast.TYPE.INFO });
+        })
+      .once('receipt',
+        (_: any) => {
+          toast.update(transferToast, { render: 'Transfer successful', type: toast.TYPE.SUCCESS, autoClose: 5000 });
+        })
+      .on('confirmation', (confNumber: any, receipt: any) => { console.log(confNumber, receipt); })
+      .on('error', (error: any) => {
+        console.log(error);
+        toast.update(transferToast, { render: 'Transfer failed', type: toast.TYPE.ERROR, autoClose: 5000 });
         setSubmitted(false);
       });
+
+    if (takesArr) {
+      const arrToast = toast('ARR Pending', { autoClose: false });
+      const arrId = transferPromise.then((receipt: any) => {
+        return receipt.events.RecordARR.returnValues.arrId;
+      });
+      const arrDue = promisify(async (callback) => {
+        const arrDue: number = await RoyaltyDistributor.methods.calculateARR(salePrice).call();
+        toast.update(arrToast, { render: `ARR due €${arrDue / 100}`, type: toast.TYPE.INFO });
+        callback(null, arrDue);
+      })() as Promise<number>;
+
+      takeArr(arrToast, arrId, arrDue);
+    } else {
+      setSubmitted(false);
+    }
   };
 
   const inputChangeHandler = (event: InputChangeEvent): void => {

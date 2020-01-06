@@ -4,9 +4,10 @@ import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Button from 'react-bootstrap/Button';
 import ButtonGroup from 'react-bootstrap/ButtonGroup';
-import ENSName from './common/ENSName';
 import { useContractContext } from '../providers/ContractProvider';
 import { useWeb3Context } from '../providers/Web3Provider';
+import Form from 'react-bootstrap/Form';
+import AddressField from './common/AddressField';
 
 interface ProposalItemProps {
   id: number;
@@ -57,15 +58,11 @@ const ProposalItem: React.FC<ProposalItemProps> = ({ id }) => {
       artwork={proposal}
       id={id}
     >
+      <Form>
+        <AddressField label='Proposer' address={proposer} />
+      </Form>
+      <hr/>
       <Col>
-        <Row>
-          <Col xs={4}>
-            <p className="mb-2 text-muted">Proposer </p>
-          </Col>
-          <Col xs={8}>
-            <ENSName address={proposer}/>
-          </Col>
-        </Row>
         <Row>
           <ButtonGroup aria-label="Actionbar" className="mx-auto">
             <Button variant="outline-success" onClick={approveProposal}>Approve</Button>

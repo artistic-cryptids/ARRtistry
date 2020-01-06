@@ -11,11 +11,12 @@ import { Math } from "@openzeppelin/contracts/math/Math.sol";
 library ARRCalculator {
   using SafeMath for uint;
 
-  uint constant private BAND_ONE_UPPER_BOUND = 5000000;
-  uint constant private BAND_TWO_UPPER_BOUND = 20000000;
-  uint constant private BAND_THREE_UPPER_BOUND = 35000000;
-  uint constant private BAND_FOUR_UPPER_BOUND = 50000000;
-  uint constant private MAX_ARR = 1250000;
+  uint constant private DECIMAL_FACTOR = 100;
+  uint constant private BAND_ONE_UPPER_BOUND = 50000 * DECIMAL_FACTOR;
+  uint constant private BAND_TWO_UPPER_BOUND = 200000 * DECIMAL_FACTOR;
+  uint constant private BAND_THREE_UPPER_BOUND = 350000 * DECIMAL_FACTOR;
+  uint constant private BAND_FOUR_UPPER_BOUND = 500000 * DECIMAL_FACTOR;
+  uint constant private MAX_ARR = 12500 * DECIMAL_FACTOR;
 
   /*
    * Calculates ARR given a price in cents (euros)
@@ -25,7 +26,7 @@ library ARRCalculator {
     // TODO: Take into account nationality of artist
     // TODO: Take into account "bought as stock" exception
     // TODO: Take into account whether artwork is sold for first time
-    if (salePrice < 100000) {
+    if (salePrice < 1000 * DECIMAL_FACTOR) {
       return 0;
     }
 

@@ -7,6 +7,7 @@ const { shouldBehaveLikeERC721 } = require('./behaviours/ERC721.behavior.js');
 const { shouldBehaveLikeERC721ApprovalEnumerable } = require('./behaviours/ERC721ApprovalEnumerable.behavior.js');
 
 const Governance = artifacts.require('./Governance.sol');
+const ArrRegistry = artifacts.require('./ARRRegistry.sol');
 const ArtifactRegistry = artifacts.require('./ArtifactRegistry.sol');
 const ArtifactRegistryMock = artifacts.require('./ArtifactRegistryMock.sol');
 
@@ -21,10 +22,12 @@ contract('ArtifactRegistry', async accounts => {
   const TOKEN_ID = 1;
 
   let governance;
+  let arrRegistry;
 
   beforeEach(async function () {
     governance = await Governance.new({ from: creator });
-    this.token = await ArtifactRegistryMock.new(creator, governance.address, { from: creator });
+    arrRegistry = await ArrRegistry.new(governance.address, governance.address, { from: creator });
+    this.token = await ArtifactRegistryMock.new(creator, governance.address, arrRegistry.address, { from: creator });
   });
 
   shouldBehaveLikeERC721(creator, creator, accounts);
@@ -35,7 +38,8 @@ contract('ArtifactRegistry', async accounts => {
   describe('mint', async () => {
     before(async () => {
       governance = await Governance.new({ from: creator });
-      registry = await ArtifactRegistry.new(creator, governance.address, { from: creator });
+      arrRegistry = await ArrRegistry.new(creator, governance.address, { from: creator });
+      registry = await ArtifactRegistry.new(creator, governance.address, arrRegistry.address, { from: creator });
       await governance.approveArtist(approvedArtist, { from: creator });
     });
 
@@ -88,7 +92,7 @@ contract('ArtifactRegistry', async accounts => {
 
   describe('getArtifact', async () => {
     before(async () => {
-      registry = await ArtifactRegistry.new(creator, governance.address, { from: creator });
+      registry = await ArtifactRegistry.new(creator, governance.address, arrRegistry.address, { from: creator });
       await registry.mint(tokenOwner, ARTIFACT, { from: creator });
     });
 
@@ -105,8 +109,10 @@ contract('ArtifactRegistry', async accounts => {
     const date = '2019-11-11';
 
     before(async () => {
-      registry = await ArtifactRegistry.new(creator, governance.address, { from: creator });
+      arrRegistry = await ArrRegistry.new(creator, governance.address, { from: creator });
+      registry = await ArtifactRegistry.new(creator, governance.address, arrRegistry.address, { from: creator });
       await registry.mint(tokenOwner, ARTIFACT, { from: creator });
+      await arrRegistry.transferOwnership(registry.address, { from: creator });
     });
 
     it('should reset setUri', async () => {
@@ -123,7 +129,7 @@ contract('ArtifactRegistry', async accounts => {
     const accountStartingWithNoTokens = accounts[2];
 
     before(async () => {
-      registry = await ArtifactRegistry.new(creator, governance.address, { from: creator });
+      registry = await ArtifactRegistry.new(creator, governance.address, arrRegistry.address, { from: creator });
     });
 
     it('should retrieve no token ids if no artifacts minted', async () => {
@@ -146,7 +152,7 @@ contract('ArtifactRegistry', async accounts => {
     let result = null;
 
     before(async () => {
-      registry = await ArtifactRegistry.new(creator, governance.address, { from: creator });
+      registry = await ArtifactRegistry.new(creator, governance.address, arrRegistry.address, { from: creator });
       await registry.mint(tokenOwner, ARTIFACT, { from: creator });
     });
 

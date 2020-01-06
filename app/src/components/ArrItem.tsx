@@ -6,6 +6,7 @@ import Form from 'react-bootstrap/Form';
 import { useContractContext } from '../providers/ContractProvider';
 import { useWeb3Context } from '../providers/Web3Provider';
 import { EventData } from 'web3-eth-contract';
+import { Link } from 'react-router-dom';
 import * as moment from 'moment';
 
 interface ArrItemProps {
@@ -19,6 +20,7 @@ interface ArrItemType {
   price: number;
   arr: number;
   location: string;
+  paid: boolean;
 }
 
 const ArrItem: React.FC<ArrItemProps> = ({ id }) => {
@@ -26,24 +28,27 @@ const ArrItem: React.FC<ArrItemProps> = ({ id }) => {
   const [lastUpdateTime, setUpdateTime] = React.useState<string>('Checking');
 
   const { web3 } = useWeb3Context();
-  const { ArtifactApplication, ArtifactRegistry } = useContractContext();
+  const { ArtifactRegistry, ArrRegistry, RoyaltyDistributor } = useContractContext();
 
   React.useEffect(() => {
     const loadArr = async (): Promise<void> => {
-      const arrData = await ArtifactApplication.methods.getARR(id).call();
+      const arrData = await ArrRegistry.methods.retrieve(id).call();
+      const arrDue: number = await RoyaltyDistributor.methods.calculateARR(arrData.price).call();
       const arr = {
-        from: arrData[0],
-        to: arrData[1],
-        tokenId: arrData[2],
-        price: arrData[3] / 100,
-        arr: arrData[4] / 100,
-        location: arrData[5],
+        from: arrData.from,
+        to: arrData.to,
+        tokenId: arrData.tokenId,
+        price: arrData.price / 100,
+        arr: arrDue / 100,
+        location: arrData.location,
+        paid: arrData.paid,
       };
+      console.log(arrData);
       setArr(arr);
     };
 
     loadArr();
-  }, [ArtifactApplication, id]);
+  }, [ArrRegistry, id, RoyaltyDistributor]);
 
   React.useEffect(() => {
     const getLastUpdated = async (): Promise<void> => {
@@ -71,10 +76,16 @@ const ArrItem: React.FC<ArrItemProps> = ({ id }) => {
   return (
     <Card>
       <Card.Body>
-        <Card.Title><span className="text-muted text-capitalize">#{id}</span></Card.Title>
+        <Card.Title>
+          <span className="text-muted text-capitalize">
+            #{id} {arr.paid ? 'Paid' : 'Outstanding'}
+          </span>
+        </Card.Title>
         <Card.Subtitle className="mb-2 text-muted"></Card.Subtitle>
         <Form>
-          <PlaintextField label='Piece' value={arr.tokenId.toString()} />
+          <Link to={'/artifact/' + arr.tokenId.toString() }>
+            <PlaintextField label='Piece' value={arr.tokenId.toString()} />
+          </Link>
           <AddressField label='Buyer' address={arr.to}/>
           <AddressField label='Seller' address={arr.from}/>
           <PlaintextField label='Sale Location' value={arr.location} />
