@@ -15,4 +15,5 @@ contract IARRRegistry {
   function markPaid(uint id) public;
   function record(ARR memory arr) public returns (uint);
   function retrieve(uint id) public view returns (ARR memory);
+  function collectingSociety() public view returns (address);
 }
