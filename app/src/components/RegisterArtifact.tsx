@@ -92,8 +92,6 @@ const RegisterArtifact: React.FC = () => {
     const jsonDataBuffer = Buffer.from(JSON.stringify(jsonData));
     const hash = await saveSingleToIPFSNoCallBack(jsonDataBuffer);
     if (currentAccount === artistAddr) {
-      // TODO: also check that the artist is approved once this is differentiated
-      // No need for approval by DACS if the artist is approved
       await ArtifactRegistry.methods.mint(
         artistAddr,
         [artistAddr, IPFS_URL_START + hash],
