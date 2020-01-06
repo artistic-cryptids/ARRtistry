@@ -34,6 +34,9 @@ export const NameServiceProvider: React.FC = ({ children }) => {
       '0xe7410170f87102df0055eb195163a03b7f2bff4a',
     );
     const ens = new web3.eth.Contract(abi, address);
+
+    console.log('Name service provided', address);
+
     setEns(ens);
   }, [web3, networkId]);
 
@@ -73,6 +76,7 @@ export const NameServiceProvider: React.FC = ({ children }) => {
         };
       })
       .then(({ abi, addr }: any) => new web3.eth.Contract(abi, addr))
+      .catch((err: any) => console.log(err))
       .then((resolver: any) => resolver.methods.addr(hash).call())
       .catch((err: any) => {
         console.log(err);
@@ -83,8 +87,6 @@ export const NameServiceProvider: React.FC = ({ children }) => {
   if (!ens) {
     return <Loading/>;
   }
-
-  console.log('Name service provided');
 
   return (
     <NameServiceContext.Provider value={{

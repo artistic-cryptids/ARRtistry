@@ -13,5 +13,5 @@ contract('ArtifactRegistry', async accounts => {
     this.token = await ERC20Eurs.new({ from: creator });
   });
 
-  shouldBehaveLikeERC20('ERC20', toBN(1000000 * (10 ** 4)), creator, recipient, anotherAccount);
+  shouldBehaveLikeERC20('ERC20', toBN(1000000 * (10 ** 2)), creator, recipient, anotherAccount);
 });
