@@ -6,9 +6,11 @@ import "@openzeppelin/contracts/token/ERC721/ERC721Full.sol";
 import "@openzeppelin/contracts/drafts/Counters.sol";
 
 import { IArtifactRegistry } from "./interfaces/IArtifactRegistry.sol";
+import { IARRRegistry } from "./interfaces/IARRRegistry.sol";
 import { IGovernance } from "./interfaces/IGovernance.sol";
 import { Consignment } from "./Consignment.sol";
 import { ERC721ApprovalEnumerable } from "./ERC721ApprovalEnumerable.sol";
+import { ARRCalculator } from "./ARRCalculator.sol";
 
 /**
  * @title ArtifactRegistry
@@ -17,6 +19,7 @@ import { ERC721ApprovalEnumerable } from "./ERC721ApprovalEnumerable.sol";
 contract ArtifactRegistry is IArtifactRegistry, Ownable, ERC721Full, ERC721ApprovalEnumerable {
 
   event RecordSale(address indexed from, address indexed to, uint256 tokenId, uint price, string location, string date);
+  event RecordARR(uint arrId);
 
   event RecordDamaged(uint256 indexed tokenId, string detailInfo, string date);
   event RecordRestored(uint256 indexed tokenId, string detailInfo, string date);
@@ -28,13 +31,15 @@ contract ArtifactRegistry is IArtifactRegistry, Ownable, ERC721Full, ERC721Appro
 
   IGovernance public governance;
   Consignment public consignment;
+  IARRRegistry public arrRegistry;
 
   Counters.Counter public _tokenId;
   mapping (uint256 => Artifact) public artifacts;
 
-  constructor(address owner, IGovernance _governance) public ERC721Full("Artifact", "ART") {
+  constructor(address owner, IGovernance _governance, IARRRegistry _arrRegistry) public ERC721Full("Artifact", "ART") {
     _transferOwnership(owner);
     governance = _governance;
+    arrRegistry = _arrRegistry;
   }
 
   function setConsignment(Consignment _consignment) public {
@@ -89,26 +94,37 @@ contract ArtifactRegistry is IArtifactRegistry, Ownable, ERC721Full, ERC721Appro
     emit RecordFilm(tokenId, info, date);
   }
 
-  function transfer(address who, address recipient, uint256 tokenId, string memory metaUri, uint price, string memory location, string memory date, bool arr) public {
-    safeTransferFrom(who, recipient, tokenId);
-
+  function transfer(
+    address who,
+    address recipient,
+    uint256 tokenId,
+    string memory metaUri,
+    uint price,
+    string memory location,
+    string memory date,
+    bool incursARR
+  ) public {
     Artifact storage artwork = artifacts[tokenId];
     artwork.metaUri = metaUri;
 
-    if (arr) {
-      // Create a new ARR
-      IGovernance.ARR memory arr;
-      arr.from = who;
-      arr.to = recipient;
-      arr.tokenId = tokenId;
-      arr.price = price;
-      arr.location = location;
-      arr.date = date;
+    if (incursARR) {
+      IARRRegistry.ARR memory arr = IARRRegistry.ARR({
+        from: who,
+        to: recipient,
+        tokenId: tokenId,
+        price: price,
+        location: location,
+        date: date,
+        paid: false
+      });
 
-      governance.pushARR(arr);
+      uint arrId = arrRegistry.record(arr);
+      emit RecordARR(arrId);
     }
 
     emit RecordSale(who, recipient, tokenId, price, location, date);
+
+    safeTransferFrom(who, recipient, tokenId);
   }
 
   function getTokenIdsOfOwner(address owner) public view returns (uint[] memory) {

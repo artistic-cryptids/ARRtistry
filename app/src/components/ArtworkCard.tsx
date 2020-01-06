@@ -65,7 +65,8 @@ const ArtworkCard: React.FC<ArtworkCardProps> = ({
     getLastUpdated();
   }, [ArtifactRegistry, id, web3, Governance]);
 
-  const path = `artifact/${id}`;
+  const path = `/artifact/${id}`;
+
   return (
     <Card className="shadow">
       <Card.Body>
@@ -82,17 +83,18 @@ const ArtworkCard: React.FC<ArtworkCardProps> = ({
         <hr/>
         {fields &&
           fields.description !== '' &&
-          <React.Fragment><Card.Text>{fields.description}</Card.Text><hr/></React.Fragment>}
+          <>
+            <Card.Text>{fields.description}</Card.Text>
+            <hr/>
+          </>}
         {children}
         <hr/>
         {fields
-          ? <Card.Text>
-            <Form>
-              <PlaintextField label='Creation Date' value={fields.artifactCreationDate} />
-              <PlaintextField label='Medium' value={fields.medium}/>
-              <PlaintextField label='Size' value={fields.height + ' x ' + fields.width} />
-            </Form>
-          </Card.Text>
+          ? <Form>
+            <PlaintextField label='Creation Date' value={fields.artifactCreationDate} />
+            <PlaintextField label='Medium' value={fields.medium}/>
+            <PlaintextField label='Size' value={fields.height + ' x ' + fields.width} />
+          </Form>
           : <CenterSpinner />
         }
         { !fullscreen
@@ -103,19 +105,21 @@ const ArtworkCard: React.FC<ArtworkCardProps> = ({
             </ButtonGroup>
           </div>
           : <Card.Text>
-            {fields && fields.documents &&
-                <>
-                  <h5>Documents</h5>
-                  <hr/>
-                  <Documents documents={fields.documents}/>
-                </>
+            {fields &&
+              fields.documents &&
+              fields.documents.length > 0 &&
+              <>
+                <h5>Documents</h5>
+                <hr/>
+                <Documents documents={fields.documents}/>
+              </>
             }
             {id &&
-                <>
-                  <h5>Provenance</h5>
-                  <hr/>
-                  <Provenance tokenId={id}/>
-                </>
+              <>
+                <h5>Provenance</h5>
+                <hr/>
+                <Provenance tokenId={id}/>
+              </>
             }
           </Card.Text>
         }

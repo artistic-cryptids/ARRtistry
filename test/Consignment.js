@@ -2,6 +2,7 @@ const { expectRevert } = require('@openzeppelin/test-helpers');
 const { ARTIFACT } = require('./constants/artifact');
 
 const Consignment = artifacts.require('Consignment');
+const ArrRegistry = artifacts.require('./ARRRegistry.sol');
 const ArtifactRegistry = artifacts.require('./ArtifactRegistry.sol');
 const Governance = artifacts.require('./Governance.sol');
 
@@ -10,12 +11,14 @@ contract('Consignment', async accounts => {
   const commission = 30;
 
   let instance;
+  let arrRegistry;
   let registry;
   let tokenId;
 
   before(async () => {
     const governance = await Governance.deployed();
-    registry = await ArtifactRegistry.new(tokenOwner, governance.address, { from: tokenOwner });
+    arrRegistry = await ArrRegistry.new(governance.address, governance.address, { from: tokenOwner });
+    registry = await ArtifactRegistry.new(tokenOwner, governance.address, arrRegistry.address, { from: tokenOwner });
     instance = await Consignment.new(registry.address);
     await registry.setConsignment(instance.address);
   });
