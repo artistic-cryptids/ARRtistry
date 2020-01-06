@@ -6,6 +6,7 @@ import Form from 'react-bootstrap/Form';
 import { useContractContext } from '../providers/ContractProvider';
 import { useWeb3Context } from '../providers/Web3Provider';
 import { EventData } from 'web3-eth-contract';
+import { Link } from 'react-router-dom';
 import * as moment from 'moment';
 
 interface ArrItemProps {
@@ -27,17 +28,18 @@ const ArrItem: React.FC<ArrItemProps> = ({ id }) => {
   const [lastUpdateTime, setUpdateTime] = React.useState<string>('Checking');
 
   const { web3 } = useWeb3Context();
-  const { ArtifactRegistry, ArrRegistry } = useContractContext();
+  const { ArtifactRegistry, ArrRegistry, RoyaltyDistributor } = useContractContext();
 
   React.useEffect(() => {
     const loadArr = async (): Promise<void> => {
       const arrData = await ArrRegistry.methods.retrieve(id).call();
+      const arrDue: number = await RoyaltyDistributor.methods.calculateARR(arrData.price).call();
       const arr = {
         from: arrData.from,
         to: arrData.to,
         tokenId: arrData.tokenId,
         price: arrData.price / 100,
-        arr: arrData[4] / 100,
+        arr: arrDue / 100,
         location: arrData.location,
         paid: arrData.paid,
       };
@@ -81,7 +83,9 @@ const ArrItem: React.FC<ArrItemProps> = ({ id }) => {
         </Card.Title>
         <Card.Subtitle className="mb-2 text-muted"></Card.Subtitle>
         <Form>
-          <PlaintextField label='Piece' value={arr.tokenId.toString()} />
+          <Link to={"/artifact/" + arr.tokenId.toString() }>
+            <PlaintextField label='Piece' value={arr.tokenId.toString()} />
+          </Link>
           <AddressField label='Buyer' address={arr.to}/>
           <AddressField label='Seller' address={arr.from}/>
           <PlaintextField label='Sale Location' value={arr.location} />

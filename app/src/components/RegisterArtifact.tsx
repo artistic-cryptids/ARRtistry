@@ -103,7 +103,6 @@ const RegisterArtifact: React.FC = () => {
           gasLimit: 6000000,
         },
       ).catch((err: any) => {
-        // rejection, usually
         console.log('register error', err);
       });
     } else {
