@@ -15,11 +15,13 @@ contract('ArtifactApplication', async accounts => {
     let artifactApplication;
     let governance;
     let registry;
+    let arrRegistry;
 
     beforeEach(async () => {
       governance = await Governance.new({ from: creator });
       arrRegistry = await ArrRegistry.new(governance.address, governance.address, { from: creator });
-      registry = await ArtifactRegistry.new(governance.address, governance.address, arrRegistry.address,{ from: creator });
+      registry = await ArtifactRegistry.new(governance.address, governance.address,
+        arrRegistry.address, { from: creator });
       artifactApplication = await ArtifactApplication.new(governance.address, registry.address, { from: creator });
     });
 
@@ -38,12 +40,14 @@ contract('ArtifactApplication', async accounts => {
   describe('Proposal retrieval', async () => {
     let artifactApplication;
     let governance;
+    let arrRegistry;
     let registry;
 
     beforeEach(async () => {
       governance = await Governance.new({ from: creator });
       arrRegistry = await ArrRegistry.new(governance.address, governance.address, { from: creator });
-      registry = await ArtifactRegistry.new(governance.address, governance.address, arrRegistry.address,{ from: creator });
+      registry = await ArtifactRegistry.new(governance.address, governance.address,
+        arrRegistry.address, { from: creator });
       artifactApplication = await ArtifactApplication.new(governance.address, registry.address, { from: creator });
     });
 

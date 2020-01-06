@@ -22,6 +22,7 @@ contract('ArtifactRegistry', async accounts => {
   const TOKEN_ID = 1;
 
   let governance;
+  let arrRegistry;
 
   beforeEach(async function () {
     governance = await Governance.new({ from: creator });
@@ -111,7 +112,7 @@ contract('ArtifactRegistry', async accounts => {
       arrRegistry = await ArrRegistry.new(creator, governance.address, { from: creator });
       registry = await ArtifactRegistry.new(creator, governance.address, arrRegistry.address, { from: creator });
       await registry.mint(tokenOwner, ARTIFACT, { from: creator });
-      await arrRegistry.transferOwnership(registry.address, { from: creator })
+      await arrRegistry.transferOwnership(registry.address, { from: creator });
     });
 
     it('should reset setUri', async () => {

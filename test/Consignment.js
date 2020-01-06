@@ -11,6 +11,7 @@ contract('Consignment', async accounts => {
   const commission = 30;
 
   let instance;
+  let arrRegistry;
   let registry;
   let tokenId;
 
