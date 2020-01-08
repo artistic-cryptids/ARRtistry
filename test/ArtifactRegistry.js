@@ -218,16 +218,4 @@ contract('ArtifactRegistry', async accounts => {
       });
     });
   });
-
-  describe('getCurrentTokenId', async () => {
-    before(async () => {
-      registry = await ArtifactRegistry.new(creator, governance.address, { from: creator });
-    });
-
-    it('should retrieve the current token id', async () => {
-      const tokenId = await registry.getCurrentTokenId();
-      const _tokenId = await registry._tokenId.call();
-      expect(tokenId.toString()).to.eql(_tokenId.toString());
-    });
-  });
 }); // end Registry contract
