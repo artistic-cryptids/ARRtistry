@@ -23,7 +23,7 @@ module.exports = async (deployer, network, accounts) => {
 
   // Upload DACS example art piece and add provenance
   const token = await registry.mint(getOwner(network, accounts), {
-    artist: '0x67EDE48B355DA3fb5d5fB6e5964DaB9fDA56aADe',
+    artist: '0xf323B526cfEbf52c349dA8F4BB4d7e6EFA55F3a6',
     metaUri: 'https://ipfs.globalupload.io/QmSrSV6KoZFWTtkBqfUs1x7VeJR3MmRKuB9HZekovaisSM',
   });
 
@@ -31,4 +31,16 @@ module.exports = async (deployer, network, accounts) => {
   await registry.pieceStolen(token, "Stolen in an art heist at The Tate Modern", "2005");
   await registry.pieceRecovered(token, "Recovered", "2007");
   await registry.pieceFilm(token, "Exhibited in The Great Gatsby", "2013");
+
+  // Sell the DACS piece
+  await registry.transfer(
+    '0xf323B526cfEbf52c349dA8F4BB4d7e6EFA55F3a6',
+    '0x67EDE48B355DA3fb5d5fB6e5964DaB9fDA56aADe',
+    token,
+    'https://ipfs.globalupload.io/QmSrSV6KoZFWTtkBqfUs1x7VeJR3MmRKuB9HZekovaisSM',
+    6000,
+    'UK',
+    '2019',
+    true
+  );
 };
