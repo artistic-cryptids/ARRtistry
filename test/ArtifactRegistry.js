@@ -102,6 +102,18 @@ contract('ArtifactRegistry', async accounts => {
     });
   });
 
+  describe('getCurrentTokenId', async () => {
+    before(async () => {
+      registry = await ArtifactRegistry.new(creator, governance.address, arrRegistry.address, { from: creator });
+      await registry.mint(tokenOwner, ARTIFACT, { from: creator });
+    });
+
+    it('should be on the first token id after a single transfer', async () => {
+      const id = await registry.getCurrentTokenId();
+      expect(id).to.eql(toBN(1));
+    });
+  });
+
   describe('transfer', async () => {
     const price = 9999;
     const metaUri = 'new metaUri';
