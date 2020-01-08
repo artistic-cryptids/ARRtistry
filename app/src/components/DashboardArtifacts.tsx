@@ -1,8 +1,7 @@
 import * as React from 'react';
 import CardColumns from 'react-bootstrap/CardColumns';
 import { useContractContext } from '../providers/ContractProvider';
-import { MetadataArtworkCard } from './ArtworkCard';
-import ArtworkItem from './ArtworkItem';
+import ArtworkItem from "./ArtworkItem";
 
 const DashboardArtifacts: React.FC = () => {
   const [numTokens, setNumTokens] = React.useState<number>(0);
@@ -22,10 +21,7 @@ const DashboardArtifacts: React.FC = () => {
 
   return (
     <CardColumns>
-      {Array.from({ length: numTokens }, (_, key) => <ArtworkItem tokenId={key} key={key}/>)}
-      <MetadataArtworkCard>
-        <p>Explore More</p>
-      </MetadataArtworkCard>
+      {Array.from({ length: numTokens }, (_, key) => <ArtworkItem tokenId={key + 1} key={key + 1} ownedArtifact={undefined}/>)}
     </CardColumns>
   );
 };
