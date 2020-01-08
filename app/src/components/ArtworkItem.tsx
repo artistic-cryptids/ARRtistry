@@ -39,17 +39,17 @@ const ArtworkItem: React.FC<ArtworkItemProps> = ({ tokenId, ownedArtifact, fulls
       id={tokenId}
       fullscreen={fullscreen}
     >
-      <div className="text-center">
+      {ownedArtifact && <div className="text-center">
         <ButtonGroup>
           <TransferArtifact
             tokenId={tokenId}
             metaUri={artwork.metaUri}
           />
-          {ownedArtifact && <ConsignArtifact
+          <ConsignArtifact
             tokenId={tokenId}
-          />}
+          />
         </ButtonGroup>
-      </div>
+      </div>}
     </ArtworkInfo>
   );
 };

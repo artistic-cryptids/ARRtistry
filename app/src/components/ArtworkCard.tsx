@@ -90,7 +90,7 @@ const ArtworkCard: React.FC<ArtworkCardProps> = ({
             <hr/>
           </>}
         {children}
-        <hr/>
+        {children !== undefined && <hr/>}
         {fields
           ? <Form>
             <PlaintextField label='Creation Date' value={fields.artifactCreationDate} />
