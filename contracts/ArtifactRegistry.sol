@@ -141,8 +141,4 @@ contract ArtifactRegistry is IArtifactRegistry, Ownable, ERC721Full, ERC721Appro
 
     return tokenIds;
   }
-
-  function getCurrentTokenId() public view returns (uint256) {
-    return _tokenId.current();
-  }
 }
