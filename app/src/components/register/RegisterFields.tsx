@@ -24,13 +24,13 @@ const RegisterFields: React.FC = () => {
   return (
     <>
       <Form.Row>
-        <Form.Group as={Col} controlId="title">
+        <Form.Group as={Col} controlId="name">
           <Form.Label>Title</Form.Label>
           <Form.Control
             required
             type="text"
             onChange={inputChangeHandler}
-            value={textFields.title}
+            value={textFields.name}
           />
         </Form.Group>
       </Form.Row>

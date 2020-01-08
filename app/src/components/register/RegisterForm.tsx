@@ -3,7 +3,7 @@ import { FilesProvider, Files, useFilesContext } from '../../providers/FileProvi
 import { FormProvider, TextFields } from '../../providers/FormProvider';
 
 export interface RegisterFields {
-  title: string;
+  name: string;
   artistId: string;
   artistWallet: string;
   description: string;
