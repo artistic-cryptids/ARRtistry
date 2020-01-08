@@ -13,8 +13,8 @@ $primary: map-get($theme-colors, 'primary');
 
 $toggle-color: lighten($primary, 20%);
 $hover-color: #fff;
-$navlink-color: lighten($primary, 30%);//#d8e1fe;
-$muted-color: lighten($primary, 20%);
+$navlink-color: #fff;//#d8e1fe;
+$muted-color: #fff;
 $background-color: $primary;
 /*
  * Sidebar
