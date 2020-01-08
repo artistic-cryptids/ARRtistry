@@ -99,7 +99,7 @@ const ArtworkInfo: React.FC<ArtworkInfoProps> = ({ artwork, id, fullscreen, chil
 
   const imgSrc = fields.image === ''
     ? 'https://file.globalupload.io/HO8sN3I2nJ.png'
-    : 'https://ipfs.io' + fields.image;
+    : fields.image;
 
   if (retrievedData) {
     return (

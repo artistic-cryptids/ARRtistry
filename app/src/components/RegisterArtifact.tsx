@@ -86,7 +86,7 @@ const RegisterArtifact: React.FC = () => {
       // this link won't work for ganache uploads
       // eslint-disable-next-line
       external_url: 'https://arrtistry.herokuapp.com/artifact/' + nextTokenId,
-      image: '/ipfs/' + files.image,
+      image: 'https://ipfs.io/ipfs/' + files.image,
       documents: files.documents.map((ipfsDocument) => {
         return {
           filename: ipfsDocument.filename,
