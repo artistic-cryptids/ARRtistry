@@ -41,6 +41,22 @@ export const NATASHA: User = {
   name: 'natasha.artistry.test',
 };
 
+export const NICHOLA: User = {
+  nickname: 'Nichola Theakston',
+  img: 'https://www.celebratingceramics.co.uk/images/cc_images/nichola_theakston_800.jpg',
+  role: 'ARTIST',
+  address: ['0x67EDE48B355DA3fb5d5fB6e5964DaB9fDA56aADe'],
+  name: 'nichola.artistry.test',
+};
+
+export const LUXEMBURG: User = {
+  nickname: 'Rut Blees',
+  img: 'https://www.tate.org.uk/art/images/work/P/P20/P20268_9.jpg',
+  role: 'ARTIST',
+  address: ['0xf323B526cfEbf52c349dA8F4BB4d7e6EFA55F3a6'],
+  name: 'rut.artistry.test',
+};
+
 export const BUYER_DEFAULT: User = {
   nickname: 'Buyer',
   img: 'https://mdbootstrap.com/img/Photos/Avatars/img%20(9).jpg',
@@ -73,7 +89,7 @@ export const SessionProvider: React.FC = ({ children }) => {
   const [user, setUser] = React.useState<User>(defaultUser);
   const [gotUser, setGotUser] = React.useState<boolean>(false);
 
-  const users = [DACS_DEFAULT, DEAL_DEFAULT, NATASHA, BUYER_DEFAULT];
+  const users = [DACS_DEFAULT, DEAL_DEFAULT, NATASHA, NICHOLA, LUXEMBURG, BUYER_DEFAULT];
 
   React.useEffect(() => {
     let curUser: User = defaultUser;
