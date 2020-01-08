@@ -14,7 +14,6 @@ module.exports = async (deployer, network, accounts) => {
     'https://ipfs.globalupload.io/QmNf3EpnFbVqFyMTYxyjAxUJPjEAoVchFSBSQ6CWuqds5u',
     'https://ipfs.globalupload.io/QmTcyw7fHsZuXxHShJ5oy7iNevVrDnRNrrfXPWEBrvTQzf',
     'https://ipfs.globalupload.io/QmWHb9TUJVmH2ue7LxCLSkZXJZGbpFPb5CeuZpMcdtD3ov',
-    'https://ipfs.globalupload.io/QmQAN8meBp1JH46K4JoDHhV9miXLSzd24NeWH4qzJSAjF3',
     'https://ipfs.globalupload.io/QmQ3DEujR26x8T7KSdBkEqc4uGUYnDeE52GsLfntLAbTxZ',
     'https://ipfs.globalupload.io/QmbH8M6U5vbciUKYnn6q3HAoYA1gtxfL7HPn2BaVEQkar6',
     'https://ipfs.globalupload.io/QmbC1uhoQsKEo2LRChMWt66LoLBxX7REyf9XNDxR5wtPAg',
