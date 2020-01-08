@@ -6,6 +6,7 @@ import ArrView from './ArrView';
 import ClientArtifactView from './ClientArtifactView';
 import RegisterArtistView from './RegisterArtistView';
 import SoldArtifactView from './SoldArtifactView';
+import DashboardView from './DashboardView';
 
 export {
   ArtifactView,
@@ -16,4 +17,5 @@ export {
   ClientArtifactView,
   RegisterArtistView,
   SoldArtifactView,
+  DashboardView,
 };

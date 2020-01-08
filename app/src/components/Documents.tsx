@@ -17,6 +17,10 @@ interface DocumentsState {
 }
 
 export const Documents: React.FC<DocumentsProps> = ({ documents }) => {
+  if (documents.length === 0) {
+    return <p>There are no documents for this artifact</p>;
+  }
+
   const provenance = documents.map((document: DocumentInfo, index: number) =>
     <ListGroup.Item key={index}>
       <p>Filename: {document.filename}</p>
