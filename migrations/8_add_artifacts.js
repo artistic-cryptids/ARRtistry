@@ -4,6 +4,7 @@ const ArtifactRegistry = artifacts.require('ArtifactRegistry');
 module.exports = async (deployer, network, accounts) => {
   const registry = await ArtifactRegistry.deployed();
 
+  // Upload Nichola Theakston's art pieces
   const artworkUris = [
     'https://ipfs.globalupload.io/QmWeBdyapreRbeWaistYV676DTfFcUF3LoMT6VfafojjdA',
     'https://ipfs.globalupload.io/QmQdmTNy6R2dYoTF8Q3PSnNZq1s7HghWpZXoyesUmJqzZ7',
@@ -15,9 +16,14 @@ module.exports = async (deployer, network, accounts) => {
     'https://ipfs.globalupload.io/Qmd6t22n9YnxVdrgSwAAP68UJ58Q1pAYbGCV3aHwGnxwzi',
     'https://ipfs.globalupload.io/QmNPh1JZdVRU6EvbosjiKMtC4i7RgikJ7sAwQXvboyKA61',
   ];
-
   artworkUris.forEach(async a => await registry.mint(getOwner(network, accounts), {
     artist: '0x67EDE48B355DA3fb5d5fB6e5964DaB9fDA56aADe',
     metaUri: a,
   }));
+
+  // Upload DACS example art piece and add provenance
+  await registry.mint(getOwner(network, accounts), {
+    artist: '0x67EDE48B355DA3fb5d5fB6e5964DaB9fDA56aADe',
+    metaUri: 'https://ipfs.globalupload.io/QmSrSV6KoZFWTtkBqfUs1x7VeJR3MmRKuB9HZekovaisSM',
+  });
 };
