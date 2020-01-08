@@ -74,7 +74,7 @@ const ArtworkCard: React.FC<ArtworkCardProps> = ({
         {id && fields
           ? <Card.Title>
             <Link to={path}>
-              <span className="text-muted text-capitalize">#{id} </span>{fields.title}
+              <span className="text-muted text-capitalize">#{id} </span>{fields.name}
             </Link>
           </Card.Title>
           : <CenterSpinner/>

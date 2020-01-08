@@ -22,7 +22,7 @@ export interface Artist {
 }
 
 export interface ArtworkInfoFields {
-  title: string;
+  name: string;
   artistId: number;
   description: string;
   edition: string;
@@ -30,7 +30,7 @@ export interface ArtworkInfoFields {
   medium: string;
   width: string;
   height: string;
-  imageIpfsHash: string;
+  image: string;
   documents: any;
 }
 
@@ -52,7 +52,7 @@ const ArtworkInfo: React.FC<ArtworkInfoProps> = ({ artwork, id, fullscreen, chil
   });
   const [retrievedData, setRetrievedData] = React.useState<boolean>(false);
   const [fields, setFields] = React.useState<ArtworkInfoFields>({
-    title: '',
+    name: '',
     artistId: 0,
     description: '',
     edition: '',
@@ -60,7 +60,7 @@ const ArtworkInfo: React.FC<ArtworkInfoProps> = ({ artwork, id, fullscreen, chil
     medium: '',
     width: '',
     height: '',
-    imageIpfsHash: '',
+    image: '',
     documents: [],
   });
 
@@ -104,9 +104,9 @@ const ArtworkInfo: React.FC<ArtworkInfoProps> = ({ artwork, id, fullscreen, chil
     setInfoFromJson();
   }, [Artists, artwork.metaUri, fields, retrievedData]);
 
-  const imgSrc = fields.imageIpfsHash === ''
+  const imgSrc = fields.image === ''
     ? 'https://file.globalupload.io/HO8sN3I2nJ.png'
-    : 'https://ipfs.io/ipfs/' + fields.imageIpfsHash;
+    : 'https://ipfs.io' + fields.image;
 
   if (retrievedData) {
     return (
