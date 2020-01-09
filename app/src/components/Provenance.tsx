@@ -229,13 +229,13 @@ export const Provenance: React.FC<{tokenId: number}> = ({ tokenId }) => {
       .then((listOfLists: any) => listOfLists.flat());
 
     const recordComparator = (a: ProvenanceRecord, b: ProvenanceRecord): number => {
-      if (a.type == 'commissioned' && b.type != 'commissioned') {
+      if (a.type === 'commissioned' && b.type !== 'commissioned') {
         return -1; 
       }
-      if (a.type != 'commissioned' && b.type == 'commissioned') {
+      if (a.type !== 'commissioned' && b.type === 'commissioned') {
         return 1;
       }
-      if (a.type == 'commissioned' && b.type == 'commissioned') {
+      if (a.type === 'commissioned' && b.type === 'commissioned') {
         return 0;
       }
       if (a.artist && b.artist) {
