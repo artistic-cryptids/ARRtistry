@@ -97,7 +97,7 @@ const BLOCK_HEADINGS: Dictionary<BlockHeading> = {
   'commissioned': {
     header: 'Commissioned',
     icon: faPaintBrush,
-  }
+  },
 };
 
 const TimelineBlock: React.FC<{type: string; subheader: string}> =
@@ -191,7 +191,8 @@ export const Provenance: React.FC<{tokenId: number}> = ({ tokenId }) => {
       )
       .then((records: ProvenanceRecord[]) => Promise.all(records));
 
-    const otherRecordTypes = ['Sale', 'Stolen', 'Recovered', 'Damaged', 'Restored', 'Film', 'Exhibited', 'Commissioned'];
+    const otherRecordTypes = ['Sale', 'Stolen', 'Recovered', 'Damaged',
+      'Restored', 'Film', 'Exhibited', 'Commissioned'];
     const otherRecords: Promise<ProvenanceRecord[]> = Promise.all(otherRecordTypes
       .map(async (type: string): Promise<ProvenanceRecord[]> => {
         const pastEvents = await ArtifactRegistry.getPastEvents('Record' + type, options);
@@ -230,7 +231,7 @@ export const Provenance: React.FC<{tokenId: number}> = ({ tokenId }) => {
 
     const recordComparator = (a: ProvenanceRecord, b: ProvenanceRecord): number => {
       if (a.type === 'commissioned' && b.type !== 'commissioned') {
-        return -1; 
+        return -1;
       }
       if (a.type !== 'commissioned' && b.type === 'commissioned') {
         return 1;

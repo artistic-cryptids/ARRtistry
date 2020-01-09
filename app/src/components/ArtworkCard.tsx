@@ -57,12 +57,12 @@ const ArtworkCard: React.FC<ArtworkCardProps> = ({
             es.filter(e => e.returnValues.proposalId === id.toString()));
       }
       if (events.length > 0) {
-      const event = events[events.length - 1];
-      const timestamp = await web3.eth.getBlock(event.blockNumber)
-        .then((block) => block.timestamp);
-      const txDate = moment.unix(Number(timestamp));
-      setUpdateTime('Last Updated ' + txDate.fromNow());
-    }
+        const event = events[events.length - 1];
+        const timestamp = await web3.eth.getBlock(event.blockNumber)
+          .then((block) => block.timestamp);
+        const txDate = moment.unix(Number(timestamp));
+        setUpdateTime('Last Updated ' + txDate.fromNow());
+      }
     };
     getLastUpdated();
   }, [ArtifactRegistry, id, web3, Governance]);
