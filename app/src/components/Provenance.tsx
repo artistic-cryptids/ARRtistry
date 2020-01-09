@@ -11,6 +11,8 @@ import {
   faVideo,
   faFireAlt,
   faWrench,
+  faEye,
+  faPaintBrush,
 } from '@fortawesome/free-solid-svg-icons';
 import { IconProp } from '@fortawesome/fontawesome-svg-core';
 import Form from 'react-bootstrap/Form';
@@ -88,6 +90,14 @@ const BLOCK_HEADINGS: Dictionary<BlockHeading> = {
     header: 'Film',
     icon: faVideo,
   },
+  'exhibited': {
+    header: 'Exhibited',
+    icon: faEye,
+  },
+  'commissioned': {
+    header: 'Commissioned',
+    icon: faPaintBrush,
+  }
 };
 
 const TimelineBlock: React.FC<{type: string; subheader: string}> =
@@ -181,7 +191,7 @@ export const Provenance: React.FC<{tokenId: number}> = ({ tokenId }) => {
       )
       .then((records: ProvenanceRecord[]) => Promise.all(records));
 
-    const otherRecordTypes = ['Sale', 'Stolen', 'Recovered', 'Damaged', 'Restored', 'Film'];
+    const otherRecordTypes = ['Sale', 'Stolen', 'Recovered', 'Damaged', 'Restored', 'Film', 'Exhibited', 'Commissioned'];
     const otherRecords: Promise<ProvenanceRecord[]> = Promise.all(otherRecordTypes
       .map(async (type: string): Promise<ProvenanceRecord[]> => {
         const pastEvents = await ArtifactRegistry.getPastEvents('Record' + type, options);
@@ -219,6 +229,15 @@ export const Provenance: React.FC<{tokenId: number}> = ({ tokenId }) => {
       .then((listOfLists: any) => listOfLists.flat());
 
     const recordComparator = (a: ProvenanceRecord, b: ProvenanceRecord): number => {
+      if (a.type == 'commissioned' && b.type != 'commissioned') {
+        return -1; 
+      }
+      if (a.type != 'commissioned' && b.type == 'commissioned') {
+        return 1;
+      }
+      if (a.type == 'commissioned' && b.type == 'commissioned') {
+        return 0;
+      }
       if (a.artist && b.artist) {
         return 0;
       }
