@@ -31,7 +31,7 @@ module.exports = async (deployer, network, accounts) => {
 
   // Add provenance to DACS piece
   await registry.pieceCommissioned(token, 'Commissioned by Tate Liverpool.', '2003');
-  await registry.pieceExhibited(token, 'Exhibited in Tate Liverpool', 'July 2014 - 2015');
+  await registry.pieceExhibited(token, 'Exhibited in Tate Liverpool', '2014-06-01');
   // await registry.pieceRecovered(token, 'Recovered', '2007');
   // await registry.pieceFilm(token, 'Exhibited in The Great Gatsby', '2013');
 
@@ -41,10 +41,10 @@ module.exports = async (deployer, network, accounts) => {
     '0x67EDE48B355DA3fb5d5fB6e5964DaB9fDA56aADe',
     token,
     'https://ipfs.globalupload.io/QmSrSV6KoZFWTtkBqfUs1x7VeJR3MmRKuB9HZekovaisSM',
-    6000,
-    'UK',
+    60000,
+    'United Kingdom',
     '2019',
-    true,
+    false,
     { from: getOwner(network, accounts) },
   );
 };
