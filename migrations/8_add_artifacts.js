@@ -30,9 +30,9 @@ module.exports = async (deployer, network, accounts) => {
   const token = await registry.getCurrentTokenId();
 
   // Add provenance to DACS piece
-  await registry.pieceStolen(token, 'Stolen in an art heist at The Tate Modern', '2005');
-  await registry.pieceRecovered(token, 'Recovered', '2007');
-  await registry.pieceFilm(token, 'Exhibited in The Great Gatsby', '2013');
+  await registry.pieceCommissioned(token, 'Commissioned by Tate Liverpool.', '2003');
+  // await registry.pieceRecovered(token, 'Recovered', '2007');
+  // await registry.pieceFilm(token, 'Exhibited in The Great Gatsby', '2013');
 
   // Sell the DACS piece
   await registry.transfer(
