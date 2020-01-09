@@ -30,8 +30,6 @@ module.exports = async (deployer, network, accounts) => {
   await governance.approveArtist('0x54D9dd30D3a407c214680A5Ef4De649a8e59a105');
   await artists.addArtist('https://ipfs.globalupload.io/QmbYeqegpyHPnpSaxP9VDxRnHKTYjKJWLX8oiByhaid3Jm');
   await governance.approveArtist('0xf323B526cfEbf52c349dA8F4BB4d7e6EFA55F3a6');
-  await artists.addArtist('https://ipfs.globalupload.io/QmWM8w6WxW7GZSvrc4pGQJ2eiANzDKfx5xsBxH2qozqYfS');
-  await governance.approveArtist('0x67EDE48B355DA3fb5d5fB6e5964DaB9fDA56aADe');
 
   await newLabel(
     'artists',
