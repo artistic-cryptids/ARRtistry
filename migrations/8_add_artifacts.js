@@ -31,6 +31,7 @@ module.exports = async (deployer, network, accounts) => {
 
   // Add provenance to DACS piece
   await registry.pieceCommissioned(token, 'Commissioned by Tate Liverpool.', '2003');
+  await registry.pieceExhibited(token, 'Exhibited in Tate Liverpool', 'July 2014 - 2015');
   // await registry.pieceRecovered(token, 'Recovered', '2007');
   // await registry.pieceFilm(token, 'Exhibited in The Great Gatsby', '2013');
 
