@@ -26,6 +26,8 @@ contract ArtifactRegistry is IArtifactRegistry, Ownable, ERC721Full, ERC721Appro
   event RecordStolen(uint256 indexed tokenId, string detailInfo, string date);
   event RecordRecovered(uint256 indexed tokenId, string detailInfo, string date);
   event RecordFilm(uint256 indexed tokenId, string detailInfo, string date);
+  event RecordExhibited(uint256 indexed tokenId, string detailInfo, string date);
+  event RecordCommissioned(uint256 indexed tokenId, string detailInfo, string date);
 
   using Counters for Counters.Counter;
 
@@ -96,6 +98,14 @@ contract ArtifactRegistry is IArtifactRegistry, Ownable, ERC721Full, ERC721Appro
 
   function pieceFilm(uint256 tokenId, string memory info, string memory date) public {
     emit RecordFilm(tokenId, info, date);
+  }
+
+  function pieceExhibited(uint256 tokenId, string memory info, string memory date) public {
+    emit RecordExhibited(tokenId, info, date);
+  }
+
+  function pieceCommissioned(uint256 tokenId, string memory info, string memory date) public {
+    emit RecordCommissioned(tokenId, info, date);
   }
 
   function transfer(
