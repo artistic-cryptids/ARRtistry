@@ -45,7 +45,7 @@
   },
   "homepage": "https://github.com/artistic-cryptids/contract#readme",
   "dependencies": {
-    "@ensdomains/ens": "^0.3.11",
+    "@ensdomains/ens": "^0.4.0",
     "@ensdomains/resolver": "^0.1.10",
     "@openzeppelin/contracts": "^2.3.0",
     "@truffle/hdwallet-provider": "^1.0.23",
