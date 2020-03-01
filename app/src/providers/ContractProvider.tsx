@@ -34,13 +34,13 @@ export const ContractProvider: React.FC = ({ children }) => {
       const royaltyAddr = await addressFromName('royalty.artistry.test');
       const eursAddr = await addressFromName('eurs.artistry.test');
 
-      const governance = new web3.eth.Contract(Governance.abi, governanceAddr);
-      const artifactApplication = new web3.eth.Contract(ArtifactApplication.abi, applicationAddr);
-      const artifactRegistry = new web3.eth.Contract(ArtifactRegistry.abi, registryAddr);
-      const artists = new web3.eth.Contract(Artists.abi, artistsAddr);
-      const consignment = new web3.eth.Contract(Consignment.abi, consignmentAddr);
-      const arr = new web3.eth.Contract(ARRRegistry.abi, arrAddr);
-      const royalty = new web3.eth.Contract(RoyaltyDistributor.abi, royaltyAddr);
+      const governance = new web3.eth.Contract(Governance.abi as AbiItem[], governanceAddr);
+      const artifactApplication = new web3.eth.Contract(ArtifactApplication.abi as AbiItem[], applicationAddr);
+      const artifactRegistry = new web3.eth.Contract(ArtifactRegistry.abi as AbiItem[], registryAddr);
+      const artists = new web3.eth.Contract(Artists.abi as AbiItem[], artistsAddr);
+      const consignment = new web3.eth.Contract(Consignment.abi as AbiItem[], consignmentAddr);
+      const arr = new web3.eth.Contract(ARRRegistry.abi as AbiItem[], arrAddr);
+      const royalty = new web3.eth.Contract(RoyaltyDistributor.abi as AbiItem[], royaltyAddr);
       const eurs = new web3.eth.Contract(ERC20Eurs.abi as AbiItem[], eursAddr);
 
       console.log('Contracts provided:', {
