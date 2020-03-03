@@ -93,6 +93,19 @@ const RegisterFields: React.FC = () => {
           </InputGroup>
         </Form.Group>
       </Form.Row>
+
+      <Form.Row>
+        <Form.Group as={Col} controlId="arweaveKey">
+          <Form.Label>Arweave Key</Form.Label>
+          <Form.Control
+            required
+            type="text"
+            onChange={inputChangeHandler}
+            value={textFields.arweaveKey}
+          />
+        </Form.Group>
+      </Form.Row>
+
       <TransactionLoadingModal
         submitted={status.submitted}
         title="Submitting this new artifact..."

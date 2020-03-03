@@ -2,20 +2,8 @@ import * as React from 'react';
 import { FilesProvider, Files, useFilesContext } from '../../providers/FileProvider';
 import { FormProvider, TextFields } from '../../providers/FormProvider';
 
-export interface RegisterFields {
-  name: string;
-  artistId: string;
-  artistWallet: string;
-  description: string;
-  edition: string;
-  artifactCreationDate: string;
-  medium: string;
-  width: string;
-  height: string;
-}
-
 interface Results {
-  fields: RegisterFields;
+  fields: TextFields;
   files: Files;
 }
 

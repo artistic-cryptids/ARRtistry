@@ -17,6 +17,7 @@ import FileList from './register/FileList';
 import { TextFields, ErrorMessages, DEFAULT_ERRORS } from '../providers/FormProvider';
 import { useFilesContext } from '../providers/FileProvider';
 import { IPFS_URL_START, saveSingleToIPFSNoCallBack } from '../helper/ipfs';
+import { ARWEAVE_URL_START, saveDocumentToArweave } from '../helper/arweave';
 
 const registerValidator: (textFields: TextFields) => ErrorMessages = (_fields) => {
   return DEFAULT_ERRORS;
@@ -78,6 +79,9 @@ const RegisterArtifact: React.FC = () => {
     const currentAccount = accounts[0];
     const artistAddr = fields.artistWallet;
 
+    // Don't upload key to arweave
+    delete fields.arweaveKey;
+
     const nextTokenId = 1 + parseInt(await ArtifactRegistry.methods.getCurrentTokenId().call());
     const jsonData: ArtifactMetadata = {
       ...fields,
@@ -96,11 +100,15 @@ const RegisterArtifact: React.FC = () => {
     };
 
     const jsonDataBuffer = Buffer.from(JSON.stringify(jsonData));
-    const hash = await saveSingleToIPFSNoCallBack(jsonDataBuffer);
+    console.log(jsonData);
+
+    const hash = await saveDocumentToArweave(jsonDataBuffer.toString(), JSON.parse(fields.arweaveKey));
+    const metaUrl = ARWEAVE_URL_START + hash;
+
     if (currentAccount === artistAddr) {
       await ArtifactRegistry.methods.mint(
         artistAddr,
-        [artistAddr, IPFS_URL_START + hash],
+        [metaUrl],
       ).send(
         {
           from: currentAccount,
@@ -113,7 +121,7 @@ const RegisterArtifact: React.FC = () => {
       await ArtifactApplication.methods.applyFor(
         currentAccount,
         artistAddr,
-        IPFS_URL_START + hash,
+        metaUrl,
       ).send(
         {
           from: accounts[0],

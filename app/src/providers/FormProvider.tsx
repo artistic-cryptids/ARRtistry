@@ -12,6 +12,7 @@ export interface TextFields {
   medium: string;
   width: string;
   height: string;
+  arweaveKey: string;
 }
 
 export interface FormStatus {
@@ -33,6 +34,7 @@ export const DEFAULT_TEXT_FIELDS: TextFields = {
   medium: '',
   width: '',
   height: '',
+  arweaveKey: '',
 };
 
 export const DEFAULT_ERRORS: ErrorMessages = {
@@ -45,6 +47,7 @@ export const DEFAULT_ERRORS: ErrorMessages = {
   medium: null,
   width: null,
   height: null,
+  arweaveKey: null,
 };
 
 export const DEFAULT_FORM_STATUS: FormStatus = {
