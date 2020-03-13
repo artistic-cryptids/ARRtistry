@@ -16,8 +16,8 @@ import DropZone from './register/DropZone';
 import FileList from './register/FileList';
 import { TextFields, ErrorMessages, DEFAULT_ERRORS } from '../providers/FormProvider';
 import { useFilesContext } from '../providers/FileProvider';
-import { IPFS_URL_START, saveSingleToIPFSNoCallBack } from '../helper/ipfs';
-import { ARWEAVE_URL_START, saveDocumentToArweave } from '../helper/arweave';
+import { IPFS_URL_START } from '../helper/ipfs';
+import { saveDocumentToArweave } from '../helper/arweave';
 
 const registerValidator: (textFields: TextFields) => ErrorMessages = (_fields) => {
   return DEFAULT_ERRORS;
@@ -80,11 +80,12 @@ const RegisterArtifact: React.FC = () => {
     const artistAddr = fields.artistWallet;
 
     // Don't upload key to arweave
-    delete fields.arweaveKey;
+    const uploadFields = {...fields};
+    delete uploadFields.arweaveKey;
 
     const nextTokenId = 1 + parseInt(await ArtifactRegistry.methods.getCurrentTokenId().call());
     const jsonData: ArtifactMetadata = {
-      ...fields,
+      ...uploadFields,
       previousSalePrice: 0,
       saleProvenance: [],
       // this link won't work for ganache uploads
@@ -102,13 +103,13 @@ const RegisterArtifact: React.FC = () => {
     const jsonDataBuffer = Buffer.from(JSON.stringify(jsonData));
     console.log(jsonData);
 
+    console.log(fields);
     const hash = await saveDocumentToArweave(jsonDataBuffer.toString(), JSON.parse(fields.arweaveKey));
-    const metaUrl = ARWEAVE_URL_START + hash;
 
     if (currentAccount === artistAddr) {
       await ArtifactRegistry.methods.mint(
         artistAddr,
-        [metaUrl],
+        [hash],
       ).send(
         {
           from: currentAccount,
@@ -121,7 +122,7 @@ const RegisterArtifact: React.FC = () => {
       await ArtifactApplication.methods.applyFor(
         currentAccount,
         artistAddr,
-        metaUrl,
+        hash,
       ).send(
         {
           from: accounts[0],

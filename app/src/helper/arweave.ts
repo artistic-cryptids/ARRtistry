@@ -1,7 +1,6 @@
 import Arweave from 'arweave/web';
 import {JWKInterface} from "arweave/web/lib/wallet";
-
-export const ARWEAVE_URL_START = "https://arweave.net/";
+import {ArtworkInfoFields} from "../components/ArtworkInfo";
 
 const arweave = Arweave.init({});
 arweave.network.getInfo().then(console.log);
@@ -14,6 +13,25 @@ const logBalance = (key: JWKInterface) => {
   });
 };
 
+export const getArtworkMetadata = async (id: string): Promise<ArtworkInfoFields> => {
+  const data = await arweave.transactions.getData(id, {decode: true, string: true});
+  if (typeof data === 'string') {
+    return JSON.parse(data);
+  }
+
+  return {
+    name: '',
+    artistId: 0,
+    description: '',
+    edition: '',
+    artifactCreationDate: '',
+    medium: '',
+    width: '',
+    height: '',
+    image: '',
+    documents: [],
+  };
+};
 
 export const logTransactionData = async (id: string) => {
   arweave.transactions.getData(id, {decode: true, string: true}).then(data => {

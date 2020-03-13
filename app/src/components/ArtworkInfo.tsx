@@ -1,6 +1,7 @@
 import * as React from 'react';
 import ArtworkCard from './ArtworkCard';
-import { useContractContext } from '../providers/ContractProvider';
+import {useContractContext} from '../providers/ContractProvider';
+import {getArtworkMetadata, logTransactionData} from "../helper/arweave";
 
 export interface Artwork {
   metaUri: string;
@@ -34,7 +35,7 @@ export interface ArtworkInfoFields {
   documents: any;
 }
 
-const ArtworkInfo: React.FC<ArtworkInfoProps> = ({ artwork, id, fullscreen, children }) => {
+const ArtworkInfo: React.FC<ArtworkInfoProps> = ({artwork, id, fullscreen, children}) => {
   const [artist, setArtist] = React.useState<Artist>({
     id: 0,
     name: '',
@@ -60,7 +61,7 @@ const ArtworkInfo: React.FC<ArtworkInfoProps> = ({ artwork, id, fullscreen, chil
   const { Artists } = useContractContext();
 
   const hashToArtist = async (hash: string): Promise<Artist> => {
-    const response = await fetch(hash);
+    const response = await fetch(hash, {mode: 'no-cors'});
     return response.json();
   };
 
@@ -86,12 +87,9 @@ const ArtworkInfo: React.FC<ArtworkInfoProps> = ({ artwork, id, fullscreen, chil
         return;
       }
 
-      const metaUri = artwork.metaUri;
-
-      const response = await fetch(metaUri);
-      const infoJson = await response.json();
-
-      setFields(infoJson);
+      await logTransactionData(artwork.metaUri);
+      const data = await getArtworkMetadata(artwork.metaUri);
+      setFields(data);
       getArtistInfo();
     };
     setInfoFromJson();
