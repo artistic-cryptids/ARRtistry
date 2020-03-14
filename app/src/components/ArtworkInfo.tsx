@@ -1,7 +1,7 @@
 import * as React from 'react';
 import ArtworkCard from './ArtworkCard';
-import {useContractContext} from '../providers/ContractProvider';
-import {getArtworkMetadata, logTransactionData} from "../helper/arweave";
+import { useContractContext } from '../providers/ContractProvider';
+import { getArtworkMetadata } from '../helper/arweave';
 
 export interface Artwork {
   metaUri: string;
@@ -35,7 +35,7 @@ export interface ArtworkInfoFields {
   documents: any;
 }
 
-const ArtworkInfo: React.FC<ArtworkInfoProps> = ({artwork, id, fullscreen, children}) => {
+const ArtworkInfo: React.FC<ArtworkInfoProps> = ({ artwork, id, fullscreen, children }) => {
   const [artist, setArtist] = React.useState<Artist>({
     id: 0,
     name: '',

@@ -1,7 +1,4 @@
-import {
-  RegisterForm,
-  RegisterOnSubmit,
-} from './register/RegisterForm';
+import { RegisterForm, RegisterOnSubmit } from './register/RegisterForm';
 import * as React from 'react';
 import Accordion from 'react-bootstrap/Accordion';
 import Card from 'react-bootstrap/Card';
@@ -80,7 +77,7 @@ const RegisterArtifact: React.FC = () => {
     const artistAddr = fields.artistWallet;
 
     // Don't upload key to arweave
-    const uploadFields = {...fields};
+    const uploadFields = { ...fields };
     delete uploadFields.arweaveKey;
 
     const nextTokenId = 1 + parseInt(await ArtifactRegistry.methods.getCurrentTokenId().call());
