@@ -87,7 +87,6 @@ const ArtworkInfo: React.FC<ArtworkInfoProps> = ({artwork, id, fullscreen, child
         return;
       }
 
-      await logTransactionData(artwork.metaUri);
       const data = await getArtworkMetadata(artwork.metaUri);
       setFields(data);
       getArtistInfo();
