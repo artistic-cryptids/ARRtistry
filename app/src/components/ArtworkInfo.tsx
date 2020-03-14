@@ -61,7 +61,7 @@ const ArtworkInfo: React.FC<ArtworkInfoProps> = ({artwork, id, fullscreen, child
   const { Artists } = useContractContext();
 
   const hashToArtist = async (hash: string): Promise<Artist> => {
-    const response = await fetch(hash, {mode: 'no-cors'});
+    const response = await fetch(hash);
     return response.json();
   };
 

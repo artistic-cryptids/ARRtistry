@@ -24,7 +24,7 @@ module.exports = async (deployer, network, accounts) => {
   // Upload DACS example art piece and add provenance
   await registry.mint(getOwner(network, accounts), {
     artist: '0xf323B526cfEbf52c349dA8F4BB4d7e6EFA55F3a6',
-    metaUri: '', // 'https://ipfs.globalupload.io/QmSrSV6KoZFWTtkBqfUs1x7VeJR3MmRKuB9HZekovaisSM',
+    metaUri: '767yWF4ab-jqzIGuvnbA6bgtHM760ArawUfK2b19tD0', // 'https://ipfs.globalupload.io/QmSrSV6KoZFWTtkBqfUs1x7VeJR3MmRKuB9HZekovaisSM',
   });
 
   const token = await registry.getCurrentTokenId();
@@ -40,7 +40,7 @@ module.exports = async (deployer, network, accounts) => {
     getOwner(network, accounts),
     '0x67EDE48B355DA3fb5d5fB6e5964DaB9fDA56aADe',
     token,
-    '', // https://ipfs.globalupload.io/QmSrSV6KoZFWTtkBqfUs1x7VeJR3MmRKuB9HZekovaisSM',
+    '767yWF4ab-jqzIGuvnbA6bgtHM760ArawUfK2b19tD0', // https://ipfs.globalupload.io/QmSrSV6KoZFWTtkBqfUs1x7VeJR3MmRKuB9HZekovaisSM',
     60000,
     'United Kingdom',
     '2019',
