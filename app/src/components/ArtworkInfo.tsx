@@ -1,7 +1,8 @@
 import * as React from 'react';
 import ArtworkCard from './ArtworkCard';
 import { useContractContext } from '../providers/ContractProvider';
-import { getArtworkMetadata } from '../helper/arweave';
+import * as IPFS from '../helper/ipfs';
+import * as Arweave from '../helper/arweave';
 
 export interface Artwork {
   metaUri: string;
@@ -87,7 +88,14 @@ const ArtworkInfo: React.FC<ArtworkInfoProps> = ({ artwork, id, fullscreen, chil
         return;
       }
 
-      const data = await getArtworkMetadata(artwork.metaUri);
+      if (artwork.metaUri.includes("ipfs")) {
+        const data = await IPFS.getArtworkMetadata(artwork.metaUri);
+        setFields(data);
+        getArtistInfo();
+        return;
+      }
+
+      const data = await Arweave.getArtworkMetadata(artwork.metaUri);
       setFields(data);
       getArtistInfo();
     };

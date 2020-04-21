@@ -72,13 +72,13 @@ const RegisterArtifact: React.FC = () => {
   const { ArtifactApplication, ArtifactRegistry } = useContractContext();
   const { accounts } = useWeb3Context();
 
-  const onSubmit: RegisterOnSubmit = async ({ files, fields }): Promise<void> => {
+  const onSubmit: RegisterOnSubmit = async ({ files, fields, arweaveKey }): Promise<void> => {
     const currentAccount = accounts[0];
     const artistAddr = fields.artistWallet;
 
     // Don't upload key to arweave
     const uploadFields = { ...fields };
-    delete uploadFields.arweaveKey;
+    delete uploadFields.arweaveKeyPath;
 
     const nextTokenId = 1 + parseInt(await ArtifactRegistry.methods.getCurrentTokenId().call());
     const jsonData: ArtifactMetadata = {
@@ -100,8 +100,15 @@ const RegisterArtifact: React.FC = () => {
     const jsonDataBuffer = Buffer.from(JSON.stringify(jsonData));
     console.log(jsonData);
 
-    console.log(fields);
-    const hash = await saveDocumentToArweave(jsonDataBuffer.toString(), JSON.parse(fields.arweaveKey));
+    if (arweaveKey === undefined) {
+      console.error("Arweave key is undefined");
+      return;
+    }
+
+    const hash = await saveDocumentToArweave(
+      jsonDataBuffer.toString(),
+      arweaveKey
+    );
 
     if (currentAccount === artistAddr) {
       await ArtifactRegistry.methods.mint(

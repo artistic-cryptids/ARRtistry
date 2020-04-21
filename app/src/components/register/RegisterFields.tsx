@@ -14,12 +14,22 @@ type InputChangeEvent = React.FormEvent<any> &
   }
 
 const RegisterFields: React.FC = () => {
-  const { setField, status } = useFormControlContext();
+  const { setField, status, setKey } = useFormControlContext();
   const textFields = useTextFieldsContext();
 
   const inputChangeHandler = (event: InputChangeEvent): void => {
     setField(event.target.id, event.target.value);
   };
+
+  const keyFileHandler = (event: any): void => {
+    const fileReader = new FileReader();
+    fileReader.onload = async (e: any) => {
+      console.log("setting key");
+      setKey(JSON.parse(e.target.result));
+    }
+    setField("arweaveKeyPath", event.target.files[0]);
+    fileReader.readAsText(event.target.files[0]);
+  }
 
   return (
     <>
@@ -99,9 +109,8 @@ const RegisterFields: React.FC = () => {
           <Form.Label>Arweave Key</Form.Label>
           <Form.Control
             required
-            type="text"
-            onChange={inputChangeHandler}
-            value={textFields.arweaveKey}
+            type="file"
+            onChange={keyFileHandler}
           />
         </Form.Group>
       </Form.Row>
