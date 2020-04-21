@@ -5,7 +5,7 @@ import { ArtworkInfoFields } from '../components/ArtworkInfo';
 const arweave = Arweave.init({});
 arweave.network.getInfo().then(console.log).catch(console.error);
 
-export const getBasename = (path: string) => path.substr(0, path.indexOf('/', 1));
+export const getBasename = (path: string): string => path.substr(0, path.indexOf('/', 1));
 
 export const getArtworkMetadata = async (id: string): Promise<ArtworkInfoFields> => {
   const data = await arweave.transactions.getData(id, { decode: true, string: true });

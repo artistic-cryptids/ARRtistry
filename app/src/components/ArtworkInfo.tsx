@@ -88,7 +88,7 @@ const ArtworkInfo: React.FC<ArtworkInfoProps> = ({ artwork, id, fullscreen, chil
         return;
       }
 
-      if (artwork.metaUri.includes("ipfs")) {
+      if (artwork.metaUri.includes('ipfs')) {
         const data = await IPFS.getArtworkMetadata(artwork.metaUri);
         setFields(data);
         getArtistInfo();

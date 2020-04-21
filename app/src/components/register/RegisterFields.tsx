@@ -24,12 +24,12 @@ const RegisterFields: React.FC = () => {
   const keyFileHandler = (event: any): void => {
     const fileReader = new FileReader();
     fileReader.onload = async (e: any) => {
-      console.log("setting key");
+      console.log('setting key');
       setKey(JSON.parse(e.target.result));
-    }
-    setField("arweaveKeyPath", event.target.files[0]);
+    };
+    setField('arweaveKeyPath', event.target.files[0]);
     fileReader.readAsText(event.target.files[0]);
-  }
+  };
 
   return (
     <>
