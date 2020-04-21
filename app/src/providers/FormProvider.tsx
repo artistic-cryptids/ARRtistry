@@ -1,6 +1,7 @@
 import * as React from 'react';
 import Form from 'react-bootstrap/Form';
 import * as _ from 'lodash';
+import { JWKInterface } from 'arweave/web/lib/wallet';
 
 export interface TextFields {
   name: string;
@@ -12,6 +13,7 @@ export interface TextFields {
   medium: string;
   width: string;
   height: string;
+  arweaveKeyPath: string;
 }
 
 export interface FormStatus {
@@ -33,6 +35,7 @@ export const DEFAULT_TEXT_FIELDS: TextFields = {
   medium: '',
   width: '',
   height: '',
+  arweaveKeyPath: '',
 };
 
 export const DEFAULT_ERRORS: ErrorMessages = {
@@ -45,6 +48,7 @@ export const DEFAULT_ERRORS: ErrorMessages = {
   medium: null,
   width: null,
   height: null,
+  arweaveKeyPath: null,
 };
 
 export const DEFAULT_FORM_STATUS: FormStatus = {
@@ -52,6 +56,7 @@ export const DEFAULT_FORM_STATUS: FormStatus = {
   submitted: false,
 };
 
+type SetKey = (value: JWKInterface) => void;
 type SetField = (name: string, value: string) => void;
 type SetFields = (newFields: {[key: string]: string}) => void;
 
@@ -60,6 +65,8 @@ export interface FormControl {
   setField: SetField;
   setFields: SetFields;
   clear: VoidFunction;
+  key: JWKInterface | undefined;
+  setKey: SetKey;
 }
 
 const TextFieldContext = React.createContext<TextFields>(DEFAULT_TEXT_FIELDS);
@@ -68,10 +75,12 @@ const FormControlContext = React.createContext<FormControl>({
   setField: console.warn,
   setFields: (newFields: {[key: string]: string}) => console.warn(newFields),
   clear: console.warn,
+  key: undefined,
+  setKey: console.warn,
 });
 const ErrorsContext = React.createContext<ErrorMessages>(DEFAULT_ERRORS);
 
-type formOnSubmit = (fields: TextFields) => Promise<void>;
+type formOnSubmit = (fields: TextFields, arweaveKey: JWKInterface | undefined) => Promise<void>;
 
 export interface FormProviderProps {
   validator: (textFields: TextFields) => ErrorMessages;
@@ -83,6 +92,7 @@ export const FormProvider: React.FC<FormProviderProps> = ({ onSubmit, validator,
   const [textFields, setTextFields] = React.useState<TextFields>(DEFAULT_TEXT_FIELDS);
   const [errors, setErrors] = React.useState<ErrorMessages>(DEFAULT_ERRORS);
   const [formStatus, setFormStatus] = React.useState<FormStatus>(DEFAULT_FORM_STATUS);
+  const [key, setKey] = React.useState<JWKInterface>();
 
   const _setField = (id: string, value: string): void => {
     setTextFields({
@@ -126,7 +136,7 @@ export const FormProvider: React.FC<FormProviderProps> = ({ onSubmit, validator,
     event.preventDefault();
     const errors = _validate(true);
     setErrors(errors);
-    await onSubmit(textFields);
+    await onSubmit(textFields, key);
     clearForm();
   };
 
@@ -137,6 +147,8 @@ export const FormProvider: React.FC<FormProviderProps> = ({ onSubmit, validator,
         setField: _setField,
         setFields: _setFields,
         clear: clearForm,
+        key: key,
+        setKey: setKey,
       }}>
         <ErrorsContext.Provider value={errors}>
           <Form

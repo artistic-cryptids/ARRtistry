@@ -1,7 +1,4 @@
-import {
-  RegisterForm,
-  RegisterOnSubmit,
-} from './register/RegisterForm';
+import { RegisterForm, RegisterOnSubmit } from './register/RegisterForm';
 import * as React from 'react';
 import Accordion from 'react-bootstrap/Accordion';
 import Card from 'react-bootstrap/Card';
@@ -16,7 +13,8 @@ import DropZone from './register/DropZone';
 import FileList from './register/FileList';
 import { TextFields, ErrorMessages, DEFAULT_ERRORS } from '../providers/FormProvider';
 import { useFilesContext } from '../providers/FileProvider';
-import { IPFS_URL_START, saveSingleToIPFSNoCallBack } from '../helper/ipfs';
+import { IPFS_URL_START } from '../helper/ipfs';
+import { saveDocumentToArweave } from '../helper/arweave';
 
 const registerValidator: (textFields: TextFields) => ErrorMessages = (_fields) => {
   return DEFAULT_ERRORS;
@@ -74,13 +72,17 @@ const RegisterArtifact: React.FC = () => {
   const { ArtifactApplication, ArtifactRegistry } = useContractContext();
   const { accounts } = useWeb3Context();
 
-  const onSubmit: RegisterOnSubmit = async ({ files, fields }): Promise<void> => {
+  const onSubmit: RegisterOnSubmit = async ({ files, fields, arweaveKey }): Promise<void> => {
     const currentAccount = accounts[0];
     const artistAddr = fields.artistWallet;
 
+    // Don't upload key to arweave
+    const uploadFields = { ...fields };
+    delete uploadFields.arweaveKeyPath;
+
     const nextTokenId = 1 + parseInt(await ArtifactRegistry.methods.getCurrentTokenId().call());
     const jsonData: ArtifactMetadata = {
-      ...fields,
+      ...uploadFields,
       previousSalePrice: 0,
       saleProvenance: [],
       // this link won't work for ganache uploads
@@ -96,11 +98,22 @@ const RegisterArtifact: React.FC = () => {
     };
 
     const jsonDataBuffer = Buffer.from(JSON.stringify(jsonData));
-    const hash = await saveSingleToIPFSNoCallBack(jsonDataBuffer);
+    console.log(jsonData);
+
+    if (arweaveKey === undefined) {
+      console.error('Arweave key is undefined');
+      return;
+    }
+
+    const hash = await saveDocumentToArweave(
+      jsonDataBuffer.toString(),
+      arweaveKey,
+    );
+
     if (currentAccount === artistAddr) {
       await ArtifactRegistry.methods.mint(
         artistAddr,
-        [artistAddr, IPFS_URL_START + hash],
+        [hash],
       ).send(
         {
           from: currentAccount,
@@ -113,7 +126,7 @@ const RegisterArtifact: React.FC = () => {
       await ArtifactApplication.methods.applyFor(
         currentAccount,
         artistAddr,
-        IPFS_URL_START + hash,
+        hash,
       ).send(
         {
           from: accounts[0],

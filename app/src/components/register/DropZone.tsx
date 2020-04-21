@@ -35,10 +35,10 @@ const DropZone: React.FC<{popup?: true; callback: (hash: string) => void}> = ({ 
         {...getRootProps()}
       >
         <div className={styles.box}>
-          <div className={styles.progress + (isComplete ? ' ' + styles.complete : '')}></div>
+          <div className={styles.progress + (isComplete ? ' ' + styles.complete : '')}/>
         </div>
         <div>
-          <div className={styles.arrow}></div>
+          <div className={styles.arrow}/>
         </div>
         { isComplete
           ? <img

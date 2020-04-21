@@ -14,11 +14,21 @@ type InputChangeEvent = React.FormEvent<any> &
   }
 
 const RegisterFields: React.FC = () => {
-  const { setField, status } = useFormControlContext();
+  const { setField, status, setKey } = useFormControlContext();
   const textFields = useTextFieldsContext();
 
   const inputChangeHandler = (event: InputChangeEvent): void => {
     setField(event.target.id, event.target.value);
+  };
+
+  const keyFileHandler = (event: any): void => {
+    const fileReader = new FileReader();
+    fileReader.onload = async (e: any) => {
+      console.log('setting key');
+      setKey(JSON.parse(e.target.result));
+    };
+    setField('arweaveKeyPath', event.target.files[0]);
+    fileReader.readAsText(event.target.files[0]);
   };
 
   return (
@@ -93,6 +103,18 @@ const RegisterFields: React.FC = () => {
           </InputGroup>
         </Form.Group>
       </Form.Row>
+
+      <Form.Row>
+        <Form.Group as={Col} controlId="arweaveKey">
+          <Form.Label>Arweave Key</Form.Label>
+          <Form.Control
+            required
+            type="file"
+            onChange={keyFileHandler}
+          />
+        </Form.Group>
+      </Form.Row>
+
       <TransactionLoadingModal
         submitted={status.submitted}
         title="Submitting this new artifact..."

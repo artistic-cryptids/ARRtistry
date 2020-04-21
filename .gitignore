@@ -8,4 +8,5 @@ coverage
 npm-debug.log
 acctKeys.json
 local.env
+*.local.env
 yarn.lock

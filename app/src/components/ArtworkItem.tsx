@@ -13,7 +13,7 @@ interface ArtworkItemProps {
 }
 
 const ArtworkItem: React.FC<ArtworkItemProps> = ({ tokenId, ownedArtifact, fullscreen }) => {
-  const [artwork, setArtwork] = React.useState<Artwork>();
+  const [artwork, setArtwork] = React.useState<Artwork>({ metaUri: '' });
   const { ArtifactRegistry } = useContractContext();
 
   React.useEffect(() => {
@@ -29,7 +29,7 @@ const ArtworkItem: React.FC<ArtworkItemProps> = ({ tokenId, ownedArtifact, fulls
       .catch(console.log);
   }, [ArtifactRegistry.methods, tokenId]);
 
-  if (!artwork) {
+  if (artwork.metaUri === '') {
     return <ArtworkCard id={tokenId} img='https://file.globalupload.io/HO8sN3I2nJ.png'/>;
   }
 

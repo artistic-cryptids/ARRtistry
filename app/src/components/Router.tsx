@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Route, Switch, Redirect, BrowserRouter } from 'react-router-dom';
+import { Route, Switch, Redirect, HashRouter } from 'react-router-dom';
 
 import { useSessionContext } from '../providers/SessionProvider';
 import { useWeb3Context } from '../providers/Web3Provider';
@@ -11,10 +11,9 @@ import NetworkAside from './NetworkAside';
 const Router: React.FC = () => {
   const { user } = useSessionContext();
   const { web3 } = useWeb3Context();
-
   return (
-    <BrowserRouter>
-      <NetworkAside web3={web3}/>
+    <HashRouter>
+      <NetworkAside web3={web3} />
       <Switch>
         { user.role !== 'DACS' && <Redirect from='/manage/' to='/'/> }
         {/* TODO: Needs more logic here, just depends on roles */}
@@ -46,7 +45,7 @@ const Router: React.FC = () => {
           <View.ClientArtifactView/>
         </Route>
       </Switch>
-    </BrowserRouter>
+    </HashRouter>
   );
 };
 
