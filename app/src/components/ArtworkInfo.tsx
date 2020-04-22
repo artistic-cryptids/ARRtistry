@@ -1,10 +1,9 @@
 import * as React from 'react';
 import ArtworkCard from './ArtworkCard';
 import { useContractContext } from '../providers/ContractProvider';
-import * as IPFS from '../helper/ipfs';
-import * as Arweave from '../helper/arweave';
-
+import * as AgnosticArtworkRetriever from '../helper/agnostic';
 export interface Artwork {
+  proposer: string;
   metaUri: string;
 }
 
@@ -23,6 +22,14 @@ export interface Artist {
   deathYear: string;
 }
 
+export interface ArtworkProvenance {
+  price: string; // cents
+  location: string;
+  buysers: string[];
+  seller: string;
+  date: string;
+}
+
 export interface ArtworkInfoFields {
   name: string;
   artistId: number;
@@ -34,6 +41,8 @@ export interface ArtworkInfoFields {
   height: string;
   image: string;
   documents: any;
+  previousSalePrice?: number;
+  saleProvenance?: ArtworkProvenance[];
 }
 
 const ArtworkInfo: React.FC<ArtworkInfoProps> = ({ artwork, id, fullscreen, children }) => {
@@ -88,14 +97,7 @@ const ArtworkInfo: React.FC<ArtworkInfoProps> = ({ artwork, id, fullscreen, chil
         return;
       }
 
-      if (artwork.metaUri.includes('ipfs')) {
-        const data = await IPFS.getArtworkMetadata(artwork.metaUri);
-        setFields(data);
-        getArtistInfo();
-        return;
-      }
-
-      const data = await Arweave.getArtworkMetadata(artwork.metaUri);
+      const data = await AgnosticArtworkRetriever.getArtworkMetadata(artwork.metaUri);
       setFields(data);
       getArtistInfo();
     };

@@ -3,12 +3,12 @@ import Button from 'react-bootstrap/Button';
 import Col from 'react-bootstrap/Col';
 import Form from 'react-bootstrap/Form';
 import Modal from 'react-bootstrap/Modal';
-import ipfs from '../helper/ipfs';
 import TransactionLoadingModal from './common/TransactionLoadingModal';
 import { EventData } from 'web3-eth-contract';
 import { useNameServiceContext } from '../providers/NameServiceProvider';
 import { useContractContext } from '../providers/ContractProvider';
 import { useWeb3Context } from '../providers/Web3Provider';
+import * as AgnosticArtworkRetriever from '../helper/agnostic';
 
 import { toast } from 'react-toastify';
 import { promisify } from 'util';
@@ -70,8 +70,7 @@ const TransferArtifact: React.FC<TransferArtifactProps> = ({ tokenId, metaUri })
 
   const addProvenance = (price: string, buyers: string[],
     seller: string, location: string, date: string): Promise<string> => {
-    return fetch(metaUri)
-      .then((response: any) => response.json())
+    return AgnosticArtworkRetriever.getArtworkMetadata(metaUri)
       .then((jsonData: any) => {
         jsonData.previousSalePrice = price;
         jsonData.saleProvenance.push({
@@ -82,7 +81,7 @@ const TransferArtifact: React.FC<TransferArtifactProps> = ({ tokenId, metaUri })
           date: date,
         });
 
-        return saveMetaData(jsonData);
+        return AgnosticArtworkRetriever.saveMetadata(jsonData, key);
       });
   };
 
