@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { useNameServiceContext } from './NameServiceProvider';
 import { useWeb3Context } from './Web3Provider';
-import Loading from '../components/common/Loading';
+import SplashScreen from '../components/SplashScreen';
 
 const DEFAULT_USER = {
   nickname: 'John Doe',
@@ -117,7 +117,9 @@ export const SessionProvider: React.FC = ({ children }) => {
   }, [address, context, defaultUser, users]);
 
   if (!gotUser) {
-    return <Loading/>;
+    return <SplashScreen>
+      Loading your user profile...
+    </SplashScreen>;
   }
 
   return (
