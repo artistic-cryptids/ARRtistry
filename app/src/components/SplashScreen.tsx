@@ -21,7 +21,7 @@ const SplashScreen: React.FC<SplashScreenProps> = ({ hide, children }) => {
 
   const subtitle = (
     <h3>
-      A <strong>Decentralised Art Registry</strong> with Automated{" "}
+      A <strong>Decentralised Art Registry</strong> with Automated{' '}
       <strong>Royalty Distribution</strong>
     </h3>
   );
