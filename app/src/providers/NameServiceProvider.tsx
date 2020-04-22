@@ -3,7 +3,7 @@ import ENSRegistry from '../contracts/ENSRegistry.json';
 import ENSResolver from '../contracts/ENSResolver.json';
 import { useWeb3Context } from './Web3Provider';
 import { getABIAndAddress } from '../helper/eth';
-import Loading from '../components/common/Loading';
+import SplashScreen from '../components/SplashScreen';
 
 // eslint-disable-next-line
 const namehash = require('eth-ens-namehash');
@@ -85,7 +85,9 @@ export const NameServiceProvider: React.FC = ({ children }) => {
   };
 
   if (!ens) {
-    return <Loading/>;
+    return <SplashScreen>
+      Connecting to Ethereum Name Service.
+    </SplashScreen>;
   }
 
   return (

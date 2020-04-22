@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { AbiItem } from 'web3-utils';
 
-import Loading from '../components/common/Loading';
+import SplashScreen from '../components/SplashScreen';
 import { useNameServiceContext } from './NameServiceProvider';
 import { useWeb3Context } from './Web3Provider';
 
@@ -19,6 +19,7 @@ import { ContractListType } from '../helper/contracts';
 const ContractContext = React.createContext<ContractListType>({} as any);
 
 export const ContractProvider: React.FC = ({ children }) => {
+  const [loaded, setLoaded] = React.useState<boolean>(false);
   const [contracts, setContracts] = React.useState<ContractListType>();
   const { addressFromName } = useNameServiceContext();
   const { web3 } = useWeb3Context();
@@ -53,6 +54,13 @@ export const ContractProvider: React.FC = ({ children }) => {
         eurs: eursAddr,
         royalty: royaltyAddr,
       });
+      if (governanceAddr &&
+        applicationAddr &&
+        registryAddr &&
+        artistsAddr &&
+        consignmentAddr && arrAddr && eursAddr && royaltyAddr) {
+        setLoaded(true);
+      }
 
       const contracts = {
         Governance: governance,
@@ -70,8 +78,10 @@ export const ContractProvider: React.FC = ({ children }) => {
     getContracts();
   }, [addressFromName, web3.eth.Contract]);
 
-  if (!contracts) {
-    return <Loading/>;
+  if (!loaded || !contracts) {
+    return <SplashScreen>
+      Connecting to latest ARRtistry smart contracts... Are you on Rinkeby?
+    </SplashScreen>;
   }
 
   return (

@@ -1,6 +1,6 @@
 import * as React from 'react';
 import Web3 from 'web3';
-import Loading from '../components/common/Loading';
+import SplashScreen from '../components/SplashScreen';
 
 // eslint-disable-next-line
 const Fortmatic = require('fortmatic');
@@ -70,7 +70,10 @@ export const Web3Provider: React.FC = ({ children }) => {
   }, []);
 
   if (!web3 || !networkId || !accounts) {
-    return <Loading/>;
+    return <SplashScreen>
+      Connecting to ethereum network.
+      Please use an injected web3 provider such as MetaMask or Fortmatic.
+    </SplashScreen>;
   }
 
   console.log('Provided Web3');

@@ -7,6 +7,7 @@ import { ContractProvider } from '../providers/ContractProvider';
 import { KeyProvider } from '../providers/KeyProvider';
 
 import Router from './Router';
+import SplashScreen from './SplashScreen';
 
 const App: React.FC = () => {
   return (
@@ -15,6 +16,7 @@ const App: React.FC = () => {
         <ContractProvider>
           <SessionProvider>
             <KeyProvider>
+              <SplashScreen hide/>
               <Router/>
             </KeyProvider>
           </SessionProvider>
