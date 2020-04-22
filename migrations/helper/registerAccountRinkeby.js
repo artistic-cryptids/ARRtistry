@@ -13,7 +13,7 @@ const ReverseAddr = '0xBbe3fD189D18C8b73BA54e9dD01F89E6b3Ee71f0';
 
 const register = async (web3) => {
   const name = process.env.ENS_NAME;
-  const domain = 'artistry.test';
+  const domain = 'arrtistry.test';
   const username = name + '.' + domain;
 
   const label = utils.sha3(name);
