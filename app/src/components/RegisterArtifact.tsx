@@ -14,7 +14,7 @@ import FileList from './register/FileList';
 import { TextFields, ErrorMessages, DEFAULT_ERRORS } from '../providers/FormProvider';
 import { useFilesContext } from '../providers/FileProvider';
 import { IPFS_URL_START } from '../helper/ipfs';
-import { saveDocumentToArweave } from '../helper/arweave';
+import * as AgnosticArtworkRetriever from '../helper/agnostic';
 import { useKeyContext } from '../providers/KeyProvider';
 
 const registerValidator: (textFields: TextFields) => ErrorMessages = (_fields) => {
@@ -91,47 +91,42 @@ const RegisterArtifact: React.FC = () => {
       // eslint-disable-next-line
       external_url: 'https://arrtistry.hails.info/artifact/' + nextTokenId,
       image: 'https://ipfs.io/ipfs/' + files.image,
-      documents: files.documents.map((ipfsDocument) => {
+      documents: files.documents.map((doc) => {
         return {
-          filename: ipfsDocument.filename,
-          metauri: IPFS_URL_START + ipfsDocument.metauri,
+          filename: doc.filename,
+          metauri: IPFS_URL_START + doc.metauri,
         };
       }),
     };
-
-    const jsonDataBuffer = Buffer.from(JSON.stringify(jsonData));
-    console.log(jsonData);
+    console.log('RegisterArtifact::onSubmit:', jsonData);
 
     if (key === undefined) {
       console.error('Arweave key is undefined');
       return;
     }
 
-    const hash = await saveDocumentToArweave(
-      jsonDataBuffer.toString(),
-      key,
-    );
+    const metaUri = await AgnosticArtworkRetriever.saveMetadata(jsonData, key);
 
     if (currentAccount === artistAddr) {
       await ArtifactRegistry.methods.mint(
-        artistAddr,
-        [hash],
+        currentAccount,
+        [artistAddr, metaUri],
       ).send(
         {
           from: currentAccount,
           gasLimit: 6000000,
         },
       ).catch((err: any) => {
-        console.log('register error', err);
+        console.error('RegisterArtifact::onSubmit:', err);
       });
     } else {
       await ArtifactApplication.methods.applyFor(
         currentAccount,
         artistAddr,
-        hash,
+        metaUri,
       ).send(
         {
-          from: accounts[0],
+          from: currentAccount,
           gasLimit: 6000000,
         },
       ).catch((err: any) => {
