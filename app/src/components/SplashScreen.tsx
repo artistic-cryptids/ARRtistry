@@ -12,6 +12,12 @@ interface SplashScreenProps {
 }
 
 const SplashScreen: React.FC<SplashScreenProps> = ({ hide, children }) => {
+  const [fade, setFade] = React.useState<boolean>(false);
+  React.useEffect(() => {
+    setTimeout(() => {
+      setFade(true);
+    }, 1000);
+  }, []);
 
   const subtitle = (
     <h3>
