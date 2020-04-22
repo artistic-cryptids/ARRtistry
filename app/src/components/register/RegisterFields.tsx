@@ -4,6 +4,7 @@ import Col from 'react-bootstrap/Col';
 import InputGroup from 'react-bootstrap/InputGroup';
 import TransactionLoadingModal from '../common/TransactionLoadingModal';
 import { useFormControlContext, useTextFieldsContext, TextFields } from '../../providers/FormProvider';
+import { useKeyContext } from '../../providers/KeyProvider';
 
 type InputChangeEvent = React.FormEvent<any> &
   {
@@ -14,8 +15,9 @@ type InputChangeEvent = React.FormEvent<any> &
   }
 
 const RegisterFields: React.FC = () => {
-  const { setField, status, setKey } = useFormControlContext();
+  const { setField, status } = useFormControlContext();
   const textFields = useTextFieldsContext();
+  const { setKey } = useKeyContext();
 
   const inputChangeHandler = (event: InputChangeEvent): void => {
     setField(event.target.id, event.target.value);
@@ -24,7 +26,7 @@ const RegisterFields: React.FC = () => {
   const keyFileHandler = (event: any): void => {
     const fileReader = new FileReader();
     fileReader.onload = async (e: any) => {
-      console.log('setting key');
+      console.log('RegisterFields:29:', 'Setting key');
       setKey(JSON.parse(e.target.result));
     };
     setField('arweaveKeyPath', event.target.files[0]);
