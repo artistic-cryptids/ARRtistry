@@ -24,11 +24,7 @@ const progressMonitor = (prog: number): void => console.log(`received: ${prog}`)
 
 export const getArtworkMetadata = async (url: string): Promise<ArtworkInfoFields> => {
   const response = await fetch(url);
-<<<<<<< HEAD
-  return await response.json();
-=======
   return response.json();
->>>>>>> master
 };
 
 export const saveSingleToIPFS = async (files: Uploadable, callback: HashCallback): Promise<void> => {
