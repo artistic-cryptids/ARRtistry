@@ -89,7 +89,7 @@ const RegisterArtifact: React.FC = () => {
       saleProvenance: [],
       // this link won't work for ganache uploads
       // eslint-disable-next-line
-      external_url: 'https://arrtistry.herokuapp.com/artifact/' + nextTokenId,
+      external_url: 'https://arrtistry.hails.info/artifact/' + nextTokenId,
       image: 'https://ipfs.io/ipfs/' + files.image,
       documents: files.documents.map((ipfsDocument) => {
         return {
