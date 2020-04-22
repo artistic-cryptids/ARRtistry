@@ -31,7 +31,7 @@ module.exports = {
     rinkeby: {
       provider: function() {
        return new HDWalletProvider(
-        process.env.WALLET_MNEMONIC,
+        process.env.PRIVATE_KEY || process.env.WALLET_MNEMONIC,
         "https://rinkeby.infura.io/v3/" + process.env.INFURA_API_KEY
        );
       },
