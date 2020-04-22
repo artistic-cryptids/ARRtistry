@@ -10,7 +10,7 @@ export const getArtworkMetadata = async (metaUri: string): Promise<ArtworkInfoFi
   return Arweave.getArtworkMetadata(metaUri);
 };
 
-export const saveMetadata = async (jsonData: string | JSON, key?: JWKInterface): Promise<string> => {
+export const saveMetadata = async (jsonData: string | object, key?: JWKInterface): Promise<string> => {
   if (typeof jsonData === 'object') {
     jsonData = JSON.stringify(jsonData);
   }
