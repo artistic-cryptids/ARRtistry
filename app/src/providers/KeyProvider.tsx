@@ -1,6 +1,4 @@
 import * as React from 'react';
-import Form from 'react-bootstrap/Form';
-import * as _ from 'lodash';
 import { JWKInterface } from 'arweave/web/lib/wallet';
 
 type SetKey = (value: JWKInterface) => void;
@@ -20,7 +18,7 @@ export const KeyProvider: React.FC = ({ children }) => {
   return (
     <KeyContext.Provider value={{
       key: key,
-      setKey: setKey
+      setKey: setKey,
     }}>
       { children }
     </KeyContext.Provider>

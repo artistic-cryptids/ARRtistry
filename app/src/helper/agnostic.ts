@@ -7,7 +7,7 @@ export const getArtworkMetadata = async (metaUri: string): Promise<ArtworkInfoFi
   if (metaUri.includes('ipfs') || metaUri.includes('http')) {
     return IPFS.getArtworkMetadata(metaUri);
   }
-  return Arweave.getArtworkMetadata(metaUri)
+  return Arweave.getArtworkMetadata(metaUri);
 };
 
 export const saveMetadata = async (jsonData: string | JSON, key?: JWKInterface): Promise<string> => {
@@ -16,8 +16,8 @@ export const saveMetadata = async (jsonData: string | JSON, key?: JWKInterface):
   }
 
   if (key) {
-    return await Arweave.saveDocumentToArweave(jsonData, key);
+    return Arweave.saveDocumentToArweave(jsonData, key);
   }
 
-  return 'https://ipfs.io/ipfs/' + await IPFS.saveSingleToIPFSNoCallBack(jsonData)
+  return 'https://ipfs.io/ipfs/' + await IPFS.saveSingleToIPFSNoCallBack(jsonData);
 };

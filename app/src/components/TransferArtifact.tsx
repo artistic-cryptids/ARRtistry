@@ -112,7 +112,7 @@ const TransferArtifact: React.FC<TransferArtifactProps> = ({ tokenId, metaUri })
     let owner = '';
     setSubmitted(true);
 
-    const isHexAddress = fields.recipientName.includes("0x");
+    const isHexAddress = fields.recipientName.includes('0x');
 
     const recipientAddress = isHexAddress ? fields.recipientName : await addressFromName(fields.recipientName);
     const address = await ArtifactRegistry.methods.ownerOf(tokenId).call();

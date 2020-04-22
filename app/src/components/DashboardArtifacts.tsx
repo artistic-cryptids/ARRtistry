@@ -1,4 +1,5 @@
 import * as React from 'react';
+import * as _ from 'lodash';
 import CardColumns from 'react-bootstrap/CardColumns';
 import { useContractContext } from '../providers/ContractProvider';
 import { BURN_ACCOUNT } from '../helper/eth';
@@ -17,16 +18,17 @@ const DashboardArtifacts: React.FC = () => {
           console.log('number of tokens:' + tokenId);
           setNumTokens(parseInt(tokenId));
         })
-        .catch((err: string) => console.log('what is going on:' + err));
+        .catch((err: string) => console.error('DashboardArtifacts::useEffect:', err));
 
       ArtifactRegistry.methods.getTokenIdsOfOwner(BURN_ACCOUNT).call()
-      .then((tokenIds: number[]) => {
-        setBurnt(tokenIds.map(x=>+x))
-      })
+        .then((tokenIds: number[]) => {
+          setBurnt(tokenIds.map(x => +x));
+        })
+        .catch((err: string) => console.error('DashboardArtifacts::useEffect:', err));
     }
   }, [ArtifactRegistry]);
 
-  const tokenList = Array.from(Array(numTokens).keys());
+  const tokenList = _.range(numTokens);
   const displayTokens = tokenList.filter(x => !burntTokens.includes(x + 1));
 
   return (

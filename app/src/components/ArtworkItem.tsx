@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { BURN_ACCOUNT } from '../helper/eth';
 import ArtworkInfo, { Artwork } from './ArtworkInfo';
 import TransferArtifact from './TransferArtifact';
 import ConsignArtifact from './ConsignArtifact';
@@ -21,7 +20,7 @@ const ArtworkItem: React.FC<ArtworkItemProps> = ({ tokenId, ownedArtifact, fulls
     ArtifactRegistry.methods.getArtifactForToken(tokenId)
       .call()
       .then((artworkData: any) => {
-        console.log("ArtworkItem:23", "ID:", tokenId, artworkData);
+        console.log('ArtworkItem:23', 'ID:', tokenId, artworkData);
         const artwork = {
           proposer: artworkData[0],
           metaUri: artworkData[1],
