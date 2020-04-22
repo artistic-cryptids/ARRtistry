@@ -101,13 +101,13 @@ const RegisterArtifact: React.FC = () => {
     console.log(jsonData);
 
     if (arweaveKey === undefined) {
-      console.error("Arweave key is undefined");
+      console.error('Arweave key is undefined');
       return;
     }
 
     const hash = await saveDocumentToArweave(
       jsonDataBuffer.toString(),
-      arweaveKey
+      arweaveKey,
     );
 
     if (currentAccount === artistAddr) {

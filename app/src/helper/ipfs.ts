@@ -1,4 +1,4 @@
-import { ArtworkInfoFields } from "../components/ArtworkInfo";
+import { ArtworkInfoFields } from '../components/ArtworkInfo';
 
 // eslint-disable-next-line
 const IpfsClient = require('ipfs-http-client');
@@ -24,7 +24,11 @@ const progressMonitor = (prog: number): void => console.log(`received: ${prog}`)
 
 export const getArtworkMetadata = async (url: string): Promise<ArtworkInfoFields> => {
   const response = await fetch(url);
+<<<<<<< HEAD
   return await response.json();
+=======
+  return response.json();
+>>>>>>> master
 };
 
 export const saveSingleToIPFS = async (files: Uploadable, callback: HashCallback): Promise<void> => {

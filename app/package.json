@@ -50,7 +50,7 @@
     "start": "react-scripts start",
     "watch": "npx tsm src --watch",
     "build": "npx tsm src && react-scripts build",
-    "test": "react-scripts test",
+    "test": "react-scripts test --passWithNoTests",
     "eject": "react-scripts eject",
     "lint": "npx eslint --ignore-path .gitignore './src/**/*.{ts,tsx}'",
     "lint:fix": "npx eslint --ignore-path .gitignore './src/**/*.{ts,tsx}' --fix"

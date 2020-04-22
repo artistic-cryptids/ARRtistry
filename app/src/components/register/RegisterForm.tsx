@@ -20,7 +20,7 @@ const SubmitWithFiles: React.FC<RegisterProps> = ({ validator, onSubmit, childre
   const { files, setImage, setDocuments } = useFilesContext();
 
   const _formSubmit = async (fields: TextFields, arweaveKey: JWKInterface | undefined): Promise<void> => {
-    await onSubmit({ files: files, fields: fields, arweaveKey: arweaveKey});
+    await onSubmit({ files: files, fields: fields, arweaveKey: arweaveKey });
   };
 
   const clearFiles = (): void => {
