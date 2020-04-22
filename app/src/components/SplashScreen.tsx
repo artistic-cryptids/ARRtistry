@@ -25,9 +25,10 @@ const SplashScreen: React.FC<SplashScreenProps> = ({ hide, children }) => {
       <strong>Royalty Distribution</strong>
     </h3>
   );
-  const style = {
+  const style: React.CSSProperties = {
     backgroundImage: `url(${Background})`,
     opacity: fade && hide ? 0 : 1,
+    visibility: fade && hide ? 'hidden' : 'visible',
   };
   return (
     <div className={styles.splashScreen} style={style}>
