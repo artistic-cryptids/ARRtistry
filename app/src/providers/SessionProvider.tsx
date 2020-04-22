@@ -7,7 +7,7 @@ const DEFAULT_USER = {
   nickname: 'John Doe',
   img: 'https://file.globalupload.io/HO8sN3I2nJ.png',
   role: 'ARTIST',
-  name: 'default.artistry.test',
+  name: 'default.arrtistry.test',
 };
 
 export const DACS_DEFAULT: User = {
@@ -19,7 +19,7 @@ export const DACS_DEFAULT: User = {
     '0x594cd738A5e99134De9DE21f253eD1Be4eb27F3e',
     '0xE120e76EC013911018483677D1f264E101e92bf1',
   ],
-  name: 'dac.artistry.test',
+  name: 'dac.arrtistry.test',
 };
 
 export const DEAL_DEFAULT: User = {
@@ -31,7 +31,7 @@ export const DEAL_DEFAULT: User = {
     '0x97A3FC5Ee46852C1Cf92A97B7BaD42F2622267cC',
     '0xce42bdB34189a93c55De250E011c68FaeE374Dd3',
   ],
-  name: 'gallery.artistry.test',
+  name: 'gallery.arrtistry.test',
 };
 
 export const NATASHA: User = {
@@ -39,7 +39,7 @@ export const NATASHA: User = {
   img: 'https://mdbootstrap.com/img/Photos/Avatars/img%20(17).jpg',
   role: 'ARTIST',
   address: ['0xc70eAc1d854E51FaFC7a487086624E79cEE6e843'],
-  name: 'natasha.artistry.test',
+  name: 'natasha.arrtistry.test',
 };
 
 export const NICHOLA: User = {
@@ -47,7 +47,7 @@ export const NICHOLA: User = {
   img: 'https://www.celebratingceramics.co.uk/images/cc_images/nichola_theakston_800.jpg',
   role: 'ARTIST',
   address: ['0x67EDE48B355DA3fb5d5fB6e5964DaB9fDA56aADe'],
-  name: 'nichola.artistry.test',
+  name: 'nichola.arrtistry.test',
 };
 
 export const LUXEMBURG: User = {
@@ -55,7 +55,7 @@ export const LUXEMBURG: User = {
   img: 'https://www.tate.org.uk/art/images/work/P/P20/P20268_9.jpg',
   role: 'ARTIST',
   address: ['0xf323B526cfEbf52c349dA8F4BB4d7e6EFA55F3a6'],
-  name: 'rut.artistry.test',
+  name: 'rut.arrtistry.test',
 };
 
 export const BUYER_DEFAULT: User = {
@@ -63,7 +63,7 @@ export const BUYER_DEFAULT: User = {
   img: 'https://mdbootstrap.com/img/Photos/Avatars/img%20(9).jpg',
   role: 'COLLECTOR',
   address: ['0x1bf078753937FB3e569C4c9724654d10cc8A7Fd7'],
-  name: 'buyer.artistry.test',
+  name: 'buyer.arrtistry.test',
 };
 
 export interface User {
