@@ -15,6 +15,7 @@ import { TextFields, ErrorMessages, DEFAULT_ERRORS } from '../providers/FormProv
 import { useFilesContext } from '../providers/FileProvider';
 import { IPFS_URL_START } from '../helper/ipfs';
 import { saveDocumentToArweave } from '../helper/arweave';
+import { useKeyContext } from '../providers/KeyProvider';
 
 const registerValidator: (textFields: TextFields) => ErrorMessages = (_fields) => {
   return DEFAULT_ERRORS;
@@ -71,12 +72,13 @@ interface ArtifactMetadata {
 const RegisterArtifact: React.FC = () => {
   const { ArtifactApplication, ArtifactRegistry } = useContractContext();
   const { accounts } = useWeb3Context();
+  const { key } = useKeyContext();
 
-  const onSubmit: RegisterOnSubmit = async ({ files, fields, arweaveKey }): Promise<void> => {
+  const onSubmit: RegisterOnSubmit = async ({ files, fields }): Promise<void> => {
     const currentAccount = accounts[0];
     const artistAddr = fields.artistWallet;
 
-    // Don't upload key to arweave
+    // Don't upload keypath to arweave, that would be bad.
     const uploadFields = { ...fields };
     delete uploadFields.arweaveKeyPath;
 
@@ -100,14 +102,14 @@ const RegisterArtifact: React.FC = () => {
     const jsonDataBuffer = Buffer.from(JSON.stringify(jsonData));
     console.log(jsonData);
 
-    if (arweaveKey === undefined) {
+    if (key === undefined) {
       console.error('Arweave key is undefined');
       return;
     }
 
     const hash = await saveDocumentToArweave(
       jsonDataBuffer.toString(),
-      arweaveKey,
+      key,
     );
 
     if (currentAccount === artistAddr) {
