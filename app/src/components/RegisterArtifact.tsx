@@ -98,14 +98,14 @@ const RegisterArtifact: React.FC = () => {
         };
       }),
     };
-    console.log("RegisterArtifact::onSubmit:", jsonData);
+    console.log('RegisterArtifact::onSubmit:', jsonData);
 
     if (key === undefined) {
       console.error('Arweave key is undefined');
       return;
     }
 
-    const metaUri = await AgnosticArtworkRetriever.saveMetadata(jsonData, key)
+    const metaUri = await AgnosticArtworkRetriever.saveMetadata(jsonData, key);
 
     if (currentAccount === artistAddr) {
       await ArtifactRegistry.methods.mint(

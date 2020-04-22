@@ -10,7 +10,7 @@ export const getBasename = (path: string): string => path.substr(0, path.indexOf
 export const getArtworkMetadata = async (id: string): Promise<ArtworkInfoFields> => {
   const data = await arweave.transactions.getData(id, { decode: true, string: true });
   if (typeof data === 'string') {
-    console.log("arweave::getArtworkMetadata:", data);
+    console.log('arweave::getArtworkMetadata:', data);
     return JSON.parse(data);
   }
 
