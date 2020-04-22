@@ -32,7 +32,6 @@ type InputChangeEvent = React.FormEvent<any> &
   }
 
 const GENERIC_FEEDBACK = <Form.Control.Feedback>Looks good!</Form.Control.Feedback>;
-// const ZERO_ADDR = '0x0000000000000000000000000000000000000000';
 
 const ConsignArtifact: React.FC<ConsignArtifactProps> = ({ tokenId }) => {
   const [fields, setFields] = React.useState<ConsignArtifactFormFields>({

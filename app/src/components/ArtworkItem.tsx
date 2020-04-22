@@ -13,15 +13,16 @@ interface ArtworkItemProps {
 }
 
 const ArtworkItem: React.FC<ArtworkItemProps> = ({ tokenId, ownedArtifact, fullscreen }) => {
-  const [artwork, setArtwork] = React.useState<Artwork>({ metaUri: '' });
+  const [artwork, setArtwork] = React.useState<Artwork>({ proposer: '', metaUri: '' });
   const { ArtifactRegistry } = useContractContext();
 
   React.useEffect(() => {
     ArtifactRegistry.methods.getArtifactForToken(tokenId)
       .call()
       .then((artworkData: any) => {
-        console.log(artworkData);
+        console.log('ArtworkItem:23', 'ID:', tokenId, artworkData);
         const artwork = {
+          proposer: artworkData[0],
           metaUri: artworkData[1],
         };
         setArtwork(artwork);

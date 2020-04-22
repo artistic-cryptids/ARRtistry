@@ -3,15 +3,16 @@ import Button from 'react-bootstrap/Button';
 import Col from 'react-bootstrap/Col';
 import Form from 'react-bootstrap/Form';
 import Modal from 'react-bootstrap/Modal';
-import ipfs from '../helper/ipfs';
 import TransactionLoadingModal from './common/TransactionLoadingModal';
 import { EventData } from 'web3-eth-contract';
 import { useNameServiceContext } from '../providers/NameServiceProvider';
 import { useContractContext } from '../providers/ContractProvider';
 import { useWeb3Context } from '../providers/Web3Provider';
+import * as AgnosticArtworkRetriever from '../helper/agnostic';
 
 import { toast } from 'react-toastify';
 import { promisify } from 'util';
+import { useKeyContext } from '../providers/KeyProvider';
 
 interface TransferArtifactProps {
   tokenId: number;
@@ -59,19 +60,11 @@ const TransferArtifact: React.FC<TransferArtifactProps> = ({ tokenId, metaUri })
   const { addressFromName } = useNameServiceContext();
   const { ArtifactRegistry, Eurs, RoyaltyDistributor, Consignment } = useContractContext();
   const { web3, accounts } = useWeb3Context();
-
-  const saveMetaData = (jsonData: string): Promise<string> => {
-    const jsonDataBuffer = Buffer.from(JSON.stringify(jsonData));
-    const files = Array(jsonDataBuffer);
-
-    return ipfs.add([...files], { progress: (prog: any) => console.log(`received: ${prog}`) })
-      .then((response: any) => 'https://ipfs.io/ipfs/' + response[0].hash);
-  };
+  const { key } = useKeyContext();
 
   const addProvenance = (price: string, buyers: string[],
     seller: string, location: string, date: string): Promise<string> => {
-    return fetch(metaUri)
-      .then((response: any) => response.json())
+    return AgnosticArtworkRetriever.getArtworkMetadata(metaUri)
       .then((jsonData: any) => {
         jsonData.previousSalePrice = price;
         jsonData.saleProvenance.push({
@@ -82,7 +75,7 @@ const TransferArtifact: React.FC<TransferArtifactProps> = ({ tokenId, metaUri })
           date: date,
         });
 
-        return saveMetaData(jsonData);
+        return AgnosticArtworkRetriever.saveMetadata(jsonData, key);
       });
   };
 
@@ -119,11 +112,13 @@ const TransferArtifact: React.FC<TransferArtifactProps> = ({ tokenId, metaUri })
     let owner = '';
     setSubmitted(true);
 
-    const recipientAddress = await addressFromName(fields.recipientName);
+    const isHexAddress = fields.recipientName.includes('0x');
+
+    const recipientAddress = isHexAddress ? fields.recipientName : await addressFromName(fields.recipientName);
     const address = await ArtifactRegistry.methods.ownerOf(tokenId).call();
     owner = address;
     console.log('Getting owner:', owner);
-    const provenanceToast = toast('Adding Provenance Record to IPFS', { autoClose: false });
+    const provenanceToast = toast('Adding Provenance Record', { autoClose: false });
     const provenanceHash = await addProvenance(
       fields.price,
       [recipientAddress],
@@ -242,7 +237,7 @@ const TransferArtifact: React.FC<TransferArtifactProps> = ({ tokenId, metaUri })
         </Modal.Header>
         <Modal.Body>
           <Form.Group as={Col} controlId="recipientName">
-            <Form.Label>Recipient Name</Form.Label>
+            <Form.Label>Recipient Identifier</Form.Label>
             <Form.Control
               required
               type="text"

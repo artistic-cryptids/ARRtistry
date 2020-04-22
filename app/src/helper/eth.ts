@@ -79,3 +79,5 @@ export const getABIAndAddress: ABIandAddress = (networkId, json, defaultAddress)
     address: address || defaultAddress,
   };
 };
+
+export const BURN_ACCOUNT = '0xf9b9001432F41FB631F6162A31861823E8679fC3';
