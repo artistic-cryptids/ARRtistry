@@ -169,7 +169,7 @@ const TransferArtifact: React.FC<TransferArtifactProps> = ({ tokenId, metaUri })
           console.log('Let\'s go');
           payArr(arrToast, arrId, arrDue);
         })
-        .catch(console.err);
+        .catch(console.error);
     } else {
       setSubmitted(false);
     }
