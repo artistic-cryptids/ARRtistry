@@ -1,8 +1,27 @@
 import * as React from 'react';
 import * as _ from 'lodash';
 import ArrItem, { ArrItemType } from './ArrItem';
+import { ProgressCard, StatisticCard } from './StatisticCard';
 import CardColumns from 'react-bootstrap/CardColumns';
 import { useContractContext } from '../providers/ContractProvider';
+import Row from 'react-bootstrap/Row';
+
+interface Reflected<T> {
+  status: string;
+  value?: T;
+  reason?: any;
+}
+
+function reflect<T> (promise: Promise<T>): Promise<Reflected<T>> {
+  return promise.then(
+    (v) => {
+      return { status: 'fulfilled', value: v };
+    },
+    (error) => {
+      return { status: 'rejected', reason: error };
+    },
+  );
+}
 
 const LoadingArrItem: React.FC<{id: number; wrappedARR: Promise<ArrItemType>}> = ({ id, wrappedARR }) => {
   const [arr, setArr] = React.useState<ArrItemType>();
@@ -25,6 +44,9 @@ const LoadingArrItem: React.FC<{id: number; wrappedARR: Promise<ArrItemType>}> =
 const ArrList: React.FC = () => {
   const { ArrRegistry, RoyaltyDistributor } = useContractContext();
   const [promisedArr, setPromisedArr] = React.useState<Promise<ArrItemType>[]>([]);
+  const [arrTotal, setArrTotal] = React.useState<number>(0);
+  const [paidArr, setPaidArr] = React.useState<number>(0);
+  const [total, setTotal] = React.useState<number>(0);
 
   React.useEffect(() => {
     const addDueAmountToARRItem = (promisedArr: Promise<ArrItemType>): Promise<ArrItemType> => (
@@ -62,6 +84,30 @@ const ArrList: React.FC = () => {
       .catch(console.error);
   }, [ArrRegistry, RoyaltyDistributor]);
 
+  React.useEffect(() => {
+    const fufilledArrs = Promise.all(promisedArr.map(reflect))
+      .then((reflects) => reflects.filter(p => p.status === 'fulfilled'))
+      .then((fufilled) => fufilled.map(p => p.value as ArrItemType));
+
+    fufilledArrs
+      .then((arrs: ArrItemType[]) => _.sumBy(arrs, (arr) => arr.price))
+      .catch(console.error)
+      .then((sum) => setTotal(sum || 0))
+      .catch(console.error);
+
+    fufilledArrs
+      .then((arrs: ArrItemType[]) => _.sumBy(arrs, (arr) => arr.due || 0))
+      .catch(console.error)
+      .then((sum) => setArrTotal(sum || 0))
+      .catch(console.error);
+
+    fufilledArrs
+      .then((arrs: ArrItemType[]) => _.filter(arrs, (arr) => arr.paid))
+      .then((arrs: ArrItemType[]) => _.sumBy(arrs, (arr) => arr.due || 0))
+      .then((sum) => setPaidArr(sum))
+      .catch(console.error);
+  }, [promisedArr]);
+
   const listItems = promisedArr.map((arr: Promise<ArrItemType>, id: number) =>
     <LoadingArrItem
       id={id}
@@ -70,8 +116,20 @@ const ArrList: React.FC = () => {
     />,
   );
 
+  const statisticGroup = (
+    <Row>
+      <StatisticCard title="Total Sales" value={total} prefix="&euro;" icon="swatchbook" />
+      <StatisticCard title="Due ARR" value={arrTotal - paidArr} icon="euro-sign" theme="danger"/>
+      <StatisticCard title="Paid ARR" value={paidArr} icon="euro-sign" theme="success"/>
+      <ProgressCard title="Paid Ratio" progress={paidArr / arrTotal || 0} icon="clipboard-list" theme="warning"/>
+    </Row>
+  );
+
   return (
-    <CardColumns>{listItems}</CardColumns>
+    <>
+      {statisticGroup}
+      <CardColumns>{listItems}</CardColumns>
+    </>
   );
 };
 

@@ -74,7 +74,7 @@ const Main: React.FC<{page: string; parents: string[]}> = ({ page, parents, chil
     <>
       <LeftSidebar>
         <Header page={page} parents={parents}/>
-        <Container>
+        <Container fluid >
           {children}
         </Container>
       </LeftSidebar>

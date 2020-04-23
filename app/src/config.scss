@@ -1,3 +1,5 @@
+@import "node_modules/bootstrap/scss/functions";
+
 $pomegrate: #c0392b;
 $turquoise: #1abc9c;
 $emerald: #2ecc71;
@@ -6,6 +8,18 @@ $pumpkin: #d35400;
 $midnight-blue: #2c3e50;
 $blue: #506ee4;
 $color-dark: #595d6e;
+
+$white: #fff !default;
+$gray-100: #f8f9fc !default;
+$gray-200: #eaecf4 !default;
+$gray-300: #dddfeb !default;
+$gray-400: #d1d3e2 !default;
+$gray-500: #b7b9cc !default;
+$gray-600: #858796 !default;
+$gray-700: #6e707e !default;
+$gray-800: #5a5c69 !default;
+$gray-900: #3a3b45 !default;
+$black: #000 !default;
 
 $body-bg: #efeff5;
 $body-color: #111;
@@ -17,6 +31,5 @@ $theme-colors: (
 $font-family-sans-serif: 'Raleway', sans-serif;
 $enable-shadows: true;
 
-@import "node_modules/bootstrap/scss/functions";
 @import "node_modules/bootstrap/scss/variables";
 @import "node_modules/bootstrap/scss/mixins";
