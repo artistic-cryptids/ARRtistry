@@ -22,12 +22,13 @@ interface StatisticCardProps {
   icon: string
 }
 export const StatisticCard: React.FC<StatisticCardProps> = ({title, value, icon}) => {
-  const { countUp } = useCountUp({ end: value });
+  const { countUp, update } = useCountUp({ end: value, separator: ','});
+  React.useEffect(() => update(value), [value, update])
   return (
     <HighlightCard>
       <Col className="mr-2">
         <div className="text-xs font-weight-bold text-primary text-uppercase mb-1">{title}</div>
-        <div className="h5 mb-0 font-weight-bold text-gray-800">{countUp.toLocaleString()}</div>
+        <div className="h5 mb-0 font-weight-bold text-gray-800">{countUp}</div>
       </Col>
       <Col xs='auto'>
         <i className={`fas fa-${icon} fa-2x text-gray-300`}></i>
@@ -43,7 +44,8 @@ interface ProgressCardProps {
 }
 export const ProgressCard: React.FC<ProgressCardProps> = ({title, progress, icon}) => {
   const progressPercentage = Math.round(progress * 100);
-  const { countUp } = useCountUp({ end: progressPercentage });
+  const { countUp, update } = useCountUp({ end: progressPercentage, separator: ','});
+  React.useEffect(() => update(progressPercentage), [progressPercentage, update])
   return (
     <HighlightCard>
       <Col className="mr-2">
@@ -54,7 +56,7 @@ export const ProgressCard: React.FC<ProgressCardProps> = ({title, progress, icon
           </Col>
           <Col>
             <div className="progress progress-sm mr-2">
-              <div className="progress-bar bg-info" role="progressbar" style={{width: `${countUp}%`}}></div>
+              <div className="progress-bar bg-primary" role="progressbar" style={{width: `${countUp}%`}}></div>
             </div>
           </Col>
         </Row>

@@ -17,14 +17,14 @@ const Governance: React.FC = ({ children }) => {
 
   if (isGovernor) {
     return (
-      <Container>
+      <Container fluid>
         { children }
       </Container>
     );
   }
 
   return (
-    <Container>
+    <Container fluid>
       <h1>You are not an approved moderator</h1>
     </Container>
   );

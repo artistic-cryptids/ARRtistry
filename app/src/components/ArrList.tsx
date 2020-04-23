@@ -114,7 +114,7 @@ const ArrList: React.FC = () => {
 
   const statisticGroup = (
     <Row>
-      <StatisticCard title="Total Sales" value={total} icon="euro-sign" />
+      <StatisticCard title="Total Sales" value={total} icon="swatchbook" />
       <StatisticCard title="Due ARR" value={arrTotal} icon="euro-sign" />
       <StatisticCard title="Paid ARR" value={paidArr} icon="euro-sign" />
       <ProgressCard title="Paid Ratio" progress={paidArr/arrTotal || 0} icon="clipboard-list" />
