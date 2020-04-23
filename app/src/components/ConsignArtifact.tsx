@@ -8,7 +8,6 @@ import { useNameServiceContext } from '../providers/NameServiceProvider';
 import { useContractContext } from '../providers/ContractProvider';
 import { useWeb3Context } from '../providers/Web3Provider';
 import ENSName from './common/ENSName';
-import { FormControlProps } from 'react-bootstrap/FormControl';
 
 interface ConsignArtifactProps {
   tokenId: number;
