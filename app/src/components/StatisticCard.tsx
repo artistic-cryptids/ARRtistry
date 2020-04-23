@@ -2,7 +2,7 @@ import * as React from 'react';
 import { useCountUp } from 'react-countup';
 import { Row, Col, Card } from 'react-bootstrap';
 
-const HighlightCard: React.FC<{theme?: string}> = ({ theme = "primary", children }) => {
+const HighlightCard: React.FC<{theme?: string}> = ({ theme = 'primary', children }) => {
   return (
     <Col xl={3} md={6} className="mb-4">
       <Card className={`border-left-${theme} shadow h-100 py-2`}>
@@ -22,7 +22,7 @@ interface StatisticCardProps {
   value: number;
   icon: string;
 }
-export const StatisticCard: React.FC<StatisticCardProps> = ({ theme = "primary", title, value, icon }) => {
+export const StatisticCard: React.FC<StatisticCardProps> = ({ theme = 'primary', title, value, icon }) => {
   const { countUp, update } = useCountUp({ end: value, separator: ',' });
   React.useEffect(() => update(value), [value, update]);
   return (
@@ -44,7 +44,7 @@ interface ProgressCardProps {
   progress: number;
   icon: string;
 }
-export const ProgressCard: React.FC<ProgressCardProps> = ({ theme = "primary", title, progress, icon }) => {
+export const ProgressCard: React.FC<ProgressCardProps> = ({ theme = 'primary', title, progress, icon }) => {
   const progressPercentage = Math.round(progress * 100);
   const { countUp, update } = useCountUp({ end: progressPercentage, separator: ',' });
   React.useEffect(() => update(progressPercentage), [progressPercentage, update]);
