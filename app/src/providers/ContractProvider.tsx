@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { AbiItem } from 'web3-utils';
+import * as _ from 'lodash';
 
 import SplashScreen from '../components/SplashScreen';
 import { useNameServiceContext } from './NameServiceProvider';
@@ -26,28 +26,28 @@ export const ContractProvider: React.FC = ({ children }) => {
   const { addressFromName } = useNameServiceContext();
   const { web3 } = useWeb3Context();
 
-  const getContract = (ensName: string, abi: any): Promise<any> => {
-    return addressFromName(ensName)
-      .then((addr) => {console.log(`Translated ${ensName} to ${addr}`); return addr;})
-      .then((addr) => new web3.eth.Contract(abi, addr))
-      .catch(console.error);
-  }
-
   React.useEffect(() => {
     if (loaded) {
       return;
     }
 
+    const getContract = (ensName: string, abi: any): Promise<any> => {
+      return addressFromName(ensName)
+        .then((addr) => { console.log(`Translated ${ensName} to ${addr}`); return addr; })
+        .then((addr) => new web3.eth.Contract(abi, addr))
+        .catch(console.error);
+    };
+
     Promise.all([
-        getContract(`governance.${DOMAIN_ROOT}`, Governance.abi),
-        getContract(`application.${DOMAIN_ROOT}`, ArtifactApplication.abi),
-        getContract(`registry.${DOMAIN_ROOT}`, ArtifactRegistry.abi),
-        getContract(`artists.${DOMAIN_ROOT}`, Artists.abi),
-        getContract(`consignment.${DOMAIN_ROOT}`, Consignment.abi),
-        getContract(`arr.${DOMAIN_ROOT}`, ARRRegistry.abi),
-        getContract(`royalty.${DOMAIN_ROOT}`, RoyaltyDistributor.abi),
-        getContract(`eurs.${DOMAIN_ROOT}`, ERC20Eurs.abi),
-      ])
+      getContract(`governance.${DOMAIN_ROOT}`, Governance.abi),
+      getContract(`application.${DOMAIN_ROOT}`, ArtifactApplication.abi),
+      getContract(`registry.${DOMAIN_ROOT}`, ArtifactRegistry.abi),
+      getContract(`artists.${DOMAIN_ROOT}`, Artists.abi),
+      getContract(`consignment.${DOMAIN_ROOT}`, Consignment.abi),
+      getContract(`arr.${DOMAIN_ROOT}`, ARRRegistry.abi),
+      getContract(`royalty.${DOMAIN_ROOT}`, RoyaltyDistributor.abi),
+      getContract(`eurs.${DOMAIN_ROOT}`, ERC20Eurs.abi),
+    ])
       .then((contracts) => {
         setContracts({
           Governance: contracts[0],
@@ -62,11 +62,12 @@ export const ContractProvider: React.FC = ({ children }) => {
         setLoaded(true);
       })
       .catch(console.warn);
-  }, [addressFromName, getContract, loaded]);
+  }, [addressFromName, addressFromName, web3.eth.Contract, loaded]);
 
-  if (!loaded || !contracts) {
-    return <SplashScreen>
-      Connecting to latest ARRtistry smart contracts... Are you on Rinkeby?
+  if (!loaded || !contracts || !_.every(contracts)) {
+    const reason = !loaded ? 'Connecting to latest ARRtistry smart contracts...' : 'Cannot connect to ARRtistry smart contracts. Are you on Rinkeby?';
+    return <SplashScreen failed={loaded} >
+      {reason}
     </SplashScreen>;
   }
 

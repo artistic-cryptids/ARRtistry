@@ -9,10 +9,11 @@ import Card from 'react-bootstrap/Card';
 import Loading from './common/Loading';
 
 interface SplashScreenProps {
-  hide?: boolean;
+  failed?: boolean;
+  hide?: true;
 }
 
-const SplashScreen: React.FC<SplashScreenProps> = ({ hide, children }) => {
+const SplashScreen: React.FC<SplashScreenProps> = ({ failed, hide, children }) => {
   const [fade, setFade] = React.useState<boolean>(false);
   React.useEffect(() => {
     if (hide) {
@@ -45,7 +46,7 @@ const SplashScreen: React.FC<SplashScreenProps> = ({ hide, children }) => {
                   <div className={styles.splashHeader}>
                     <h1>ARRtistry</h1>
                     {subtitle}
-                    <Loading />
+                    {!failed && <Loading />}
                     <p>
                       {children}
                     </p>
