@@ -5,7 +5,7 @@ const utils = require('web3-utils');
 const ENS = artifacts.require('ENSRegistry');
 const Contract = artifacts.require('ArrtistryRegistrar');
 
-const NAME = 'artistry';
+const NAME = 'arrtistry';
 const TLD = 'test';
 
 contract('ArrtistryRegistrar', async accounts => {
@@ -36,7 +36,7 @@ contract('ArrtistryRegistrar', async accounts => {
   });
 
   describe('setRootNode', async () => {
-    const rootNode = 'artistry.test';
+    const rootNode = 'arrtistry.test';
     let instance;
 
     beforeEach(async () => {

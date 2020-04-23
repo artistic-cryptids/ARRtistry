@@ -26,14 +26,14 @@ export const ContractProvider: React.FC = ({ children }) => {
 
   React.useEffect(() => {
     async function getContracts (): Promise<void> {
-      const governanceAddr = await addressFromName('governance.artistry.test');
-      const applicationAddr = await addressFromName('application.artistry.test');
-      const registryAddr = await addressFromName('registry.artistry.test');
-      const artistsAddr = await addressFromName('artists.artistry.test');
-      const consignmentAddr = await addressFromName('consignment.artistry.test');
-      const arrAddr = await addressFromName('arr.artistry.test');
-      const royaltyAddr = await addressFromName('royalty.artistry.test');
-      const eursAddr = await addressFromName('eurs.artistry.test');
+      const governanceAddr = await addressFromName('governance.arrtistry.test');
+      const applicationAddr = await addressFromName('application.arrtistry.test');
+      const registryAddr = await addressFromName('registry.arrtistry.test');
+      const artistsAddr = await addressFromName('artists.arrtistry.test');
+      const consignmentAddr = await addressFromName('consignment.arrtistry.test');
+      const arrAddr = await addressFromName('arr.arrtistry.test');
+      const royaltyAddr = await addressFromName('royalty.arrtistry.test');
+      const eursAddr = await addressFromName('eurs.arrtistry.test');
 
       const governance = new web3.eth.Contract(Governance.abi as AbiItem[], governanceAddr);
       const artifactApplication = new web3.eth.Contract(ArtifactApplication.abi as AbiItem[], applicationAddr);
