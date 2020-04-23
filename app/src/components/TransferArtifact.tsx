@@ -8,6 +8,7 @@ import { EventData } from 'web3-eth-contract';
 import { useNameServiceContext } from '../providers/NameServiceProvider';
 import { useContractContext } from '../providers/ContractProvider';
 import { useWeb3Context } from '../providers/Web3Provider';
+import { useArrContext } from '../providers/ArrProvider';
 import * as AgnosticArtworkRetriever from '../helper/agnostic';
 
 import { toast } from 'react-toastify';
@@ -58,9 +59,10 @@ const TransferArtifact: React.FC<TransferArtifactProps> = ({ tokenId, metaUri })
   const [submitted, setSubmitted] = React.useState<boolean>(false);
 
   const { addressFromName } = useNameServiceContext();
-  const { ArtifactRegistry, Eurs, RoyaltyDistributor, Consignment } = useContractContext();
-  const { web3, accounts } = useWeb3Context();
+  const { ArtifactRegistry, RoyaltyDistributor, Consignment } = useContractContext();
+  const { accounts } = useWeb3Context();
   const { key } = useKeyContext();
+  const { payArr } = useArrContext();
 
   const addProvenance = (price: string, buyers: string[],
     seller: string, location: string, date: string): Promise<string> => {
@@ -77,35 +79,6 @@ const TransferArtifact: React.FC<TransferArtifactProps> = ({ tokenId, metaUri })
 
         return AgnosticArtworkRetriever.saveMetadata(jsonData, key);
       });
-  };
-
-  const takeArr = (arrToast: React.ReactText, arrId: Promise<number>, arrDue: Promise<number>): void => {
-    Promise.all([arrId, arrDue]).then(([arrId, arrDue]) => {
-      console.log(arrDue, arrId, web3.eth.abi.encodeParameter('uint', arrId));
-      return Eurs.methods.approveAndCall(
-        RoyaltyDistributor.options.address,
-        arrDue,
-        web3.eth.abi.encodeParameter('uint', arrId),
-      )
-        .send({ from: accounts[0] })
-        .once('transactionHash',
-          (hash: any) => { toast.update(arrToast, { render: `ARR accepted #${hash}`, type: toast.TYPE.INFO }); })
-        .once('receipt',
-          (_: any) => { toast.update(arrToast, { render: 'ARR recieved', type: toast.TYPE.INFO }); })
-        .on('confirmation',
-          (confNumber: any, receipt: any) => { console.log(confNumber, receipt); })
-        .on('error', (error: any) => {
-          console.log(error);
-          toast.update(arrToast, { render: 'ARR failed', type: toast.TYPE.ERROR, autoClose: 5000 });
-          setSubmitted(false);
-        })
-        .then((receipt: any) => {
-          toast.update(arrToast, { render: 'ARR Transfer successful', type: toast.TYPE.SUCCESS, autoClose: 5000 });
-          console.log('Mined: ', receipt);
-          setSubmitted(false);
-        });
-    })
-      .catch(console.warn);
   };
 
   const transferArtwork = async (_: React.FormEvent): Promise<void> => {
@@ -179,6 +152,7 @@ const TransferArtifact: React.FC<TransferArtifactProps> = ({ tokenId, metaUri })
         setSubmitted(false);
       });
 
+    console.log('takesARR', takesArr);
     if (takesArr) {
       const arrToast = toast('ARR Pending', { autoClose: false });
       const arrId = transferPromise.then((receipt: any) => {
@@ -190,7 +164,12 @@ const TransferArtifact: React.FC<TransferArtifactProps> = ({ tokenId, metaUri })
         callback(null, arrDue);
       })() as Promise<number>;
 
-      takeArr(arrToast, arrId, arrDue);
+      Promise.all([arrId, arrDue])
+        .then(([arrId, arrDue]) => {
+          console.log('Let\'s go');
+          payArr(arrToast, arrId, arrDue);
+        })
+        .catch(console.err);
     } else {
       setSubmitted(false);
     }

@@ -5,6 +5,7 @@ import { NameServiceProvider } from '../providers/NameServiceProvider';
 import { SessionProvider } from '../providers/SessionProvider';
 import { ContractProvider } from '../providers/ContractProvider';
 import { KeyProvider } from '../providers/KeyProvider';
+import { ArrProvider } from '../providers/ArrProvider';
 
 import Router from './Router';
 import SplashScreen from './SplashScreen';
@@ -16,8 +17,10 @@ const App: React.FC = () => {
         <ContractProvider>
           <SessionProvider>
             <KeyProvider>
-              <SplashScreen hide/>
-              <Router/>
+              <ArrProvider>
+                <SplashScreen hide/>
+                <Router/>
+              </ArrProvider>
             </KeyProvider>
           </SessionProvider>
         </ContractProvider>
