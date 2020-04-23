@@ -1,7 +1,7 @@
 const utils = require('web3-utils');
 const namehash = require('eth-ens-namehash');
 
-const NAME = 'artistry';
+const NAME = 'arrtistry';
 const TLD = 'test';
 const DOMAIN = NAME + '.' + TLD;
 
