@@ -58,13 +58,13 @@ export const NameServiceProvider: React.FC = ({ children }) => {
       })
       .then(({ abi, addr }: any) => new web3.eth.Contract(abi, addr))
       .catch((err: any) => {
-        return Promise.reject(`Could not create resolver contract: ${err}`);
+        throw new Error(`Could not create resolver contract: ${err}`);
       });
   };
 
   const nameFromAddress: Address2ENS = (address) => {
     if (ens === undefined) {
-      return Promise.reject('No ENS Service');
+      return Promise.reject(new Error('No ENS Service'));
     }
 
     const lookup = address.toLowerCase().substr(2) + '.addr.reverse';
@@ -72,19 +72,19 @@ export const NameServiceProvider: React.FC = ({ children }) => {
     return getResolverForHash(hash)
       .then((resolver: any) => resolver.methods.name(hash).call())
       .catch((err: any) => {
-        return Promise.reject(`Could not resolve name hash: ${err}`);
+        throw new Error(`Could not resolve name hash: ${err}`);
       });
   };
 
   const addressFromName: ENS2Address = (name) => {
     if (ens === undefined) {
-      return Promise.reject('No ENS Service');
+      return Promise.reject(new Error('No ENS Service'));
     }
     const hash = namehash.hash(name);
     return getResolverForHash(hash)
       .then((resolver: any) => resolver.methods.addr(hash).call())
       .catch((err: any) => {
-        return Promise.reject(`Could not resolve address hash: ${err}`);
+        throw new Error(`Could not resolve address hash: ${err}`);
       });
   };
 

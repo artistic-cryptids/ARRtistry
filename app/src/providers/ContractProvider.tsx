@@ -62,10 +62,12 @@ export const ContractProvider: React.FC = ({ children }) => {
         setLoaded(true);
       })
       .catch(console.warn);
-  }, [addressFromName, addressFromName, web3.eth.Contract, loaded]);
+  }, [addressFromName, web3.eth.Contract, loaded]);
 
   if (!loaded || !contracts || !_.every(contracts)) {
-    const reason = !loaded ? 'Connecting to latest ARRtistry smart contracts...' : 'Cannot connect to ARRtistry smart contracts. Are you on Rinkeby?';
+    const reason = !loaded
+      ? 'Connecting to latest ARRtistry smart contracts...'
+      : 'Cannot connect to ARRtistry smart contracts. Are you on Rinkeby?';
     return <SplashScreen failed={loaded} >
       {reason}
     </SplashScreen>;
