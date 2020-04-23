@@ -12,14 +12,14 @@ interface Reflected<T> {
   reason?: any;
 }
 
-function reflect<T>(promise: Promise<T>): Promise<Reflected<T>> {
+function reflect<T> (promise: Promise<T>): Promise<Reflected<T>> {
   return promise.then(
     (v) => {
       return { status: 'fulfilled', value: v };
     },
     (error) => {
       return { status: 'rejected', reason: error };
-    }
+    },
   );
 }
 
@@ -87,7 +87,7 @@ const ArrList: React.FC = () => {
   React.useEffect(() => {
     const fufilledArrs = Promise.all(promisedArr.map(reflect))
       .then((reflects) => reflects.filter(p => p.status === 'fulfilled'))
-      .then((fufilled) => {console.log(fufilled); return fufilled.map(p => p.value!); })
+      .then((fufilled) => { console.log(fufilled); return fufilled.map(p => p.value!); });
 
     fufilledArrs
       .then((arrs: ArrItemType[]) => _.sumBy(arrs, (arr) => arr.price))
@@ -101,8 +101,7 @@ const ArrList: React.FC = () => {
       .then((arrs: ArrItemType[]) => _.filter(arrs, (arr) => arr.paid))
       .then((arrs: ArrItemType[]) => _.sumBy(arrs, (arr) => arr.due || 0))
       .then((sum) => setPaidArr(sum));
-
-  }, [promisedArr])
+  }, [promisedArr]);
 
   const listItems = promisedArr.map((arr: Promise<ArrItemType>, id: number) =>
     <LoadingArrItem
@@ -117,7 +116,7 @@ const ArrList: React.FC = () => {
       <StatisticCard title="Total Sales" value={total} icon="swatchbook" />
       <StatisticCard title="Due ARR" value={arrTotal} icon="euro-sign" />
       <StatisticCard title="Paid ARR" value={paidArr} icon="euro-sign" />
-      <ProgressCard title="Paid Ratio" progress={paidArr/arrTotal || 0} icon="clipboard-list" />
+      <ProgressCard title="Paid Ratio" progress={paidArr / arrTotal || 0} icon="clipboard-list" />
     </Row>
   );
 
