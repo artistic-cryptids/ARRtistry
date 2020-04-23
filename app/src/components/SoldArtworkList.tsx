@@ -19,7 +19,7 @@ const SoldArtworkList: React.FC = () => {
   const { ArtifactRegistry } = useContractContext();
   const { accounts } = useWeb3Context();
   const { validTokenIds } = useTokenContext();
-  console.log("SoldArtworkList:", validTokenIds);
+  console.log('SoldArtworkList:', validTokenIds);
 
   React.useEffect(() => {
     const currentAccount = accounts[0];
@@ -41,7 +41,7 @@ const SoldArtworkList: React.FC = () => {
   }, [ArtifactRegistry, validTokenIds, accounts]);
 
   if (balance === -1) {
-    return <Loading />
+    return <Loading />;
   }
 
   if (balance === 0) {

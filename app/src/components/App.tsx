@@ -11,7 +11,7 @@ import { TokenProvider } from '../providers/TokenProvider';
 import Router from './Router';
 import SplashScreen from './SplashScreen';
 
-const BlockingProviders: React.FC = ({children}) => {
+const BlockingProviders: React.FC = ({ children }) => {
   return (
     <Web3Provider>
       <NameServiceProvider>
@@ -23,9 +23,9 @@ const BlockingProviders: React.FC = ({children}) => {
       </NameServiceProvider>
     </Web3Provider>
   );
-}
+};
 
-const NonBlockingProviders: React.FC = ({children}) => {
+const NonBlockingProviders: React.FC = ({ children }) => {
   return (
     <KeyProvider>
       <ArrProvider>
@@ -35,7 +35,7 @@ const NonBlockingProviders: React.FC = ({children}) => {
       </ArrProvider>
     </KeyProvider>
   );
-}
+};
 
 const App: React.FC = () => {
   return (

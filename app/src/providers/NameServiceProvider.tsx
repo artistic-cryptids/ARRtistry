@@ -17,11 +17,11 @@ export interface User {
 }
 
 export interface ENS2Address extends Function {
-  (ens: string): Promise<string>
+  (ens: string): Promise<string>;
 }
 
 export interface Address2ENS extends Function {
-  (address: string): Promise<string>
+  (address: string): Promise<string>;
 }
 
 export interface NameService {
@@ -59,8 +59,8 @@ export const NameServiceProvider: React.FC = ({ children }) => {
       .then(({ abi, addr }: any) => new web3.eth.Contract(abi, addr))
       .catch((err: any) => {
         return Promise.reject(`Could not create resolver contract: ${err}`);
-      })
-  }
+      });
+  };
 
   const nameFromAddress: Address2ENS = (address) => {
     if (ens === undefined) {
