@@ -68,8 +68,8 @@ const ArrItem: React.FC<ArrItemProps> = ({ id, arr }) => {
           <AddressField label='Buyer' address={arr.to}/>
           <AddressField label='Seller' address={arr.from}/>
           <PlaintextField label='Sale Location' value={arr.location} />
-          <PlaintextField label='Sale Price' value={'€' + arr.price} />
-          <PlaintextField label='ARR' value={'€' + arr.due} />
+          <PlaintextField label='Sale Price' value={'€' + arr.price.toLocaleString()} />
+          {arr.due && <PlaintextField label='ARR' value={'€' + arr.due.toLocaleString()} />}
         </Form>
       </Card.Body>
       <Card.Footer>
