@@ -87,20 +87,25 @@ const ArrList: React.FC = () => {
   React.useEffect(() => {
     const fufilledArrs = Promise.all(promisedArr.map(reflect))
       .then((reflects) => reflects.filter(p => p.status === 'fulfilled'))
-      .then((fufilled) => { console.log(fufilled); return fufilled.map(p => p.value!); });
+      .then((fufilled) => fufilled.map(p => p.value as ArrItemType));
 
     fufilledArrs
       .then((arrs: ArrItemType[]) => _.sumBy(arrs, (arr) => arr.price))
-      .then((sum) => setTotal(sum));
+      .catch(console.error)
+      .then((sum) => setTotal(sum || 0))
+      .catch(console.error);
 
     fufilledArrs
       .then((arrs: ArrItemType[]) => _.sumBy(arrs, (arr) => arr.due || 0))
-      .then((sum) => setArrTotal(sum));
+      .catch(console.error)
+      .then((sum) => setArrTotal(sum || 0))
+      .catch(console.error);
 
     fufilledArrs
       .then((arrs: ArrItemType[]) => _.filter(arrs, (arr) => arr.paid))
       .then((arrs: ArrItemType[]) => _.sumBy(arrs, (arr) => arr.due || 0))
-      .then((sum) => setPaidArr(sum));
+      .then((sum) => setPaidArr(sum))
+      .catch(console.error);
   }, [promisedArr]);
 
   const listItems = promisedArr.map((arr: Promise<ArrItemType>, id: number) =>
