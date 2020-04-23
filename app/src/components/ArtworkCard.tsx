@@ -19,6 +19,7 @@ interface ArtworkCardProps {
   metaUri?: string;
   fields?: ArtworkInfoFields;
   artist?: Artist;
+  placeholder?: true;
   fullscreen?: true;
 }
 
@@ -38,6 +39,7 @@ const ArtworkCard: React.FC<ArtworkCardProps> = ({
   fields,
   artist,
   fullscreen,
+  placeholder,
   children,
 }) => {
   const [lastUpdateTime, setUpdateTime] = React.useState<string>('Checking');
@@ -46,6 +48,10 @@ const ArtworkCard: React.FC<ArtworkCardProps> = ({
   const { ArtifactRegistry, Governance } = useContractContext();
 
   React.useEffect(() => {
+    if (placeholder) {
+      return;
+    }
+
     const getLastUpdated = async (): Promise<void> => {
       const options = { fromBlock: 0 };
       let events = await ArtifactRegistry.getPastEvents('Transfer', options)
@@ -65,7 +71,7 @@ const ArtworkCard: React.FC<ArtworkCardProps> = ({
       }
     };
     getLastUpdated();
-  }, [ArtifactRegistry, id, web3, Governance]);
+  }, [ArtifactRegistry, id, web3, Governance, placeholder]);
 
   const path = `/artifact/${id}`;
 
@@ -106,7 +112,7 @@ const ArtworkCard: React.FC<ArtworkCardProps> = ({
               {id && <ProvenanceModal tokenId={id} />}
             </ButtonGroup>
           </div>
-          : <Card.Text>
+          : <Card.Text as="div">
             {fields &&
               fields.documents &&
               fields.documents.length > 0 &&
