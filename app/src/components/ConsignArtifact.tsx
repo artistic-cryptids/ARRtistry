@@ -26,7 +26,7 @@ interface ConsignmentInfo {
 type InputChangeEvent = React.FormEvent<any> &
   {
     target: {
-      id: keyof ConsignArtifactFormFields;
+      id: string;
       value: ConsignArtifactFormFields[keyof ConsignArtifactFormFields];
     };
   }
@@ -142,7 +142,7 @@ const ConsignArtifact: React.FC<ConsignArtifactProps> = ({ tokenId }) => {
   };
 
   const inputChangeHandler = (event: InputChangeEvent): void => {
-    const key = event.target.id;
+    const key = event.target.id as keyof ConsignArtifactFormFields;
     const val = event.target.value;
     const stateUpdate = {
       fields: fields as Pick<ConsignArtifactFormFields, keyof ConsignArtifactFormFields>,
@@ -213,7 +213,7 @@ const ConsignArtifact: React.FC<ConsignArtifactProps> = ({ tokenId }) => {
             </React.Fragment>}
           <p>Consign Account to Sell</p>
           <Form.Group as={Col} controlId="recipientName">
-            <Form.Label>Recipient Name</Form.Label>
+            <Form.Label>Recipient Identifier</Form.Label>
             <Form.Control
               required
               type="text"
