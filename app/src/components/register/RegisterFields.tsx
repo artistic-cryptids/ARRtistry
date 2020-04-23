@@ -48,7 +48,7 @@ const RegisterFields: React.FC = () => {
           <Form.Label className="mb-2 text-muted"> (optional)</Form.Label>
           <Form.Control
             as="textarea"
-            rows="3"
+            rows={3}
             onChange={inputChangeHandler}
             value={textFields.description}
           />
