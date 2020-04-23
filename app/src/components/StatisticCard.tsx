@@ -19,17 +19,18 @@ const HighlightCard: React.FC<{theme?: string}> = ({ theme = 'primary', children
 interface StatisticCardProps {
   theme?: string;
   title: string;
+  prefix?: string;
   value: number;
   icon: string;
 }
-export const StatisticCard: React.FC<StatisticCardProps> = ({ theme = 'primary', title, value, icon }) => {
+export const StatisticCard: React.FC<StatisticCardProps> = ({ theme = 'primary', title, prefix, value, icon }) => {
   const { countUp, update } = useCountUp({ end: value, separator: ',' });
   React.useEffect(() => update(value), [value, update]);
   return (
     <HighlightCard theme={theme} >
       <Col className="mr-2">
         <div className={`text-xs font-weight-bold text-${theme} text-uppercase mb-1`}>{title}</div>
-        <div className="h5 mb-0 font-weight-bold text-gray-800">{countUp}</div>
+        <div className="h5 mb-0 font-weight-bold text-gray-800">{prefix}{countUp}</div>
       </Col>
       <Col xs='auto'>
         <i className={`fas fa-${icon} fa-2x text-gray-300`}></i>
