@@ -2,6 +2,7 @@ import * as React from 'react';
 import { useNameServiceContext } from './NameServiceProvider';
 import { useWeb3Context } from './Web3Provider';
 import SplashScreen from '../components/SplashScreen';
+import { getUserListMetadata } from '../helper/agnostic';
 
 const DEFAULT_USER = {
   nickname: 'John Doe',
@@ -44,7 +45,7 @@ export const NATASHA: User = {
 
 export const NICHOLA: User = {
   nickname: 'Nichola Theakston',
-  img: 'https://www.celebratingceramics.co.uk/images/cc_images/nichola_theakston_800.jpg',
+  img: 'https://i.imgur.com/u6NWt8i.jpg',
   role: 'ARTIST',
   address: ['0x67EDE48B355DA3fb5d5fB6e5964DaB9fDA56aADe'],
   name: 'nichola.arrtistry.test',
@@ -90,7 +91,13 @@ export const SessionProvider: React.FC = ({ children }) => {
   const [user, setUser] = React.useState<User>(defaultUser);
   const [gotUser, setGotUser] = React.useState<boolean>(false);
 
-  const users = [DACS_DEFAULT, DEAL_DEFAULT, NATASHA, NICHOLA, LUXEMBURG, BUYER_DEFAULT];
+  // let users = [DACS_DEFAULT, DEAL_DEFAULT, NATASHA, NICHOLA, LUXEMBURG, BUYER_DEFAULT];
+  let users: Array<User> = [];
+  getUserListMetadata('8R5oVUsbTnhiJlkm56HVRcEHvc9YEG4Hr3YxOYw_gSg')
+    .then((userList: Array<User>) => {
+      console.log(userList);
+      users = userList;
+    }).catch(console.log);
 
   React.useEffect(() => {
     let curUser: User = defaultUser;
