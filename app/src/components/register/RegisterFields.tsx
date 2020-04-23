@@ -3,24 +3,20 @@ import * as React from 'react';
 import Col from 'react-bootstrap/Col';
 import InputGroup from 'react-bootstrap/InputGroup';
 import TransactionLoadingModal from '../common/TransactionLoadingModal';
-import { useFormControlContext, useTextFieldsContext, TextFields } from '../../providers/FormProvider';
+import { useFormControlContext, useTextFieldsContext } from '../../providers/FormProvider';
 import { useKeyContext } from '../../providers/KeyProvider';
-
-type InputChangeEvent = React.FormEvent<any> &
-  {
-    target: {
-      id: keyof TextFields;
-      value: TextFields[keyof TextFields];
-    };
-  }
 
 const RegisterFields: React.FC = () => {
   const { setField, status } = useFormControlContext();
   const textFields = useTextFieldsContext();
   const { setKey } = useKeyContext();
 
-  const inputChangeHandler = (event: InputChangeEvent): void => {
-    setField(event.target.id, event.target.value);
+  const inputChangeHandler: React.FormEventHandler<any> = (event) => {
+    // Can't handle the Bootstrap form types
+    const target = event.target as any;
+    const key = target.id;
+    const val = target.value;
+    setField(key, val);
   };
 
   const keyFileHandler = (event: any): void => {

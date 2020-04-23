@@ -8,6 +8,7 @@ import { useNameServiceContext } from '../providers/NameServiceProvider';
 import { useContractContext } from '../providers/ContractProvider';
 import { useWeb3Context } from '../providers/Web3Provider';
 import ENSName from './common/ENSName';
+import { FormControlProps } from 'react-bootstrap/FormControl';
 
 interface ConsignArtifactProps {
   tokenId: number;
@@ -22,14 +23,6 @@ interface ConsignmentInfo {
   account: string;
   commission: string;
 }
-
-type InputChangeEvent = React.FormEvent<any> &
-  {
-    target: {
-      id: string;
-      value: ConsignArtifactFormFields[keyof ConsignArtifactFormFields];
-    };
-  }
 
 const GENERIC_FEEDBACK = <Form.Control.Feedback>Looks good!</Form.Control.Feedback>;
 
@@ -141,9 +134,11 @@ const ConsignArtifact: React.FC<ConsignArtifactProps> = ({ tokenId }) => {
       );
   };
 
-  const inputChangeHandler = (event: InputChangeEvent): void => {
-    const key = event.target.id as keyof ConsignArtifactFormFields;
-    const val = event.target.value;
+  const inputChangeHandler: React.FormEventHandler<any> = (event) => {
+    // Can't handle the Bootstrap form types
+    const target = event.target as any;
+    const key = target.id as keyof ConsignArtifactFormFields;
+    const val = target.value;
     const stateUpdate = {
       fields: fields as Pick<ConsignArtifactFormFields, keyof ConsignArtifactFormFields>,
     };
