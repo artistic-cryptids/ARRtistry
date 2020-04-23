@@ -136,7 +136,7 @@ const RegisterArtist: React.FC = () => {
   const inputChangeHandler: React.FormEventHandler<any> = (event) => {
     // Can't handle the Bootstrap form types
     const target = event.target as any;
-    const key = target.id;
+    const key = target.id as keyof RegisterFormFields;
     const val = target.value;
 
     const stateUpdate = { fields: fields as Pick<RegisterFormFields, keyof RegisterFormFields> };

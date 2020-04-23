@@ -175,9 +175,12 @@ const TransferArtifact: React.FC<TransferArtifactProps> = ({ tokenId, metaUri })
     }
   };
 
-  const inputChangeHandler = (event: InputChangeEvent): void => {
-    const key = event.target.id;
-    const val = event.target.value;
+  const inputChangeHandler: React.FormEventHandler<any> = (event) => {
+    // Can't handle the Bootstrap form types
+    const target = event.target as any;
+    const key = target.id as keyof TransferArtifactFormFields;
+    const val = target.value;
+
     const stateUpdate = {
       fields: fields as Pick<TransferArtifactFormFields, keyof TransferArtifactFormFields>,
     };
