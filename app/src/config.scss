@@ -1,6 +1,4 @@
 @import "node_modules/bootstrap/scss/functions";
-@import "node_modules/bootstrap/scss/variables";
-@import "node_modules/bootstrap/scss/mixins";
 
 $pomegrate: #c0392b;
 $turquoise: #1abc9c;
@@ -33,4 +31,5 @@ $theme-colors: (
 $font-family-sans-serif: 'Raleway', sans-serif;
 $enable-shadows: true;
 
-$link-color: $midnight-blue;
+@import "node_modules/bootstrap/scss/variables";
+@import "node_modules/bootstrap/scss/mixins";

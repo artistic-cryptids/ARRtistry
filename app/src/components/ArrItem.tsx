@@ -53,7 +53,7 @@ const ArrItem: React.FC<ArrItemProps> = ({ id, arr }) => {
   }
 
   return (
-    <Card>
+    <Card className={arr.paid ? 'border-top-success' : 'border-top-danger'}>
       <Card.Body>
         <Card.Title>
           <span className="text-muted text-capitalize">
