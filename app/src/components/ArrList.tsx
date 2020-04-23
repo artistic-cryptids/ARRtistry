@@ -1,35 +1,72 @@
 import * as React from 'react';
-import ArrItem from './ArrItem';
+import * as _ from 'lodash';
+import ArrItem, { ArrItemType } from './ArrItem';
 import CardColumns from 'react-bootstrap/CardColumns';
 import { useContractContext } from '../providers/ContractProvider';
 
-const ArrList: React.FC = () => {
-  const [ids, setIds] = React.useState<string[]>();
-
-  const { ArrRegistry } = useContractContext();
+const LoadingArrItem: React.FC<{id: number; wrappedARR: Promise<ArrItemType>}> = ({ id, wrappedARR }) => {
+  const [arr, setArr] = React.useState<ArrItemType>();
 
   React.useEffect(() => {
-    const loadArrs = async (): Promise<void> => {
-      const len = await ArrRegistry.methods.totalRecords().call();
+    wrappedARR
+      .then((arr) => setArr(arr))
+      .catch(console.log);
+  }, [wrappedARR]);
 
-      const ids = [];
-      for (let i = 1; i <= len; i++) {
-        ids.push(i.toString());
-      }
-
-      setIds(ids);
-    };
-    loadArrs();
-  }, [ArrRegistry]);
-
-  if (!ids) {
+  if (!arr) {
     return null;
   }
+  return <ArrItem
+    id={id}
+    arr={arr}
+  />;
+};
 
-  const listItems = ids.map((id: any) =>
-    <ArrItem
+const ArrList: React.FC = () => {
+  const { ArrRegistry, RoyaltyDistributor } = useContractContext();
+  const [promisedArr, setPromisedArr] = React.useState<Promise<ArrItemType>[]>([]);
+
+  React.useEffect(() => {
+    const addDueAmountToARRItem = (promisedArr: Promise<ArrItemType>): Promise<ArrItemType> => (
+      promisedArr.then((arr: ArrItemType) => (
+        RoyaltyDistributor.methods.calculateARR(arr.price).call()
+          .then(parseInt)
+          .then(
+            (due: number) => {
+              if (due === 0) {
+                throw Error('Do not display 0 ARR');
+              }
+              return {
+                from: arr.from,
+                to: arr.to,
+                tokenId: arr.tokenId,
+                price: arr.price / 100,
+                due: due / 100,
+                location: arr.location,
+                paid: arr.paid,
+              };
+            },
+          )
+      ))
+    );
+
+    const loadARRMetadata = (id: number): Promise<ArrItemType> => {
+      const meta: Promise<ArrItemType> = ArrRegistry.methods.retrieve(id).call();
+      return addDueAmountToARRItem(meta);
+    };
+
+    ArrRegistry.methods.totalRecords().call()
+      .then((total: string) => _.range(1, parseInt(total) + 1))
+      .catch(console.error)
+      .then((ids: number[]) => setPromisedArr(ids.map(loadARRMetadata)))
+      .catch(console.error);
+  }, [ArrRegistry, RoyaltyDistributor]);
+
+  const listItems = promisedArr.map((arr: Promise<ArrItemType>, id: number) =>
+    <LoadingArrItem
       id={id}
       key={id}
+      wrappedARR={arr}
     />,
   );
 

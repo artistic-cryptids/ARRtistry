@@ -17,12 +17,14 @@ async function retrieveWeb3 (): Promise<Web3 | undefined> {
   const { ethereum } = window as any;
   if (ethereum) {
     try {
+      // Silences warning about refresh on change
+      ethereum.autoRefreshOnNetworkChange = false;
       const web3 = new Web3(ethereum);
       const selectedAccount = await ethereum.enable();
       if (!selectedAccount) {
         console.warn('User opted out');
       } else {
-        console.log('user gave access!');
+        console.log('User gave access!');
       }
       return web3;
     } catch (error) {
@@ -71,7 +73,7 @@ export const Web3Provider: React.FC = ({ children }) => {
 
   if (!web3 || !networkId || !accounts) {
     return <SplashScreen>
-      Connecting to ethereum network.
+      Connecting to ethereum network...
       Please use an injected web3 provider such as MetaMask or Fortmatic.
     </SplashScreen>;
   }

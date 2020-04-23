@@ -6,18 +6,23 @@ import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Background from './SplashScreen.jpg';
 import Card from 'react-bootstrap/Card';
+import Loading from './common/Loading';
 
 interface SplashScreenProps {
-  hide?: boolean;
+  failed?: boolean;
+  hide?: true;
 }
 
-const SplashScreen: React.FC<SplashScreenProps> = ({ hide, children }) => {
+const SplashScreen: React.FC<SplashScreenProps> = ({ failed, hide, children }) => {
   const [fade, setFade] = React.useState<boolean>(false);
   React.useEffect(() => {
-    setTimeout(() => {
-      setFade(true);
-    }, 1000);
-  }, []);
+    if (hide) {
+      const fadeTimeout = setTimeout(() => {
+        setFade(true);
+      }, 1000);
+      return () => clearTimeout(fadeTimeout);
+    }
+  }, [hide]);
 
   const subtitle = (
     <h3>
@@ -27,8 +32,8 @@ const SplashScreen: React.FC<SplashScreenProps> = ({ hide, children }) => {
   );
   const style: React.CSSProperties = {
     backgroundImage: `url(${Background})`,
-    opacity: fade && hide ? 0 : 1,
-    visibility: fade && hide ? 'hidden' : 'visible',
+    opacity: fade ? 0 : 1,
+    visibility: fade ? 'hidden' : 'visible',
   };
   return (
     <div className={styles.splashScreen} style={style}>
@@ -41,6 +46,7 @@ const SplashScreen: React.FC<SplashScreenProps> = ({ hide, children }) => {
                   <div className={styles.splashHeader}>
                     <h1>ARRtistry</h1>
                     {subtitle}
+                    {!failed && <Loading />}
                     <p>
                       {children}
                     </p>

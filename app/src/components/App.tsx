@@ -6,26 +6,45 @@ import { SessionProvider } from '../providers/SessionProvider';
 import { ContractProvider } from '../providers/ContractProvider';
 import { KeyProvider } from '../providers/KeyProvider';
 import { ArrProvider } from '../providers/ArrProvider';
+import { TokenProvider } from '../providers/TokenProvider';
 
 import Router from './Router';
 import SplashScreen from './SplashScreen';
 
-const App: React.FC = () => {
+const BlockingProviders: React.FC = ({ children }) => {
   return (
     <Web3Provider>
       <NameServiceProvider>
         <ContractProvider>
           <SessionProvider>
-            <KeyProvider>
-              <ArrProvider>
-                <SplashScreen hide/>
-                <Router/>
-              </ArrProvider>
-            </KeyProvider>
+            {children}
           </SessionProvider>
         </ContractProvider>
       </NameServiceProvider>
     </Web3Provider>
+  );
+};
+
+const NonBlockingProviders: React.FC = ({ children }) => {
+  return (
+    <KeyProvider>
+      <ArrProvider>
+        <TokenProvider>
+          {children}
+        </TokenProvider>
+      </ArrProvider>
+    </KeyProvider>
+  );
+};
+
+const App: React.FC = () => {
+  return (
+    <BlockingProviders>
+      <SplashScreen hide/>
+      <NonBlockingProviders>
+        <Router/>
+      </NonBlockingProviders>
+    </BlockingProviders>
   );
 };
 

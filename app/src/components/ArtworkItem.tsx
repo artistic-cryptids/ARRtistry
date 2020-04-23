@@ -31,26 +31,30 @@ const ArtworkItem: React.FC<ArtworkItemProps> = ({ tokenId, ownedArtifact, fulls
   }, [ArtifactRegistry.methods, tokenId]);
 
   if (artwork.metaUri === '') {
-    return <ArtworkCard id={tokenId} img='https://file.globalupload.io/HO8sN3I2nJ.png'/>;
+    return <ArtworkCard id={tokenId} placeholder />;
   }
+
+  const ownedControl = (
+    <div className="text-center">
+      <ButtonGroup>
+        <TransferArtifact
+          tokenId={tokenId}
+          metaUri={artwork.metaUri}
+        />
+        <ConsignArtifact
+          tokenId={tokenId}
+        />
+      </ButtonGroup>
+    </div>
+  );
 
   return (
     <ArtworkInfo
-      artwork={artwork}
       id={tokenId}
+      artwork={artwork}
       fullscreen={fullscreen}
     >
-      {ownedArtifact && <div className="text-center">
-        <ButtonGroup>
-          <TransferArtifact
-            tokenId={tokenId}
-            metaUri={artwork.metaUri}
-          />
-          <ConsignArtifact
-            tokenId={tokenId}
-          />
-        </ButtonGroup>
-      </div>}
+      {ownedArtifact && ownedControl}
     </ArtworkInfo>
   );
 };

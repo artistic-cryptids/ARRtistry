@@ -3,6 +3,8 @@ import SoldArtworkItem from './SoldArtworkItem';
 import CardColumns from 'react-bootstrap/CardColumns';
 import { useContractContext } from '../providers/ContractProvider';
 import { useWeb3Context } from '../providers/Web3Provider';
+import { useTokenContext } from '../providers/TokenProvider';
+import Loading from './common/Loading';
 
 interface SoldInformation {
   tokenId: number;
@@ -11,13 +13,15 @@ interface SoldInformation {
 }
 
 const SoldArtworkList: React.FC = () => {
-  const [balance, setBalance] = React.useState<number>(0);
+  const [balance, setBalance] = React.useState<number>(-1);
   const [soldList, setSoldList] = React.useState<SoldInformation[]>([]);
 
   const { ArtifactRegistry } = useContractContext();
   const { accounts } = useWeb3Context();
+  const { validTokenIds } = useTokenContext();
+  console.log('SoldArtworkList:', validTokenIds);
 
-  const loadSales: VoidFunction = () => {
+  React.useEffect(() => {
     const currentAccount = accounts[0];
     const options = { fromBlock: 0 };
 
@@ -25,17 +29,20 @@ const SoldArtworkList: React.FC = () => {
       const soldMap = events.filter(event => event.returnValues.from === currentAccount)
         .map((event) => {
           return {
-            tokenId: event.returnValues.tokenId,
+            tokenId: parseInt(event.returnValues.tokenId),
             price: event.returnValues.price,
             newOwner: event.returnValues.to,
           };
-        });
+        })
+        .filter(({ tokenId }) => validTokenIds.includes(tokenId));
       setSoldList(soldMap);
       setBalance(soldMap.length);
     }).catch(console.log);
-  };
+  }, [ArtifactRegistry, validTokenIds, accounts]);
 
-  React.useEffect(loadSales, [balance, soldList]);
+  if (balance === -1) {
+    return <Loading />;
+  }
 
   if (balance === 0) {
     return (

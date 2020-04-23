@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { AbiItem } from 'web3-utils';
+import * as _ from 'lodash';
 
 import SplashScreen from '../components/SplashScreen';
 import { useNameServiceContext } from './NameServiceProvider';
@@ -16,6 +16,8 @@ import ERC20Eurs from '../contracts/ERC20Eurs.json';
 
 import { ContractListType } from '../helper/contracts';
 
+const DOMAIN_ROOT = 'artistry.test';
+
 const ContractContext = React.createContext<ContractListType>({} as any);
 
 export const ContractProvider: React.FC = ({ children }) => {
@@ -25,62 +27,49 @@ export const ContractProvider: React.FC = ({ children }) => {
   const { web3 } = useWeb3Context();
 
   React.useEffect(() => {
-    async function getContracts (): Promise<void> {
-      const governanceAddr = await addressFromName('governance.arrtistry.test');
-      const applicationAddr = await addressFromName('application.arrtistry.test');
-      const registryAddr = await addressFromName('registry.arrtistry.test');
-      const artistsAddr = await addressFromName('artists.arrtistry.test');
-      const consignmentAddr = await addressFromName('consignment.arrtistry.test');
-      const arrAddr = await addressFromName('arr.arrtistry.test');
-      const royaltyAddr = await addressFromName('royalty.arrtistry.test');
-      const eursAddr = await addressFromName('eurs.arrtistry.test');
+    if (loaded) {
+      return;
+    }
 
-      const governance = new web3.eth.Contract(Governance.abi as AbiItem[], governanceAddr);
-      const artifactApplication = new web3.eth.Contract(ArtifactApplication.abi as AbiItem[], applicationAddr);
-      const artifactRegistry = new web3.eth.Contract(ArtifactRegistry.abi as AbiItem[], registryAddr);
-      const artists = new web3.eth.Contract(Artists.abi as AbiItem[], artistsAddr);
-      const consignment = new web3.eth.Contract(Consignment.abi as AbiItem[], consignmentAddr);
-      const arr = new web3.eth.Contract(ARRRegistry.abi as AbiItem[], arrAddr);
-      const royalty = new web3.eth.Contract(RoyaltyDistributor.abi as AbiItem[], royaltyAddr);
-      const eurs = new web3.eth.Contract(ERC20Eurs.abi as AbiItem[], eursAddr);
-
-      console.log('Contracts provided:', {
-        governance: governanceAddr,
-        application: applicationAddr,
-        registry: registryAddr,
-        artists: artistsAddr,
-        consignment: consignmentAddr,
-        arr: arrAddr,
-        eurs: eursAddr,
-        royalty: royaltyAddr,
-      });
-      if (governanceAddr &&
-        applicationAddr &&
-        registryAddr &&
-        artistsAddr &&
-        consignmentAddr && arrAddr && eursAddr && royaltyAddr) {
-        setLoaded(true);
-      }
-
-      const contracts = {
-        Governance: governance,
-        ArtifactApplication: artifactApplication,
-        ArtifactRegistry: artifactRegistry,
-        Artists: artists,
-        Consignment: consignment,
-        ArrRegistry: arr,
-        Eurs: eurs,
-        RoyaltyDistributor: royalty,
-      };
-
-      setContracts(contracts);
+    const getContract = (ensName: string, abi: any): Promise<any> => {
+      return addressFromName(ensName)
+        .then((addr) => { console.log(`Translated ${ensName} to ${addr}`); return addr; })
+        .then((addr) => new web3.eth.Contract(abi, addr))
+        .catch(console.error);
     };
-    getContracts();
-  }, [addressFromName, web3.eth.Contract]);
 
-  if (!loaded || !contracts) {
-    return <SplashScreen>
-      Connecting to latest ARRtistry smart contracts... Are you on Rinkeby?
+    Promise.all([
+      getContract(`governance.${DOMAIN_ROOT}`, Governance.abi),
+      getContract(`application.${DOMAIN_ROOT}`, ArtifactApplication.abi),
+      getContract(`registry.${DOMAIN_ROOT}`, ArtifactRegistry.abi),
+      getContract(`artists.${DOMAIN_ROOT}`, Artists.abi),
+      getContract(`consignment.${DOMAIN_ROOT}`, Consignment.abi),
+      getContract(`arr.${DOMAIN_ROOT}`, ARRRegistry.abi),
+      getContract(`royalty.${DOMAIN_ROOT}`, RoyaltyDistributor.abi),
+      getContract(`eurs.${DOMAIN_ROOT}`, ERC20Eurs.abi),
+    ])
+      .then((contracts) => {
+        setContracts({
+          Governance: contracts[0],
+          ArtifactApplication: contracts[1],
+          ArtifactRegistry: contracts[2],
+          Artists: contracts[3],
+          Consignment: contracts[4],
+          ArrRegistry: contracts[5],
+          RoyaltyDistributor: contracts[6],
+          Eurs: contracts[7],
+        });
+        setLoaded(true);
+      })
+      .catch(console.warn);
+  }, [addressFromName, web3.eth.Contract, loaded]);
+
+  if (!loaded || !contracts || !_.every(contracts)) {
+    const reason = !loaded
+      ? 'Connecting to latest ARRtistry smart contracts...'
+      : 'Cannot connect to ARRtistry smart contracts. Are you on Rinkeby?';
+    return <SplashScreen failed={loaded} >
+      {reason}
     </SplashScreen>;
   }
 

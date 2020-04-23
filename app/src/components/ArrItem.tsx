@@ -11,44 +11,24 @@ import * as moment from 'moment';
 
 interface ArrItemProps {
   id: number;
+  arr: ArrItemType;
 }
 
-interface ArrItemType {
+export interface ArrItemType {
   from: string;
   to: string;
   tokenId: number;
   price: number;
-  arr: number;
+  due?: number;
   location: string;
   paid: boolean;
 }
 
-const ArrItem: React.FC<ArrItemProps> = ({ id }) => {
-  const [arr, setArr] = React.useState<ArrItemType>();
+const ArrItem: React.FC<ArrItemProps> = ({ id, arr }) => {
   const [lastUpdateTime, setUpdateTime] = React.useState<string>('Checking');
 
   const { web3 } = useWeb3Context();
-  const { ArtifactRegistry, ArrRegistry, RoyaltyDistributor } = useContractContext();
-
-  React.useEffect(() => {
-    const loadArr = async (): Promise<void> => {
-      const arrData = await ArrRegistry.methods.retrieve(id).call();
-      const arrDue: number = await RoyaltyDistributor.methods.calculateARR(arrData.price).call();
-      const arr = {
-        from: arrData.from,
-        to: arrData.to,
-        tokenId: arrData.tokenId,
-        price: arrData.price / 100,
-        arr: arrDue / 100,
-        location: arrData.location,
-        paid: arrData.paid,
-      };
-      console.log(arrData);
-      setArr(arr);
-    };
-
-    loadArr();
-  }, [ArrRegistry, id, RoyaltyDistributor]);
+  const { ArtifactRegistry } = useContractContext();
 
   React.useEffect(() => {
     const getLastUpdated = async (): Promise<void> => {
@@ -56,7 +36,6 @@ const ArrItem: React.FC<ArrItemProps> = ({ id }) => {
         const options = { fromBlock: 0 };
         const events = await ArtifactRegistry.getPastEvents('Transfer', options)
           .then((es: EventData[]) => es.filter(e => e.returnValues.tokenId === arr.tokenId.toString()));
-        console.log(events);
         const event = events[events.length - 1];
         const timestamp = await web3.eth.getBlock(event.blockNumber)
           .then((block) => block.timestamp);
@@ -90,7 +69,7 @@ const ArrItem: React.FC<ArrItemProps> = ({ id }) => {
           <AddressField label='Seller' address={arr.from}/>
           <PlaintextField label='Sale Location' value={arr.location} />
           <PlaintextField label='Sale Price' value={'€' + arr.price} />
-          <PlaintextField label='ARR' value={'€' + arr.arr} />
+          <PlaintextField label='ARR' value={'€' + arr.due} />
         </Form>
       </Card.Body>
       <Card.Footer>

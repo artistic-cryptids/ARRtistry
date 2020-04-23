@@ -104,27 +104,22 @@ const ArtworkInfo: React.FC<ArtworkInfoProps> = ({ artwork, id, fullscreen, chil
     setInfoFromJson();
   }, [Artists, artwork.metaUri, fields, retrievedData]);
 
-  const imgSrc = fields.image === ''
-    ? 'https://file.globalupload.io/HO8sN3I2nJ.png'
-    : fields.image;
-
-  if (retrievedData) {
+  if (!retrievedData) {
     return (
-      <ArtworkCard
-        id={id}
-        img={imgSrc}
-        metaUri={artwork.metaUri}
-        fields={fields}
-        artist={artist}
-        fullscreen={fullscreen}
-      >
+      <ArtworkCard id={id} fullscreen={fullscreen} placeholder >
         {children}
       </ArtworkCard>
     );
   }
-
   return (
-    <ArtworkCard id={id} img={imgSrc} fullscreen={fullscreen}>
+    <ArtworkCard
+      id={id}
+      img={fields.image}
+      metaUri={artwork.metaUri}
+      fields={fields}
+      artist={artist}
+      fullscreen={fullscreen}
+    >
       {children}
     </ArtworkCard>
   );

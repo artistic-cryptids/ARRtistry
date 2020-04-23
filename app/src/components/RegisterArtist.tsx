@@ -23,14 +23,6 @@ interface RegisterFormFields {
   metaIpfsHash: string;
 }
 
-type InputChangeEvent = React.FormEvent<any> &
-  {
-    target: {
-      id: keyof RegisterFormFields;
-      value: RegisterFormFields[keyof RegisterFormFields];
-    };
-  }
-
 const GENERIC_FEEDBACK = <Form.Control.Feedback>Looks good!</Form.Control.Feedback>;
 
 const RegisterArtist: React.FC = () => {
@@ -141,9 +133,11 @@ const RegisterArtist: React.FC = () => {
     }
   };
 
-  const inputChangeHandler = (event: InputChangeEvent): void => {
-    const key = event.target.id;
-    const val = event.target.value;
+  const inputChangeHandler: React.FormEventHandler<any> = (event) => {
+    // Can't handle the Bootstrap form types
+    const target = event.target as any;
+    const key = target.id as keyof RegisterFormFields;
+    const val = target.value;
 
     const stateUpdate = { fields: fields as Pick<RegisterFormFields, keyof RegisterFormFields> };
     stateUpdate.fields[key] = val;
