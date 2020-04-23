@@ -35,7 +35,7 @@ export const TokenProvider: React.FC = ({ children }) => {
       ).then((results) => {
         const totalTokens: number = results[0];
         const burntTokens: number[] = results[1];
-        console.log(burntTokens);
+        console.log("Burnt: ", burntTokens);
         const tokenList = _.range(1, totalTokens + 1);
         setValidTokenIds(tokenList.filter(id => !burntTokens.includes(id)));
       }).catch((err: string) => console.error('TokenProvider::useEffect:', err));
