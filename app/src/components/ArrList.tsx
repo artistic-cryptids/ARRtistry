@@ -36,7 +36,7 @@ const ArrList: React.FC = () => {
         .then(
           (due: number) => {
             if (due === 0) {
-              throw 'Do not display 0 ARR';
+              throw Error('Do not display 0 ARR');
             }
             return {
               from: arr.from,
