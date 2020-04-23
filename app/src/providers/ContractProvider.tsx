@@ -56,8 +56,8 @@ export const ContractProvider: React.FC = ({ children }) => {
           Artists: contracts[3],
           Consignment: contracts[4],
           ArrRegistry: contracts[5],
-          Eurs: contracts[6],
-          RoyaltyDistributor: contracts[7],
+          RoyaltyDistributor: contracts[6],
+          Eurs: contracts[7],
         });
         setLoaded(true);
       })
