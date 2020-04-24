@@ -9,13 +9,14 @@ import * as View from '../views';
 import NetworkAside from './NetworkAside';
 
 const Router: React.FC = () => {
-  const { user } = useSessionContext();
+  const { getPermissions } = useSessionContext();
   const { web3 } = useWeb3Context();
+  const permissions = getPermissions();
   return (
     <HashRouter>
       <NetworkAside web3={web3} />
       <Switch>
-        { user.role !== 'DACS' && <Redirect from='/manage/' to='/'/> }
+        { !permissions.managing && <Redirect from='/manage/' to='/'/> }
         {/* TODO: Needs more logic here, just depends on roles */}
         <Route exact path="/">
           <View.DashboardView/>

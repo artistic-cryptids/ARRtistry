@@ -19,8 +19,15 @@ export interface User {
   name: string;
 }
 
+export interface Permissions {
+  managing: boolean;
+  hasClients: boolean;
+  governingBody: boolean;
+}
+
 export interface Session {
   user: User;
+  getPermissions: () => Permissions;
   setUser: React.Dispatch<React.SetStateAction<User>>;
 }
 
@@ -32,6 +39,16 @@ export const SessionProvider: React.FC = ({ children }) => {
   const address = accounts[0];
   const [user, setUser] = React.useState<User>(DEFAULT_USER);
   const [gotUser, setGotUser] = React.useState<boolean>(false);
+
+  const _getPermissions = (): Permissions => {
+    const governingBody = user.role === 'DACS' || user.role === 'GOVERNING';
+    const hasClients = user.role === 'DEAL';
+    return {
+      managing: governingBody || hasClients,
+      hasClients: hasClients,
+      governingBody: governingBody,
+    };
+  };
 
   React.useEffect(() => {
     const userProfile = getUserListMetadata('8R5oVUsbTnhiJlkm56HVRcEHvc9YEG4Hr3YxOYw_gSg')
@@ -48,7 +65,7 @@ export const SessionProvider: React.FC = ({ children }) => {
         return DEFAULT_USER;
       });
 
-    const reverseENS = nameFromAddress(address).catch((err) => {
+    const reverseENS = nameFromAddress(address.toString()).catch((err) => {
       console.error(err);
       return '';
     });
@@ -75,7 +92,7 @@ export const SessionProvider: React.FC = ({ children }) => {
   }
 
   return (
-    <SessionContext.Provider value={{ user: user, setUser: setUser }}>
+    <SessionContext.Provider value={{ user: user, setUser: setUser, getPermissions: _getPermissions }}>
       { children }
     </SessionContext.Provider>
   );

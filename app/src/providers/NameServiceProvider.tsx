@@ -66,6 +66,9 @@ export const NameServiceProvider: React.FC = ({ children }) => {
     if (ens === undefined) {
       return Promise.reject(new Error('No ENS Service'));
     }
+    if (typeof address !== 'string') {
+      return Promise.reject(new Error('Failure to provide valid address'));
+    }
 
     const lookup = address.toLowerCase().substr(2) + '.addr.reverse';
     const hash = namehash.hash(lookup);
@@ -80,6 +83,10 @@ export const NameServiceProvider: React.FC = ({ children }) => {
     if (ens === undefined) {
       return Promise.reject(new Error('No ENS Service'));
     }
+    if (typeof name !== 'string') {
+      return Promise.reject(new Error('Failure to provide valid address'));
+    }
+
     const hash = namehash.hash(name);
     return getResolverForHash(hash)
       .then((resolver: any) => resolver.methods.addr(hash).call())

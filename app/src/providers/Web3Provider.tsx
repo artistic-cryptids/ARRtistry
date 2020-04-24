@@ -78,7 +78,7 @@ export const Web3Provider: React.FC = ({ children }) => {
     </SplashScreen>;
   }
 
-  console.log('Provided Web3');
+  console.log('Provided Web3:', web3, networkId, accounts);
 
   return (
     <Web3Context.Provider value={{ web3: web3, networkId: networkId, accounts: accounts }}>

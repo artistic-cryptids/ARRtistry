@@ -50,7 +50,7 @@
     "serve": "serve -s build",
     "start": "react-scripts start",
     "watch": "npx tsm src --watch",
-    "build": "npx tsm src && react-scripts build",
+    "build": "npx tsm src && GENERATE_SOURCEMAP=false react-scripts build",
     "test": "react-scripts test --passWithNoTests",
     "eject": "react-scripts eject",
     "lint": "npx eslint --ignore-path .gitignore './src/**/*.{ts,tsx}'",

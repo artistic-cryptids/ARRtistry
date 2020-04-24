@@ -10,3 +10,4 @@ acctKeys.json
 local.env
 *.local.env
 yarn.lock
+arweave-keyfile-*.json
