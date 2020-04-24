@@ -56,6 +56,12 @@
     "lint": "npx eslint --ignore-path .gitignore './src/**/*.{ts,tsx}'",
     "lint:fix": "npx eslint --ignore-path .gitignore './src/**/*.{ts,tsx}' --fix"
   },
+  "husky": {
+    "hooks": {
+      "pre-commit": "yarn lint:fix",
+      "pre-push": "yarn test && yarn lint:fix"
+    }
+  },
   "eslintConfig": {
     "extends": "react-app"
   },
