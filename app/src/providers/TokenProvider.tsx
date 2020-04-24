@@ -23,7 +23,7 @@ export const TokenProvider: React.FC = ({ children }) => {
         [ArtifactRegistry.methods.getCurrentTokenId()
           .call()
           .then((tokenId: any) => {
-            console.log('number of tokens:' + tokenId);
+            console.log('Number of tokens:' + tokenId);
             return parseInt(tokenId);
           })
           .catch((err: string) => console.error('TokenProvider::useEffect:', err)),

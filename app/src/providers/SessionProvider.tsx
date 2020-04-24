@@ -70,7 +70,7 @@ export const SessionProvider: React.FC = ({ children }) => {
 
   if (!gotUser) {
     return <SplashScreen>
-      Loading your user profile...
+      Loading your user profile from arweave...
     </SplashScreen>;
   }
 
