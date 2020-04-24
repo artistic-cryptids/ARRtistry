@@ -29,7 +29,7 @@ const NavItem: React.FC<{name: string; icon: IconDefinition; path: string}> = ({
 };
 
 const NavMenu: React.FC<{user: User}> = ({ user }) => {
-  const manager = user.role === 'GOVERNING' || user.role === 'DEAL'
+  const manager = user.role === 'GOVERNING' || user.role === 'DEAL';
   return (
     <Col md={2} className={'d-none d-md-block ' + styles.sidebar}>
       <Row className={styles.brand}>
