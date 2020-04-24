@@ -32,7 +32,6 @@ export const getArtworkMetadata = async (id: string): Promise<ArtworkInfoFields>
 export const getUserListMetadata = async (id: string): Promise<Array<User>> => {
   const data = await arweave.transactions.getData(id, { decode: true, string: true });
   if (typeof data === 'string') {
-    console.log('arweave::getUserListMetadata:', data);
     return JSON.parse(data);
   }
 
