@@ -27,44 +27,46 @@ export interface Session {
 export const SessionContext = React.createContext<Session>({} as any);
 
 export const SessionProvider: React.FC = ({ children }) => {
-  const context = useNameServiceContext();
+  const { nameFromAddress } = useNameServiceContext();
   const { accounts } = useWeb3Context();
   const address = accounts[0];
-
-  const defaultUser = DEFAULT_USER;
-  const [user, setUser] = React.useState<User>(defaultUser);
+  const [user, setUser] = React.useState<User>(DEFAULT_USER);
   const [gotUser, setGotUser] = React.useState<boolean>(false);
 
-  let users: Array<User> = [];
-  getUserListMetadata('8R5oVUsbTnhiJlkm56HVRcEHvc9YEG4Hr3YxOYw_gSg')
-    .then((userList: Array<User>) => {
-      console.log(userList);
-      users = userList;
-    }).catch(console.log);
-
   React.useEffect(() => {
-    let curUser: User = defaultUser;
-    for (const user of users) {
-      if (user.address && user.address.includes(address)) {
-        curUser = user;
-        break;
-      }
-    }
-
-    curUser.address = [address];
-
-    setUser(curUser);
-
-    context.nameFromAddress(address)
-      .then((name: string) => {
-        if (name !== '') {
-          curUser.name = name;
-          setUser(curUser);
+    const userProfile = getUserListMetadata('8R5oVUsbTnhiJlkm56HVRcEHvc9YEG4Hr3YxOYw_gSg')
+      .then((users: Array<User>) => {
+        for (const u of users) {
+          if (u.address && u.address.includes(address)) {
+            return { ...u, address: [address] };
+          }
         }
-        setGotUser(true);
+        return DEFAULT_USER;
       })
-      .catch(console.log);
-  }, [address, context, defaultUser, users]);
+      .catch((err) => {
+        console.error(err);
+        return DEFAULT_USER;
+      });
+
+    const reverseENS = nameFromAddress(address).catch((err) => {
+      console.error(err);
+      return '';
+    });
+
+    Promise.all([userProfile, reverseENS])
+      .then(([usr, name]: [User, string]): User => {
+        if (!usr) {
+          throw Error('User profile couldn\'t be found, even with DEFAULT');
+        }
+        if (name) {
+          return { ...usr, name: name };
+        }
+        return usr;
+      })
+      .then((user) => user && setUser(user))
+      .finally(() => setGotUser(true))
+      .catch(console.error);
+  }, [address, nameFromAddress, DEFAULT_USER]);
 
   if (!gotUser) {
     return <SplashScreen>
