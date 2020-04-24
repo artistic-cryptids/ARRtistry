@@ -66,7 +66,7 @@ export const SessionProvider: React.FC = ({ children }) => {
       .then((user) => user && setUser(user))
       .finally(() => setGotUser(true))
       .catch(console.error);
-  }, [address, nameFromAddress, DEFAULT_USER]);
+  }, [address, nameFromAddress]);
 
   if (!gotUser) {
     return <SplashScreen>
