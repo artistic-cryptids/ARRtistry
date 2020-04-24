@@ -1,4 +1,5 @@
 import { ArtworkInfoFields } from '../components/ArtworkInfo';
+import { User } from '../providers/SessionProvider';
 
 // eslint-disable-next-line
 const IpfsClient = require('ipfs-http-client');
@@ -23,6 +24,11 @@ const ipfs = new IpfsClient({
 const progressMonitor = (prog: number): void => console.log(`received: ${prog}`);
 
 export const getArtworkMetadata = async (url: string): Promise<ArtworkInfoFields> => {
+  const response = await fetch(url);
+  return response.json();
+};
+
+export const getUserListMetadata = async (url: string): Promise<Array<User>> => {
   const response = await fetch(url);
   return response.json();
 };

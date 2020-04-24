@@ -2,68 +2,13 @@ import * as React from 'react';
 import { useNameServiceContext } from './NameServiceProvider';
 import { useWeb3Context } from './Web3Provider';
 import SplashScreen from '../components/SplashScreen';
+import { getUserListMetadata } from '../helper/agnostic';
 
 const DEFAULT_USER = {
-  nickname: 'John Doe',
-  img: 'https://file.globalupload.io/HO8sN3I2nJ.png',
-  role: 'ARTIST',
-  name: 'default.arrtistry.test',
-};
-
-export const DACS_DEFAULT: User = {
-  nickname: 'Anna Doe',
-  img: 'https://mdbootstrap.com/img/Photos/Avatars/img%20%2820%29.jpg',
-  role: 'DACS',
-  address: [
-    '0xDf08F82De32B8d460adbE8D72043E3a7e25A3B39',
-    '0x594cd738A5e99134De9DE21f253eD1Be4eb27F3e',
-    '0xE120e76EC013911018483677D1f264E101e92bf1',
-  ],
-  name: 'dac.arrtistry.test',
-};
-
-export const DEAL_DEFAULT: User = {
-  nickname: 'Gallery',
-  img: 'https://www.cavan-arts.com/uploads/1/2/2/7/122790076/img-4071_orig.jpg',
-  role: 'DEAL',
-  address: [
-    '0xdE164a54b441808DA5C448D85Ba2F0F6e271CC36',
-    '0x97A3FC5Ee46852C1Cf92A97B7BaD42F2622267cC',
-    '0xce42bdB34189a93c55De250E011c68FaeE374Dd3',
-  ],
-  name: 'gallery.arrtistry.test',
-};
-
-export const NATASHA: User = {
-  nickname: 'Natasha',
-  img: 'https://mdbootstrap.com/img/Photos/Avatars/img%20(17).jpg',
-  role: 'ARTIST',
-  address: ['0xc70eAc1d854E51FaFC7a487086624E79cEE6e843'],
-  name: 'natasha.arrtistry.test',
-};
-
-export const NICHOLA: User = {
-  nickname: 'Nichola Theakston',
-  img: 'https://www.celebratingceramics.co.uk/images/cc_images/nichola_theakston_800.jpg',
-  role: 'ARTIST',
-  address: ['0x67EDE48B355DA3fb5d5fB6e5964DaB9fDA56aADe'],
-  name: 'nichola.arrtistry.test',
-};
-
-export const LUXEMBURG: User = {
-  nickname: 'Rut Blees',
-  img: 'https://www.tate.org.uk/art/images/work/P/P20/P20268_9.jpg',
-  role: 'ARTIST',
-  address: ['0xf323B526cfEbf52c349dA8F4BB4d7e6EFA55F3a6'],
-  name: 'rut.arrtistry.test',
-};
-
-export const BUYER_DEFAULT: User = {
-  nickname: 'Buyer',
-  img: 'https://mdbootstrap.com/img/Photos/Avatars/img%20(9).jpg',
-  role: 'COLLECTOR',
-  address: ['0x1bf078753937FB3e569C4c9724654d10cc8A7Fd7'],
-  name: 'buyer.arrtistry.test',
+  nickname: 'Unknown',
+  img: 'https://arweave.net/koGEvbLifVjKVqWRruecP040lNWr8M9cI2IqQ1eyZXo',
+  role: 'UNREGISTERED',
+  name: '',
 };
 
 export interface User {
@@ -82,43 +27,50 @@ export interface Session {
 export const SessionContext = React.createContext<Session>({} as any);
 
 export const SessionProvider: React.FC = ({ children }) => {
-  const context = useNameServiceContext();
+  const { nameFromAddress } = useNameServiceContext();
   const { accounts } = useWeb3Context();
   const address = accounts[0];
-
-  const defaultUser = DEFAULT_USER;
-  const [user, setUser] = React.useState<User>(defaultUser);
+  const [user, setUser] = React.useState<User>(DEFAULT_USER);
   const [gotUser, setGotUser] = React.useState<boolean>(false);
 
-  const users = [DACS_DEFAULT, DEAL_DEFAULT, NATASHA, NICHOLA, LUXEMBURG, BUYER_DEFAULT];
-
   React.useEffect(() => {
-    let curUser: User = defaultUser;
-    for (const user of users) {
-      if (user.address && user.address.includes(address)) {
-        curUser = user;
-        break;
-      }
-    }
-
-    curUser.address = [address];
-
-    setUser(curUser);
-
-    context.nameFromAddress(address)
-      .then((name: string) => {
-        if (name !== '') {
-          curUser.name = name;
-          setUser(curUser);
+    const userProfile = getUserListMetadata('8R5oVUsbTnhiJlkm56HVRcEHvc9YEG4Hr3YxOYw_gSg')
+      .then((users: Array<User>) => {
+        for (const u of users) {
+          if (u.address && u.address.includes(address)) {
+            return { ...u, address: [address] };
+          }
         }
-        setGotUser(true);
+        return DEFAULT_USER;
       })
-      .catch(console.log);
-  }, [address, context, defaultUser, users]);
+      .catch((err) => {
+        console.error(err);
+        return DEFAULT_USER;
+      });
+
+    const reverseENS = nameFromAddress(address).catch((err) => {
+      console.error(err);
+      return '';
+    });
+
+    Promise.all([userProfile, reverseENS])
+      .then(([usr, name]: [User, string]): User => {
+        if (!usr) {
+          throw Error('User profile couldn\'t be found, even with DEFAULT');
+        }
+        if (name) {
+          return { ...usr, name: name };
+        }
+        return usr;
+      })
+      .then((user) => user && setUser(user))
+      .finally(() => setGotUser(true))
+      .catch(console.error);
+  }, [address, nameFromAddress]);
 
   if (!gotUser) {
     return <SplashScreen>
-      Loading your user profile...
+      Loading your user profile from arweave...
     </SplashScreen>;
   }
 

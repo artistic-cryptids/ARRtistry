@@ -29,6 +29,7 @@ const NavItem: React.FC<{name: string; icon: IconDefinition; path: string}> = ({
 };
 
 const NavMenu: React.FC<{user: User}> = ({ user }) => {
+  const manager = user.role === 'GOVERNING' || user.role === 'DEAL';
   return (
     <Col md={2} className={'d-none d-md-block ' + styles.sidebar}>
       <Row className={styles.brand}>
@@ -49,9 +50,9 @@ const NavMenu: React.FC<{user: User}> = ({ user }) => {
         <NavItem name='New' icon={faFingerprint} path='/artifact/new'/>
         <NavItem name='Owned' icon={faClone} path='/artifact'/>
         <NavItem name='Sold' icon={faEuroSign} path='/artifact/sold'/>
-        <h4 className={styles.section}>Management</h4>
-        {user.role === 'DACS' && <NavItem name='Artifact Requests' icon={faStamp} path='/manage/proposal'/>}
-        {user.role === 'DACS' && <NavItem name='ARR' icon={faEuroSign} path='/manage/arr'/>}
+        {manager && <h4 className={styles.section}>Management</h4>}
+        {user.role === 'GOVERNING' && <NavItem name='Artifact Requests' icon={faStamp} path='/manage/proposal'/>}
+        {user.role === 'GOVERNING' && <NavItem name='ARR' icon={faEuroSign} path='/manage/arr'/>}
         {user.role === 'DEAL' && <NavItem name='Clients' icon={faIdCardAlt} path='/client/all/artifact'/>}
         <h4 className={styles.section}>Artists</h4>
         <NavItem name='New' icon={faPalette} path='/artist/new'/>

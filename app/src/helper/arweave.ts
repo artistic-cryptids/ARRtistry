@@ -1,6 +1,7 @@
 import Arweave from 'arweave/web';
 import { JWKInterface } from 'arweave/web/lib/wallet';
 import { ArtworkInfoFields } from '../components/ArtworkInfo';
+import { User } from '../providers/SessionProvider';
 
 const arweave = Arweave.init({});
 arweave.network.getInfo().then(console.log).catch(console.error);
@@ -10,7 +11,7 @@ export const getBasename = (path: string): string => path.substr(0, path.indexOf
 export const getArtworkMetadata = async (id: string): Promise<ArtworkInfoFields> => {
   const data = await arweave.transactions.getData(id, { decode: true, string: true });
   if (typeof data === 'string') {
-    console.log('arweave::getArtworkMetadata:', data);
+    // console.log('arweave::getArtworkMetadata:', data);
     return JSON.parse(data);
   }
 
@@ -26,6 +27,15 @@ export const getArtworkMetadata = async (id: string): Promise<ArtworkInfoFields>
     image: '',
     documents: [],
   };
+};
+
+export const getUserListMetadata = async (id: string): Promise<Array<User>> => {
+  const data = await arweave.transactions.getData(id, { decode: true, string: true });
+  if (typeof data === 'string') {
+    return JSON.parse(data);
+  }
+
+  return [];
 };
 
 export const saveDocumentToArweave = async (file: string, key: JWKInterface): Promise<string> => {

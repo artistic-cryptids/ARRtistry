@@ -7,7 +7,6 @@ $primary: map-get($theme-colors, 'primary');
   min-height: 100%;  /* Fallback for browsers do NOT support vh unit */
   min-height: 100vh; /* These two lines are counted as one :-)       */
   min-width: 100%;
-  min-width: 100vw;
   background-position: center center;
   background-size: cover;
   transition: all 1s ease-in-out;

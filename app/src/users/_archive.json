@@ -1,0 +1,60 @@
+[
+  {
+    "nickname": "John Doe",
+    "img": "https://arweave.net/koGEvbLifVjKVqWRruecP040lNWr8M9cI2IqQ1eyZXo",
+    "role": "ARTIST",
+    "address": [],
+    "name": "default.arrtistry.test"
+  },
+  {
+    "nickname": "Anna Doe",
+    "img": "https://arweave.net/vFSl8zxSLbuh6WkoVgTMfmOMntYAagQmP2aml96uCjk",
+    "role": "GOVERNING",
+    "address": [
+      "0xDf08F82De32B8d460adbE8D72043E3a7e25A3B39",
+      "0x594cd738A5e99134De9DE21f253eD1Be4eb27F3e",
+      "0xE120e76EC013911018483677D1f264E101e92bf1"
+    ],
+    "name": "dacs.arrtistry.test"
+  },
+  {
+    "nickname": "Gallery",
+    "img": "https://arweave.net/7fNp7Lmvcuw_2m_y3AEjKWVZgt-iHwdF859_CKmXF-g",
+    "role": "DEAL",
+    "address": [
+      "0xdE164a54b441808DA5C448D85Ba2F0F6e271CC36",
+      "0x97A3FC5Ee46852C1Cf92A97B7BaD42F2622267cC",
+      "0xce42bdB34189a93c55De250E011c68FaeE374Dd3"
+    ],
+    "name": "gallery.arrtistry.test"
+  },
+  {
+    "nickname": "Natasha",
+    "img": "https://arweave.net/XuVRiwsoYo4Uny0fAtdqbQbm0az6OGHdrJmxxEvh1jE",
+    "role": "ARTIST",
+    "address": ["0xc70eAc1d854E51FaFC7a487086624E79cEE6e843"],
+    "name": "natasha.arrtistry.test"
+  },
+  {
+    "nickname": "Nichola Theakston",
+    "img": "https://arweave.net/bRmdF1hMDzuNP6mE0RT2QT_t-LocviRdDP8-TNBlHMs",
+    "role": "ARTIST",
+    "address": ["0x67EDE48B355DA3fb5d5fB6e5964DaB9fDA56aADe"],
+    "name": "nichola.arrtistry.test"
+  },
+  {
+    "nickname": "Rut Blees",
+    "img": "https://arweave.net/3nmRS8w5Jn_Qt3_9gKG38xHIv5Jx0yfGX3VLONzveu0",
+    "role": "ARTIST",
+    "address": ["0xf323B526cfEbf52c349dA8F4BB4d7e6EFA55F3a6"],
+    "name": "rut.arrtistry.test"
+  },
+  {
+    "nickname": "Buyer",
+    "img": "https://arweave.net/0_dVOLqhTXJb4UG7vM9iXT_YomEvXny8LC2G7VHVkU8",
+    "role": "COLLECTOR",
+    "address": ["0x1bf078753937FB3e569C4c9724654d10cc8A7Fd7"],
+    "name": "buyer.arrtistry.test"
+  }
+
+]
