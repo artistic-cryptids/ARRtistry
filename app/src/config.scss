@@ -30,6 +30,7 @@ $theme-colors: (
 
 $font-family-sans-serif: 'Raleway', sans-serif;
 $enable-shadows: true;
+$enable-responsive-font-sizes: true;
 
 @import "node_modules/bootstrap/scss/variables";
 @import "node_modules/bootstrap/scss/mixins";

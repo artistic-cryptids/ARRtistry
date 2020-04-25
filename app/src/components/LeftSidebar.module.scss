@@ -1,7 +1,7 @@
 @import "../config";
 
 body {
-  font-size: .875rem;
+  @include font-size(.875rem)
 }
 
 .feather {
@@ -99,7 +99,7 @@ $background-color: $primary;
   }
 
   .brandLogo a {
-    font-size: 1rem;
+    @include font-size(1rem);
     margin: 0;
     padding: 0 1rem 0 0;
     font-weight: 500;

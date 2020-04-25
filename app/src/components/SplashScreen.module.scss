@@ -43,7 +43,7 @@ $primary: map-get($theme-colors, 'primary');
   color: $body-bg;
   text-align: center;
   h1{
-    font-size: 7em;
+    @include font-size(7rem)
     text-align: center;
     font-weight: 700;
   }

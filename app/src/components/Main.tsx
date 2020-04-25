@@ -57,7 +57,7 @@ const UserDropdown: React.FC = () => {
 
 const Header: React.FC<{page: string; parents: string[]}> = ({ page, parents }) => {
   return (
-    <Navbar collapseOnSelect expand="lg">
+    <Navbar collapseOnSelect expand="md" className="d-none d-md-flex">
       <Navbar.Toggle aria-controls="responsive-navbar-nav" />
       <Navbar.Collapse id="responsive-navbar-nav">
         <Nav className={'mr-auto ' + styles.header}>

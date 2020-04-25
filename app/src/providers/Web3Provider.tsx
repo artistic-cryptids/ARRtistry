@@ -1,7 +1,6 @@
 import * as React from 'react';
 import Web3 from 'web3';
 import SplashScreen from '../components/SplashScreen';
-
 // eslint-disable-next-line
 const Fortmatic = require('fortmatic');
 
@@ -33,9 +32,16 @@ async function retrieveWeb3 (): Promise<Web3 | undefined> {
   }
 };
 
-async function fortmaticWeb3 (): Promise<Web3 | undefined> {
-  const fm = new Fortmatic('pk_test_F667BF6D086F45B9');
-  return new Web3(fm.getProvider());
+interface InfuraWeb3 {
+  web3: Web3;
+  account: string;
+}
+
+async function infuraWeb3 (): Promise<InfuraWeb3 | undefined> {
+  const web3 = new Web3('https://rinkeby.infura.io/v3/f08a197d5a4b4435802695970588aaa2');
+  const account = web3.eth.accounts.create();
+  console.log(account);
+  return { web3: web3, account: account.address };
 };
 
 export const Web3Provider: React.FC = ({ children }) => {
@@ -46,27 +52,30 @@ export const Web3Provider: React.FC = ({ children }) => {
   React.useEffect(() => {
     async function setWeb3Properties (): Promise<void> {
       console.log('Attempting to use injected web3');
-      let foundWeb3 = await retrieveWeb3();
+      const foundWeb3 = await retrieveWeb3();
+      if (foundWeb3) {
+        foundWeb3.eth.net.getId()
+          .then((nId) => setNetworkId(nId))
+          .catch(console.warn);
 
-      if (!foundWeb3) {
-        console.log('Attempting to use fortmatic web3');
-        foundWeb3 = await fortmaticWeb3();
+        foundWeb3.eth.getAccounts()
+          .then((accounts) => setAccounts(accounts))
+          .catch(console.warn);
+
+        setWeb3(foundWeb3);
       }
 
-      if (!foundWeb3) {
-        console.log('Attempts to grab web3 have failed');
-        return;
+      console.log('Attempting to use infura web3');
+      const infura = await infuraWeb3();
+
+      if (infura) {
+        const { web3, account } = infura;
+        web3.eth.net.getId()
+          .then((nId) => setNetworkId(nId))
+          .catch(console.warn);
+        setAccounts([account]);
+        setWeb3(web3);
       }
-
-      setWeb3(foundWeb3);
-
-      foundWeb3.eth.net.getId()
-        .then((nId) => setNetworkId(nId))
-        .catch(console.warn);
-
-      foundWeb3.eth.getAccounts()
-        .then((accounts) => setAccounts(accounts))
-        .catch(console.warn);
     };
     setWeb3Properties();
   }, []);

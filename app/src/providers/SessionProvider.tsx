@@ -64,7 +64,7 @@ export const SessionProvider: React.FC = ({ children }) => {
             return { ...u, address: [address] };
           }
         }
-        return DEFAULT_USER;
+        return { ...DEFAULT_USER, address: [address] };
       })
       .catch((err) => {
         console.error(err);
