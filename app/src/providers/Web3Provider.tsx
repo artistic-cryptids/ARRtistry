@@ -41,7 +41,7 @@ async function infuraWeb3 (): Promise<InfuraWeb3 | undefined> {
   const web3 = new Web3('https://rinkeby.infura.io/v3/f08a197d5a4b4435802695970588aaa2');
   const account = web3.eth.accounts.create();
   console.log(account);
-  return {web3: web3, account: account.address};
+  return { web3: web3, account: account.address };
 };
 
 export const Web3Provider: React.FC = ({ children }) => {
@@ -52,7 +52,7 @@ export const Web3Provider: React.FC = ({ children }) => {
   React.useEffect(() => {
     async function setWeb3Properties (): Promise<void> {
       console.log('Attempting to use injected web3');
-      let foundWeb3 = await retrieveWeb3();
+      const foundWeb3 = await retrieveWeb3();
       if (foundWeb3) {
         foundWeb3.eth.net.getId()
           .then((nId) => setNetworkId(nId))
