@@ -11,7 +11,7 @@ const DEFAULT_USER = {
   role: 'UNREGISTERED',
   name: '',
   eth: '0',
-  eurs: '0'
+  eurs: '0',
 };
 
 export interface User {
@@ -87,10 +87,10 @@ export const SessionProvider: React.FC = ({ children }) => {
         }
         if (name) {
           let eth = web3.utils.fromWei(wei);
-          eth = (Number(eth).toFixed(4)).toString()
+          eth = (Number(eth).toFixed(4)).toString();
 
           eurs = (Number(eurs) / 100).toString();
-          return { ...usr, name: name, eth: eth, eurs: eurs};
+          return { ...usr, name: name, eth: eth, eurs: eurs };
         }
         return usr;
       })
