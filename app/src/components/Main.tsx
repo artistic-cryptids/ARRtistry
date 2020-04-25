@@ -33,6 +33,11 @@ const UserCard: React.FC<{user: User}> = ({ user }) => {
       <blockquote className="blockquote text-left">
         <footer className="blockquote-footer">{user.address}</footer>
       </blockquote>
+      <h4 className="font-weight-bold mb-4">Balance</h4>
+      <blockquote className="blockquote text-left">
+        <footer className="blockquote-footer">{user.eth} ETH</footer>
+        <footer className="blockquote-footer">{user.eurs} EURS</footer>
+      </blockquote>
     </Card.Body>
   </Card>;
 };

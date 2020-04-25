@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { useNameServiceContext } from './NameServiceProvider';
 import { useWeb3Context } from './Web3Provider';
+import { useContractContext } from './ContractProvider';
 import SplashScreen from '../components/SplashScreen';
 import { getUserListMetadata } from '../helper/agnostic';
 
@@ -9,6 +10,8 @@ const DEFAULT_USER = {
   img: 'https://arweave.net/koGEvbLifVjKVqWRruecP040lNWr8M9cI2IqQ1eyZXo',
   role: 'UNREGISTERED',
   name: '',
+  eth: '0',
+  eurs: '0',
 };
 
 export interface User {
@@ -17,6 +20,8 @@ export interface User {
   role: string;
   address?: string[];
   name: string;
+  eth: string;
+  eurs: string;
 }
 
 export interface Permissions {
@@ -35,7 +40,8 @@ export const SessionContext = React.createContext<Session>({} as any);
 
 export const SessionProvider: React.FC = ({ children }) => {
   const { nameFromAddress } = useNameServiceContext();
-  const { accounts } = useWeb3Context();
+  const { web3, accounts } = useWeb3Context();
+  const { Eurs } = useContractContext();
   const address = accounts[0];
   const [user, setUser] = React.useState<User>(DEFAULT_USER);
   const [gotUser, setGotUser] = React.useState<boolean>(false);
@@ -70,20 +76,28 @@ export const SessionProvider: React.FC = ({ children }) => {
       return '';
     });
 
-    Promise.all([userProfile, reverseENS])
-      .then(([usr, name]: [User, string]): User => {
+    const ethBalance = web3.eth.getBalance(address);
+    console.log(Eurs.methods);
+    const eursBalance = Eurs.methods.balanceOf(address).call();
+
+    Promise.all([userProfile, reverseENS, ethBalance, eursBalance])
+      .then(([usr, name, wei, eurs]: [User, string, string, string]): User => {
         if (!usr) {
           throw Error('User profile couldn\'t be found, even with DEFAULT');
         }
         if (name) {
-          return { ...usr, name: name };
+          let eth = web3.utils.fromWei(wei);
+          eth = (Number(eth).toFixed(4)).toString();
+
+          eurs = (Number(eurs) / 100).toString();
+          return { ...usr, name: name, eth: eth, eurs: eurs };
         }
         return usr;
       })
       .then((user) => user && setUser(user))
       .finally(() => setGotUser(true))
       .catch(console.error);
-  }, [address, nameFromAddress]);
+  }, [address, nameFromAddress, web3.eth, web3.utils, Eurs.methods]);
 
   if (!gotUser) {
     return <SplashScreen>
