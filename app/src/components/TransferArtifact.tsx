@@ -8,11 +8,10 @@ import { EventData } from 'web3-eth-contract';
 import { useNameServiceContext } from '../providers/NameServiceProvider';
 import { useContractContext } from '../providers/ContractProvider';
 import { useWeb3Context } from '../providers/Web3Provider';
-import { useArrContext } from '../providers/ArrProvider';
+import { useRegisterSaleCompleteContext } from '../providers/RegisterSaleCompleteProvider';
 import * as AgnosticArtworkRetriever from '../helper/agnostic';
 
 import { toast } from 'react-toastify';
-import { promisify } from 'util';
 import { useKeyContext } from '../providers/KeyProvider';
 
 interface TransferArtifactProps {
@@ -59,10 +58,10 @@ const TransferArtifact: React.FC<TransferArtifactProps> = ({ tokenId, metaUri })
   const [submitted, setSubmitted] = React.useState<boolean>(false);
 
   const { addressFromName } = useNameServiceContext();
-  const { ArtifactRegistry, RoyaltyDistributor, Consignment } = useContractContext();
+  const { ArtifactRegistry, Consignment } = useContractContext();
   const { accounts } = useWeb3Context();
   const { key } = useKeyContext();
-  const { payArr } = useArrContext();
+  const { showRegisterSaleCompleteForm } = useRegisterSaleCompleteContext();
 
   const addProvenance = (price: string, buyers: string[],
     seller: string, location: string, date: string): Promise<string> => {
@@ -116,7 +115,8 @@ const TransferArtifact: React.FC<TransferArtifactProps> = ({ tokenId, metaUri })
 
     // only take ARR in country that takes it, and if no sales with this token have occurred
     // no sales → user is the one who registered it → they're the artist, or a gallery representing them
-    const takesArr = ARR_LOCATIONS.includes(fields.location) && relevantEvents.length > 0;
+    const takesArr = ARR_LOCATIONS.includes(fields.location) &&
+      relevantEvents.length > 0 && parseFloat(fields.price) >= 1000;
 
     const contract = approved === Consignment._address ? Consignment : ArtifactRegistry;
     const salePrice = parseFloat(fields.price) * 100; // Sale price in cents.
@@ -153,26 +153,9 @@ const TransferArtifact: React.FC<TransferArtifactProps> = ({ tokenId, metaUri })
       });
 
     console.log('takesARR', takesArr);
-    if (takesArr) {
-      const arrToast = toast('ARR Pending', { autoClose: false });
-      const arrId = transferPromise.then((receipt: any) => {
-        return receipt.events.RecordARR.returnValues.arrId;
-      });
-      const arrDue = promisify(async (callback) => {
-        const arrDue: number = await RoyaltyDistributor.methods.calculateARR(salePrice).call();
-        toast.update(arrToast, { render: `ARR due €${arrDue / 100}`, type: toast.TYPE.INFO });
-        callback(null, arrDue);
-      })() as Promise<number>;
-
-      Promise.all([arrId, arrDue])
-        .then(([arrId, arrDue]) => {
-          console.log('Let\'s go');
-          payArr(arrToast, arrId, arrDue);
-        })
-        .catch(console.error);
-    } else {
-      setSubmitted(false);
-    }
+    transferPromise.then((receipt: any) => {
+      showRegisterSaleCompleteForm(takesArr, receipt, salePrice);
+    }).catch(console.log);
   };
 
   const inputChangeHandler: React.FormEventHandler<any> = (event) => {
