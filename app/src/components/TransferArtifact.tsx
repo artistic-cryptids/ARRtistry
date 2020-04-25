@@ -115,7 +115,8 @@ const TransferArtifact: React.FC<TransferArtifactProps> = ({ tokenId, metaUri })
 
     // only take ARR in country that takes it, and if no sales with this token have occurred
     // no sales → user is the one who registered it → they're the artist, or a gallery representing them
-    const takesArr = ARR_LOCATIONS.includes(fields.location) && relevantEvents.length > 0 && parseFloat(fields.price) >= 1000;
+    const takesArr = ARR_LOCATIONS.includes(fields.location) &&
+      relevantEvents.length > 0 && parseFloat(fields.price) >= 1000;
 
     const contract = approved === Consignment._address ? Consignment : ArtifactRegistry;
     const salePrice = parseFloat(fields.price) * 100; // Sale price in cents.
@@ -154,7 +155,7 @@ const TransferArtifact: React.FC<TransferArtifactProps> = ({ tokenId, metaUri })
     console.log('takesARR', takesArr);
     transferPromise.then((receipt: any) => {
       showRegisterSaleCompleteForm(takesArr, receipt, salePrice);
-    });
+    }).catch(console.log);
   };
 
   const inputChangeHandler: React.FormEventHandler<any> = (event) => {

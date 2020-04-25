@@ -30,7 +30,7 @@ export const RegisterSaleCompleteProvider: React.FC = ({ children }) => {
     setReceipt(receipt);
     setSalePrice(salePrice);
     setShowRegisterSaleSuccessfulForm(true);
-  }
+  };
 
   const handleOk = (): void => {
     setShowRegisterSaleSuccessfulForm(false);
@@ -78,4 +78,5 @@ export const RegisterSaleCompleteProvider: React.FC = ({ children }) => {
   );
 };
 
-export const useRegisterSaleCompleteContext: () => RegisterSaleComplete = () => React.useContext<RegisterSaleComplete>(RegisterSaleCompleteContext);
+export const useRegisterSaleCompleteContext: () => RegisterSaleComplete = () =>
+  React.useContext<RegisterSaleComplete>(RegisterSaleCompleteContext);
