@@ -7,6 +7,7 @@ import { ContractProvider } from '../providers/ContractProvider';
 import { KeyProvider } from '../providers/KeyProvider';
 import { ArrProvider } from '../providers/ArrProvider';
 import { TokenProvider } from '../providers/TokenProvider';
+import { RegisterSaleCompleteProvider } from '../providers/RegisterSaleCompleteProvider';
 
 import Router from './Router';
 import SplashScreen from './SplashScreen';
@@ -30,7 +31,9 @@ const NonBlockingProviders: React.FC = ({ children }) => {
     <KeyProvider>
       <ArrProvider>
         <TokenProvider>
-          {children}
+          <RegisterSaleCompleteProvider>
+            {children}
+          </RegisterSaleCompleteProvider>
         </TokenProvider>
       </ArrProvider>
     </KeyProvider>
