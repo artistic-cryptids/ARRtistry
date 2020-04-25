@@ -1,0 +1,28 @@
+[
+  {
+    "artist": "0xf323B526cfEbf52c349dA8F4BB4d7e6EFA55F3a6",
+    "metaUri": "767yWF4ab-jqzIGuvnbA6bgtHM760ArawUfK2b19tD0",
+    "commissions": [
+      {
+        "description": "Comissioned by Tate Liverpool.",
+        "date": "2003"
+      }
+    ],
+    "exhibitions": [
+      {
+        "description": "Exhibited in Tate Liverpool.",
+        "date": "2014-06-01"
+      }
+    ],
+    "sales": [
+      {
+        "to": "0x67EDE48B355DA3fb5d5fB6e5964DaB9fDA56aADe",
+        "metaUri": "767yWF4ab-jqzIGuvnbA6bgtHM760ArawUfK2b19tD0",
+        "price": 60000,
+        "country": "United Kingdom",
+        "date": "2019",
+        "arr": false
+      }
+    ]
+  }
+]
