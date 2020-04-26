@@ -1,0 +1,54 @@
+@import "../../config";
+
+$primary: map-get($theme-colors, 'primary');
+
+.titleScreen {
+  z-index: 3;
+  min-height: 100%;  /* Fallback for browsers do NOT support vh unit */
+  min-height: 100vh; /* These two lines are counted as one :-)       */
+  min-width: 100%;
+  background-position: center center;
+  background-size: cover;
+  transition: all 1s ease-in-out;
+  -webkit-transition: all 1s ease-in-out;
+  -moz-transition: all 1s ease-in-out;
+  -ms-transition: all 1s ease-in-out;
+  position: absolute;
+  opacity: 1;
+
+  .titleCard{
+    border: none;
+    min-height: 410px;
+    background: none;
+    padding: 2em;
+  }
+}
+
+.titleContainer {
+ padding-top: 100px;
+ z-index: 5;
+}
+
+.titleOverlay {
+  z-index: 4;
+  min-height: 100%;
+  min-height: 100vh;
+  width: 100%;
+  background-color: #2c3e50ca;
+  display: flex;
+  align-items: center;
+}
+
+.titleHeader {
+  color: $body-bg;
+  text-align: center;
+  h1{
+    @include font-size(7rem)
+    text-align: center;
+    font-weight: 700;
+  }
+  h3{
+    text-align: center;
+    font-weight: 100;
+  }
+}

@@ -5,6 +5,7 @@ import { useSessionContext } from '../providers/SessionProvider';
 import { useWeb3Context } from '../providers/Web3Provider';
 
 import * as View from '../views';
+import FrontPage from './frontpage/FrontPage';
 
 import NetworkAside from './NetworkAside';
 
@@ -20,6 +21,9 @@ const Router: React.FC = () => {
         {/* TODO: Needs more logic here, just depends on roles */}
         <Route exact path="/">
           <View.DashboardView/>
+        </Route>
+        <Route path="/info">
+          <FrontPage/>
         </Route>
         <Route path="/artifact/new">
           <View.RegisterView/>
