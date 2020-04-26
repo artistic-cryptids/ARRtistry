@@ -15,6 +15,7 @@ import * as moment from 'moment';
 
 interface ArtworkCardProps {
   id: number;
+  className?: string;
   img?: string;
   metaUri?: string;
   fields?: ArtworkInfoFields;
@@ -35,6 +36,7 @@ export const MetadataArtworkCard: React.FC = ({ children }) => {
 
 const ArtworkCard: React.FC<ArtworkCardProps> = ({
   id,
+  className,
   img,
   fields,
   artist,
@@ -75,8 +77,10 @@ const ArtworkCard: React.FC<ArtworkCardProps> = ({
 
   const path = `/artifact/${id}`;
 
+  const cardClass = className ? `shadow ${className}` : 'shadow';
+
   return (
-    <Card className="shadow">
+    <Card className={cardClass}>
       <Card.Body>
         {img && <Card.Img variant="top" src={img} />}
         {id && fields

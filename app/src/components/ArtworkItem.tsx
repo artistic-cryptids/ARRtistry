@@ -8,11 +8,12 @@ import { useContractContext } from '../providers/ContractProvider';
 
 interface ArtworkItemProps {
   tokenId: number;
+  className?: string;
   ownedArtifact?: true;
   fullscreen?: true;
 }
 
-const ArtworkItem: React.FC<ArtworkItemProps> = ({ tokenId, ownedArtifact, fullscreen }) => {
+const ArtworkItem: React.FC<ArtworkItemProps> = ({ tokenId, className, ownedArtifact, fullscreen }) => {
   const [artwork, setArtwork] = React.useState<Artwork>({ proposer: '', metaUri: '' });
   const { ArtifactRegistry } = useContractContext();
 
@@ -51,6 +52,7 @@ const ArtworkItem: React.FC<ArtworkItemProps> = ({ tokenId, ownedArtifact, fulls
   return (
     <ArtworkInfo
       id={tokenId}
+      className={className}
       artwork={artwork}
       fullscreen={fullscreen}
     >

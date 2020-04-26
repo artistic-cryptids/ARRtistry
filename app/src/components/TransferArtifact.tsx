@@ -192,6 +192,8 @@ const TransferArtifact: React.FC<TransferArtifactProps> = ({ tokenId, metaUri })
       <option key={index}>{location}</option>,
     );
   };
+  const today = new Date();
+  const todaysDate = today.toISOString().substring(0, 10);
 
   return (
     <>
@@ -236,6 +238,7 @@ const TransferArtifact: React.FC<TransferArtifactProps> = ({ tokenId, metaUri })
             <Form.Control
               required
               type="text"
+              defaultValue={todaysDate}
               onChange={inputChangeHandler}/>
             {GENERIC_FEEDBACK}
           </Form.Group>

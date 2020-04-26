@@ -29,6 +29,9 @@ const RegisterFields: React.FC = () => {
     fileReader.readAsText(event.target.files[0]);
   };
 
+  const today = new Date();
+  const todaysDate = today.toISOString().substring(0, 10);
+
   return (
     <>
       <Form.Row>
@@ -61,6 +64,7 @@ const RegisterFields: React.FC = () => {
           <Form.Control
             required
             type="text"
+            defaultValue={todaysDate}
             onChange={inputChangeHandler}
             value={textFields.artifactCreationDate}
           />
