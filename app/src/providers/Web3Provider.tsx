@@ -63,6 +63,7 @@ export const Web3Provider: React.FC = ({ children }) => {
           .catch(console.warn);
 
         setWeb3(foundWeb3);
+        return;
       }
 
       console.log('Attempting to use infura web3');
