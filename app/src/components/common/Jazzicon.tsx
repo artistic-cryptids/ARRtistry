@@ -17,25 +17,16 @@ function jsNumberForAddress (address: string): number {
 const Jazzicon: React.FC<JazziconProps> = ({ address, className, diameter = 46 }) => {
   const container = useRef<HTMLDivElement>(null);
 
-  const removeChildren: VoidFunction = () => {
+  useEffect(() => {
     if (!container.current) { return; }
 
     const { children } = container.current;
     for (let i = 0; i < children.length; i++) {
       container.current.removeChild(children[i]);
     }
-  };
-
-  const appendJazzicon: VoidFunction = () => {
-    if (!container.current) { return; }
 
     const image = jazzicon(diameter, jsNumberForAddress(address));
     container.current.appendChild(image);
-  };
-
-  useEffect(() => {
-    removeChildren();
-    appendJazzicon();
   }, [address, diameter]);
 
   return (
