@@ -6,22 +6,22 @@ import SplashScreen from '../components/SplashScreen';
 import { getUserListMetadata } from '../helper/agnostic';
 
 const DEFAULT_USER = {
-  nickname: 'Unknown',
-  img: 'https://arweave.net/koGEvbLifVjKVqWRruecP040lNWr8M9cI2IqQ1eyZXo',
-  role: 'UNREGISTERED',
+  nickname: '',
+  role: '',
+  address: [],
   name: '',
   eth: '0',
   eurs: '0',
 };
 
 export interface User {
-  img: string;
   nickname: string;
   role: string;
-  address?: string[];
+  address: string[];
   name: string;
   eth: string;
   eurs: string;
+  img?: string;
 }
 
 export interface Permissions {
