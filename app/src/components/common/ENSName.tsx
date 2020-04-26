@@ -2,6 +2,7 @@ import * as React from 'react';
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import Tooltip from 'react-bootstrap/Tooltip';
 import { useNameServiceContext } from '../../providers/NameServiceProvider';
+import { addressSlicer } from '../../helper/eth';
 
 interface ENSNameProps {
   address: string;
@@ -21,14 +22,12 @@ const ENSName: React.FC<ENSNameProps> = ({ address, className }) => {
       .catch((err: any) => console.log(err));
   }, [address, nameFromAddress]);
 
+  const inner = <span className={className}> {name === '' ? addressSlicer(address) : name} </span>;
+
   return (
-    <>
-      {name === ''
-        ? address
-        : <OverlayTrigger placement='top-start' overlay={<Tooltip id="address">{address}</Tooltip>}>
-          <span className={className}>{name}</span>
-        </OverlayTrigger>}
-    </>
+    <OverlayTrigger placement='top-start' overlay={<Tooltip id="address">{address}</Tooltip>}>
+      {inner}
+    </OverlayTrigger>
   );
 };
 
