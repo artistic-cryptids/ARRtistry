@@ -7,7 +7,7 @@ interface JazziconProps {
   diameter?: number;
 }
 
-function jsNumberForAddress (address: string) {
+function jsNumberForAddress (address: string): string {
   const addr = address.slice(2, 10);
   const seed = parseInt(addr, 16);
   return seed;
@@ -17,7 +17,7 @@ function jsNumberForAddress (address: string) {
 const Jazzicon: React.FC<JazziconProps> = ({ address, className, diameter = 46 }) => {
   const container = useRef<HTMLDivElement>(null);
 
-  const removeChildren = () => {
+  const removeChildren: VoidFunction = () => {
     if (!container.current) { return; }
 
     const { children } = container.current;
@@ -26,7 +26,7 @@ const Jazzicon: React.FC<JazziconProps> = ({ address, className, diameter = 46 }
     }
   };
 
-  const appendJazzicon = () => {
+  const appendJazzicon: VoidFunction = () => {
     if (!container.current) { return; }
 
     const image = jazzicon(diameter, jsNumberForAddress(address));
