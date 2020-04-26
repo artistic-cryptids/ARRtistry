@@ -83,6 +83,7 @@ const TransferArtifact: React.FC<TransferArtifactProps> = ({ tokenId, metaUri })
   const transferArtwork = async (_: React.FormEvent): Promise<void> => {
     let owner = '';
     setSubmitted(true);
+    setShowTransferForm(false);
 
     const isHexAddress = fields.recipientName.includes('0x');
 
@@ -154,6 +155,7 @@ const TransferArtifact: React.FC<TransferArtifactProps> = ({ tokenId, metaUri })
 
     console.log('takesARR', takesArr);
     transferPromise.then((receipt: any) => {
+      setSubmitted(false);
       showRegisterSaleCompleteForm(takesArr, receipt, salePrice);
     }).catch(console.log);
   };
