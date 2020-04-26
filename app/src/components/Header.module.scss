@@ -109,14 +109,15 @@
 
 .testimonialCard {
   .cardUp {
-    height: 120px;
+    height: 100px;
     overflow: hidden;
     border-top-left-radius: .25rem;
     border-top-right-radius: .25rem;
   }
 
   .avatar {
-      width: 120px;
+      width: 100px;
+      height: 100px;
       margin-top: -60px;
       overflow: hidden;
       border: 5px solid #fff;
