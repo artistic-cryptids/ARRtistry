@@ -40,7 +40,7 @@ const SplashScreen: React.FC<SplashScreenProps> = ({ failed, hide, children }) =
       <div className={styles.splashOverlay}>
         <Container>
           <Row>
-            <Col sm={{ span: 8, offset: 2 }}>
+            <Col xs={12} lg={{ span: 8, offset: 2 }}>
               <div className={styles.splashContainer}>
                 <Card className={styles.splashCard}>
                   <div className={styles.splashHeader}>

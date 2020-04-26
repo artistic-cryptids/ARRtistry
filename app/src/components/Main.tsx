@@ -5,34 +5,48 @@ import { User, useSessionContext } from '../providers/SessionProvider';
 import * as styles from './Header.module.scss';
 import NavLink from 'react-bootstrap/NavLink';
 import LeftSidebar from './LeftSidebar';
+import Jazzicon from './common/Jazzicon';
+
 import 'react-toastify/scss/main.scss';
+import ENSName from './common/ENSName';
 
 const BreadCrumb: React.FC<{crumbs: string[]}> = ({ crumbs }) => {
   return <div className={styles.breadcrumb}>
     {crumbs.map((value: string, index: number) => {
       return <React.Fragment key={index}>
-        <a href="#!" className={styles.link}>{value}</a>
+        <a href="/#" className={styles.link}>{value}</a>
         {index === (crumbs.length - 1) ? null : <span className={styles.separator}></span>}
       </React.Fragment>;
     })}
   </div>;
 };
 
+const UserImage: React.FC<{user: User; diameter: number; className?: string}> = ({ user, diameter, className }) => {
+  if (user.img) {
+    const imgClassName = className ? `rounded-circle ${className}` : 'rounded-circle';
+    return <img src={user.img} className={imgClassName} alt='avatar' style={{ width: diameter, height: 'auto' }}/>;
+  }
+
+  return <Jazzicon address={user.address[0]} diameter={diameter} className={className} />;
+};
+
 const UserCard: React.FC<{user: User}> = ({ user }) => {
+  const primary = user.nickname || <ENSName address={user.address[0]} />;
+  const secondary = user.role;
+
   return <Card className={styles.testimonialCard}>
     <div className={styles.blueGradient + ' ' + styles.cardUp}>
     </div>
     <div className={'mx-auto white ' + styles.avatar}>
-      <img src={user.img} className="rounded-circle img-fluid" alt='avatar'/>
+      <UserImage user={user} diameter={90}/>
     </div>
     <Card.Body>
-      <h4 className="font-weight-bold mb-4">{user.nickname} <small>{user.role}</small></h4>
-      <blockquote className="blockquote text-left">
-        <footer className="blockquote-footer">{user.name}</footer>
-      </blockquote>
-      <blockquote className="blockquote text-left">
-        <footer className="blockquote-footer">{user.address}</footer>
-      </blockquote>
+      <h4 className="font-weight-bold mb-4">{primary} {secondary && <small>{secondary}</small>}</h4>
+      { user.nickname && <blockquote className="blockquote text-left">
+        <footer className="blockquote-footer">
+          <ENSName address={user.address[0]} />
+        </footer>
+      </blockquote>}
       <h4 className="font-weight-bold mb-4">Balance</h4>
       <blockquote className="blockquote text-left">
         <footer className="blockquote-footer">{user.eth} ETH</footer>
@@ -47,7 +61,7 @@ const UserDropdown: React.FC = () => {
 
   return <Dropdown as={NavItem} alignRight>
     <Dropdown.Toggle as={NavLink} id="nav-dropdown">
-      <img src={user.img} className="rounded-circle z-depth-0" style={{ 'width': '3rem' }} alt='avatar'/>
+      <UserImage user={user} diameter={48} className="d-inline-block align-middle"/>
     </Dropdown.Toggle>
     <Dropdown.Menu className={styles.avatarDropdown}>
       <UserCard user={user}/>
