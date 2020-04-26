@@ -80,4 +80,12 @@ export const getABIAndAddress: ABIandAddress = (networkId, json, defaultAddress)
   };
 };
 
+export const addressSlicer = (address = ''): string => {
+  if (address.length < 11) {
+    return address;
+  }
+
+  return `${address.slice(0, 6)}...${address.slice(-4)}`;
+};
+
 export const BURN_ACCOUNT = '0xf9b9001432F41FB631F6162A31861823E8679fC3';
