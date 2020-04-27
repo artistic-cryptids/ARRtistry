@@ -28,7 +28,7 @@ const NonBlockingProviders: React.FC = ({ children }) => {
   return (
     <KeyProvider>
       <TokenProvider>
-          {children}
+        {children}
       </TokenProvider>
     </KeyProvider>
   );
