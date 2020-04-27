@@ -261,7 +261,8 @@ export const TransactionProvider: React.FC = ({ children }) => {
         payArr={() => {
           payArr(arrState.toast, arrState.arrId, arrState.arrDue).then(() =>
             setTransferState(TransferState.TransactionSuccess),
-          );
+          )
+            .catch(console.error);
         }
         }
       />}
