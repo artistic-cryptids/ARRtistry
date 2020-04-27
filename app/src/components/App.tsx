@@ -6,7 +6,6 @@ import { SessionProvider } from '../providers/SessionProvider';
 import { ContractProvider } from '../providers/ContractProvider';
 import { KeyProvider } from '../providers/KeyProvider';
 import { TokenProvider } from '../providers/TokenProvider';
-import { TransactionProvider } from '../providers/TransactionProvider';
 
 import Router from './Router';
 import SplashScreen from './SplashScreen';
@@ -29,9 +28,7 @@ const NonBlockingProviders: React.FC = ({ children }) => {
   return (
     <KeyProvider>
       <TokenProvider>
-        <TransactionProvider>
           {children}
-        </TransactionProvider>
       </TokenProvider>
     </KeyProvider>
   );
