@@ -13,7 +13,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTimes, faExternalLinkAlt } from '@fortawesome/free-solid-svg-icons';
 import moment from 'moment';
 
-const BLOCK_TIME = moment.duration(15, 's');
+const BLOCK_TIME = moment.duration(500, 'seconds');
 
 interface TransactionStartedProps extends TransactionModal {
   transaction: Transaction;
@@ -27,20 +27,26 @@ const TransactionStarted: React.FC<TransactionStartedProps> = ({
     from,
     transactionHash,
     cost,
+    startTime,
     delay = BLOCK_TIME,
   },
 }) => {
-  const [startTime] = React.useState(moment());
-  const [finishTime] = React.useState(moment().add(delay));
+  const [finishTime, setFinishTime] = React.useState(moment().add(delay));
   const [seconds, setSeconds] = React.useState(0);
 
-  const progress = Math.min(100, 100 * seconds / (finishTime.diff(startTime, 'seconds')));
+  React.useEffect(() => {
+    setFinishTime(moment(startTime).add(delay));
+  }, [startTime, delay]);
+
   React.useEffect(() => {
     const interval = setInterval(() => {
       setSeconds(seconds => seconds + 1);
     }, 200);
+    if (!visible) clearInterval(interval);
     return () => clearInterval(interval);
-  }, [seconds]);
+  }, [seconds, visible]);
+
+  const progress = Math.min(90, 100 * seconds / (finishTime.diff(startTime, 'seconds')));
 
   return (
     <Fade in={visible}>

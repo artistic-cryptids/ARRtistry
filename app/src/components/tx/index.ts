@@ -1,5 +1,6 @@
 import moment from 'moment';
 
+export { default as TransactionConfirmation } from './TransactionConfirmation';
 export { default as TransactionStarted } from './TransactionStarted';
 export { default as TransactionSuccess } from './TransactionSuccess';
 export { default as TransactionPartial } from './TransactionPartial';
@@ -20,5 +21,12 @@ export interface Transaction {
   from: string;
   transactionHash: string;
   cost: number;
+  startTime: moment.Moment;
   delay?: moment.Duration;
+}
+
+export interface ARRState {
+  toast: any;
+  arrId: number;
+  arrDue: number;
 }

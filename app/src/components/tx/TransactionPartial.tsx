@@ -4,21 +4,23 @@ import Fade from 'react-bootstrap/Fade';
 import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
 
-import { TransactionModal } from './index';
+import { TransactionModal, ARRState } from './index';
 import { FlexSeparator } from './FlexSeparator';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faExclamationTriangle, faTimes } from '@fortawesome/free-solid-svg-icons';
 
 interface TransactionPartialProps extends TransactionModal {
-  arrDue: number;
+  arr: ARRState;
   payArr: VoidFunction;
 }
 
 const TransactionPartial: React.FC<TransactionPartialProps> = ({
   visible,
   handleClose,
-  arrDue,
+  arr: {
+    arrDue,
+  },
   payArr,
 }) => {
   return (
