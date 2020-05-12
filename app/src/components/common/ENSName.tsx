@@ -22,7 +22,14 @@ const ENSName: React.FC<ENSNameProps> = ({ address, className }) => {
       .catch((err: any) => console.log(err));
   }, [address, nameFromAddress]);
 
-  const inner = <span className={className}> {name === '' ? addressSlicer(address) : name} </span>;
+  const inner = (
+    <a
+      className={className}
+      href={`https://rinkeby.etherscan.io/address/${address}`}
+    >
+      {name === '' ? addressSlicer(address) : name}
+    </a>
+  );
 
   return (
     <OverlayTrigger placement='top-start' overlay={<Tooltip id="address">{address}</Tooltip>}>

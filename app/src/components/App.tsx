@@ -5,9 +5,7 @@ import { NameServiceProvider } from '../providers/NameServiceProvider';
 import { SessionProvider } from '../providers/SessionProvider';
 import { ContractProvider } from '../providers/ContractProvider';
 import { KeyProvider } from '../providers/KeyProvider';
-import { ArrProvider } from '../providers/ArrProvider';
 import { TokenProvider } from '../providers/TokenProvider';
-import { RegisterSaleCompleteProvider } from '../providers/RegisterSaleCompleteProvider';
 
 import Router from './Router';
 import SplashScreen from './SplashScreen';
@@ -29,13 +27,9 @@ const BlockingProviders: React.FC = ({ children }) => {
 const NonBlockingProviders: React.FC = ({ children }) => {
   return (
     <KeyProvider>
-      <ArrProvider>
-        <TokenProvider>
-          <RegisterSaleCompleteProvider>
-            {children}
-          </RegisterSaleCompleteProvider>
-        </TokenProvider>
-      </ArrProvider>
+      <TokenProvider>
+        {children}
+      </TokenProvider>
     </KeyProvider>
   );
 };

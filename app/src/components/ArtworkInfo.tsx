@@ -10,6 +10,7 @@ export interface Artwork {
 interface ArtworkInfoProps {
   artwork: Artwork;
   id: number;
+  className?: string;
   fullscreen?: true;
 }
 
@@ -45,7 +46,7 @@ export interface ArtworkInfoFields {
   saleProvenance?: ArtworkProvenance[];
 }
 
-const ArtworkInfo: React.FC<ArtworkInfoProps> = ({ artwork, id, fullscreen, children }) => {
+const ArtworkInfo: React.FC<ArtworkInfoProps> = ({ artwork, id, className, fullscreen, children }) => {
   const [artist, setArtist] = React.useState<Artist>({
     id: 0,
     name: '',
@@ -114,6 +115,7 @@ const ArtworkInfo: React.FC<ArtworkInfoProps> = ({ artwork, id, fullscreen, chil
   return (
     <ArtworkCard
       id={id}
+      className={className}
       img={fields.image}
       metaUri={artwork.metaUri}
       fields={fields}
