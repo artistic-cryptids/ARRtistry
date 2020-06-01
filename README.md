@@ -2,7 +2,8 @@
 
 <h1>
   :art: ARRtistry
-  <sub>
+<br/>
+<sub>
     Decentralised Art Registry with Automated Artists Resale Rights
   </sub>
 </h1>
